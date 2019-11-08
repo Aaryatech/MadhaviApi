@@ -25,6 +25,8 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 	int deleteCustomer(@Param("custId") int custId);
 
 	List<Customer> findByFrIdAndDelStatus(int frId, int i);
+
+	Customer findByPhoneNumber(String phoneNo);
 	
 
 }

@@ -2,6 +2,7 @@ package com.ats.webapi.model.advorder;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,55 +14,57 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 @Table(name = "t_adv_order_detail")
 public class AdvanceOrderDetail {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int  advDetailId;
-	
-	private int  frId;
-	
-	private int  catId;
-	
-	private int  subCatId;
-	
-	private int  menuId;
-	
-	private int  itemId;
-	
+	private int advDetailId;
+
+	private int frId;
+
+	private int catId;
+
+	private int subCatId;
+
+	private int menuId;
+
+	private int itemId;
+
 	private float rate;
-	
+
 	private float mrp;
-	
+
 	private float qty;
-	
+
 	private Date orderDate;
-	
+
 	private Date prodDate;
-	
+
 	private Date deliveryDate;
-	
-	private String  events;
-	
+
+	private String events;
+
 	private String eventsName;
-	
+
 	private float subTotal;
-	
+
 	private float tax1;
-	
-	private float tax1Amt;
-	
+
+	@Column(name = "tax1_amt")
+ 	private float tax1Amt;
+
 	private float tax2;
 	
-	private float tax2Amt;
-	
-	private int  isBillGenerated;
-	
-	private int  advHeaderId;
-	
+	@Column(name = "tax2_amt")
+ 	private float tax2Amt;
+
+	private int isBillGenerated;
+
+	private int advHeaderId;
+
 	private float discPer;
-	
-	private int  grnType;
-	
+
+	private int grnType;
+
 	private int delStatus;
 
 	private int exInt1;
@@ -148,7 +151,7 @@ public class AdvanceOrderDetail {
 		this.qty = qty;
 	}
 
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -157,7 +160,7 @@ public class AdvanceOrderDetail {
 		this.orderDate = orderDate;
 	}
 
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getProdDate() {
 		return prodDate;
 	}
@@ -166,7 +169,7 @@ public class AdvanceOrderDetail {
 		this.prodDate = prodDate;
 	}
 
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
@@ -330,10 +333,5 @@ public class AdvanceOrderDetail {
 				+ ", delStatus=" + delStatus + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exVar1=" + exVar1
 				+ ", exVar2=" + exVar2 + ", exFloat1=" + exFloat1 + ", exFloat2=" + exFloat2 + "]";
 	}
-	
-	
-	 
-	
-	
 
 }
