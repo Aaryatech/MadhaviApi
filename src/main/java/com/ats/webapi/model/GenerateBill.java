@@ -94,7 +94,19 @@ public class GenerateBill {
 	@Column(name="hsn_code")//new
 	private String  hsnCode;
 	
+	@Column(name="is_own_fr")
+	private int isOwnFr;
 	
+	
+	
+	public int getIsOwnFr() {
+		return isOwnFr;
+	}
+
+	public void setIsOwnFr(int isOwnFr) {
+		this.isOwnFr = isOwnFr;
+	}
+
 	public String getHsnCode() {
 		return hsnCode;
 	}
@@ -315,7 +327,7 @@ public class GenerateBill {
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", grnType=" + grnType
 				+ ", itemShelfLife=" + itemShelfLife + ", isSameState=" + isSameState + ", deliveryDate=" + deliveryDate
 				+ ", partyName=" + partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress
-				+ ", hsnCode=" + hsnCode + "]";
+				+ ", hsnCode=" + hsnCode + ", isOwnFr=" + isOwnFr + "]";
 	}
     
 }

@@ -38,11 +38,15 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 
 		List<GenerateRegSpBill> generateRegSpBills = regSpBillRepository.generateRegSpBill(frId,menuId, delDate);
 		
+		List<GenerateBill> generateBillsOfAdvOrder = billRepository.generateBillOfAdvOrder(frId, menuId, delDate);
+		
 		System.out.println("Regular Sp Cake Orders "+generateRegSpBills.toString());
 
 		generateBills = convertSpCakeToItem(generateSpBills, generateBills);
 
 		generateBills = convertRegSpCakeToItem(generateRegSpBills, generateBills);
+		
+		generateBills.addAll(generateBillsOfAdvOrder);//
 		
 		Info info = new Info();
 
@@ -77,13 +81,14 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 		
 		List<GenerateRegSpBill> generateRegSpBills = regSpBillRepository.generateRegSpBillForAllFr(menuId, delDate);
 		System.out.println("Regular Sp Cake Orders "+generateRegSpBills.toString());
+		List<GenerateBill> generateBillsForAdvanceOrder = billRepository.generateBillForAllFrAdvOrder(menuId, delDate);
 
 
 		generateBills = convertSpCakeToItem(generateSpBills, generateBills);
 
 		generateBills = convertRegSpCakeToItem(generateRegSpBills, generateBills);
 
-		
+		generateBills.addAll(generateBillsForAdvanceOrder);
 		Info info = new Info();
 
 		if (generateBills != null) {
@@ -117,7 +122,8 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 
 		List<GenerateRegSpBill> generateRegSpBills = regSpBillRepository.generateRegSpBillForAllFrAllMenu( delDate);
 
-		System.out.println("Regular Sp Cake Orders "+generateRegSpBills.toString());
+		//System.out.println("Regular Sp Cake Orders "+generateRegSpBills.toString());
+		List<GenerateBill> generateBillsForAdvOrder = billRepository.generateBillForAllFrAllMenuAdvOrder(delDate);
 
 		generateBills = convertSpCakeToItem(generateSpBills, generateBills);
 		
@@ -127,6 +133,8 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+		generateBills.addAll(generateBillsForAdvOrder);///
+		
 		Info info = new Info();
 
 		if (generateBills != null) {
@@ -159,6 +167,7 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 		List<GenerateSpBill> generateSpBills = generateSpBillRepository.generateSpBillForAllMenu(frId, delDate);
 
 		List<GenerateRegSpBill> generateRegSpBills = regSpBillRepository.generateRegSpBillForAllMenu(frId, delDate);
+		List<GenerateBill> generateBillsAdvOrder = billRepository.generateBillForAllMenuForAdvOrder(frId, delDate);
 
 		//System.out.println("sp cake orders " + generateSpBills.toString());
 
@@ -167,7 +176,7 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 		generateBills = convertSpCakeToItem(generateSpBills, generateBills);
 
 		generateBills = convertRegSpCakeToItem(generateRegSpBills, generateBills);
-
+        generateBills.addAll(generateBillsAdvOrder);
 		Info info = new Info();
 
 		if (generateBills != null) {
