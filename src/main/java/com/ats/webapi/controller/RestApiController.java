@@ -3297,7 +3297,10 @@ public class RestApiController {
 
 				for (int i = 0; i < itemList.size(); i++) {
 
+					
+					
 					ItemWithSubCat item = itemList.get(i);
+					System.out.println("ItemWithSubCat= " + item.toString());
 
 					GetFrItems getFrItems = new GetFrItems();
 
@@ -3323,7 +3326,11 @@ public class RestApiController {
 					getFrItems.setSubCatName(item.getSubCatName());
 					getFrItems.setMinQty(item.getMinQty());
 					getFrItems.setItemRate3(item.getItemRate3());
-
+					getFrItems.setCatName(item.getCatName());
+					
+					
+					
+ 
 					for (int j = 0; j < orderList.size(); j++) {
 
 						if (String.valueOf(item.getId()).equalsIgnoreCase(orderList.get(j).getItemId())) {

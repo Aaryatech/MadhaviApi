@@ -64,6 +64,8 @@ public class ItemWithSubCat implements Serializable {
 	
 	private String subCatName;
 	
+	private String catName;//New
+	
 	
 	
 
@@ -73,6 +75,14 @@ public class ItemWithSubCat implements Serializable {
 
 	public void setItemMrp3(double itemMrp3) {
 		this.itemMrp3 = itemMrp3;
+	}
+
+	public String getCatName() {
+		return catName;
+	}
+
+	public void setCatName(String catName) {
+		this.catName = catName;
 	}
 
 	public double getItemRate3() {
@@ -255,12 +265,17 @@ public class ItemWithSubCat implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Item [itemId=" + itemId + ", itemName=" + itemName + ", itemGrp1=" + itemGrp1 + ", itemGrp2=" + itemGrp2
-				+ ", itemGrp3=" + itemGrp3 + ", itemRate1=" + itemRate1 + ", itemRate2=" + itemRate2 + ", itemMrp1="
-				+ itemMrp1 + ", itemMrp2=" + itemMrp2 + ", itemImage=" + itemImage + ", itemTax1=" + itemTax1
-				+ ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", itemIsUsed=" + itemIsUsed + ", itemSortId="
-				+ itemSortId + ", grnTwo=" + grnTwo + ", delStatus=" + delStatus + ", id=" + id + "]";
+		return "ItemWithSubCat [itemId=" + itemId + ", itemName=" + itemName + ", itemGrp1=" + itemGrp1 + ", itemGrp2="
+				+ itemGrp2 + ", itemGrp3=" + itemGrp3 + ", itemRate1=" + itemRate1 + ", itemRate2=" + itemRate2
+				+ ", itemMrp1=" + itemMrp1 + ", itemMrp2=" + itemMrp2 + ", itemMrp3=" + itemMrp3 + ", itemImage="
+				+ itemImage + ", itemTax1=" + itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3
+				+ ", itemIsUsed=" + itemIsUsed + ", itemSortId=" + itemSortId + ", grnTwo=" + grnTwo + ", delStatus="
+				+ delStatus + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", subCatName=" + subCatName
+				+ ", catName=" + catName + ", id=" + id + "]";
 	}
+	
+	
+ 
 
 
 }

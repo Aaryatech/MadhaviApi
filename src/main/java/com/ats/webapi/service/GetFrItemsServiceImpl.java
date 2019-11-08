@@ -69,7 +69,7 @@ public class GetFrItemsServiceImpl implements GetFrItemsService {
 			arrList.add(17);
 			list=getFrItemRepository.findFrItems(arrList,items);
 		}
-		
+		System.err.println("getFrItemRepository"+list.toString());
 		return list;
 	}
 

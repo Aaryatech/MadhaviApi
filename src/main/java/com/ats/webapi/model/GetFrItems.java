@@ -56,6 +56,8 @@ public class GetFrItems {
 	private float discPer;//new
 	
 	
+	private String catName;//new
+	
 	
 	public float getDiscPer() {
 		return discPer;
@@ -258,6 +260,17 @@ public class GetFrItems {
 		this.menuId = menuId;
 	}
 
+	
+	
+	
+	public String getCatName() {
+		return catName;
+	}
+
+	public void setCatName(String catName) {
+		this.catName = catName;
+	}
+
 	@Override
 	public String toString() {
 		return "GetFrItems [id=" + id + ", itemId=" + itemId + ", itemName=" + itemName + ", itemGrp1=" + itemGrp1
@@ -266,8 +279,9 @@ public class GetFrItems {
 				+ ", itemImage=" + itemImage + ", itemTax1=" + itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3="
 				+ itemTax3 + ", itemIsUsed=" + itemIsUsed + ", itemSortId=" + itemSortId + ", grnTwo=" + grnTwo
 				+ ", itemQty=" + itemQty + ", delStatus=" + delStatus + ", subCatName=" + subCatName + ", menuId="
-				+ menuId + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", discPer=" + discPer + "]";
+				+ menuId + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", discPer=" + discPer + ", catName="
+				+ catName + "]";
 	}
-
+ 
 	
 }
