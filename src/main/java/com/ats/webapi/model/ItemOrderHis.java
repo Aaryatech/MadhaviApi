@@ -17,66 +17,71 @@ public class ItemOrderHis implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	
-	private int orderId;
+	private int orderId;   //advDetailId
 	
 	@Temporal(TemporalType.DATE)
-	private Date orderDate;
+	private Date orderDate;////orderDate
 	
 	
-	private int frId;
+	private int frId;//frId
 	
 	
-	private int orderType;
+	private int orderType;////catId
 	
 	
-	private int orderSubType;
-	
-
-	private int refId;
-	
-	
-	private String itemId;
+	private int orderSubType;//subCatId
 	
 
-	private int orderQty;
+	private int refId; //itemId
 	
 	
-	private double orderRate;
-	
-	
-	private double orderMrp;
+	private String itemId;//itemId
 	
 
-	private int orderStatus;
+	private int orderQty;//qty
+	
+	
+	private double orderRate; //rate
+	
+	
+	private double orderMrp; //mrp
+	
+
+	private int orderStatus; //0
 	
 	@Column(name="order_datetime")
-	private String orderDatetime;
+	private String orderDatetime; //0
 	
 	@Temporal(TemporalType.DATE)
 	
-	private Date productionDate;
+	private Date productionDate;//prodDate
 	
 	@Temporal(TemporalType.DATE)
 	
-	private Date deliveryDate;
+	private Date deliveryDate;//deliveryDate
 	
 	
-	private int isEdit;
-	
-
-	private float editQty;
-	
-	
-	private int userId;
+	private int isEdit;//0
 	
 
-	private int isPositive;
+	private float editQty;//0
+	
+	
+	private int userId;//0
+	
 
-	private int menuId;
+	private int isPositive;//discPer
+
+	private int menuId; //menuId
 	
-	private String menuTitle;
+	private String menuTitle;//menuTitle
 	
-	private String itemName;
+	private String itemName;//itemName
+	
+	
+	
+ 
+	
 
 	public int getOrderId() {
 		return orderId;

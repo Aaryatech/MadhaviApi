@@ -1833,6 +1833,21 @@ public class RestApiController {
 
 	}
 
+	// Search Advance Order History
+	@RequestMapping("/advanceOrderHistory")
+	public @ResponseBody ItemOrderList searchAdvOrderHistory(@RequestParam List<String> catId,
+			@RequestParam String deliveryDt, @RequestParam int frId) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = sdf.parse(deliveryDt);
+		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
+
+		ItemOrderList orderList = orderService.searchAdvOrderHistory(catId, deliveryDate, frId);
+
+		return orderList;
+
+	}
+
 	// UserLogin of AdminPanel
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	@ResponseBody
