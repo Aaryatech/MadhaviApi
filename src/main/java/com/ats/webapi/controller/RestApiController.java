@@ -3276,7 +3276,6 @@ public class RestApiController {
 	}
 
 	// 3
-
 	@RequestMapping(value = "/getFrItems", method = RequestMethod.POST)
 	public @ResponseBody List<GetFrItems> getFrItems(@RequestParam List<Integer> items, @RequestParam String frId,
 			@RequestParam String date, @RequestParam String menuId) {
@@ -3297,8 +3296,6 @@ public class RestApiController {
 
 				for (int i = 0; i < itemList.size(); i++) {
 
-					
-					
 					ItemWithSubCat item = itemList.get(i);
 					System.out.println("ItemWithSubCat= " + item.toString());
 
@@ -3327,24 +3324,23 @@ public class RestApiController {
 					getFrItems.setMinQty(item.getMinQty());
 					getFrItems.setItemRate3(item.getItemRate3());
 					getFrItems.setCatName(item.getCatName());
-					
-					
-					
- 
+
 					for (int j = 0; j < orderList.size(); j++) {
 
 						if (String.valueOf(item.getId()).equalsIgnoreCase(orderList.get(j).getItemId())) {
 
 							getFrItems.setItemQty(orderList.get(j).getOrderQty());
 							getFrItems.setMenuId(orderList.get(j).getMenuId());
-
 						}
 
 					}
-					float discPer = 0.0f;
+					float discPer = 0.0f;float discPerDm = 0.0f;
 					try {// new change of discPer
 						discPer = itemDiscConfiguredRepository.findByIdAndFrId(item.getId(), Integer.parseInt(frId));
 						getFrItems.setDiscPer(discPer);
+						discPerDm = itemDiscConfiguredRepository.findByIdAndFrIdForDm(item.getId(), Integer.parseInt(frId));
+						getFrItems.setDmDiscPer(discPerDm);
+						
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -3364,7 +3360,6 @@ public class RestApiController {
 		return frItemList;
 
 	}
-
 	@RequestMapping("/getMessage")
 	public @ResponseBody Message getMessage(@RequestParam int msgId) {
 

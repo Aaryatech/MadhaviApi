@@ -85,6 +85,118 @@ public class Item implements Serializable {
 	
 	@Column(name="item_shelf_life")
 	private int shelfLife;
+	
+	@Column(name="is_saleable")
+	private int isSaleable;
+	
+	@Column(name="is_stockable")
+	private int isStockable;
+	
+	@Column(name="is_fact_or_fr")
+	private int isFactOrFr;
+	
+	@Column(name="ext_int1")
+	private int extInt1;
+	
+	@Column(name="ext_int2")
+	private int extInt2;
+	
+	@Column(name="ext_float1")
+	private float extFloat1;
+	
+	@Column(name="ext_float2")
+	private float extFloat2;
+	
+	@Column(name="ext_var1")
+	private float extVar1;
+	
+	@Column(name="ext_var2")
+	private float extVar2;
+	
+	@Column(name="ext_var3")
+	private float extVar3;
+	
+	
+	
+	public int getIsSaleable() {
+		return isSaleable;
+	}
+
+	public void setIsSaleable(int isSaleable) {
+		this.isSaleable = isSaleable;
+	}
+
+	public int getIsStockable() {
+		return isStockable;
+	}
+
+	public void setIsStockable(int isStockable) {
+		this.isStockable = isStockable;
+	}
+
+	public int getIsFactOrFr() {
+		return isFactOrFr;
+	}
+
+	public void setIsFactOrFr(int isFactOrFr) {
+		this.isFactOrFr = isFactOrFr;
+	}
+
+	public int getExtInt1() {
+		return extInt1;
+	}
+
+	public void setExtInt1(int extInt1) {
+		this.extInt1 = extInt1;
+	}
+
+	public int getExtInt2() {
+		return extInt2;
+	}
+
+	public void setExtInt2(int extInt2) {
+		this.extInt2 = extInt2;
+	}
+
+	public float getExtFloat1() {
+		return extFloat1;
+	}
+
+	public void setExtFloat1(float extFloat1) {
+		this.extFloat1 = extFloat1;
+	}
+
+	public float getExtFloat2() {
+		return extFloat2;
+	}
+
+	public void setExtFloat2(float extFloat2) {
+		this.extFloat2 = extFloat2;
+	}
+
+	public float getExtVar1() {
+		return extVar1;
+	}
+
+	public void setExtVar1(float extVar1) {
+		this.extVar1 = extVar1;
+	}
+
+	public float getExtVar2() {
+		return extVar2;
+	}
+
+	public void setExtVar2(float extVar2) {
+		this.extVar2 = extVar2;
+	}
+
+	public float getExtVar3() {
+		return extVar3;
+	}
+
+	public void setExtVar3(float extVar3) {
+		this.extVar3 = extVar3;
+	}
 
 	public double getItemRate3() {
 		return itemRate3;
@@ -277,9 +389,9 @@ public class Item implements Serializable {
 				+ ", itemImage=" + itemImage + ", itemTax1=" + itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3="
 				+ itemTax3 + ", itemIsUsed=" + itemIsUsed + ", itemSortId=" + itemSortId + ", grnTwo=" + grnTwo
 				+ ", delStatus=" + delStatus + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", shelfLife="
-				+ shelfLife + "]";
+				+ shelfLife + ", isSaleable=" + isSaleable + ", isStockable=" + isStockable + ", isFactOrFr="
+				+ isFactOrFr + ", extInt1=" + extInt1 + ", extInt2=" + extInt2 + ", extFloat1=" + extFloat1
+				+ ", extFloat2=" + extFloat2 + ", extVar1=" + extVar1 + ", extVar2=" + extVar2 + ", extVar3=" + extVar3
+				+ "]";
 	}
-
-	
-
 }

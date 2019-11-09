@@ -41,8 +41,7 @@ public class GetFrItems {
 	private int grnTwo;
 	
 	private int itemQty;
-	
-	
+		
 	private int delStatus;
 	
 	private String subCatName;
@@ -54,11 +53,19 @@ public class GetFrItems {
 	private int minQty;
 	
 	private float discPer;//new
-	
-	
+		
 	private String catName;//new
 	
-	
+	private float dmDiscPer;//new
+
+	public float getDmDiscPer() {
+		return dmDiscPer;
+	}
+
+	public void setDmDiscPer(float dmDiscPer) {
+		this.dmDiscPer = dmDiscPer;
+	}
+
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -259,9 +266,6 @@ public class GetFrItems {
 	public void setMenuId(int menuId) {
 		this.menuId = menuId;
 	}
-
-	
-	
 	
 	public String getCatName() {
 		return catName;
@@ -280,8 +284,8 @@ public class GetFrItems {
 				+ itemTax3 + ", itemIsUsed=" + itemIsUsed + ", itemSortId=" + itemSortId + ", grnTwo=" + grnTwo
 				+ ", itemQty=" + itemQty + ", delStatus=" + delStatus + ", subCatName=" + subCatName + ", menuId="
 				+ menuId + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", discPer=" + discPer + ", catName="
-				+ catName + "]";
+				+ catName + ", dmDiscPer=" + dmDiscPer + "]";
 	}
- 
+
 	
 }

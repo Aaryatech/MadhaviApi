@@ -11,5 +11,8 @@ public interface ItemDiscConfiguredRepository extends JpaRepository<ItemDiscConf
 	@Query(value="select disc_per from m_fr_discount where is_active=1 and del_status=0  and FIND_IN_SET(:id,item_id) and FIND_IN_SET(:frId,franch_id) order by disc_id desc limit 1\n" + 
 			"",nativeQuery=true)
 	float findByIdAndFrId(@Param("id") int id,@Param("frId") int frId);
+	@Query(value="select var_1 from m_fr_discount where is_active=1 and del_status=0  and FIND_IN_SET(:id,item_id) and FIND_IN_SET(:frId,franch_id) order by disc_id desc limit 1\n" + 
+			"",nativeQuery=true)
+	float findByIdAndFrIdForDm(@Param("id") int id,@Param("frId") int frId);
 
 }
