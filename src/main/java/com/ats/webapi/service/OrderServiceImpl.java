@@ -152,6 +152,54 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return itemOrderList;
 	}
+	
+	
+	@Override
+	public ItemOrderList searchAdvOrderHistory(List<String> catId, Date deliveryDate, int frId) {
+		List<ItemOrderHis> orderList = null;
+		ErrorMessage errorMessage;
+		ItemOrderList itemOrderList;
+		try {
+			
+			if(catId.contains("-1")) {
+				orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateAllForAdv(deliveryDate, frId);
+
+			}else {
+			orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateForAdv(catId, deliveryDate, frId);
+			}
+			if (orderList == null) {
+				errorMessage = new ErrorMessage();
+				itemOrderList = new ItemOrderList();
+
+				errorMessage.setError(true);
+				errorMessage.setMessage("Orders Not Found");
+
+				itemOrderList.setErrorMessage(errorMessage);
+			} else {
+				errorMessage = new ErrorMessage();
+				itemOrderList = new ItemOrderList();
+
+				errorMessage.setError(false);
+				errorMessage.setMessage("Orders found Successfully");
+
+				itemOrderList.setItemOrderList(orderList);
+				itemOrderList.setErrorMessage(errorMessage);
+
+			}
+
+		} catch (Exception e) {
+			itemOrderList = new ItemOrderList();
+			errorMessage = new ErrorMessage();
+
+			errorMessage.setError(true);
+			errorMessage.setMessage("Orders Not Found(EXC)");
+
+			itemOrderList.setErrorMessage(errorMessage);
+		}
+		return itemOrderList;
+	}
+	
+	 
 
 	// new Update order method for billing
 	@Override
@@ -209,4 +257,6 @@ public class OrderServiceImpl implements OrderService {
 			}
 		return returnList;
 	}
+
+	
 }
