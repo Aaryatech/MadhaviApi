@@ -55,13 +55,7 @@ public class AdvanceOrderHeader {
 
 	@Transient
 	List<AdvanceOrderDetail> detailList;
-	
-	
-	
-	
-	
-	
-	
+	 
 
 	public int getFrId() {
 		return frId;
