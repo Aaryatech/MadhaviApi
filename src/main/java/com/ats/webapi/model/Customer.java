@@ -70,8 +70,10 @@ public class Customer {
 	public void setCustDob(Date custDob) {
 		this.custDob = custDob;
 	}
-	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	public String getPhoneNumber() {
+
+	/*
+	 * @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	 */	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
