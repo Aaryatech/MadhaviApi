@@ -48,9 +48,31 @@ public class ItemDetail implements Serializable{
 	
 	@Column(name="del_status")
 	private int delStatus;
+	
+	@Column(name="int1")
+	private int int1;
+	
+	@Column(name="int2")
+	private int int2;
 
 	
 	
+	public int getInt1() {
+		return int1;
+	}
+
+	public void setInt1(int int1) {
+		this.int1 = int1;
+	}
+
+	public int getInt2() {
+		return int2;
+	}
+
+	public void setInt2(int int2) {
+		this.int2 = int2;
+	}
+
 	public int getNoOfPiecesPerItem() {
 		return noOfPiecesPerItem;
 	}
@@ -148,7 +170,8 @@ public class ItemDetail implements Serializable{
 		return "ItemDetail [itemDetailId=" + itemDetailId + ", itemId=" + itemId + ", rmId=" + rmId + ", rmName="
 				+ rmName + ", itemName=" + itemName + ", noOfPiecesPerItem=" + noOfPiecesPerItem + ", rmType=" + rmType
 				+ ", rmUomId=" + rmUomId + ", rmQty=" + rmQty + ", rmWeight=" + rmWeight + ", delStatus=" + delStatus
-				+ "]";
+				+ ", int1=" + int1 + ", int2=" + int2 + "]";
 	}
+    
    
 }

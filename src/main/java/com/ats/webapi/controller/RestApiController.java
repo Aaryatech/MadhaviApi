@@ -2001,7 +2001,8 @@ public class RestApiController {
 			@RequestParam("itemImage") String itemImage, @RequestParam("itemTax1") double itemTax1,
 			@RequestParam("itemTax2") double itemTax2, @RequestParam("itemTax3") double itemTax3,
 			@RequestParam("itemIsUsed") int itemIsUsed, @RequestParam("itemSortId") double itemSortId,
-			@RequestParam("grnTwo") int grnTwo, @RequestParam("itemShelfLife") int itemShelfLife) {
+			@RequestParam("grnTwo") int grnTwo,@RequestParam("itemShelfLife")int itemShelfLife,@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable, 
+			@RequestParam("isFactOrFr") int isFactOrFr) {
 
 		Item item = new Item();
 		item.setItemImage(itemImage);
@@ -2025,8 +2026,12 @@ public class RestApiController {
 		item.setGrnTwo(grnTwo);
 		item.setItemId(itemId);
 		item.setShelfLife(itemShelfLife);
-
-		Item jsonResult = item = itemRepository.save(item);
+		item.setIsSaleable(isSaleable);
+		item.setIsStockable(isStockable);
+		item.setIsFactOrFr(isFactOrFr);
+		
+		Item jsonResult =itemRepository.save(item);
+		System.err.println("jsonResult"+jsonResult.toString());
 		try {
 			List<String> frTokens = franchiseSupRepository.findTokens();
 
@@ -2663,7 +2668,8 @@ public class RestApiController {
 			@RequestParam("itemTax1") double itemTax1, @RequestParam("itemTax2") double itemTax2,
 			@RequestParam("itemTax3") double itemTax3, @RequestParam("itemIsUsed") int itemIsUsed,
 			@RequestParam("itemSortId") double itemSortId, @RequestParam("grnTwo") int grnTwo,
-			@RequestParam("itemShelfLife") int itemShelfLife) {
+			@RequestParam("itemShelfLife") int itemShelfLife,@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable, 
+			@RequestParam("isFactOrFr") int isFactOrFr) {
 
 		Item item = itemService.findItems(id);
 		item.setItemImage(itemImage);
@@ -2686,6 +2692,10 @@ public class RestApiController {
 		item.setGrnTwo(grnTwo);
 		item.setShelfLife(itemShelfLife);
 		item.setItemId(itemId);
+		item.setIsSaleable(isSaleable);
+		item.setIsStockable(isStockable);
+		item.setIsFactOrFr(isFactOrFr);
+		
 
 		ErrorMessage jsonResult = itemService.saveItem(item);
 		return jsonResult;
