@@ -49,10 +49,10 @@ public class ItemDetail implements Serializable{
 	@Column(name="del_status")
 	private int delStatus;
 	
-	@Column(name="int1")
+	@Column(name="int_1")
 	private int int1;
 	
-	@Column(name="int2")
+	@Column(name="int_2")
 	private int int2;
 
 	
