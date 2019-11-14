@@ -2081,6 +2081,26 @@ public class RestApiController {
 		return jsonResult;
 	}
 
+	@RequestMapping(value = { "/updtBillableItem" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Info updtBillableItem(@RequestParam int itmId) {
+		Info info = new Info();
+		try {
+		int res = itemRepository.updateBillableItem(itmId);
+		
+			if (res > 0) {
+				info.setError(false);
+				info.setMessage("success Update");
+			} else {
+				info.setError(true);
+				info.setMessage("Failed Updating");
+			}
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+		return info;
+	}
+	
 	@RequestMapping(value = { "/insertItemList" }, method = RequestMethod.POST)
 	@ResponseBody
 	public List<Item> insertItemList(@RequestBody List<Item> itemList) {

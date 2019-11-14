@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.Item;
@@ -118,4 +119,9 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
 
 	public List<Item> findByDelStatusAndIsStockableOrderByItemGrp1AscItemGrp2AscItemNameAsc(int i, int j);
+
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE Item SET ext_var1=:itmId WHERE id=:itmId")
+	public int updateBillableItem(@Param("itmId") int itmId);
 }
