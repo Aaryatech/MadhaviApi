@@ -1285,14 +1285,30 @@ public class RestApiController {
 	}
 
 	@RequestMapping(value = "/getBillHeader", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("frId") List<String> frId,
+	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("typeId") int typeId,@RequestParam("frId") List<String> frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		GetBillHeaderList billHeaderList = null;
 		try {
-
+			int flag =-1;
+			if(typeId==1) {
+				flag=0;
+			}else if(typeId==2) {
+				flag=1;
+			}else {
+				flag =-1;
+			}
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			billHeaderList = getBillHeaderService.getBillHeader(frId, fromDate, toDate);
+			if(flag!=-1) {
+			
+			billHeaderList = getBillHeaderService.getBillHeader(frId, fromDate, toDate,flag);
+			}
+			else {
+				billHeaderList = getBillHeaderService.getBillHeader(frId, fromDate, toDate);
+
+			}
+			
+			
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();
@@ -1301,18 +1317,33 @@ public class RestApiController {
 		return billHeaderList;
 
 	}
-
+	 
+	
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("fromDate") String fromDate,
+	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeId") int typeId,@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
 
 		GetBillHeaderList billHeaderList = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
+			int flag =-1;
+			if(typeId==1) {
+				flag=0;
+			}else if(typeId==2) {
+				flag=1;
+			}else {
+				flag =-1;
+			}
+			 
+			
+			if(flag!=-1) {
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate,flag);
 
-			billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
-		} catch (Exception e) {
+			} else {
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
+			}
+ 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();
 		}

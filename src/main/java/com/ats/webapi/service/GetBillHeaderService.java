@@ -12,13 +12,29 @@ import com.ats.webapi.model.UpdateBillStatus;
 
 public interface GetBillHeaderService {
 	
-	GetBillHeaderList getBillHeader(List<String>frId, String fromDate, String toDate);
 	
-	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate);
+	GetBillHeaderList getBillHeader(List<String>frId, String fromDate, String toDate,int flag);
+	
+	 
+	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate,int flag);
 	 
 
+	
+	
+	
 	UpdateBillStatus updateBillStatus(UpdateBillStatus updateBillStatus);
 
+	
+	
+	//Company Outlet Bill
+	
+	
+	
+	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate);
+	
+	GetBillHeaderList getBillHeader(List<String>frId, String fromDate, String toDate);
+
+	
 	
 	
 	

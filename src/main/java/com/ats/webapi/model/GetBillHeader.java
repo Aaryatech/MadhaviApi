@@ -17,31 +17,31 @@ public class GetBillHeader implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="bill_no")
+	@Column(name="bill_no")  //sell_bill_no
 	private int billNo;
 	
-	@Column(name="fr_name")
-	private String frName;
+	@Column(name="fr_name") 
+	private String frName; 
 	
-	@Column(name="time")
+	@Column(name="time") 
 	private String time;
 
 	@Column(name="tax_applicable")
 	private int taxApplicable;
 	
-	@Column(name="invoice_no")
+	@Column(name="invoice_no")  
 	private String invoiceNo;
 	
-	@Column(name="bill_date")
+	@Column(name="bill_date")  
 	private Date billDate;
 	
-	@Column(name="fr_id")
+	@Column(name="fr_id")  
 	private int frId;
 	
 	@Column(name="fr_code")
 	private String frCode;
 	
-	@Column(name="grand_total")
+	@Column(name="grand_total") // bill_grant_amt
 	private float grandTotal;
 	
 	@Column(name="taxable_amt")
@@ -54,28 +54,28 @@ public class GetBillHeader implements Serializable {
 	private int status;
 	
 	
-	@Column(name="del_status")
+	@Column(name="del_status") //del_status
 	private int DelStatus;
 	
-	@Column(name="remark")
+	@Column(name="remark") //NA 
 	private String remark;
 	
-	@Column(name="party_name")
+	@Column(name="party_name") //user_name
 	private String partyName;
 	
-	@Column(name="party_address")
+	@Column(name="party_address")//na
 	private String partyAddress;
 	
-	@Column(name="party_gstin")
+	@Column(name="party_gstin")//user_gst_no
 	private String partyGstin;
 	
-	private String vehNo;
+	private String vehNo;//na
 	
-	private String billTime;
+	private String billTime;//timestamp
 	
-	private String exVarchar1;
+	private String exVarchar1;//NA
 	
-	private String exVarchar2;
+	private String exVarchar2;//NA
 	
     
 	
