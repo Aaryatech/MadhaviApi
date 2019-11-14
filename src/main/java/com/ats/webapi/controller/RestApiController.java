@@ -2096,7 +2096,7 @@ public class RestApiController {
 				info.setMessage("Failed Updating");
 			}
 		}catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return info;
 	}
