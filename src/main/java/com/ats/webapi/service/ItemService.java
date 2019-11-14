@@ -36,4 +36,6 @@ public interface ItemService {
 	public List<Item> getItemsByCatIdForSup(String itemGrp1);
 	public List<Item> findAllItemsByItemId(List<Integer> itemList);
 	public GetItemSup getItemSupByItemId(int itemId);
+	public ItemsList findAllStockableItems();
+	public List<Item> findFrItemsStockable(String itemGrp1);
 }

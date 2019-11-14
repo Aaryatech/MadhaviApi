@@ -2002,7 +2002,7 @@ public class RestApiController {
 			@RequestParam("itemTax2") double itemTax2, @RequestParam("itemTax3") double itemTax3,
 			@RequestParam("itemIsUsed") int itemIsUsed, @RequestParam("itemSortId") double itemSortId,
 			@RequestParam("grnTwo") int grnTwo,@RequestParam("itemShelfLife")int itemShelfLife,@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable, 
-			@RequestParam("isFactOrFr") int isFactOrFr) {
+			@RequestParam("isFactOrFr") int isFactOrFr, @RequestParam("isBillable") int isBillable, @RequestParam("billIitems") String billIitems) {
 
 		Item item = new Item();
 		item.setItemImage(itemImage);
@@ -2029,6 +2029,10 @@ public class RestApiController {
 		item.setIsSaleable(isSaleable);
 		item.setIsStockable(isStockable);
 		item.setIsFactOrFr(isFactOrFr);
+		item.setExtInt1(isBillable); 
+		item.setExtVar1(billIitems);
+		item.setExtVar2("NA");
+		item.setExtVar3("NA");
 		
 		Item jsonResult =itemRepository.save(item);
 		System.err.println("jsonResult"+jsonResult.toString());
@@ -3079,6 +3083,22 @@ public class RestApiController {
 		return items;
 
 	}
+	
+	@RequestMapping(value = "/getStockableItemsByCatId", method = RequestMethod.POST)
+	public @ResponseBody List<Item> getStockableItemsByCatId(@RequestParam String itemGrp1) {
+
+		List<Item> items = itemService.findFrItemsStockable(itemGrp1);
+		return items;
+
+	}
+	
+	@RequestMapping(value = "/getItems", method = RequestMethod.GET)
+	public @ResponseBody List<Item> getItems() {
+
+		List<Item> items = itemService.getAllItems();
+		return items;
+
+	}
 	/*@RequestMapping(value = "/getItemsByCatIdAndFrId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getItems(@RequestParam int itemGrp1,@RequestParam int frId) {
 
@@ -3405,6 +3425,13 @@ public class RestApiController {
 	@RequestMapping(value = { "/getAllItems" }, method = RequestMethod.GET)
 	public @ResponseBody ItemsList findAllItems() {
 		ItemsList itemsList = itemService.findAllItems();
+		return itemsList;
+	}
+	
+	//Get All Stockable Items
+	@RequestMapping(value = { "/getAllStockableItems" }, method = RequestMethod.GET)
+	public @ResponseBody ItemsList findAllStockableItems() {
+		ItemsList itemsList = itemService.findAllStockableItems();
 		return itemsList;
 	}
 

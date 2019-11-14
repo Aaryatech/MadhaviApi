@@ -108,13 +108,13 @@ public class Item implements Serializable {
 	private float extFloat2;
 	
 	@Column(name="ext_var1")
-	private float extVar1;
+	private String extVar1;
 	
 	@Column(name="ext_var2")
-	private float extVar2;
+	private String extVar2;
 	
 	@Column(name="ext_var3")
-	private float extVar3;
+	private String extVar3;
 	
 	
 	
@@ -174,27 +174,27 @@ public class Item implements Serializable {
 		this.extFloat2 = extFloat2;
 	}
 
-	public float getExtVar1() {
+	public String getExtVar1() {
 		return extVar1;
 	}
 
-	public void setExtVar1(float extVar1) {
+	public void setExtVar1(String extVar1) {
 		this.extVar1 = extVar1;
 	}
 
-	public float getExtVar2() {
+	public String getExtVar2() {
 		return extVar2;
 	}
 
-	public void setExtVar2(float extVar2) {
+	public void setExtVar2(String extVar2) {
 		this.extVar2 = extVar2;
 	}
 
-	public float getExtVar3() {
+	public String getExtVar3() {
 		return extVar3;
 	}
 
-	public void setExtVar3(float extVar3) {
+	public void setExtVar3(String extVar3) {
 		this.extVar3 = extVar3;
 	}
 
