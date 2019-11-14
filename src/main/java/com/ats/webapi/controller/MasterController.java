@@ -1260,7 +1260,7 @@ public class MasterController {
 
 					List<ItemForMOrder> itemList = null;
 					try {
-						if(isDairyMart==1) {
+						if(isDairyMart==0) {
 						if(ordertype==0)
 						{
 							System.err.println("itemGrp1"+itemGrp1+"frId"+menuId+"ordertype"+ordertype+"prodDate"+prodDate);
@@ -1280,15 +1280,15 @@ public class MasterController {
 						if(ordertype==0)
 						{
 							System.err.println("itemGrp1"+itemGrp1+"frId"+menuId+"ordertype"+ordertype+"prodDate"+prodDate);
-					    	itemList = itemRepositoryForMOrderRepository.getItemListForMOrder(itemGrp1,frId,menuId,prodDate);
+					    	itemList = itemRepositoryForMOrderRepository.getItemListForMOrderDm(itemGrp1,frId,menuId,prodDate);
 						}
 						else if(ordertype==2)
 						{
-							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderMul(itemGrp1);
+							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderMulDm(itemGrp1);
 
 						}else
 						{
-							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderPrev(itemGrp1,frId);
+							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderPrevDm(itemGrp1,frId);
 
 						}
 					}
