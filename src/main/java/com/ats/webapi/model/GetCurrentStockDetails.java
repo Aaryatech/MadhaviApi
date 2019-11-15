@@ -11,7 +11,6 @@ import javax.persistence.Transient;
 
 @Entity
 @Table(name = "m_fr_opening_stock_detail")
-
 public class GetCurrentStockDetails {
 
 	@Id
@@ -26,37 +25,37 @@ public class GetCurrentStockDetails {
 	private String itemName;
 
 	@Column(name = "reg_opening_stock")
-	private int regOpeningStock;
+	private float regOpeningStock;
 
 	@Column(name = "sp_opening_stock")
-	private double spOpeningStock; // neha ItemRate1
+	private float spOpeningStock;
 
 	@Column(name = "reg_total_purchase")
-	private int regTotalPurchase;
+	private float regTotalPurchase;
 
 	@Column(name = "sp_total_purchase")
-	private double spTotalPurchase; // neha MRP 1
+	private float spTotalPurchase;
 
 	@Column(name = "reg_total_grn_gvn")
-	private int regTotalGrnGvn;
+	private float regTotalGrnGvn;
 
 	@Column(name = "reg_total_sell")
-	private int regTotalSell;
+	private float regTotalSell;
 
 	@Column(name = "sp_total_sell")
-	private int spTotalSell;
+	private float spTotalSell;
 
 	@Column(name = "opening_stock_header_id")
 	private int stockHeaderId;
 
 	@Transient
-	private int currentRegStock;
+	private float currentRegStock;
 
 	@Transient
-	private int currentSpStock;
+	private float currentSpStock;
 
 	@Transient
-	private int reOrderQty;
+	private float reOrderQty;
 
 	@Transient
 	private int id;
@@ -91,59 +90,59 @@ public class GetCurrentStockDetails {
 		this.itemName = itemName;
 	}
 
-	public int getRegOpeningStock() {
+	public float getRegOpeningStock() {
 		return regOpeningStock;
 	}
 
-	public void setRegOpeningStock(int regOpeningStock) {
+	public void setRegOpeningStock(float regOpeningStock) {
 		this.regOpeningStock = regOpeningStock;
 	}
 
-	public double getSpOpeningStock() {
+	public float getSpOpeningStock() {
 		return spOpeningStock;
 	}
 
-	public void setSpOpeningStock(double spOpeningStock) {
+	public void setSpOpeningStock(float spOpeningStock) {
 		this.spOpeningStock = spOpeningStock;
 	}
 
-	public int getRegTotalPurchase() {
+	public float getRegTotalPurchase() {
 		return regTotalPurchase;
 	}
 
-	public void setRegTotalPurchase(int regTotalPurchase) {
+	public void setRegTotalPurchase(float regTotalPurchase) {
 		this.regTotalPurchase = regTotalPurchase;
 	}
 
-	public double getSpTotalPurchase() {
+	public float getSpTotalPurchase() {
 		return spTotalPurchase;
 	}
 
-	public void setSpTotalPurchase(double spTotalPurchase) {
+	public void setSpTotalPurchase(float spTotalPurchase) {
 		this.spTotalPurchase = spTotalPurchase;
 	}
 
-	public int getRegTotalGrnGvn() {
+	public float getRegTotalGrnGvn() {
 		return regTotalGrnGvn;
 	}
 
-	public void setRegTotalGrnGvn(int regTotalGrnGvn) {
+	public void setRegTotalGrnGvn(float regTotalGrnGvn) {
 		this.regTotalGrnGvn = regTotalGrnGvn;
 	}
 
-	public int getRegTotalSell() {
+	public float getRegTotalSell() {
 		return regTotalSell;
 	}
 
-	public void setRegTotalSell(int regTotalSell) {
+	public void setRegTotalSell(float regTotalSell) {
 		this.regTotalSell = regTotalSell;
 	}
 
-	public int getSpTotalSell() {
+	public float getSpTotalSell() {
 		return spTotalSell;
 	}
 
-	public void setSpTotalSell(int spTotalSell) {
+	public void setSpTotalSell(float spTotalSell) {
 		this.spTotalSell = spTotalSell;
 	}
 
@@ -155,20 +154,28 @@ public class GetCurrentStockDetails {
 		this.stockHeaderId = stockHeaderId;
 	}
 
-	public int getCurrentRegStock() {
+	public float getCurrentRegStock() {
 		return currentRegStock;
 	}
 
-	public void setCurrentRegStock(int currentRegStock) {
+	public void setCurrentRegStock(float currentRegStock) {
 		this.currentRegStock = currentRegStock;
 	}
 
-	public int getCurrentSpStock() {
+	public float getCurrentSpStock() {
 		return currentSpStock;
 	}
 
-	public void setCurrentSpStock(int currentSpStock) {
+	public void setCurrentSpStock(float currentSpStock) {
 		this.currentSpStock = currentSpStock;
+	}
+
+	public float getReOrderQty() {
+		return reOrderQty;
+	}
+
+	public void setReOrderQty(float reOrderQty) {
+		this.reOrderQty = reOrderQty;
 	}
 
 	public int getId() {
@@ -177,14 +184,6 @@ public class GetCurrentStockDetails {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public int getReOrderQty() {
-		return reOrderQty;
-	}
-
-	public void setReOrderQty(int reOrderQty) {
-		this.reOrderQty = reOrderQty;
 	}
 
 	@Override
@@ -196,5 +195,7 @@ public class GetCurrentStockDetails {
 				+ spTotalSell + ", stockHeaderId=" + stockHeaderId + ", currentRegStock=" + currentRegStock
 				+ ", currentSpStock=" + currentSpStock + ", reOrderQty=" + reOrderQty + ", id=" + id + "]";
 	}
+
+	
 
 }

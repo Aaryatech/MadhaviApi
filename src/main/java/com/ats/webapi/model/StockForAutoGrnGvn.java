@@ -9,23 +9,27 @@ public class StockForAutoGrnGvn {
 
 	private String itemName;
 
-	private int regCurrentStock;
+	private float regCurrentStock;
 
-	private int spCurrentStock;
+	private float spCurrentStock;
 	
-	private int purchaseQty;
+	private float purchaseQty;
 
-	private int pushQty;
+	private float pushQty;
 
-	private int regSellQty;
+	private float regSellQty;
 
-	private int spSellQty;
+	private float spSellQty;
 
-	private int grnGvnQty;
-	
-	
-	
-	
+	private float grnGvnQty;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getItemId() {
 		return itemId;
@@ -43,68 +47,59 @@ public class StockForAutoGrnGvn {
 		this.itemName = itemName;
 	}
 
-	public int getRegCurrentStock() {
+	public float getRegCurrentStock() {
 		return regCurrentStock;
 	}
 
-	public void setRegCurrentStock(int regCurrentStock) {
+	public void setRegCurrentStock(float regCurrentStock) {
 		this.regCurrentStock = regCurrentStock;
 	}
 
-	public int getSpCurrentStock() {
+	public float getSpCurrentStock() {
 		return spCurrentStock;
 	}
 
-	public void setSpCurrentStock(int spCurrentStock) {
+	public void setSpCurrentStock(float spCurrentStock) {
 		this.spCurrentStock = spCurrentStock;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getPurchaseQty() {
+	public float getPurchaseQty() {
 		return purchaseQty;
 	}
 
-	public void setPurchaseQty(int purchaseQty) {
+	public void setPurchaseQty(float purchaseQty) {
 		this.purchaseQty = purchaseQty;
 	}
 
-	public int getPushQty() {
+	public float getPushQty() {
 		return pushQty;
 	}
 
-	public void setPushQty(int pushQty) {
+	public void setPushQty(float pushQty) {
 		this.pushQty = pushQty;
 	}
 
-	
-	public int getRegSellQty() {
+	public float getRegSellQty() {
 		return regSellQty;
 	}
 
-	public void setRegSellQty(int regSellQty) {
+	public void setRegSellQty(float regSellQty) {
 		this.regSellQty = regSellQty;
 	}
 
-	public int getSpSellQty() {
+	public float getSpSellQty() {
 		return spSellQty;
 	}
 
-	public void setSpSellQty(int spSellQty) {
+	public void setSpSellQty(float spSellQty) {
 		this.spSellQty = spSellQty;
 	}
 
-	public int getGrnGvnQty() {
+	public float getGrnGvnQty() {
 		return grnGvnQty;
 	}
 
-	public void setGrnGvnQty(int grnGvnQty) {
+	public void setGrnGvnQty(float grnGvnQty) {
 		this.grnGvnQty = grnGvnQty;
 	}
 
@@ -115,16 +110,6 @@ public class StockForAutoGrnGvn {
 				+ pushQty + ", regSellQty=" + regSellQty + ", spSellQty=" + spSellQty + ", grnGvnQty=" + grnGvnQty
 				+ "]";
 	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

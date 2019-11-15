@@ -22,37 +22,34 @@ public class PostFrItemStockDetail {
 	private int openingStockHeaderId;
 
 	@Column(name="item_id")
-	private int 	itemId;
-	
-	
+	private int itemId;
 	
 	@Column(name="reg_opening_stock")
-	private int regOpeningStock;
+	private float regOpeningStock;
 	
 	@Column(name="sp_opening_stock")
-	private int spOpeningStock;
-	
+	private float spOpeningStock;
 	
 	@Column(name="physical_stock")
-	private int physicalStock;
+	private float physicalStock;
 	
 	@Column(name="stock_difference")
-	private int stockDifference;
+	private float stockDifference;
 	
 	@Column(name="reg_total_purchase")
-	private int regTotalPurchase;
+	private float regTotalPurchase;
 	
 	@Column(name="sp_total_purchase")
-	private int spTotalPurchase;
+	private float spTotalPurchase;
 	
 	@Column(name="reg_total_grn_gvn")
-	private int regTotalGrnGvn;
+	private float regTotalGrnGvn;
 	
 	@Column(name="reg_total_sell")
-	private int regTotalSell;
+	private float regTotalSell;
 	
 	@Column(name="sp_total_sell")
-	private int spTotalSell;
+	private float spTotalSell;
 	
 	@Column(name="remark")
 	private String remark;
@@ -63,130 +60,96 @@ public class PostFrItemStockDetail {
 	@Transient
 	@Column(name="item_code")
 	private String itemCode;
-	
-	
 	public int getOpeningStockDetailId() {
 		return openingStockDetailId;
 	}
-
 	public void setOpeningStockDetailId(int openingStockDetailId) {
 		this.openingStockDetailId = openingStockDetailId;
 	}
-
 	public int getOpeningStockHeaderId() {
 		return openingStockHeaderId;
 	}
-
 	public void setOpeningStockHeaderId(int openingStockHeaderId) {
 		this.openingStockHeaderId = openingStockHeaderId;
 	}
-
 	public int getItemId() {
 		return itemId;
 	}
-
 	public void setItemId(int itemId) {
 		this.itemId = itemId;
 	}
-
-
-	public int getPhysicalStock() {
+	public float getRegOpeningStock() {
+		return regOpeningStock;
+	}
+	public void setRegOpeningStock(float regOpeningStock) {
+		this.regOpeningStock = regOpeningStock;
+	}
+	public float getSpOpeningStock() {
+		return spOpeningStock;
+	}
+	public void setSpOpeningStock(float spOpeningStock) {
+		this.spOpeningStock = spOpeningStock;
+	}
+	public float getPhysicalStock() {
 		return physicalStock;
 	}
-
-	public void setPhysicalStock(int physicalStock) {
+	public void setPhysicalStock(float physicalStock) {
 		this.physicalStock = physicalStock;
 	}
-
-	public int getStockDifference() {
+	public float getStockDifference() {
 		return stockDifference;
 	}
-
-	public void setStockDifference(int stockDifference) {
+	public void setStockDifference(float stockDifference) {
 		this.stockDifference = stockDifference;
 	}
-
-	
+	public float getRegTotalPurchase() {
+		return regTotalPurchase;
+	}
+	public void setRegTotalPurchase(float regTotalPurchase) {
+		this.regTotalPurchase = regTotalPurchase;
+	}
+	public float getSpTotalPurchase() {
+		return spTotalPurchase;
+	}
+	public void setSpTotalPurchase(float spTotalPurchase) {
+		this.spTotalPurchase = spTotalPurchase;
+	}
+	public float getRegTotalGrnGvn() {
+		return regTotalGrnGvn;
+	}
+	public void setRegTotalGrnGvn(float regTotalGrnGvn) {
+		this.regTotalGrnGvn = regTotalGrnGvn;
+	}
+	public float getRegTotalSell() {
+		return regTotalSell;
+	}
+	public void setRegTotalSell(float regTotalSell) {
+		this.regTotalSell = regTotalSell;
+	}
+	public float getSpTotalSell() {
+		return spTotalSell;
+	}
+	public void setSpTotalSell(float spTotalSell) {
+		this.spTotalSell = spTotalSell;
+	}
 	public String getRemark() {
 		return remark;
 	}
-
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
 	public String getItemName() {
 		return itemName;
 	}
-
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
-
-	public int getRegOpeningStock() {
-		return regOpeningStock;
-	}
-
-	public void setRegOpeningStock(int regOpeningStock) {
-		this.regOpeningStock = regOpeningStock;
-	}
-
-	public int getSpOpeningStock() {
-		return spOpeningStock;
-	}
-
-	public void setSpOpeningStock(int spOpeningStock) {
-		this.spOpeningStock = spOpeningStock;
-	}
-
-	public int getRegTotalPurchase() {
-		return regTotalPurchase;
-	}
-
-	public void setRegTotalPurchase(int regTotalPurchase) {
-		this.regTotalPurchase = regTotalPurchase;
-	}
-
-	public int getSpTotalPurchase() {
-		return spTotalPurchase;
-	}
-
-	public void setSpTotalPurchase(int spTotalPurchase) {
-		this.spTotalPurchase = spTotalPurchase;
-	}
-
-	public int getRegTotalGrnGvn() {
-		return regTotalGrnGvn;
-	}
-
-	public void setRegTotalGrnGvn(int regTotalGrnGvn) {
-		this.regTotalGrnGvn = regTotalGrnGvn;
-	}
-
-	public int getRegTotalSell() {
-		return regTotalSell;
-	}
-
-	public void setRegTotalSell(int regTotalSell) {
-		this.regTotalSell = regTotalSell;
-	}
-
-	public int getSpTotalSell() {
-		return spTotalSell;
-	}
-
-	public void setSpTotalSell(int spTotalSell) {
-		this.spTotalSell = spTotalSell;
-	}
-
 	public String getItemCode() {
 		return itemCode;
 	}
-
 	public void setItemCode(String itemCode) {
 		this.itemCode = itemCode;
 	}
-
 	@Override
 	public String toString() {
 		return "PostFrItemStockDetail [openingStockDetailId=" + openingStockDetailId + ", openingStockHeaderId="
@@ -196,7 +159,6 @@ public class PostFrItemStockDetail {
 				+ ", regTotalGrnGvn=" + regTotalGrnGvn + ", regTotalSell=" + regTotalSell + ", spTotalSell="
 				+ spTotalSell + ", remark=" + remark + ", itemName=" + itemName + ", itemCode=" + itemCode + "]";
 	}
-
 	
 	
 	
