@@ -105,17 +105,140 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp2InAndDelStatusOrderByItemGrp2AscItemNameAsc(List<String> catIdList, int delStatus);
 
 	@Query(value = "\n"
-			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i where  i.id IN (:itemList) AND i.del_status=0  ORDER BY \n" + 
+			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,ext_int1, ext_int2, ext_float1, ext_float2, ext_var1, ext_var2, ext_var3 from m_item i where  i.id IN (:itemList) AND i.del_status=0  ORDER BY \n" + 
 			"        i.item_grp1,i.item_grp2,i.item_name", nativeQuery = true)
 	public List<Item> findItemsNameByItemId(@Param("itemList") List<Integer> itemList);
 	
 
-	@Query(value = "select id,item_id,item_name,item_grp1,item_grp2,item_grp3,item_rate1,item_rate2,item_rate3,item_mrp1,item_mrp2,item_mrp3,item_image,item_tax1,item_tax2,item_tax3,item_is_used,item_sort_id,grn_two,del_status,min_qty,item_shelf_life  \n" + 
+	/*@Query(value = "select id,item_id,item_name,item_grp1,item_grp2,item_grp3,item_rate1,item_rate2,item_rate3,item_mrp1,item_mrp2,item_mrp3,item_image,item_tax1,item_tax2,item_tax3,item_is_used,item_sort_id,grn_two,del_status,min_qty,item_shelf_life,is_saleable, is_stockable,is_fact_or_fr,ext_int1, ext_int2, ext_float1, ext_float2, ext_var1, ext_var2, ext_var3  \n" + 
 			"			from  \n" + 
-			"			(select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,s.item_hsncd as item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i,m_item_sup s where  s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0    \n" + 
+			"			(select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,s.item_hsncd as item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.del_status,i.min_qty,i.item_shelf_life,i.grn_two,i.is_saleable, i.is_stockable,i.is_fact_or_fr, i.ext_int1, i.ext_int2, i.ext_float1, i.ext_float2, i.ext_var1, i.ext_var2, i.ext_var3 from m_item i,m_item_sup s where  s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0    \n" + 
 			"			UNION ALL  \n" + 
 			"			  \n" + 
-			"			select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,s.item_hsncd as item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i,m_item_sup s where s.item_id=i.id and   i.del_status=0 and i.item_grp1=:catId and i.item_rate2=:frId) a   ORDER BY a.item_grp1,a.item_grp2,a.item_name", nativeQuery = true)
+			"			select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,s.item_hsncd as item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.del_status,i.min_qty,i.item_shelf_life,i.grn_two,i.is_saleable, i.is_stockable,i.is_fact_or_fr, i.ext_int1, i.ext_int2, i.ext_float1, i.ext_float2, i.ext_var1, i.ext_var2, i.ext_var3 from m_item i,m_item_sup s where s.item_id=i.id and  i.del_status=0 and i.item_grp1=:catId and i.item_rate2=:frId) a   ORDER BY a.item_grp1,a.item_grp2,a.item_name", nativeQuery = true)*/
+	@Query(value="select\n" + 
+			"        id,\n" + 
+			"        item_id,\n" + 
+			"        item_name,\n" + 
+			"        item_grp1,\n" + 
+			"        item_grp2,\n" + 
+			"        item_grp3,\n" + 
+			"        item_rate1,\n" + 
+			"        item_rate2,\n" + 
+			"        item_rate3,\n" + 
+			"        item_mrp1,\n" + 
+			"        item_mrp2,\n" + 
+			"        item_mrp3,\n" + 
+			"        item_image,\n" + 
+			"        item_tax1,\n" + 
+			"        item_tax2,\n" + 
+			"        item_tax3,\n" + 
+			"        item_is_used,\n" + 
+			"        item_sort_id,\n" + 
+			"        grn_two,\n" + 
+			"        del_status,\n" + 
+			"        min_qty,\n" + 
+			"        item_shelf_life,\n" + 
+			"        is_saleable,\n" + 
+			"        is_stockable,\n" + 
+			"        is_fact_or_fr,\n" + 
+			"        ext_int1,\n" + 
+			"        ext_int2,\n" + 
+			"        ext_float1,\n" + 
+			"        ext_float2,\n" + 
+			"        ext_var1,\n" + 
+			"        ext_var2,\n" + 
+			"        ext_var3      \n" + 
+			"    from\n" + 
+			"        (select\n" + 
+			"            i.id,\n" + 
+			"            i.item_id,\n" + 
+			"            i.item_name,\n" + 
+			"            i.item_grp1,\n" + 
+			"            i.item_grp2,\n" + 
+			"            i.item_grp3,\n" + 
+			"            i.item_rate1,\n" + 
+			"            i.item_rate2,\n" + 
+			"            i.item_rate3,\n" + 
+			"            i.item_mrp1,\n" + 
+			"            i.item_mrp2,\n" + 
+			"            i.item_mrp3,\n" + 
+			"            s.item_hsncd as item_image,\n" + 
+			"            i.item_tax1,\n" + 
+			"            i.item_tax2,\n" + 
+			"            i.item_tax3,\n" + 
+			"            i.item_is_used,\n" + 
+			"            i.item_sort_id,\n" + 
+			"            i.del_status,\n" + 
+			"            i.min_qty,\n" + 
+			"            i.item_shelf_life,\n" + 
+			"            i.grn_two,\n" + 
+			"            i.is_saleable,\n" + 
+			"            i.is_stockable,\n" + 
+			"            i.is_fact_or_fr,\n" + 
+			"            i.ext_int1,\n" + 
+			"            i.ext_int2,\n" + 
+			"            i.ext_float1,\n" + 
+			"            i.ext_float2,\n" + 
+			"            i.ext_var1,\n" + 
+			"            i.ext_var2,\n" + 
+			"            i.ext_var3 \n" + 
+			"        from\n" + 
+			"            m_item i,\n" + 
+			"            m_item_sup s \n" + 
+			"        where\n" + 
+			"            s.item_id=i.id \n" + 
+			"            and i.id IN (:itemList) \n" + 
+			"            AND i.del_status=0 \n" + 
+			"        	AND i.is_saleable=1\n" + 
+			"        UNION\n" + 
+			"        ALL            select\n" + 
+			"            i.id,\n" + 
+			"            i.item_id,\n" + 
+			"            i.item_name,\n" + 
+			"            i.item_grp1,\n" + 
+			"            i.item_grp2,\n" + 
+			"            i.item_grp3,\n" + 
+			"            i.item_rate1,\n" + 
+			"            i.item_rate2,\n" + 
+			"            i.item_rate3,\n" + 
+			"            i.item_mrp1,\n" + 
+			"            i.item_mrp2,\n" + 
+			"            i.item_mrp3,\n" + 
+			"            s.item_hsncd as item_image,\n" + 
+			"            i.item_tax1,\n" + 
+			"            i.item_tax2,\n" + 
+			"            i.item_tax3,\n" + 
+			"            i.item_is_used,\n" + 
+			"            i.item_sort_id,\n" + 
+			"            i.del_status,\n" + 
+			"            i.min_qty,\n" + 
+			"            i.item_shelf_life,\n" + 
+			"            i.grn_two,\n" + 
+			"            i.is_saleable,\n" + 
+			"            i.is_stockable,\n" + 
+			"            i.is_fact_or_fr,\n" + 
+			"            i.ext_int1,\n" + 
+			"            i.ext_int2,\n" + 
+			"            i.ext_float1,\n" + 
+			"            i.ext_float2,\n" + 
+			"            i.ext_var1,\n" + 
+			"            i.ext_var2,\n" + 
+			"            i.ext_var3 \n" + 
+			"        from\n" + 
+			"            m_item i,\n" + 
+			"            m_item_sup s \n" + 
+			"        where\n" + 
+			"            s.item_id=i.id \n" + 
+			"            and  i.del_status=0 \n" + 
+			"            and i.item_grp1=:catId \n" +
+			"            and i.item_rate2=:frId\n" + 
+			"         	and i.is_saleable=1\n" + 
+			"    ) a  \n" + 
+			"ORDER BY\n" + 
+			"    a.item_grp1,\n" + 
+			"    a.item_grp2,\n" + 
+			"    a.item_name",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItem(@Param("itemList") List<Integer> itemList,@Param("catId")int catId,@Param("frId")int frId);
 
 	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
