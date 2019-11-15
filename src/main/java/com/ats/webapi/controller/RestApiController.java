@@ -3135,6 +3135,16 @@ public class RestApiController {
 
 	}
 	
+	// Get Salable Items
+	@RequestMapping(value = "/getSalableItemsByCatId", method = RequestMethod.POST)
+	public @ResponseBody List<Item> getSalableItemsByCatId(@RequestParam String itemGrp1) {
+
+		List<Item> items = itemService.findSalableFrItems(itemGrp1);
+		return items;
+
+	}
+	
+	
 	@RequestMapping(value = "/getStockableItemsByCatId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getStockableItemsByCatId(@RequestParam String itemGrp1) {
 

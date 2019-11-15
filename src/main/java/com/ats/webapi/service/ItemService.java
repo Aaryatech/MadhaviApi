@@ -38,4 +38,5 @@ public interface ItemService {
 	public GetItemSup getItemSupByItemId(int itemId);
 	public ItemsList findAllStockableItems();
 	public List<Item> findFrItemsStockable(String itemGrp1);
+	List<Item> findSalableFrItems(String itemGrp1);
 }

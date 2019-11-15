@@ -132,6 +132,12 @@ public class ItemServiceImpl implements ItemService{
 	}
 	
 	@Override
+	public List<Item> findSalableFrItems(String itemGrp1) {
+		List<Item> items=itemRepository.findByItemGrp1AndDelStatusAndIsSaleableOrderByItemGrp2Asc(itemGrp1,0,1);
+		return items;
+	}
+	
+	@Override
 	public List<Item> findFrItemsStockable(String itemGrp1) {
 		List<Item> items=itemRepository.findByItemGrp1AndDelStatusAndIsStockableOrderByItemGrp2Asc(itemGrp1,0,1);
 		return items;

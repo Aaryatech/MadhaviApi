@@ -23,6 +23,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
 	public List<Item> findByItemGrp1AndDelStatusOrderByItemGrp2Asc(String itemGrp1, int i);
 	
+	public List<Item> findByItemGrp1AndDelStatusAndIsSaleableOrderByItemGrp2Asc(String itemGrp1, int i, int salable);
+	
 	public List<Item> findByItemGrp1AndDelStatusAndIsStockableOrderByItemGrp2Asc(String itemGrp1, int i, int stock);
 
 	@Query(value = "\n"
