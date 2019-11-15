@@ -30,7 +30,7 @@ public class SalesReportConApi {
 
 	@RequestMapping(value = { "/getDatewiseReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportDateMonth> getDatewiseReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList) {
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,@RequestParam("typeId") int typeId) {
 
 		List<SalesReportDateMonth> salesReportDateMonthList = new ArrayList<>();
 		List<SalesReportBillwise> salesReportBillwiseList = new ArrayList<>();
@@ -39,9 +39,22 @@ public class SalesReportConApi {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
+			int flag=-1;
+			if(typeId==1) {
+				flag=0;
+			}else if(typeId==2) {
+				flag=1;
+			}else {
+				 flag=-1;
+			}
+			
+			if(flag!=-1) {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateWithoutOutlet(frIdList, fromDate, toDate, flag);
 
-			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDate(frIdList, fromDate, toDate);
+			}else {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateOutlet(frIdList, fromDate, toDate);
 
+			} 
 			grnList = salesReportDMCreditRepo.getDataGRN(frIdList, fromDate, toDate);
 
 			gvnList = salesReportDMCreditRepo.getDataGVN(frIdList, fromDate, toDate);
@@ -111,7 +124,7 @@ public class SalesReportConApi {
 
 	@RequestMapping(value = { "/getMonthwiseReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportDateMonth> getMonthwiseReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList) {
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,@RequestParam("typeId") String typeId) {
 
 		List<SalesReportDateMonth> salesReportDateMonthList = new ArrayList<>();
 		List<SalesReportBillwise> salesReportBillwiseList = new ArrayList<>();
@@ -121,8 +134,29 @@ public class SalesReportConApi {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 
-			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth(frIdList, fromDate, toDate);
+			int flag=-1;
+			
+			
+			
+			if(Integer.parseInt(typeId)==1) {
+				flag=0;
+ 			}else if(Integer.parseInt(typeId)==2) {
+				flag=1;
+			}else {
+				flag=-1;
+			}
+			 
+			
+			if(flag!=-1) { 
+				System.err.println("in  getSaleReportBillwiseByMonthWithoutOutlet");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonthWithoutOutlet(frIdList, fromDate, toDate, flag);
 
+			}else {
+				System.err.println("in  getSaleReportBillwiseByMonthOutlet");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonthOutlet(frIdList, fromDate, toDate);
+ 
+			}
+ 
 			grnList = salesReportDMCreditRepo.getDataGRNForMonth(frIdList, fromDate, toDate);
 
 			gvnList = salesReportDMCreditRepo.getDataGVNForMonth(frIdList, fromDate, toDate);
