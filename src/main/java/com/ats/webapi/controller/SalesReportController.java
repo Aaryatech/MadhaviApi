@@ -231,15 +231,30 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getSaleReportBillwiseAllFrSelected" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwise> getSaleReportBillwiseAllFrSelected(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("catIdList") List<String> catIdList) {
+			@RequestParam("catIdList") List<String> catIdList,@RequestParam("typeId") int typeId) {
 
 		List<SalesReportBillwise> salesReportBillwiseList = null;
 		try {
+			
+			int flag=-1;
+			if(typeId==1) {
+				flag=0;
+			}else if(typeId==2) {
+				flag=1;
+			}else {
+				flag=-1;
+			}
+			
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			System.out.println("Input received " + fromDate + "" + toDate + "");
-			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFr(fromDate, toDate, catIdList);
-			System.out.println("getSaleReportBillwise" + salesReportBillwiseList.toString());
+			if(flag!=-1) {
+	 			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFr(fromDate, toDate, catIdList,flag);
+
+			}else {
+	 			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrOutlet(fromDate, toDate, catIdList);
+
+			}
+		 
 
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwise  " + e.getMessage());
@@ -252,16 +267,29 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getSaleReportBillwiseByFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwise> getSaleReportBillwiseByFr(
 			@RequestParam("frIdList") List<String> frIdList, @RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<String> catIdList) {
+			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<String> catIdList,@RequestParam("typeId") int typeId) {
 
 		List<SalesReportBillwise> salesReportBillwiseList = null;
+		int flag=-1;
+		if(typeId==1) {
+			flag=0;
+		}else if(typeId==2) {
+			flag=1;
+		}else {
+			flag=-1;
+		}
+		
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 			System.out.println("Input received " + fromDate + "" + toDate + "" + frIdList);
-
+			if(flag!=-1) {
 			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByFr(frIdList, fromDate, toDate,
-					catIdList);
+					catIdList,flag);
+			}else {
+	 			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrOutlet(frIdList, fromDate, toDate, catIdList);
+
+			}
 			System.out.println("getSaleReportBillwiseByFr" + salesReportBillwiseList.toString());
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwise  by Fr " + e.getMessage());

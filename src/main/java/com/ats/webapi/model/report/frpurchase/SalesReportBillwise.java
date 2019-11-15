@@ -17,19 +17,19 @@ public class SalesReportBillwise implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="bill_no")
+	@Column(name="bill_no") //sell_bill_no
 	private int billNo;
 		
-	@Column(name="tax_applicable")
+	@Column(name="tax_applicable") //0
 	private int taxApplicable;
 	
-	@Column(name="invoice_no")
+	@Column(name="invoice_no")//same 
 	private String invoiceNo;
 	
 	@Column(name="fr_name")
 	private String frName;
 	
-	@Column(name="bill_date")
+	@Column(name="bill_date") //same
 	private Date billDate;
 	
 	@Column(name="fr_id")
@@ -38,22 +38,22 @@ public class SalesReportBillwise implements Serializable {
 	@Column(name="fr_code")
 	private String frCode;
 	
-	@Column(name="grand_total")
+	@Column(name="grand_total")//same 
 	private float grandTotal;
 	
-	@Column(name="taxable_amt")
+	@Column(name="taxable_amt") //same
 	private float taxableAmt;
 	
-	@Column(name="total_tax")
+	@Column(name="total_tax") //same
 	private float totalTax;
 
-	@Column(name="sgst_sum")
+	@Column(name="sgst_sum") //sum
 	private float sgstSum;
 	
-	@Column(name="cgst_sum")
+	@Column(name="cgst_sum") // sum
 	private float cgstSum;
 	
-	@Column(name="igst_sum")
+	@Column(name="igst_sum") //sum
 	private float igstSum;
 	
 	@Column(name="round_off")
