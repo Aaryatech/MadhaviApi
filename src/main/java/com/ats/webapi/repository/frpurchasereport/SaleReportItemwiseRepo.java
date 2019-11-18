@@ -7,13 +7,10 @@ import org.springframework.data.repository.query.Param;
 import com.ats.webapi.model.report.frpurchase.SalesReportItemwise;
 //sales report no 8
 public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwise, Integer> {
-	
-	
 	 
-
 //Report 4  New work 
  
-	@Query(value=" SELECT\n" + 
+	@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM (SELECT\n" + 
 			"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 			"    m_sp_cake.sp_id AS id,\n" + 
 			"    m_sp_cake.sp_tax1 AS item_tax1,\n" + 
@@ -33,9 +30,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 			"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_sp_cake.sp_id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id = 5 AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2 IN(0,1)\n" + 
 			"GROUP BY\n" + 
 			"    t_bill_detail.item_id\n" + 
-			"ORDER BY\n" + 
-			"    item_name\n" + 
- 			"  UNION All SELECT * FROM ((\n" + 
+ 			"  UNION All  \n" + 
 			"    SELECT\n" + 
 			"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 			"        m_sp_cake.sp_id AS id,\n" + 
@@ -57,7 +52,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 			"    GROUP BY\n" + 
 			"        t_sell_bill_detail.item_id\n" + 
 	 
-			")) ORDER BY item_name ",nativeQuery=true)
+			") a ORDER BY a.item_name  ",nativeQuery=true)
 	List<SalesReportItemwise> getSaleReportSpcakewiseAll(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
 
@@ -113,7 +108,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 
 
 
-	@Query(value=" SELECT\n" + 
+	@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM ( SELECT\n" + 
 			"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 			"    m_sp_cake.sp_id AS id,\n" + 
 			"    m_sp_cake.sp_tax1 AS item_tax1,\n" + 
@@ -133,10 +128,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 			"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_sp_cake.sp_id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id = 5 AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2=:flag \n" + 
 			"GROUP BY\n" + 
 			"    t_bill_detail.item_id\n" + 
-			"ORDER BY\n" + 
-			"    item_name\n" + 
-			"UNION\n" + 
-			"    (\n" + 
+ 			"UNION ALL \n" + 
 			"    SELECT\n" + 
 			"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 			"        m_sp_cake.sp_id AS id,\n" + 
@@ -156,9 +148,9 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 			"    WHERE\n" + 
 			"        t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_detail.item_id = m_sp_cake.sp_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.cat_id = 5 AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0\n" + 
 			"    GROUP BY\n" + 
-			"        t_sell_bill_detail.item_id\n" + 
+			"        t_sell_bill_detail.item_id) a \n" + 
 			"    ORDER BY\n" + 
-			"        item_name\n" + 
+			"        a.item_name\n" + 
 			")",nativeQuery=true)
 	List<SalesReportItemwise> getSaleReportSpcakewise1O2O3(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("flag") int flag);
 
@@ -200,7 +192,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 				
 				List<SalesReportItemwise> getSaleReportItemwiseOutlet3(@Param("catId")int catId ,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
-			@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum FROM (( SELECT\n" + 
+			@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM ( SELECT\n" + 
 					"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 					"    m_item.id,\n" + 
 					"    m_item.item_tax1,\n" + 
@@ -211,7 +203,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    SUM(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum\n" + 
+					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum,m_item.item_grp2,m_item.item_grp1\n" + 
 					"FROM\n" + 
 					"    t_bill_header,\n" + 
 					"    t_bill_detail,\n" + 
@@ -232,7 +224,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        SUM(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum\n" + 
+					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2 \n" + 
 					"    FROM\n" + 
 					"        t_sell_bill_header,\n" + 
 					"        t_sell_bill_detail,\n" + 
@@ -241,12 +233,12 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_detail.item_id = m_item.id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.cat_id = :catId AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0\n" + 
 					"    GROUP BY\n" + 
 					"        m_item.item_name\n" + 
-					")) a  ORDER BY  a.item_grp1,a.item_grp2,a.item_name",nativeQuery=true)
+					") a  ORDER BY  a.item_grp1,a.item_grp2,a.item_name",nativeQuery=true)
 				
 				List<SalesReportItemwise> getSaleReportItemwiseAll(@Param("catId")int catId ,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 			
 			
-			@Query(value=" SELECT\n" + 
+			@Query(value=" SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM (SELECT\n" + 
 					"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 					"    m_item.id,\n" + 
 					"    m_item.item_tax1,\n" + 
@@ -257,7 +249,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    SUM(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum\n" + 
+					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2\n" + 
 					"FROM\n" + 
 					"    t_bill_header,\n" + 
 					"    t_bill_detail,\n" + 
@@ -266,13 +258,8 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_item.id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id = :catId AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2=:flag \n" + 
 					"GROUP BY\n" + 
 					"    m_item.item_name\n" + 
-					"ORDER BY\n" + 
-					"    m_item.item_grp1,\n" + 
-					"    m_item.item_grp2,\n" + 
-					"    m_item.item_name\n" + 
-					"UNION\n" + 
-					"    (\n" + 
-					"    SELECT\n" + 
+ 					"UNION ALL " + 
+ 					"    SELECT\n" + 
 					"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 					"        m_item.id,\n" + 
 					"        m_item.item_tax1,\n" + 
@@ -283,7 +270,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        SUM(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum\n" + 
+					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2\n" + 
 					"    FROM\n" + 
 					"        t_sell_bill_header,\n" + 
 					"        t_sell_bill_detail,\n" + 
@@ -292,11 +279,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_detail.item_id = m_item.id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.cat_id = :catId AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0\n" + 
 					"    GROUP BY\n" + 
 					"        m_item.item_name\n" + 
-					"    ORDER BY\n" + 
-					"        m_item.item_grp1,\n" + 
-					"        m_item.item_grp2,\n" + 
-					"        m_item.item_name\n" + 
-					")",nativeQuery=true)
+					") ORDER BY  a.item_grp1,a.item_grp2,a.item_name",nativeQuery=true)
 				
 				List<SalesReportItemwise> getSaleReportItemwise1O2O3(@Param("catId")int catId ,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("flag") int flag);
 
@@ -332,7 +315,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 				List<SalesReportItemwise> getSaleReportItemwiseExceptTradingPackingOutlet3(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 			
 			
-			@Query(value=" SELECT\n" + 
+			@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM ( SELECT\n" + 
 					"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 					"    m_item.id,\n" + 
 					"    m_item.item_tax1,\n" + 
@@ -343,7 +326,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    SUM(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum\n" + 
+					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2 \n" + 
 					"FROM\n" + 
 					"    t_bill_header,\n" + 
 					"    t_bill_detail,\n" + 
@@ -352,13 +335,8 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_item.id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id != 5 AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2 IN(0,1)\n" + 
 					"GROUP BY\n" + 
 					"    m_item.item_name\n" + 
-					"ORDER BY\n" + 
-					"    m_item.item_grp1,\n" + 
-					"    m_item.item_grp2,\n" + 
-					"    m_item.item_name\n" + 
-					"UNION\n" + 
-					"    (\n" + 
-					"    SELECT\n" + 
+ 					"UNION ALL \n" + 
+ 					"    SELECT\n" + 
 					"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 					"        m_item.id,\n" + 
 					"        m_item.item_tax1,\n" + 
@@ -369,7 +347,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        SUM(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum\n" + 
+					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2 \n" + 
 					"    FROM\n" + 
 					"        t_sell_bill_header,\n" + 
 					"        t_sell_bill_detail,\n" + 
@@ -377,15 +355,12 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    WHERE\n" + 
 					"        t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_detail.item_id = m_item.id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0\n" + 
 					"    GROUP BY\n" + 
-					"        m_item.item_name\n" + 
-					"    ORDER BY\n" + 
-					"        m_item.item_grp1,\n" + 
-					"        m_item.item_grp2,\n" + 
-					"        m_item.item_name\n" + 
+					"        m_item.item_name) a ORDER BY  a.item_grp1,a.item_grp2,a.item_name \n" + 
+				 
 					")",nativeQuery=true)
 				List<SalesReportItemwise> getSaleReportItemwiseExceptTradingPackingOutletAll(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 			
-			@Query(value=" SELECT\n" + 
+			@Query(value=" SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum,a.sgst_rs_sum,a.cgst_rs_sum,a.igst_rs_sum,a.bill_qty_sum FROM (SELECT\n" + 
 					"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 					"    m_item.id,\n" + 
 					"    m_item.item_tax1,\n" + 
@@ -396,7 +371,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    SUM(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"    SUM(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum\n" + 
+					"    SUM(t_bill_detail.bill_qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2 \n" + 
 					"FROM\n" + 
 					"    t_bill_header,\n" + 
 					"    t_bill_detail,\n" + 
@@ -405,13 +380,8 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_item.id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id != 5 AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2=:flag \n" + 
 					"GROUP BY\n" + 
 					"    m_item.item_name\n" + 
-					"ORDER BY\n" + 
-					"    m_item.item_grp1,\n" + 
-					"    m_item.item_grp2,\n" + 
-					"    m_item.item_name\n" + 
-					"UNION\n" + 
-					"    (\n" + 
-					"    SELECT\n" + 
+ 					"UNION ALL \n" + 
+ 					"    SELECT\n" + 
 					"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 					"        m_item.id,\n" + 
 					"        m_item.item_tax1,\n" + 
@@ -422,7 +392,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"        SUM(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 					"        SUM(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
-					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum\n" + 
+					"        SUM(t_sell_bill_detail.qty) AS bill_qty_sum,m_item.item_grp1,m_item.item_grp2 \n" + 
 					"    FROM\n" + 
 					"        t_sell_bill_header,\n" + 
 					"        t_sell_bill_detail,\n" + 
@@ -430,12 +400,8 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    WHERE\n" + 
 					"        t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_detail.item_id = m_item.id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0\n" + 
 					"    GROUP BY\n" + 
-					"        m_item.item_name\n" + 
-					"    ORDER BY\n" + 
-					"        m_item.item_grp1,\n" + 
-					"        m_item.item_grp2,\n" + 
-					"        m_item.item_name\n" + 
-					")",nativeQuery=true)
+					"        m_item.item_name) a  ORDER BY  a.item_grp1,a.item_grp2,a.item_name\n" + 
+ 					")",nativeQuery=true)
 				List<SalesReportItemwise> getSaleReportItemwiseExceptTradingPackingOutlet1O2O3(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("flag") int flag);
 
 }
