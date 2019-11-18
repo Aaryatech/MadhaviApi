@@ -509,21 +509,43 @@ public class SalesReportController {
 
 	@RequestMapping(value = { "/getSaleReportItemwise" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportItemwise> getSaleReportItemwise(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("catId") int catId) {
+			@RequestParam("toDate") String toDate, @RequestParam("catId") int catId,@RequestParam("typeId") int typeId) {
 
 		List<SalesReportItemwise> salesReportItemwise = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
+			
+			int flag=-1;
+			if(typeId == 1) {
+				flag=0;
+			}else if(typeId == 2) {
+				flag=1;
+			}else {
+				 flag=-1;
+			} 
 			System.out.println("Input received " + fromDate + "" + toDate);
-			if (catId == 5) {
-				salesReportItemwise = saleReportItemwiseRepo.getSaleReportSpcakewise(fromDate, toDate);
-			} else if (catId != -3)
-				salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwise(catId, fromDate, toDate);
-			else
-				salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking(fromDate,
-						toDate);
-
+			
+			
+			if(flag!=-1) {
+				if (catId == 5 ) {
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportSpcakewise(fromDate, toDate,flag);
+				} else if (catId != -3)
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwise(catId, fromDate, toDate,flag);
+				else
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking(fromDate,
+							toDate,flag);
+			}
+			else {
+				if (catId == 5 ) {
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportSpcakewiseOutlet(fromDate, toDate);
+				} else if (catId != -3)
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwiseOutlet(catId, fromDate, toDate);
+				else
+					salesReportItemwise = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet(fromDate,
+							toDate);
+			}
+			 
 			System.out.println("salesReportItemwise " + salesReportItemwise.toString());
 
 		} catch (Exception e) {
