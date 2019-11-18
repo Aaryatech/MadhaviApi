@@ -320,7 +320,7 @@ public class DispachRestApi {
 							ItemListForDispatchReport dRport = new ItemListForDispatchReport();
 							dRport.setId(allItemList.get(j).getId());
 							dRport.setItemId(allItemList.get(j).getItemId());
-							dRport.setItemMrp2((double) stationNos.get(i));
+							dRport.setItemMrp2(stationNos.get(i));
 							dRport.setItemName(allItemList.get(j).getItemName());
 							dRport.setOrderQty(allItemList.get(j).getOrderQty());
 							dRport.setEditQty(allItemList.get(j).getOrderQty());

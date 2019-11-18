@@ -200,7 +200,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 				
 				List<SalesReportItemwise> getSaleReportItemwiseOutlet3(@Param("catId")int catId ,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
-			@Query(value=" SELECT\n" + 
+			@Query(value="SELECT a.item_hsncd,a.id,a.item_tax1,a.item_tax2,a.item_tax3,a.item_name,a.taxable_amt_sum FROM (( SELECT\n" + 
 					"    t_bill_detail.hsn_code AS item_hsncd,\n" + 
 					"    m_item.id,\n" + 
 					"    m_item.item_tax1,\n" + 
@@ -220,7 +220,7 @@ public interface SaleReportItemwiseRepo extends JpaRepository<SalesReportItemwis
 					"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.item_id = m_item.id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id = :catId AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.ex_varchar2 IN(0, 1)\n" + 
 					"GROUP BY\n" + 
 					"    m_item.item_name\n" + 
-					"	 UNION All SELECT * FROM (( \n" + 
+					"	 UNION All  \n" + 
 					"    SELECT\n" + 
 					"        t_sell_bill_detail.remark AS item_hsncd,\n" + 
 					"        m_item.id,\n" + 

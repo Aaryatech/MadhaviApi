@@ -28,7 +28,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp1AndDelStatusAndIsStockableOrderByItemGrp2Asc(String itemGrp1, int i, int stock);
 
 	@Query(value = "\n"
-			+ "select i.id,i.item_id,s.short_name as item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i,m_item_sup s where s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0", nativeQuery = true)
+			+ "select i.id,i.item_id,s.short_name as item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,i.is_saleable, i.is_stockable,i.is_fact_or_fr,i.ext_int1,i.ext_int2,i.ext_float1,i.ext_float2,i.ext_var1,i.ext_var2,i.ext_var3 from m_item i,m_item_sup s where s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0", nativeQuery = true)
 	public List<Item> findByDelStatusAndItemIdIn(@Param("itemList") List<Integer> itemList);
 
 	public List<Item> findByDelStatusOrderByItemGrp2(int i);// changed to order by subcatId 21/Apr
@@ -54,7 +54,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			+ "i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,"
 			+ "i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life "
 			+ " ,coalesce((select m_item_sup.short_name from m_item_sup where m_item_sup.item_id=i.id),0) "
-			+ "as item_name from m_item i  where i.del_status=:delStatus order by i.item_grp2 asc ,i.item_sort_id asc ", nativeQuery = true)
+			+ "as item_name,i.is_saleable, i.is_stockable,i.is_fact_or_fr, i.ext_int1, i.ext_int2, i.ext_float1, i.ext_float2, i.ext_var1, i.ext_var2, i.ext_var3 from m_item i  where i.del_status=:delStatus order by i.item_grp2 asc ,i.item_sort_id asc ", nativeQuery = true)
 	public List<Item> findByDelStatusOrderByItemGrp2AscItemSortIdAsc(@Param("delStatus") int i);
 
 	@Query(value = "select * from m_item where m_item.id IN (Select m_item_sup.item_id from m_item_sup where m_item_sup.is_allow_bday=:isAllowBday) AND m_item.del_status=:delStatus", nativeQuery = true)
@@ -105,7 +105,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp2InAndDelStatusOrderByItemGrp2AscItemNameAsc(List<String> catIdList, int delStatus);
 
 	@Query(value = "\n"
-			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,ext_int1, ext_int2, ext_float1, ext_float2, ext_var1, ext_var2, ext_var3 from m_item i where  i.id IN (:itemList) AND i.del_status=0  ORDER BY \n" + 
+			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,i.is_saleable, i.is_stockable,i.is_fact_or_fr,i.ext_int1,i.ext_int2,i.ext_float1,i.ext_float2,i.ext_var1,i.ext_var2,i.ext_var3 from m_item i where  i.id IN (:itemList) AND i.del_status=0  ORDER BY \n" + 
 			"        i.item_grp1,i.item_grp2,i.item_name", nativeQuery = true)
 	public List<Item> findItemsNameByItemId(@Param("itemList") List<Integer> itemList);
 	

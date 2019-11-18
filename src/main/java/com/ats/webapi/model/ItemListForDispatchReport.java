@@ -21,7 +21,7 @@ public class ItemListForDispatchReport {
 	private String itemName;
 	
 	@Column(name="item_mrp2")
-	private Double itemMrp2;
+	private float itemMrp2;
 	
 	@Column(name="order_qty")
 	private float orderQty;
@@ -45,11 +45,11 @@ public class ItemListForDispatchReport {
 		this.itemName = itemName;
 	}
 
-	public Double getItemMrp2() {
+	public float getItemMrp2() {
 		return itemMrp2;
 	}
 
-	public void setItemMrp2(Double itemMrp2) {
+	public void setItemMrp2(float itemMrp2) {
 		this.itemMrp2 = itemMrp2;
 	}
 
