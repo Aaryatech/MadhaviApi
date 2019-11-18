@@ -616,63 +616,159 @@ public class SalesReportController {
 			 * else salesReportItemwise =
 			 * saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking(fromDate,
 			 * toDate, flag);
-			 * 
 			 */
+			 
 			
-			if (catId == 5) {
+			if (catId != -3) {
 				if (typeIdList.contains("-1")
 						|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-					System.err.println("all");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
+				 
+					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseAll(catId,fromDate, toDate);
 
 				} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
 						&& !typeIdList.contains("-1")) {
 
-					System.err.println("1 2");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1N2(fromDate, toDate
+ 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1N2(catId,fromDate, toDate
 							 );
 
 				} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
 						&& !typeIdList.contains("-1")) {
-					System.err.println(" 2 3");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
+ 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2O3(catId,fromDate,
 							toDate, 1);
 
 				} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
 						&& !typeIdList.contains("-1")) {
-					System.err.println(" 1 3");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
+ 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2O3(catId,fromDate,
 							toDate, 0);
 
 				} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
 						&& !typeIdList.contains("2")) {
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
+					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2(catId,fromDate, toDate,
 							 0);
-					System.err.println(" 1");
-
+ 
 				} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
 						&& !typeIdList.contains("1")) {
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
+					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2(catId,fromDate, toDate,
 							 1);
-					System.err.println(" 2");
-
+ 
 				} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
 						&& !typeIdList.contains("1")) {
-					System.err.println(" 3");
-
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseOutlet(fromDate, toDate
+ 
+					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseOutlet3(catId,fromDate, toDate
 							);
 
 				} else {
 					System.err.println(" else");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
+					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseAll(catId,fromDate, toDate);
 
-				}
- 
-				
-				
+				} 
 			}
+			 else if (catId == 5) {
+				 if (typeIdList.contains("-1")
+							|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+						System.err.println("all");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
+
+					} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+							&& !typeIdList.contains("-1")) {
+
+						System.err.println("1 2");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1N2(fromDate, toDate
+								 );
+
+					} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+							&& !typeIdList.contains("-1")) {
+						System.err.println(" 2 3");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
+								toDate, 1);
+
+					} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+							&& !typeIdList.contains("-1")) {
+						System.err.println(" 1 3");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
+								toDate, 0);
+
+					} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("2")) {
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
+								 0);
+						System.err.println(" 1");
+
+					} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("1")) {
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
+								 1);
+						System.err.println(" 2");
+
+					} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("1")) {
+						System.err.println(" 3");
+
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseOutlet(fromDate, toDate
+								);
+
+					} else {
+						System.err.println(" else");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
+
+					}
+					
+			 }else {
+				 
+				 if (typeIdList.contains("-1")
+							|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+						System.err.println("all");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate, toDate);
+
+					} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+							&& !typeIdList.contains("-1")) {
+
+						System.err.println("1 2");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1N2(fromDate, toDate
+								 );
+
+					} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+							&& !typeIdList.contains("-1")) {
+						System.err.println(" 2 3");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet1O2O3(fromDate,
+								toDate, 1);
+
+					} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+							&& !typeIdList.contains("-1")) {
+						System.err.println(" 1 3");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet1O2O3(fromDate,
+								toDate, 0);
+
+					} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("2")) {
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1O2(fromDate, toDate,
+								 0);
+						System.err.println(" 1");
+
+					} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("1")) {
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1O2(fromDate, toDate,
+								 1);
+						System.err.println(" 2");
+
+					} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+							&& !typeIdList.contains("1")) {
+						System.err.println(" 3");
+
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet3(fromDate, toDate
+								);
+
+					} else {
+						System.err.println(" else");
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate, toDate);
+
+					}
+				 
+			 }
+					
 			
 			 
 
