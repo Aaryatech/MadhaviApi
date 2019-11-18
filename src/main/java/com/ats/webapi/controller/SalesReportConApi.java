@@ -30,7 +30,8 @@ public class SalesReportConApi {
 
 	@RequestMapping(value = { "/getDatewiseReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportDateMonth> getDatewiseReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,@RequestParam("typeId") int typeId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,
+			@RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<SalesReportDateMonth> salesReportDateMonthList = new ArrayList<>();
 		List<SalesReportBillwise> salesReportBillwiseList = new ArrayList<>();
@@ -39,22 +40,60 @@ public class SalesReportConApi {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			int flag=-1;
-			if(typeId==1) {
-				flag=0;
-			}else if(typeId==2) {
-				flag=1;
-			}else {
-				 flag=-1;
+
+		 
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateAll(frIdList, fromDate,
+						toDate);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+					&& !typeIdList.contains("-1")) {
+
+				System.err.println("1 2");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDate12(frIdList,
+						fromDate, toDate);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 2 3");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDate1O2O3(frIdList, fromDate,
+						toDate, 1);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 1 3");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDate1O2O3(frIdList, fromDate,
+						toDate, 0);
+
+			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("2")) {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateWithoutOutlet1O2(frIdList,
+						fromDate, toDate, 0);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateWithoutOutlet1O2(frIdList,
+						fromDate, toDate, 1);
+				System.err.println(" 2");
+
+			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				System.err.println(" 3");
+
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateOutlet(frIdList, fromDate,
+						toDate);
+
+			} else {
+				System.err.println(" else");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateAll(frIdList, fromDate,
+						toDate);
+
 			}
-			
-			if(flag!=-1) {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateWithoutOutlet(frIdList, fromDate, toDate, flag);
 
-			}else {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateOutlet(frIdList, fromDate, toDate);
-
-			} 
 			grnList = salesReportDMCreditRepo.getDataGRN(frIdList, fromDate, toDate);
 
 			gvnList = salesReportDMCreditRepo.getDataGVN(frIdList, fromDate, toDate);
@@ -124,7 +163,8 @@ public class SalesReportConApi {
 
 	@RequestMapping(value = { "/getMonthwiseReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportDateMonth> getMonthwiseReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,@RequestParam("typeId") String typeId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList,
+			@RequestParam("typeIdList") String typeIdList) {
 
 		List<SalesReportDateMonth> salesReportDateMonthList = new ArrayList<>();
 		List<SalesReportBillwise> salesReportBillwiseList = new ArrayList<>();
@@ -134,29 +174,60 @@ public class SalesReportConApi {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 
-			int flag=-1;
-			
-			
-			
-			if(Integer.parseInt(typeId)==1) {
-				flag=0;
- 			}else if(Integer.parseInt(typeId)==2) {
-				flag=1;
-			}else {
-				flag=-1;
-			}
-			 
-			
-			if(flag!=-1) { 
-				System.err.println("in  getSaleReportBillwiseByMonthWithoutOutlet");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonthWithoutOutlet(frIdList, fromDate, toDate, flag);
 
-			}else {
-				System.err.println("in  getSaleReportBillwiseByMonthOutlet");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonthOutlet(frIdList, fromDate, toDate);
- 
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonthAll(frIdList, fromDate,
+						toDate);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+					&& !typeIdList.contains("-1")) {
+
+				System.err.println("1 2");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth12(frIdList,
+						fromDate, toDate);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 2 3");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth1O2O3(frIdList, fromDate,
+						toDate, 1);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 1 3");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth1O2O3(frIdList, fromDate,
+						toDate, 0);
+
+			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("2")) {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth1O2(frIdList,
+						fromDate, toDate, 0);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByMonth1O2(frIdList,
+						fromDate, toDate, 1);
+				System.err.println(" 2");
+
+			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				System.err.println(" 3");
+
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateOutlet(frIdList, fromDate,
+						toDate);
+
+			} else {
+				System.err.println(" else");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseByDateAll(frIdList, fromDate,
+						toDate);
+
 			}
- 
+
+			  
 			grnList = salesReportDMCreditRepo.getDataGRNForMonth(frIdList, fromDate, toDate);
 
 			gvnList = salesReportDMCreditRepo.getDataGVNForMonth(frIdList, fromDate, toDate);
@@ -180,15 +251,15 @@ public class SalesReportConApi {
 				for (int j = 0; j < grnList.size(); j++) {
 
 					Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-					cal.setTime(salesReportDateMonthList.get(i).getBillDate()); 
-					int month = cal.get(Calendar.MONTH); 
-					
+					cal.setTime(salesReportDateMonthList.get(i).getBillDate());
+					int month = cal.get(Calendar.MONTH);
+
 					Calendar cal1 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-					cal1.setTime(grnList.get(j).getCrnDate()); 
-					int month1 = cal1.get(Calendar.MONTH); 
-					
-					//System.out.println(month + " " + month1);
-					if (month==month1) {
+					cal1.setTime(grnList.get(j).getCrnDate());
+					int month1 = cal1.get(Calendar.MONTH);
+
+					// System.out.println(month + " " + month1);
+					if (month == month1) {
 
 						salesReportDateMonthList.get(i).setCrnDate(grnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGrnTaxableAmt(grnList.get(j).getTaxableAmt());
@@ -210,15 +281,15 @@ public class SalesReportConApi {
 				for (int j = 0; j < gvnList.size(); j++) {
 
 					Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-					cal.setTime(salesReportDateMonthList.get(i).getBillDate()); 
-					int month = cal.get(Calendar.MONTH); 
-					
+					cal.setTime(salesReportDateMonthList.get(i).getBillDate());
+					int month = cal.get(Calendar.MONTH);
+
 					Calendar cal1 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
-					cal1.setTime(gvnList.get(j).getCrnDate()); 
-					int month1 = cal1.get(Calendar.MONTH); 
-					
+					cal1.setTime(gvnList.get(j).getCrnDate());
+					int month1 = cal1.get(Calendar.MONTH);
+
 					System.out.println(month + " " + month1);
-					if (month==month1) { 
+					if (month == month1) {
 
 						salesReportDateMonthList.get(i).setCrnDate(gvnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGvnTaxableAmt(gvnList.get(j).getTaxableAmt());
