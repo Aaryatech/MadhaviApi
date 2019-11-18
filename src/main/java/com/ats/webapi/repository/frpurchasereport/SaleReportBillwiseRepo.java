@@ -361,4 +361,99 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 		
 		List<SalesReportBillwise> getSaleReportBillwiseFrOutlet(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("catIdList") List<String> catIdList);
 
+	
+	
+	///
+	
+	
+	@Query(value=" " + 
+			"SELECT " + 
+			"        MONTHNAME(t_bill_header.bill_date)as month," + 
+			"        t_bill_header.bill_no," + 
+			"        t_bill_header.bill_date," + 
+			"        t_bill_header.invoice_no," + 
+			"        t_bill_header.fr_id," + 
+			"        t_bill_header.fr_code," + 
+			"        t_bill_header.tax_applicable," + 
+			"        sum(t_bill_detail.taxable_amt) as taxable_amt," + 
+			"        sum(t_bill_detail.total_tax) as total_tax," + 
+			"        SUM(t_bill_detail.grand_total) AS grand_total," + 
+			"        t_bill_header.round_off," + 
+			"        SUM(t_bill_detail.sgst_rs) as sgst_sum," + 
+			"        SUM(t_bill_detail.cgst_rs) as cgst_sum ," + 
+			"        SUM(t_bill_detail.igst_rs) as igst_sum," + 
+			"        m_franchisee.fr_name," + 
+			"        m_franchisee.fr_city," + 
+			"        m_franchisee.fr_gst_no," + 
+			"        m_franchisee.is_same_state," + 
+			"        m_franchisee.fr_name " + 
+			"    FROM" + 
+			"        m_franchisee," + 
+			"        t_bill_header ," + 
+			"        t_bill_detail" + 
+			"    WHERE" + 
+			"        t_bill_header.fr_id=m_franchisee.fr_id " + 
+			"        AND t_bill_header.fr_id IN(" + 
+			"           :frIdList" + 
+			"        ) " + 
+			" AND t_bill_detail.cat_id IN(" + 
+			"           :catIdList" + 
+			"        ) " + 
+			"        AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate " + 
+			"        AND t_bill_detail.bill_no=t_bill_header.bill_no" + 
+			"        " + 
+			"        AND t_bill_header.del_status=0 AND t_bill_detail.del_status=0  AND t_bill_header.ex_varchar2=:flag" + 
+			"    GROUP BY" + 
+			"       t_bill_header.bill_no",nativeQuery=true)
+		
+		List<SalesReportBillwise> getSaleReportBillwiseWithoutOutlet(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("catIdList") List<String> catIdList,@Param("flag") int flag);
+
+
+	@Query(value=" " + 
+			"SELECT " + 
+			"        MONTHNAME(t_sell_bill_header.bill_date)as month," + 
+			"        t_sell_bill_header.sell_bill_no as bill_no," + 
+			"        t_sell_bill_header.bill_date," + 
+			"        t_sell_bill_header.invoice_no," + 
+			"        t_sell_bill_header.fr_id," + 
+			"        t_sell_bill_header.fr_code," + 
+			"       '0' as tax_applicable," + 
+			"        sum(t_sell_bill_detail.taxable_amt) as taxable_amt," + 
+			"        sum(t_sell_bill_detail.total_tax) as total_tax," + 
+			"        SUM(t_sell_bill_detail.grand_total) AS grand_total," + 
+			"       '0' as  round_off," + 
+			"        SUM(t_sell_bill_detail.sgst_rs) as sgst_sum," + 
+			"        SUM(t_sell_bill_detail.cgst_rs) as cgst_sum ," + 
+			"        SUM(t_sell_bill_detail.igst_rs) as igst_sum," + 
+			"        m_franchisee.fr_name," + 
+			"        m_franchisee.fr_city," + 
+			"        m_franchisee.fr_gst_no," + 
+			"        m_franchisee.is_same_state," + 
+			"        m_franchisee.fr_name " + 
+			"    FROM" + 
+			"        m_franchisee," + 
+			"        t_sell_bill_header ," + 
+			"        t_sell_bill_detail" + 
+			"    WHERE" + 
+			"        t_sell_bill_header.fr_id=m_franchisee.fr_id " + 
+			"        AND t_sell_bill_header.fr_id IN(" + 
+			"           :frIdList" + 
+			"        ) " + 
+			" AND t_sell_bill_detail.cat_id IN(" + 
+			"           :catIdList" + 
+			"        ) " + 
+			"        AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate " + 
+			"        AND t_sell_bill_detail.sell_bill_no=t_sell_bill_header.sell_bill_no" + 
+			"        " + 
+			"        AND t_sell_bill_header.del_status=0 AND t_sell_bill_detail.del_status=0 " + 
+			"    GROUP BY" + 
+			"       t_sell_bill_header.sell_bill_no",nativeQuery=true)
+		
+		List<SalesReportBillwise> getSaleReportBillwiseWithOutlet(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("catIdList") List<String> catIdList);
+
+
+
+
+
+
 }

@@ -209,15 +209,30 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getSaleReportBillwise" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwise> getSaleReportBillwise(
 			@RequestParam("frIdList") List<String> frIdList, @RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<String> catIdList) {
+			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<String> catIdList,@RequestParam("typeId") int typeId) {
 
 		List<SalesReportBillwise> salesReportBillwiseList = null;
+		int flag=-1;
+		if(typeId==1) {
+			flag=0;
+		}else if(typeId==2) {
+			flag=1;
+		}else {
+			flag=-1;
+		}
+		
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 			System.out.println("Input received " + fromDate + "" + toDate + "" + frIdList);
-			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwise(frIdList, fromDate, toDate,
-					catIdList);
+			if(flag!=-1) {
+			salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseWithoutOutlet(frIdList, fromDate, toDate, catIdList, flag);
+				 
+			}else {
+				System.err.println("reached");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseWithOutlet(frIdList, fromDate, toDate, catIdList);
+
+			}
 			System.out.println("getSaleReportBillwise" + salesReportBillwiseList.toString());
 
 		} catch (Exception e) {
