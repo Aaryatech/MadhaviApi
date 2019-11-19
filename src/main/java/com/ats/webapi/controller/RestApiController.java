@@ -1285,29 +1285,63 @@ public class RestApiController {
 	}
 
 	@RequestMapping(value = "/getBillHeader", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("typeId") int typeId,@RequestParam("frId") List<String> frId,
+	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("typeIdList") List<String> typeIdList,@RequestParam("frId") List<String> frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		GetBillHeaderList billHeaderList = null;
-		try {
-			int flag =-1;
-			if(typeId==1) {
-				flag=0;
-			}else if(typeId==2) {
-				flag=1;
-			}else {
-				flag =-1;
-			}
+		
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			if(flag!=-1) {
-			
-			billHeaderList = getBillHeaderService.getBillHeader(frId, fromDate, toDate,flag);
-			}
-			else {
-				billHeaderList = getBillHeaderService.getBillHeader(frId, fromDate, toDate);
+			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString()+frId.toString());
+		try {
+			 
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+					&& !typeIdList.contains("-1")) {
+
+				System.err.println("1 2");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 2 3");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2O3(frId,fromDate,
+						toDate, 1);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 1 3");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2O3(frId,fromDate,
+						toDate, 0);
+
+			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("2")) {
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1O2(frId,fromDate, toDate,
+						 0);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1O2(frId,fromDate, toDate,
+						 1);
+				System.err.println(" 2");
+
+			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				System.err.println(" 3");
+
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType3(frId,fromDate, toDate
+						);
+
+			} else {
+				System.err.println(" else");
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate);
 
 			}
-			
 			
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
@@ -1320,28 +1354,62 @@ public class RestApiController {
 	 
 	
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeId") int typeId,@RequestParam("fromDate") String fromDate,
+	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
 
 		GetBillHeaderList billHeaderList = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			int flag =-1;
-			if(typeId==1) {
-				flag=0;
-			}else if(typeId==2) {
-				flag=1;
-			}else {
-				flag =-1;
-			}
+			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString());
 			 
-			
-			if(flag!=-1) {
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate,flag);
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
+					&& !typeIdList.contains("-1")) {
+
+				System.err.println("1 2");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 2 3");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseAllFrType1O2O3(fromDate,
+						toDate, 1);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
+					&& !typeIdList.contains("-1")) {
+				System.err.println(" 1 3");
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseAllFrType1O2O3(fromDate,
+						toDate, 0);
+
+			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("2")) {
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2(fromDate, toDate,
+						 0);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2(fromDate, toDate,
+						 1);
+				System.err.println(" 2");
+
+			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
+					&& !typeIdList.contains("1")) {
+				System.err.println(" 3");
+
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate
+						);
 
 			} else {
+				System.err.println(" else");
 				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
+
 			}
  		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());

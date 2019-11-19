@@ -12,27 +12,40 @@ import com.ats.webapi.model.UpdateBillStatus;
 
 public interface GetBillHeaderService {
 	
-	
-	GetBillHeaderList getBillHeader(List<String>frId, String fromDate, String toDate,int flag);
-	
-	 
-	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate,int flag);
-	 
-
-	
-	
-	
+	  
 	UpdateBillStatus updateBillStatus(UpdateBillStatus updateBillStatus);
 
-	
-	
-	//Company Outlet Bill
-	
-	
+  
+//***********************
+//All fr
 	
 	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate);
 	
-	GetBillHeaderList getBillHeader(List<String>frId, String fromDate, String toDate);
+	GetBillHeaderList getSaleReportBillwiseFrType1N2(String fromDate, String toDate);
+
+ 
+	GetBillHeaderList getSaleReportBillwiseAllFrType1O2O3(String fromDate, String toDate, int i);
+
+
+	GetBillHeaderList getSaleReportBillwiseFrType1O2(String fromDate, String toDate, int i);
+
+
+	GetBillHeaderList getSaleReportBillwiseFrOutletType3(String fromDate, String toDate);
+
+//sel fr
+	GetBillHeaderList getBillHeaderForFrAllSel(List<String> frId, String fromDate, String toDate);
+
+
+	GetBillHeaderList getSaleReportBillwiseFr1N2(List<String> frId, String fromDate, String toDate);
+
+
+	GetBillHeaderList getSaleReportBillwiseFrType1O2O3(List<String> frId, String fromDate, String toDate, int i);
+
+
+	GetBillHeaderList getSaleReportBillwiseFr1O2(List<String> frId, String fromDate, String toDate, int i);
+
+
+	GetBillHeaderList getSaleReportBillwiseFrType3(List<String> frId, String fromDate, String toDate);
 
 	
 	
