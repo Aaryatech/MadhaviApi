@@ -218,57 +218,74 @@ public class SalesReportController {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
+			int listSize=typeIdList.size();
+			
+			System.out.println("type list"+typeIdList.toString());
+			List<Integer> itmList=new ArrayList<Integer>();
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
-
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
 				System.err.println("all");
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType(frIdList,fromDate, toDate,
-						catIdList);
+						catIdList,itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
 
 				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrType1N2(frIdList,fromDate, toDate,
-						catIdList);
+						catIdList,itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
 				System.err.println(" 2 3");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType1O2O3(frIdList,fromDate,
-						toDate, catIdList, 1);
+				
+				
+				itmList=new ArrayList<Integer>();
+ 				itmList.add(1);
+				System.err.println("all");
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType(frIdList,fromDate, toDate,
+						catIdList,itmList);
+				 
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-					&& !typeIdList.contains("-1")) {
-				System.err.println(" 1 3");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType1O2O3(frIdList,fromDate,
-						toDate, catIdList, 0);
+			}
+			 else if (typeIdList.contains("1") && typeIdList.contains("3") &&  listSize==2) {
+					System.err.println(" 1 3");
+					
+					
+					itmList=new ArrayList<Integer>();
+	 				itmList.add(0);
+					System.err.println("all");
+					salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType(frIdList,fromDate, toDate,
+							catIdList,itmList);
+					 
 
-			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("2")) {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrType12(frIdList,fromDate, toDate,
-						catIdList, 0);
+				}
+
+			 else if (typeIdList.contains("2") &&  listSize==1 ) {
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrType1N2(frIdList,fromDate, toDate,
+						catIdList,itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrType12(frIdList,fromDate, toDate,
-						catIdList, 1);
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrType1N2(frIdList,fromDate, toDate,
+						catIdList,itmList);
 				System.err.println(" 2");
 
-			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
+			} else {
 				System.err.println(" 3");
 
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseFrOutletType3(frIdList,fromDate, toDate,
 						catIdList);
 
-			} else {
-				System.err.println(" else");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType(frIdList,fromDate, toDate,
-						catIdList);
-
-			}
+			} 
 
 			System.out.println("getSaleReportBillwise" + salesReportBillwiseList.toString());
 
@@ -290,58 +307,65 @@ public class SalesReportController {
 
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+		 System.out.println("type len"+typeIdList.size());
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType(fromDate, toDate,
-						catIdList);
+						catIdList,itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
 
 				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType1N2(fromDate, toDate,
-						catIdList);
+						catIdList,itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
 				System.err.println(" 2 3");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType1O2O3(fromDate,
-						toDate, catIdList, 1);
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType(fromDate,
+						toDate, catIdList,itmList );
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
 				System.err.println(" 1 3");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType1O2O3(fromDate,
-						toDate, catIdList, 0);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType(fromDate,
+						toDate, catIdList,itmList);
 
-			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("2")) {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType12(fromDate, toDate,
-						catIdList, 0);
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType1N2(fromDate, toDate,
+						catIdList,itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType12(fromDate, toDate,
-						catIdList, 1);
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrType1N2(fromDate, toDate,
+						catIdList, itmList);
 				System.err.println(" 2");
 
-			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
+			} else   {
 				System.err.println(" 3");
 
 				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrOutletType3(fromDate, toDate,
 						catIdList);
 
-			} else {
-				System.err.println(" else");
-				salesReportBillwiseList = saleReportBillwiseRepo.getSaleReportBillwiseAllFrAllType(fromDate, toDate,
-						catIdList);
-
-			}
+			}  
 
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwise  " + e.getMessage());
@@ -579,16 +603,72 @@ public class SalesReportController {
 
 	@RequestMapping(value = { "/getSaleReportBillwiseAllFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr(
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate ,@RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<SalesReportBillwiseAllFr> salesReportBillwiseAllFr = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			System.out.println("Input received " + fromDate + "" + toDate);
-			salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFr(fromDate, toDate);
-			System.out.println("getSaleReportBillwiseAllFr " + salesReportBillwiseAllFr.toString());
+			
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+		 System.out.println("type len"+typeIdList.size());
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFrAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFr1N2(
+						fromDate, toDate,itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				 
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFrAll(fromDate,
+						toDate,itmList);
+
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFrAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+ 				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFr1N2(fromDate,
+						toDate,itmList);
+
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+ 				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFr1N2(fromDate,
+						toDate,itmList);
+
+				System.err.println(" 2");
+
+			} else  {
+				System.err.println(" 3");
+
+				salesReportBillwiseAllFr = saleReportBillwiseAllFrRepo.getSaleReportBillwiseAllFr1N3(fromDate,
+						toDate);
+		}
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwise all fr  " + e.getMessage());
 			e.printStackTrace();
@@ -605,172 +685,66 @@ public class SalesReportController {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
- 
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
 			System.out.println("Input received " + fromDate + "" + toDate);
-
-			/*
-			 * if (catId == 5) { salesReportItemwise =
-			 * saleReportItemwiseRepo.getSaleReportSpcakewise(fromDate, toDate, flag); }
-			 * else if (catId != -3) salesReportItemwise =
-			 * saleReportItemwiseRepo.getSaleReportItemwise(catId, fromDate, toDate, flag);
-			 * else salesReportItemwise =
-			 * saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking(fromDate,
-			 * toDate, flag);
-			 */
-			 
-			
-			if (catId != -3) {
-				if (typeIdList.contains("-1")
-						|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
-
-				 
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseAll(catId,fromDate, toDate);
-
-				} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-						&& !typeIdList.contains("-1")) {
-
- 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1N2(catId,fromDate, toDate
-							 );
-
-				} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-						&& !typeIdList.contains("-1")) {
- 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2O3(catId,fromDate,
-							toDate, 1);
-
-				} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-						&& !typeIdList.contains("-1")) {
- 					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2O3(catId,fromDate,
-							toDate, 0);
-
-				} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-						&& !typeIdList.contains("2")) {
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2(catId,fromDate, toDate,
-							 0);
  
-				} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-						&& !typeIdList.contains("1")) {
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwise1O2(catId,fromDate, toDate,
-							 1);
- 
-				} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-						&& !typeIdList.contains("1")) {
- 
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseOutlet3(catId,fromDate, toDate
-							);
-
-				} else {
-					System.err.println(" else");
-					salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseAll(catId,fromDate, toDate);
-
-				} 
-			}
-			 else if (catId == 5) {
-				 if (typeIdList.contains("-1")
-							|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
-
-						System.err.println("all");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
-
-					} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-							&& !typeIdList.contains("-1")) {
-
-						System.err.println("1 2");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1N2(fromDate, toDate
-								 );
-
-					} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-							&& !typeIdList.contains("-1")) {
-						System.err.println(" 2 3");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
-								toDate, 1);
-
-					} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-							&& !typeIdList.contains("-1")) {
-						System.err.println(" 1 3");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2O3(fromDate,
-								toDate, 0);
-
-					} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("2")) {
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
-								 0);
-						System.err.println(" 1");
-
-					} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("1")) {
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewise1O2(fromDate, toDate,
-								 1);
-						System.err.println(" 2");
-
-					} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("1")) {
-						System.err.println(" 3");
-
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseOutlet(fromDate, toDate
-								);
-
-					} else {
-						System.err.println(" else");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportSpcakewiseAll(fromDate, toDate);
-
-					}
-					
-			 }else {
+	 
 				 
 				 if (typeIdList.contains("-1")
 							|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
-
+						itmList=new ArrayList<Integer>();
+						itmList.add(0);
+						itmList.add(1);
 						System.err.println("all");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate, toDate);
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate, toDate,itmList);
 
-					} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-							&& !typeIdList.contains("-1")) {
-
+					} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+						itmList=new ArrayList<Integer>();
+						itmList.add(0);
+						itmList.add(1);
 						System.err.println("1 2");
 						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1N2(fromDate, toDate
-								 );
+								,itmList);
 
-					} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-							&& !typeIdList.contains("-1")) {
+					} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
 						System.err.println(" 2 3");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet1O2O3(fromDate,
-								toDate, 1);
+						
+						itmList=new ArrayList<Integer>();
+ 						itmList.add(1);
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate,
+								toDate, itmList);
 
-					} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-							&& !typeIdList.contains("-1")) {
+					} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
 						System.err.println(" 1 3");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet1O2O3(fromDate,
-								toDate, 0);
+						itmList=new ArrayList<Integer>();
+						itmList.add(0);
+ 						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate,
+								toDate, itmList);
 
-					} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("2")) {
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1O2(fromDate, toDate,
-								 0);
+					} else if (typeIdList.contains("1") &&  listSize==1 ) {
+						itmList=new ArrayList<Integer>();
+						itmList.add(0);
+ 						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1N2(fromDate, toDate,
+ 								itmList);
 						System.err.println(" 1");
 
-					} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("1")) {
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1O2(fromDate, toDate,
-								 1);
+					} else if (typeIdList.contains("2") &&  listSize==1 ) {
+						itmList=new ArrayList<Integer>();
+ 						itmList.add(1);
+						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPacking1N2(fromDate, toDate,
+								itmList);
 						System.err.println(" 2");
 
-					} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-							&& !typeIdList.contains("1")) {
+					} else {
 						System.err.println(" 3");
 
 						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutlet3(fromDate, toDate
 								);
 
-					} else {
-						System.err.println(" else");
-						salesReportBillwiseList = saleReportItemwiseRepo.getSaleReportItemwiseExceptTradingPackingOutletAll(fromDate, toDate);
-
-					}
+					}  
 				 
-			 }
-					
-			
-			 
+		 
 
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwisesales Report Itemwise " + e.getMessage());

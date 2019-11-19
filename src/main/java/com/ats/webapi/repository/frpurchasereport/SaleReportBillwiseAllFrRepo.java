@@ -57,89 +57,116 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 		
 		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 */
-	
 	@Query(value="SELECT UUID() as id,\n" + 
-			"        t_bill_detail.bill_no,\n" + 
+			"        t_bill_detail.bill_no ,\n" + 
 			"        t_bill_header.bill_date,\n" + 
 			"        t_bill_header.invoice_no,\n" + 
-			"        t_bill_header.fr_id,\n" + 
-			"        t_bill_header.fr_code,\n" + 
+			"        t_bill_detail.fr_id,\n" + 
+			"        t_bill_detail.fr_code,\n" + 
 			"        m_franchisee.fr_name,\n" + 
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"      t_bill_detail.hsn_code AS item_hsncd,\n" + 
-			"        CASE  \n" + 
-			"            WHEN t_bill_detail.cat_id=5 THEN (SELECT\n" + 
-			"                m_sp_cake.sp_name  \n" + 
-			"            FROM\n" + 
-			"                m_sp_cake \n" + 
-			"            WHERE\n" + 
-			"                m_sp_cake.sp_id= t_bill_detail.item_id) \n" + 
-			"            ELSE (SELECT\n" + 
-			"                m_item.item_name \n" + 
-			"            FROM\n" + 
-			"                m_item \n" + 
-			"            WHERE\n" + 
-			"                t_bill_detail.item_id=m_item.id)\n" + 
-			"        END AS item_name,\n" + 
-			"        CASE  \n" + 
-			"            WHEN t_bill_detail.cat_id=5 THEN (SELECT\n" + 
-			"                m_sp_cake.sp_tax1  \n" + 
-			"            FROM\n" + 
-			"                m_sp_cake \n" + 
-			"            WHERE\n" + 
-			"                m_sp_cake.sp_id= t_bill_detail.item_id) \n" + 
-			"            ELSE (SELECT\n" + 
-			"                m_item.item_tax1 \n" + 
-			"            FROM\n" + 
-			"                m_item \n" + 
-			"            WHERE\n" + 
-			"                t_bill_detail.item_id=m_item.id)\n" + 
-			"        END AS item_tax1,\n" + 
-			"        CASE  \n" + 
-			"            WHEN t_bill_detail.cat_id=5 THEN (SELECT\n" + 
-			"                m_sp_cake.sp_tax2  \n" + 
-			"            FROM\n" + 
-			"                m_sp_cake \n" + 
-			"            WHERE\n" + 
-			"                m_sp_cake.sp_id= t_bill_detail.item_id) \n" + 
-			"            ELSE (SELECT\n" + 
-			"                m_item.item_tax2 \n" + 
-			"            FROM\n" + 
-			"                m_item \n" + 
-			"            WHERE\n" + 
-			"                t_bill_detail.item_id=m_item.id)\n" + 
-			"        END AS item_tax2,\n" + 
-			"        CASE  \n" + 
-			"            WHEN t_bill_detail.cat_id=5 THEN (SELECT\n" + 
-			"                m_sp_cake.sp_tax3  \n" + 
-			"            FROM\n" + 
-			"                m_sp_cake \n" + 
-			"            WHERE\n" + 
-			"                m_sp_cake.sp_id= t_bill_detail.item_id) \n" + 
-			"            ELSE (SELECT\n" + 
-			"                m_item.item_tax3 \n" + 
-			"            FROM\n" + 
-			"                m_item \n" + 
-			"            WHERE\n" + 
-			"                t_bill_detail.item_id=m_item.id)\n" + 
-			"        END AS item_tax3,\n" + 
-			"        sum(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
+			"      t_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+ 			"        sum(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
 			"        sum(t_bill_detail.taxable_amt) AS taxable_amt_sum     \n" + 
 			"    FROM\n" + 
 			"        t_bill_header,\n" + 
 			"        t_bill_detail,\n" + 
-			"        m_franchisee    \n" + 
+			"        m_franchisee ,m_item   \n" + 
 			"    WHERE\n" + 
 			"        t_bill_header.bill_no=t_bill_detail.bill_no         \n" + 
 			"        AND t_bill_header.fr_id=m_franchisee.fr_id         \n" + 
-			"        AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate  \n" + 
+			"        AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_bill_header.ex_varchar2 IN(:temp) AND  t_bill_detail.item_id=m_item.item_id \n" + 
 			"    GROUP BY\n" + 
 			"         t_bill_detail.bill_no,item_hsncd\n" + 
 			" " ,nativeQuery=true) 
-		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr1N2(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
+	
+	
+	
+	@Query(value="SELECT UUID() as id,\n" + 
+			"        t_bill_detail.bill_no ,\n" + 
+			"        t_bill_header.bill_date,\n" + 
+			"        t_bill_header.invoice_no,\n" + 
+			"        t_bill_detail.fr_id,\n" + 
+			"        t_bill_detail.fr_code,\n" + 
+			"        m_franchisee.fr_name,\n" + 
+			"        m_franchisee.fr_city,\n" + 
+			"        m_franchisee.fr_gst_no,\n" + 
+			"        m_franchisee.is_same_state,\n" + 
+			"      t_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+ 			"        sum(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
+			"        sum(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
+			"        sum(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
+			"        sum(t_bill_detail.taxable_amt) AS taxable_amt_sum     \n" + 
+			"    FROM\n" + 
+			"        t_bill_header,\n" + 
+			"        t_bill_detail,\n" + 
+			"        m_franchisee ,m_item   \n" + 
+			"    WHERE\n" + 
+			"        t_bill_header.bill_no=t_bill_detail.bill_no         \n" + 
+			"        AND t_bill_header.fr_id=m_franchisee.fr_id         \n" + 
+			"        AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_bill_header.ex_varchar2 IN(:temp) AND  t_bill_detail.item_id=m_item.item_id \n" + 
+			"    GROUP BY\n" + 
+			"         t_bill_detail.bill_no,item_hsncd UNION \n" + 
+			" (SELECT UUID() as id,\n" + 
+			"        t_sell_bill_detail.sell_bill_no as bill_no ,\n" + 
+			"        t_sell_bill_header.bill_date,\n" + 
+			"        t_sell_bill_header.invoice_no,\n" + 
+			"        t_sell_bill_header.fr_id,\n" + 
+			"        t_sell_bill_header.fr_code,\n" + 
+			"        m_franchisee.fr_name,\n" + 
+			"        m_franchisee.fr_city,\n" + 
+			"        m_franchisee.fr_gst_no,\n" + 
+			"        m_franchisee.is_same_state,\n" + 
+			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+ 			"        sum(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.taxable_amt) AS taxable_amt_sum     \n" + 
+			"    FROM\n" + 
+			"        t_sell_bill_header,\n" + 
+			"        t_sell_bill_detail,\n" + 
+			"        m_franchisee ,m_item   \n" + 
+			"    WHERE\n" + 
+			"        t_sell_bill_header.sell_bill_no=t_sell_bill_detail.sell_bill_no         \n" + 
+			"        AND t_sell_bill_header.fr_id=m_franchisee.fr_id         \n" + 
+			"        AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_sell_bill_detail.item_id=m_item.item_id \n" + 
+			"    GROUP BY\n" + 
+			"         t_bill_detail.bill_no,item_hsncd) \n" + 
+			" " ,nativeQuery=true) 
+		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFrAll(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
+	
+
+	@Query(value="SELECT UUID() as id,\n" + 
+			"        t_sell_bill_detail.sell_bill_no as bill_no ,\n" + 
+			"        t_sell_bill_header.bill_date,\n" + 
+			"        t_sell_bill_header.invoice_no,\n" + 
+			"        t_sell_bill_header.fr_id,\n" + 
+			"        t_sell_bill_header.fr_code,\n" + 
+			"        m_franchisee.fr_name,\n" + 
+			"        m_franchisee.fr_city,\n" + 
+			"        m_franchisee.fr_gst_no,\n" + 
+			"        m_franchisee.is_same_state,\n" + 
+			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+ 			"        sum(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
+			"        sum(t_sell_bill_detail.taxable_amt) AS taxable_amt_sum     \n" + 
+			"    FROM\n" + 
+			"        t_sell_bill_header,\n" + 
+			"        t_sell_bill_detail,\n" + 
+			"        m_franchisee ,m_item   \n" + 
+			"    WHERE\n" + 
+			"        t_sell_bill_header.sell_bill_no=t_sell_bill_detail.sell_bill_no         \n" + 
+			"        AND t_sell_bill_header.fr_id=m_franchisee.fr_id         \n" + 
+			"        AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_sell_bill_detail.item_id=m_item.item_id \n" + 
+			"    GROUP BY\n" + 
+			"         t_bill_detail.bill_no,item_hsncd\n" + 
+			" " ,nativeQuery=true) 
+		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr1N3(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
 }
