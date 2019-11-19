@@ -71,5 +71,63 @@ public interface GetGrnItemConfigRepository extends JpaRepository<GetGrnItemConf
 	public List<GetGrnItemConfig> getGvnItemConfig(@Param("billNo") int billNo);
 	
 	
+	//Mahendra Singh
+	//18-11-2019
+	@Query(value = "SELECT\n" + 
+			"    t_bill_header.bill_no,\n" + 
+			"    t_bill_header.bill_date_time,\n" + 
+			"    t_bill_header.bill_date,\n" + 
+			"    t_bill_detail.item_id,\n" + 
+			"    m_item.item_name,\n" + 
+			"    m_item.item_grp2,\n" + 
+			"    CASE WHEN t_bill_detail.grn_type = 0 THEN(\n" + 
+			"    SELECT\n" + 
+			"        setting_value\n" + 
+			"    FROM\n" + 
+			"        t_setting\n" + 
+			"    WHERE\n" + 
+			"        setting_key = 'GRN1'\n" + 
+			") ELSE CASE WHEN t_bill_detail.grn_type = 1 THEN(\n" + 
+			"    SELECT\n" + 
+			"        setting_value\n" + 
+			"    FROM\n" + 
+			"        t_setting\n" + 
+			"    WHERE\n" + 
+			"        setting_key = 'GRN2'\n" + 
+			") ELSE(\n" + 
+			"    SELECT\n" + 
+			"        setting_value\n" + 
+			"    FROM\n" + 
+			"        t_setting\n" + 
+			"    WHERE\n" + 
+			"        setting_key = 'GRN3'\n" + 
+			")\n" + 
+			"END\n" + 
+			"END AS grn_type,\n" + 
+			"t_bill_detail.grn_type,\n" + 
+			"ROUND(t_bill_detail.base_rate, 2) AS rate,\n" + 
+			"t_bill_detail.mrp,\n" + 
+			"t_bill_detail.bill_qty,\n" + 
+			"t_bill_detail.bill_detail_no,\n" + 
+			"t_bill_detail.bill_no,\n" + 
+			"t_bill_detail.sgst_per,\n" + 
+			"t_bill_detail.cgst_per,\n" + 
+			"t_bill_detail.igst_per,\n" + 
+			"t_bill_detail.cat_id,\n" + 
+			"t_bill_detail.menu_id,\n" + 
+			"t_bill_detail.disc_per,\n" + 
+			"t_bill_detail.hsn_code,\n" + 
+			"t_bill_header.fr_id,\n" + 
+			"t_bill_header.invoice_no\n" + 
+			"FROM\n" + 
+			"    t_bill_header,\n" + 
+			"    t_bill_detail,\n" + 
+			"    m_item\n" + 
+			"WHERE\n" + 
+			"    t_bill_header.fr_id = :frId AND t_bill_detail.bill_no = t_bill_header.bill_no AND "
+			+ "t_bill_header.status = 2 AND t_bill_detail.item_id = m_item.id AND "
+			+ "t_bill_detail.grn_type != 3 AND t_bill_detail.bill_no = :billNo", nativeQuery = true)
+	
+	public List<GetGrnItemConfig> getItemForMannualGrn(@Param("billNo")int billNo,@Param("frId") int frId);
 	
 }

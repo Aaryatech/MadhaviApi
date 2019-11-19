@@ -14,5 +14,6 @@ public interface GetGrnItemConfigService {
 	
 	//21 March Front end Manual GRN
 	GetGrnItemConfigList getItemForManualGrn(int billNo,int frId);
+	
 
 }

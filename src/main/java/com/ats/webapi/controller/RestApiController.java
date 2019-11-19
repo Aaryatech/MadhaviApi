@@ -44,6 +44,7 @@ import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GenerateBillRepository;
 import com.ats.webapi.repository.GetBillDetailsRepository;
+import com.ats.webapi.repository.GetGrnItemConfigRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
 import com.ats.webapi.repository.GetReorderByStockTypeRepository;
 import com.ats.webapi.repository.ItemDiscConfiguredRepository;
@@ -990,6 +991,30 @@ public class RestApiController {
 		return grnItemConfigList;
 
 	}
+	
+	//Mahendra
+		@Autowired GetGrnItemConfigRepository getGrnValue;
+		@RequestMapping(value = "/getItemsForManGrnByFrAndBill", method = RequestMethod.POST)
+		public @ResponseBody List<GetGrnItemConfig> getItemsForManGrnByFrAndBill(@RequestParam("frId") int frId,
+				@RequestParam("billNo") int billNo) {
+			System.out.println("inside rest /getItemsForManGrnByFrAndBill");
+			List<GetGrnItemConfig> grnItemConfigList = null;
+
+			try {
+				
+				grnItemConfigList = getGrnValue.getItemForMannualGrn(billNo, frId);			
+
+				System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());			
+
+			} catch (Exception e) {
+
+				System.out.println("restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
+				e.printStackTrace();
+			}
+
+			return grnItemConfigList;
+
+		}
 
 	@RequestMapping(value = "/deleteBill", method = RequestMethod.POST)
 	public @ResponseBody Info deleteBill(@RequestParam("delStatus") int delStatus, @RequestParam("billNo") int billNo) {
