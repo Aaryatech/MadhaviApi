@@ -8,6 +8,8 @@ import com.ats.webapi.model.MCategory;
 public interface CategoryService {
 
 	public List<MCategory> findAllCategory();
+
+	List<MCategory> findAllOnlyCategory();
 	
 
 }

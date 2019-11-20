@@ -2756,6 +2756,20 @@ public class RestApiController {
 
 		return categoryList;
 	}
+	
+	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET) 
+	public @ResponseBody CategoryList findAllOnlyCategory() {
+
+		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory();
+		CategoryList categoryList = new CategoryList();
+		ErrorMessage errorMessage = new ErrorMessage(); 
+		errorMessage.setError(false);
+		errorMessage.setMessage("Success");
+		categoryList.setErrorMessage(errorMessage);
+		categoryList.setmCategoryList(jsonCategoryResponse);
+
+		return categoryList;
+	}
 
 	// Show Flavor List
 	@RequestMapping(value = { "/showFlavourList" }, method = RequestMethod.GET)
@@ -3401,6 +3415,34 @@ public class RestApiController {
 		ItemResponse itemResponse = new ItemResponse();
 		ErrorMessage errorMessage = new ErrorMessage();
 		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList,7,frId);
+		if (items != null) {
+			itemResponse.setItemList(items);
+			errorMessage.setError(false);
+			errorMessage.setMessage("Success");
+		} else {
+			errorMessage.setError(true);
+			errorMessage.setMessage("No Items Found");
+		}
+		return itemResponse;
+
+	}
+	
+	@RequestMapping(value = "/getItemsNameByIdWithOtherItemCateIdOrSubCatId", method = RequestMethod.POST)
+	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItemCateIdOrSubCatId(@RequestParam List<Integer> itemList,@RequestParam int frId,@RequestParam int searchBy,
+			@RequestParam int catId) {
+
+		ItemResponse itemResponse = new ItemResponse();
+		ErrorMessage errorMessage = new ErrorMessage();
+		List<Item> items =  new ArrayList<>();
+		
+		if(searchBy==1) {
+			items = itemRepository.getItemsNameByIdWithOtherItemCateId(itemList,7,frId,catId);
+		}else if(searchBy==2){
+			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId(itemList,7,frId,catId);
+		}
+		
+		
+		
 		if (items != null) {
 			itemResponse.setItemList(items);
 			errorMessage.setError(false);

@@ -28,5 +28,13 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		return mCategoryList;
 	}
+	
+	@Override
+	public List<MCategory> findAllOnlyCategory() {
+		List<MCategory> mCategoryList=categoryRepository.findByDelStatus(0);
+		
+		 
+		return mCategoryList;
+	}
 		
 }
