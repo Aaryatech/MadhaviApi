@@ -106,14 +106,72 @@ public class SalesReportController {
 
 	@RequestMapping(value = { "/getTax1Report" }, method = RequestMethod.POST)
 	public @ResponseBody List<Tax1Report> getTax1Report(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+			@RequestParam("toDate") String toDate,@RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<Tax1Report> tax1ReportList = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+			
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-			tax1ReportList = tax1ReportRepository.getTax1Report(fromDate, toDate);
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				tax1ReportList = tax1ReportRepository.getTax1ReportAll(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				tax1ReportList = tax1ReportRepository.getTax1Report12(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				tax1ReportList = tax1ReportRepository.getTax1ReportAll(fromDate,
+						toDate,itmList );
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				tax1ReportList = tax1ReportRepository.getTax1ReportAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				tax1ReportList = tax1ReportRepository.getTax1Report12(fromDate, toDate,
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				tax1ReportList = tax1ReportRepository.getTax1Report12(fromDate, toDate,
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				tax1ReportList = tax1ReportRepository.getTax1Report3(fromDate, toDate);
+
+			}  
 		} catch (Exception e) {
 			System.out.println(" Exce in Tax1 Report " + e.getMessage());
 			e.printStackTrace();
@@ -604,12 +662,12 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getSaleReportBillwiseAllFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate ,@RequestParam("typeIdList") List<String> typeIdList) {
-
+		System.err.println("item are"+typeIdList.toString());
 		List<SalesReportBillwiseAllFr> salesReportBillwiseAllFr = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			
+			System.err.println("item are"+typeIdList.toString());
 			int listSize=typeIdList.size();
 			List<Integer> itmList=new ArrayList<Integer>();
 		 System.out.println("type len"+typeIdList.size());

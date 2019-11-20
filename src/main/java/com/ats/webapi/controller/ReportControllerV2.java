@@ -130,37 +130,150 @@ public class ReportControllerV2 {
 	}
 
 	@RequestMapping(value = { "/getGstRegister" }, method = RequestMethod.POST)
-	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") String frIdList,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") List<String> frIdList,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeIdList") List<String> typeIdList) {
 
 		GstRegisterList gstList = new GstRegisterList();
+		System.err.println("fr list"+frIdList.toString());
 
+		int listSize=typeIdList.size();
+		List<Integer> itmList=new ArrayList<Integer>();
 		if (frIdList.contains("-1")) {
-
+			//all fr
+			
+			System.err.println("all Fr");
 			List<GstRegisterItem> saleList1 = new ArrayList<>();
-			List<GstRegisterSp> saleList2 = new ArrayList<>();
+ 			
+		
+		 System.out.println("type len"+typeIdList.size());
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-			saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem(fromDate, toDate);
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAll(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAll(fromDate,
+						toDate,itmList );
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12(fromDate, toDate,
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12(fromDate, toDate,
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem3(fromDate, toDate);
+
+			}  
 			gstList.setGstRegItemList(saleList1);
+			
 
-			saleList2 = getGstRegisterSpRepo.getGstRegisterAllFrSp(fromDate, toDate);
-			gstList.setGstRegSpList(saleList2);
-
-		} else {
-
+		}  
+		
+		else {
+//spec fr
+			
+			System.err.println("single  Fr");
 			List<GstRegisterItem> saleList1 = new ArrayList<>();
-			List<GstRegisterSp> saleList2 = new ArrayList<>();
+ 			 
+			 System.out.println("type len"+typeIdList.size());
+				if (typeIdList.contains("-1")
+						|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-			saleList1 = getGstRegisterItemRepo.getGstRegisterSpecFrItem(fromDate, toDate, frIdList);
-			gstList.setGstRegItemList(saleList1);
+					System.err.println("all");
+					itmList=new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAllFr(fromDate, toDate,
+							itmList,frIdList);
 
-			saleList2 = getGstRegisterSpRepo.getGstRegisterSpecFrSp(fromDate, toDate, frIdList);
-			gstList.setGstRegSpList(saleList2);
+				} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+					System.err.println("1 2");
+					itmList=new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12Fr(fromDate, toDate,
+							itmList,frIdList);
+
+				} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+					System.err.println(" 2 3");
+					itmList=new ArrayList<Integer>();
+					itmList.add(1);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAllFr(fromDate,
+							toDate,itmList,frIdList );
+
+				} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+					System.err.println(" 1 3");
+					itmList=new ArrayList<Integer>();
+					itmList.add(0);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItemAllFr(fromDate,
+							toDate,itmList,frIdList);
+
+				} else if (typeIdList.contains("1") &&  listSize==1 ) {
+					
+					itmList=new ArrayList<Integer>();
+					itmList.add(0);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12Fr(fromDate, toDate,
+							itmList,frIdList);
+					System.err.println(" 1");
+
+				} else if (typeIdList.contains("2") &&  listSize==1) {
+					
+					itmList=new ArrayList<Integer>();
+					itmList.add(1);
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem12Fr(fromDate, toDate,
+							itmList,frIdList);
+					System.err.println(" 2");
+
+				} else   {
+					System.err.println(" 3");
+
+					saleList1 = getGstRegisterItemRepo.getGstRegisterAllFrItem3Fr(fromDate, toDate,frIdList);
+
+				}  
+				gstList.setGstRegItemList(saleList1);
+		 
 
 		}
 		System.err.println("size Item  gstList " + gstList.getGstRegItemList().size());
-		System.err.println("size Sp  gstList " + gstList.getGstRegSpList());
-
+ 
 		return gstList;
 	}
 

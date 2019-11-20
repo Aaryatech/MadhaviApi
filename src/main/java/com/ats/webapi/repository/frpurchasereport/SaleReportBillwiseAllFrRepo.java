@@ -61,13 +61,13 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        t_bill_detail.bill_no ,\n" + 
 			"        t_bill_header.bill_date,\n" + 
 			"        t_bill_header.invoice_no,\n" + 
-			"        t_bill_detail.fr_id,\n" + 
-			"        t_bill_detail.fr_code,\n" + 
+			"        t_bill_header.fr_id,\n" + 
+			"        t_bill_header.fr_code,\n" + 
 			"        m_franchisee.fr_name,\n" + 
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"      t_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+			"      t_bill_detail.hsn_code AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3, \n" + 
  			"        sum(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
@@ -91,13 +91,13 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        t_bill_detail.bill_no ,\n" + 
 			"        t_bill_header.bill_date,\n" + 
 			"        t_bill_header.invoice_no,\n" + 
-			"        t_bill_detail.fr_id,\n" + 
-			"        t_bill_detail.fr_code,\n" + 
+			"        t_bill_header.fr_id,\n" + 
+			"        t_bill_header.fr_code,\n" + 
 			"        m_franchisee.fr_name,\n" + 
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"      t_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+			"      t_bill_detail.hsn_code AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3, \n" + 
  			"        sum(t_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 			"        sum(t_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
@@ -122,7 +122,7 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3, \n" + 
  			"        sum(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 			"        sum(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 			"        sum(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
@@ -136,7 +136,7 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        AND t_sell_bill_header.fr_id=m_franchisee.fr_id         \n" + 
 			"        AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_sell_bill_detail.item_id=m_item.item_id \n" + 
 			"    GROUP BY\n" + 
-			"         t_bill_detail.bill_no,item_hsncd) \n" + 
+			"         t_sell_bill_detail.sell_bill_no,item_hsncd) \n" + 
 			" " ,nativeQuery=true) 
 		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFrAll(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
 	
@@ -151,7 +151,7 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 \n" + 
+			"      t_sell_bill_detail.remark AS item_hsncd, m_item.item_name, m_item.item_tax1, m_item.item_tax2, m_item.item_tax3 ,\n" + 
  			"        sum(t_sell_bill_detail.sgst_rs) AS sgst_rs_sum,\n" + 
 			"        sum(t_sell_bill_detail.cgst_rs) AS cgst_rs_sum,\n" + 
 			"        sum(t_sell_bill_detail.igst_rs) AS igst_rs_sum,\n" + 
@@ -165,7 +165,7 @@ public interface SaleReportBillwiseAllFrRepo extends JpaRepository<SalesReportBi
 			"        AND t_sell_bill_header.fr_id=m_franchisee.fr_id         \n" + 
 			"        AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND  t_sell_bill_detail.item_id=m_item.item_id \n" + 
 			"    GROUP BY\n" + 
-			"         t_bill_detail.bill_no,item_hsncd\n" + 
+			"         t_sell_bill_detail.sell_bill_no,item_hsncd\n" + 
 			" " ,nativeQuery=true) 
 		List<SalesReportBillwiseAllFr> getSaleReportBillwiseAllFr1N3(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
