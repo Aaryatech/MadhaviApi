@@ -53,30 +53,81 @@ public class ReportControllerV2 {
 
 	@RequestMapping(value = { "/getHsnBillReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnBillReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+			@RequestParam("toDate") String toDate,@RequestParam("typeIdList") List<String> typeIdList) {
 		List<HSNWiseReport> saleList = new ArrayList<>();
 		try {
 
-			saleList = hSNWiseReportRepo.getReport(fromDate, toDate);
+			/*
+			 * saleList = hSNWiseReportRepo.getReport(fromDate, toDate);
+			 */			
+			
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+			
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = hSNWiseReportRepo.getReportAll(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = hSNWiseReportRepo.getReport12(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = hSNWiseReportRepo.getReportAll(fromDate,
+						toDate,itmList );
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = hSNWiseReportRepo.getReportAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = hSNWiseReportRepo.getReport12(fromDate, toDate,
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = hSNWiseReportRepo.getReport12(fromDate, toDate,
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				saleList = hSNWiseReportRepo.getReport3(fromDate, toDate);
+
+			}   
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return saleList;
 	}
-
-	@RequestMapping(value = { "/getHsnBillReportByFrId" }, method = RequestMethod.POST)
-	public @ResponseBody List<HSNWiseReport> getHsnBillReportByFrId(@RequestParam("frId") int frId,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
-		List<HSNWiseReport> saleList = new ArrayList<>();
-		try {
-
-			saleList = hSNWiseReportRepo.getReportByFrId(frId, fromDate, toDate);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return saleList;
-	}
-
+	
+	
 	@RequestMapping(value = { "/getHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
@@ -93,6 +144,21 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
+
+	@RequestMapping(value = { "/getHsnBillReportByFrId" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNWiseReport> getHsnBillReportByFrId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+		List<HSNWiseReport> saleList = new ArrayList<>();
+		try {
+
+			saleList = hSNWiseReportRepo.getReportByFrId(frId, fromDate, toDate);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return saleList;
+	}
+
+	
 
 	@RequestMapping(value = { "/getHsnReportByFrId" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReportByFrId(@RequestParam("frId") int frId,
