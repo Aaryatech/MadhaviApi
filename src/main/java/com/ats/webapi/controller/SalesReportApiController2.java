@@ -42,7 +42,7 @@ public class SalesReportApiController2 {
 
 	@RequestMapping(value = { "/getSubCatReportApi" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatReport> getSubCatReportApi(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+			@RequestParam("toDate") String toDate, 	@RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
@@ -53,10 +53,66 @@ public class SalesReportApiController2 {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 
-			// catReportList = subCatReportRepo.getData(fromDate, toDate);
+			
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+	if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-			catReportBill = subCatBillRepRepo.getData(fromDate, toDate);
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
+						itmList);
 
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
+						itmList);
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				catReportBill = subCatBillRepRepo.getData3(fromDate, toDate);
+
+			}  
+			
 			
 			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
 			
