@@ -11,57 +11,135 @@ import com.ats.webapi.model.salesvaluereport.SalesReturnValueItemDao;
 
 public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnValueItemDao, Integer> {
 
-	@Query(value = "select\n" + "        CONCAT(:month,\n" + "        \"\",\n" + "        id) as id,\n"
-			+ "        id as item_id,\n" + "        coalesce((SELECT\n"
-			+ "            SUM(t_bill_detail.grand_total) as grand_total  \n" + "        FROM\n"
-			+ "            t_bill_detail,\n" + "            t_bill_header\n" + "        WHERE\n"
-			+ "            DATE_FORMAT(t_bill_header.bill_date,'%Y-%m')=:month\n"
-			+ "            AND t_bill_header.del_status=0\n"
-			+ "            And t_bill_header.bill_no=t_bill_detail.bill_no\n"
-			+ "            and t_bill_detail.cat_id!=5\n" + "            and m_item.id=t_bill_detail.item_id),\n"
-			+ "        0) as grand_total,\n" + "        coalesce((select\n"
-			+ "            SUM(grn_gvn_amt) as grn_qty\n" + "        from\n" + "            t_credit_note_header,\n"
-			+ "            t_credit_note_details\n" + "           \n" + "        where\n"
-			+ "            t_credit_note_header.crn_id=t_credit_note_details.crn_id\n"
-			+ "            and t_credit_note_header.is_grn=1\n"
-			+ "            and DATE_FORMAT(t_credit_note_header.crn_date,'%Y-%m')=:month\n"
-			+ "            and t_credit_note_details.cat_id!=5\n"
-			+ "            and m_item.id=t_credit_note_details.item_id\n" + "            ),\n"
-			+ "        0) as grn_qty,\n" + "        coalesce((select\n" + "            SUM(grn_gvn_amt) as gvn_qty\n"
-			+ "        from\n" + "            t_credit_note_header,\n" + "            t_credit_note_details\n"
-			+ "           \n" + "        where\n"
-			+ "            t_credit_note_header.crn_id=t_credit_note_details.crn_id  \n"
-			+ "            and DATE_FORMAT(t_credit_note_header.crn_date,'%Y-%m')=:month\n"
-			+ "            and t_credit_note_header.is_grn=0\n" + "            and t_credit_note_details.cat_id!=5\n"
-			+ "            and m_item.id=t_credit_note_details.item_id\n" + "            ),\n"
-			+ "        0) as gvn_qty  \n" + "    from\n" + "        m_item\n" + "    where\n"
-			+ "        m_item.item_grp2 IN (:subCatId)\n" + "        and m_item.del_status=0  ", nativeQuery = true)
-	List<SalesReturnValueItemDao> getSalesReturnValueItemReport1(@Param("month") String month,
+	@Query(value = "SELECT\n" + 
+			"    CONCAT(:month, id) AS id,\n" + 
+			"    id AS item_id,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            SUM(t_bill_detail.grand_total) AS grand_total\n" + 
+			"        FROM\n" + 
+			"            t_bill_detail,\n" + 
+			"            t_bill_header\n" + 
+			"        WHERE\n" + 
+			"            DATE_FORMAT(t_bill_header.bill_date, '%Y-%m') = :month AND t_bill_header.del_status = 0 AND t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.cat_id != 5 AND m_item.id = t_bill_detail.item_id \n" + 
+			"    ),\n" + 
+			"    0\n" + 
+			"    ) AS grand_total,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            SUM(grn_gvn_amt) AS grn_qty\n" + 
+			"        FROM\n" + 
+			"            t_credit_note_header,\n" + 
+			"            t_credit_note_details\n" + 
+			"        WHERE\n" + 
+			"            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 1 AND DATE_FORMAT(\n" + 
+			"                t_credit_note_header.crn_date,\n" + 
+			"                '%Y-%m'\n" + 
+			"            ) = :month AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n" + 
+			"    ),\n" + 
+			"    0\n" + 
+			"    ) AS grn_qty,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            SUM(grn_gvn_amt) AS gvn_qty\n" + 
+			"        FROM\n" + 
+			"            t_credit_note_header,\n" + 
+			"            t_credit_note_details\n" + 
+			"        WHERE\n" + 
+			"            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND DATE_FORMAT(\n" + 
+			"                t_credit_note_header.crn_date,\n" + 
+			"                '%Y-%m'\n" + 
+			"            ) = :month AND t_credit_note_header.is_grn = 0 AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n" + 
+			"    ),\n" + 
+			"    0\n" + 
+			"    ) AS gvn_qty\n" + 
+			"FROM\n" + 
+			"    m_item\n" + 
+			"WHERE\n" + 
+			"    m_item.item_grp2 IN(:subCatId) AND m_item.del_status = 0 ", nativeQuery = true)
+	List<SalesReturnValueItemDao> getSalesReturnValueItemReport12(@Param("month") String month,
 			@Param("subCatId") List<Integer> subCatId);
-
-	@Query(value = "select  CONCAT(:month,\"\",sp_id) as id,\n" + 
-			"        sp_id as item_id,\n" + 
-			"        coalesce((SELECT SUM(t_bill_detail.grand_total) as grand_total FROM t_bill_detail,t_bill_header WHERE\n" + 
-			"			            DATE_FORMAT(t_bill_header.bill_date,'%Y-%m')=:month" + 
-			"			            AND t_bill_header.del_status=0" + 
-			"			            And t_bill_header.bill_no=t_bill_detail.bill_no" + 
-			"			            and t_bill_detail.cat_id=5 and m_sp_cake.sp_id=t_bill_detail.item_id),\n" + 
-			"			        0) as grand_total," + 
-			"         coalesce((select SUM(grn_gvn_amt) as grn_qty from t_credit_note_header, t_credit_note_details where\n" + 
-			"			            t_credit_note_header.crn_id=t_credit_note_details.crn_id" + 
-			"			            and t_credit_note_header.is_grn=1" + 
-			"			            and DATE_FORMAT(t_credit_note_header.crn_date,'%Y-%m')=:month" + 
-			"			            and t_credit_note_details.cat_id=5" + 
-			"			            and m_sp_cake.sp_id=t_credit_note_details.item_id)," + 
-			"			        0) as grn_qty," + 
-			"         coalesce((select  SUM(grn_gvn_amt) as gvn_qty" + 
-			"	 from  t_credit_note_header,t_credit_note_details where" + 
-			"	 t_credit_note_header.crn_id=t_credit_note_details.crn_id " + 
-			"	 and DATE_FORMAT(t_credit_note_header.crn_date,'%Y-%m')=:month" + 
-			"	 and t_credit_note_header.is_grn=0  and t_credit_note_details.cat_id=5" + 
-			"	 and m_sp_cake.sp_id=t_credit_note_details.item_id ),0) as gvn_qty" + 
-			" from m_sp_cake where\n" + 
-			"	  m_sp_cake.del_status=0", nativeQuery = true)
-	List<SalesReturnValueItemDao> getSalesReturnValueSpReport1(@Param("month") String month);
+	
+	
+	/*
+	 * @Query(value = "SELECT\n" + "    CONCAT(:month, id) AS id,\n" +
+	 * "    id AS item_id,\n" + "    COALESCE(\n" + "        (\n" +
+	 * "        SELECT\n" +
+	 * "            SUM(t_sell_bill_detail.grand_total) AS grand_total\n" +
+	 * "        FROM\n" + "            t_sell_bill_detail,\n" +
+	 * "            t_sell_bill_header\n" + "        WHERE\n" +
+	 * "            DATE_FORMAT(\n" +
+	 * "                t_sell_bill_header.bill_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_detail.cat_id != 5 AND m_item.id = t_sell_bill_detail.item_id\n"
+	 * + "    ),\n" + "    0\n" + "    ) AS grand_total,\n" + "    COALESCE(\n" +
+	 * "        (\n" + "        SELECT\n" +
+	 * "            SUM(grn_gvn_amt) AS grn_qty\n" + "        FROM\n" +
+	 * "            t_credit_note_header,\n" + "            t_credit_note_details\n"
+	 * + "        WHERE\n" +
+	 * "            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 1 AND DATE_FORMAT(\n"
+	 * + "                t_credit_note_header.crn_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n"
+	 * + "    ),\n" + "    0\n" + "    ) AS grn_qty,\n" + "    COALESCE(\n" +
+	 * "        (\n" + "        SELECT\n" +
+	 * "            SUM(grn_gvn_amt) AS gvn_qty\n" + "        FROM\n" +
+	 * "            t_credit_note_header,\n" + "            t_credit_note_details\n"
+	 * + "        WHERE\n" +
+	 * "            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND DATE_FORMAT(\n"
+	 * + "                t_credit_note_header.crn_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_credit_note_header.is_grn = 0 AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n"
+	 * + "    ),\n" + "    0\n" + "    ) AS gvn_qty\n" + "FROM\n" + "    m_item\n" +
+	 * "WHERE\n" + "    m_item.item_grp2 IN(:subCatId) AND m_item.del_status = 0",
+	 * nativeQuery = true) List<SalesReturnValueItemDao>
+	 * getSalesReturnValueItemReport3(@Param("month") String month,
+	 * 
+	 * @Param("subCatId") List<Integer> subCatId);
+	 * 
+	 * 
+	 * @Query(value = "SELECT\n" + "    CONCAT(:month, id) AS id,\n" +
+	 * "    id AS item_id,\n" + "    COALESCE(\n" + "        ((\n" +
+	 * "        SELECT\n" +
+	 * "            SUM(t_bill_detail.grand_total) AS grand_total\n" +
+	 * "        FROM\n" + "            t_bill_detail,\n" +
+	 * "            t_bill_header\n" + "        WHERE\n" +
+	 * "            DATE_FORMAT(t_bill_header.bill_date, '%Y-%m') = :month AND t_bill_header.del_status = 0 AND t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_detail.cat_id != 5 AND m_item.id = t_bill_detail.item_id AND t_bill_header.ex_varchar1 IN (:itmList)\n"
+	 * + "    )+( SELECT\n" +
+	 * "            SUM(t_sell_bill_detail.grand_total) AS grand_total\n" +
+	 * "        FROM\n" + "            t_sell_bill_detail,\n" +
+	 * "            t_sell_bill_header\n" + "        WHERE\n" +
+	 * "            DATE_FORMAT(\n" +
+	 * "                t_sell_bill_header.bill_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_detail.cat_id != 5 AND m_item.id = t_sell_bill_detail.item_id)),\n"
+	 * + "    0\n" + "    ) AS grand_total,\n" + "    COALESCE(\n" + "        (\n" +
+	 * "        SELECT\n" + "            SUM(grn_gvn_amt) AS grn_qty\n" +
+	 * "        FROM\n" + "            t_credit_note_header,\n" +
+	 * "            t_credit_note_details\n" + "        WHERE\n" +
+	 * "            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 1 AND DATE_FORMAT(\n"
+	 * + "                t_credit_note_header.crn_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n"
+	 * + "    ),\n" + "    0\n" + "    ) AS grn_qty,\n" + "    COALESCE(\n" +
+	 * "        (\n" + "        SELECT\n" +
+	 * "            SUM(grn_gvn_amt) AS gvn_qty\n" + "        FROM\n" +
+	 * "            t_credit_note_header,\n" + "            t_credit_note_details\n"
+	 * + "        WHERE\n" +
+	 * "            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND DATE_FORMAT(\n"
+	 * + "                t_credit_note_header.crn_date,\n" +
+	 * "                '%Y-%m'\n" +
+	 * "            ) = :month AND t_credit_note_header.is_grn = 0 AND t_credit_note_details.cat_id != 5 AND m_item.id = t_credit_note_details.item_id\n"
+	 * + "    ),\n" + "    0\n" + "    ) AS gvn_qty\n" + "FROM\n" + "    m_item\n" +
+	 * "WHERE\n" + "    m_item.item_grp2 IN(:subCatId) AND m_item.del_status = 0",
+	 * nativeQuery = true) List<SalesReturnValueItemDao>
+	 * getSalesReturnValueItemReportAll(@Param("month") String month,
+	 * 
+	 * @Param("subCatId") List<Integer> subCatId,@Param("itmList") List<Integer>
+	 * itmList);
+	 */
 
 }

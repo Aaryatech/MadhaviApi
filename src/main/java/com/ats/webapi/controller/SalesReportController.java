@@ -1036,7 +1036,7 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getSaleReportRoyConsoByCatAllFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFr(
 			@RequestParam("catIdList") List<String> catIdList, @RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("getBy") int getBy, @RequestParam("type") int type) {
+			@RequestParam("toDate") String toDate, @RequestParam("getBy") int getBy, @RequestParam("type") int type,@RequestParam("typeIdList") List<String> typeIdList) {
 		System.out.println("getBy" + getBy);
 		List<SalesReportRoyalty> salesReportRoyaltyList = null;
 		try {
@@ -1060,80 +1060,35 @@ public class SalesReportController {
 			}
 			if (getBy == 1) {
 				if (type == 1) {
-					if (catIdList.contains("5")) {
-						System.err.println("New 1");
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getSaleReportRoyConsoByCatAllFr(catIdList,
-								fromDate, toDate);
-						List<String> spcats = new ArrayList<>(Arrays.asList("5"));
-						List<SalesReportRoyalty> salesReportRoyaltyListRes = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrForSpCake(spcats, fromDate, toDate);
-						System.out.println("getSaleReportBillwisespppppp" + salesReportRoyaltyListRes.toString());
-						salesReportRoyaltyList.addAll(salesReportRoyaltyListRes);
-
-					} else {
+					 
 
 						salesReportRoyaltyList = salesReportRoyaltyRepo.getSaleReportRoyConsoByCatAllFr(catIdList,
 								fromDate, toDate);
 						System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
-					}
+					 
 				} else if (type == 2) {
-					if (catIdList.contains("5")) {
-						System.err.println("New 2");
-
-						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrAndType2(catIdList, fromDate, toDate);
-
-						List<String> spcats = new ArrayList<>(Arrays.asList("5"));
-						List<SalesReportRoyalty> salesReportRoyaltyListRes = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrForSpCakeAndType2(spcats, fromDate, toDate);
-						System.out.println("getSaleReportBillwisespppppp" + salesReportRoyaltyListRes.toString());
-						salesReportRoyaltyList.addAll(salesReportRoyaltyListRes);
-
-					} else {
+					 
 
 						salesReportRoyaltyList = salesReportRoyaltyRepo
 								.getSaleReportRoyConsoByCatAllFrAndType2(catIdList, fromDate, toDate);
 						System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
-					}
+					 
 				}
 			} else {
 				if (type == 1) {
-					if (catIdList.contains("5")) {
-						System.err.println("New 3");
-
-						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrByGrandTotal(catIdList, fromDate, toDate);
-						List<String> spcats = new ArrayList<>(Arrays.asList("5"));
-						List<SalesReportRoyalty> salesReportRoyaltyListRes = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrForSpCakeByGrandTotal(spcats, fromDate, toDate);
-						System.out.println("getSaleReportBillwisespppppp" + salesReportRoyaltyListRes.toString());
-						salesReportRoyaltyList.addAll(salesReportRoyaltyListRes);
-
-					} else {
-
+					 
 						salesReportRoyaltyList = salesReportRoyaltyRepo
 								.getSaleReportRoyConsoByCatAllFrByGrandTotal(catIdList, fromDate, toDate);
 						System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
-					}
+					 
 				} else if (type == 2) {
 
-					if (catIdList.contains("5")) {
-						System.err.println("New 4");
-
-						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrByGrandTotalAndType2(catIdList, fromDate, toDate);
-						List<String> spcats = new ArrayList<>(Arrays.asList("5"));
-						List<SalesReportRoyalty> salesReportRoyaltyListRes = salesReportRoyaltyRepo
-								.getSaleReportRoyConsoByCatAllFrForSpCakeByGrandTotalAndType2(spcats, fromDate, toDate);
-						System.out.println("getSaleReportBillwisespppppp" + salesReportRoyaltyListRes.toString());
-						salesReportRoyaltyList.addAll(salesReportRoyaltyListRes);
-
-					} else {
+					 
 
 						salesReportRoyaltyList = salesReportRoyaltyRepo
 								.getSaleReportRoyConsoByCatAllFrByGrandTotalAndType2(catIdList, fromDate, toDate);
 						System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
-					}
+					
 				}
 			}
 
@@ -1171,7 +1126,7 @@ public class SalesReportController {
 	// Report----------------------------------------------
 	@RequestMapping(value = { "/getSalesReturnQtyReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReturnQtyReportList> getSalesReturnQtyReport(@RequestParam("fromYear") int fromYear,
-			@RequestParam("toYear") int toYear) throws ParseException {
+			@RequestParam("toYear") int toYear, @RequestParam("typeIdList") List<String> typeIdList) throws ParseException {
 
 		List<SalesReturnQtyReportList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -1197,8 +1152,68 @@ public class SalesReportController {
 			System.err.println("months" + months.get(i));
 			SalesReturnQtyReportList salesReturnQtyReportList = new SalesReturnQtyReportList();
 			salesReturnQtyReportList.setMonth(month);
-			List<SalesReturnQtyDao> salesReturnQtyDao = salesReturnQtyDaoRepository
-					.getSalesReturnQtyReport(months.get(i));
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+			List<SalesReturnQtyDao> salesReturnQtyDao = new ArrayList<SalesReturnQtyDao>();
+			
+ 			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				salesReturnQtyDao  =salesReturnQtyDaoRepository.getSalesReturnQtyReportAll(months.get(i),
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReport12(months.get(i),
+						itmList);
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReportAll(months.get(i),
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReportAll(months.get(i),
+						itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReport12(months.get(i),
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReport12(months.get(i),
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getSalesReturnQtyReport3(months.get(i)
+						);
+
+			}   
+			 
 			salesReturnQtyReportList.setSalesReturnQtyDaoList(salesReturnQtyDao);
 			repList.add(salesReturnQtyReportList);
 		}
@@ -1208,7 +1223,7 @@ public class SalesReportController {
 
 	@RequestMapping(value = { "/getSalesReturnValueReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReturnValueDaoList> getSalesReturnValueReport(@RequestParam("fromYear") int fromYear,
-			@RequestParam("toYear") int toYear) throws ParseException {
+			@RequestParam("toYear") int toYear,@RequestParam("typeIdList") List<String> typeIdList) throws ParseException {
 
 		List<SalesReturnValueDaoList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -1224,6 +1239,11 @@ public class SalesReportController {
 		months.add(toYear + "-01");
 		months.add(toYear + "-02");
 		months.add(toYear + "-03");
+		
+		int listSize=typeIdList.size();
+		List<Integer> itmList=new ArrayList<Integer>();
+		System.err.println("type list"+typeIdList.toString());
+		
 
 		for (int i = 0; i < months.size(); i++) {
 			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM");
@@ -1232,11 +1252,78 @@ public class SalesReportController {
 			String month = formatter.format(parser.parse(months.get(i)));
 			SalesReturnValueDaoList salesReturnValueReportList = new SalesReturnValueDaoList();
 			salesReturnValueReportList.setMonth(month);
-			List<SalesReturnValueDao> salesReturnValueDao = salesReturnValueDaoRepository
-					.getSalesReturnValueReport(months.get(i));
+			List<SalesReturnValueDao> salesReturnValueDao = new ArrayList<SalesReturnValueDao>();
+			  
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReportAll(months.get(i),itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReport12(months.get(i),itmList);
+
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReportAll(months.get(i),itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReportAll(months.get(i),itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReport12(months.get(i),itmList);
+
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReport12(months.get(i),itmList);
+
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				  salesReturnValueDao = salesReturnValueDaoRepository.getSalesReturnValueReport3(months.get(i));
+
+
+			}  
+			 
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			salesReturnValueReportList.setSalesReturnQtyValueList(salesReturnValueDao);
 			repList.add(salesReturnValueReportList);
 		}
+		
+		
+		
+		
 		return repList;
 
 	}
@@ -1269,13 +1356,10 @@ public class SalesReportController {
 			SalesReturnItemDaoList salesReturnItemDaoList = new SalesReturnItemDaoList();
 			salesReturnItemDaoList.setMonth(month);
 			List<SalesReturnValueItemDao> salesReturnValueDao = null;
-			if (subCatId.contains(4)) {// 4 is sp sub cAt
-				salesReturnValueDao = salesReturnValueItemDaoRepo.getSalesReturnValueSpReport1(months.get(i));
-			} else {
-				salesReturnValueDao = salesReturnValueItemDaoRepo.getSalesReturnValueItemReport1(months.get(i),
-						subCatId);
-			}
-
+	  
+					salesReturnValueDao = salesReturnValueItemDaoRepo.getSalesReturnValueItemReport12(months.get(i),subCatId
+							);
+ 
 			salesReturnItemDaoList.setSalesReturnValueItemDao(salesReturnValueDao);
 			repList.add(salesReturnItemDaoList);
 			System.out.println(months.toString());
