@@ -29,7 +29,6 @@ public class SellBillDetail implements Serializable{
 	
 	@Column(name="item_id")
 	private int itemId;
-	
 
 	@Column(name="mrp")
 	private float mrp;
@@ -61,6 +60,12 @@ public class SellBillDetail implements Serializable{
 	@Column(name="igst_rs")
 	private float igstRs;
 	
+	@Column(name="disc_per")
+	private float discPer;//new
+	
+	@Column(name="disc_amt")
+	private float discAmt;//new
+	
 	@Column(name="total_tax")
 	private float totalTax;
 	
@@ -76,6 +81,23 @@ public class SellBillDetail implements Serializable{
 	@Column(name="bill_stock_type")
 	private int billStockType;
 	
+	
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
 	public int getSellBillDetailNo() {
 		return sellBillDetailNo;
 	}
@@ -234,9 +256,10 @@ public class SellBillDetail implements Serializable{
 		return "SellBillDetail [sellBillDetailNo=" + sellBillDetailNo + ", sellBillNo=" + sellBillNo + ", catId="
 				+ catId + ", itemId=" + itemId + ", mrp=" + mrp + ", qty=" + qty + ", mrpBaseRate=" + mrpBaseRate
 				+ ", taxableAmt=" + taxableAmt + ", sgstPer=" + sgstPer + ", sgstRs=" + sgstRs + ", cgstPer=" + cgstPer
-				+ ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", totalTax=" + totalTax
-				+ ", grandTotal=" + grandTotal + ", remark=" + remark + ", delStatus=" + delStatus + "]";
+				+ ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", discPer=" + discPer
+				+ ", discAmt=" + discAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + ", remark="
+				+ remark + ", delStatus=" + delStatus + ", billStockType=" + billStockType + "]";
 	}
-	
+
 	
 }

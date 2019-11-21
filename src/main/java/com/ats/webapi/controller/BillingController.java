@@ -112,9 +112,13 @@ public class BillingController {
 	  }
 	@RequestMapping(value = { "/saveSellBillHeader" }, method = RequestMethod.POST)
 	public @ResponseBody SellBillHeader saveSellBillHeader(@RequestBody SellBillHeader sellBillHeader) {
-
-		SellBillHeader sellBillHeaderRes=expressBillService.saveSellBillHeader(sellBillHeader);
-		    
+		SellBillHeader sellBillHeaderRes=new SellBillHeader();
+		try {
+		sellBillHeaderRes=expressBillService.saveSellBillHeader(sellBillHeader);
+		    System.err.println("sellBillHeaderRes"+sellBillHeaderRes.toString());
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
 			return sellBillHeaderRes;
 	  }
 	@RequestMapping(value = { "/saveSellBillDetail" }, method = RequestMethod.POST)
