@@ -19,33 +19,35 @@ public interface GetBillHeaderService {
 //***********************
 //All fr
 	
-	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate);
+	GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate,List<Integer> templist);
 	
-	GetBillHeaderList getSaleReportBillwiseFrType1N2(String fromDate, String toDate);
-
- 
-	GetBillHeaderList getSaleReportBillwiseAllFrType1O2O3(String fromDate, String toDate, int i);
-
-
-	GetBillHeaderList getSaleReportBillwiseFrType1O2(String fromDate, String toDate, int i);
-
-
+	GetBillHeaderList getSaleReportBillwiseFrType1N2(String fromDate, String toDate,List<Integer> templist);
+	
+	
 	GetBillHeaderList getSaleReportBillwiseFrOutletType3(String fromDate, String toDate);
 
+ 
+	//1GetBillHeaderList getSaleReportBillwiseAllFrType1O2O3(String fromDate, String toDate, int i);
+
+
+	//1GetBillHeaderList getSaleReportBillwiseFrType1O2(String fromDate, String toDate, int i);
+
+
+
 //sel fr
-	GetBillHeaderList getBillHeaderForFrAllSel(List<String> frId, String fromDate, String toDate);
+	GetBillHeaderList getBillHeaderForFrAllSel(List<String> frId, String fromDate, String toDate,List<Integer> templist);
 
 
-	GetBillHeaderList getSaleReportBillwiseFr1N2(List<String> frId, String fromDate, String toDate);
-
-
-	GetBillHeaderList getSaleReportBillwiseFrType1O2O3(List<String> frId, String fromDate, String toDate, int i);
-
-
-	GetBillHeaderList getSaleReportBillwiseFr1O2(List<String> frId, String fromDate, String toDate, int i);
-
+	GetBillHeaderList getSaleReportBillwiseFr1N2(List<String> frId, String fromDate, String toDate,List<Integer> templist);
 
 	GetBillHeaderList getSaleReportBillwiseFrType3(List<String> frId, String fromDate, String toDate);
+
+	//1GetBillHeaderList getSaleReportBillwiseFrType1O2O3(List<String> frId, String fromDate, String toDate, int i);
+
+
+	//1GetBillHeaderList getSaleReportBillwiseFr1O2(List<String> frId, String fromDate, String toDate, int i);
+
+
 
 	
 	

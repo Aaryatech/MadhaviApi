@@ -1319,55 +1319,68 @@ public class RestApiController {
 			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString()+frId.toString());
 		try {
 			 
+			  
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+			
+
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
-				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate,
+						itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
 
 				System.err.println("1 2");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
+						itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
 				System.err.println(" 2 3");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2O3(frId,fromDate,
-						toDate, 1);
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate,
+						toDate,itmList );
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
 				System.err.println(" 1 3");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2O3(frId,fromDate,
-						toDate, 0);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate,
+						toDate,itmList);
 
-			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("2")) {
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1O2(frId,fromDate, toDate,
-						 0);
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
+						itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1O2(frId,fromDate, toDate,
-						 1);
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
+						itmList);
 				System.err.println(" 2");
 
-			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
+			} else   {
 				System.err.println(" 3");
 
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType3(frId,fromDate, toDate
-						);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType3(frId,fromDate, toDate);
 
-			} else {
-				System.err.println(" else");
-				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate);
-
-			}
-			
+			}  
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();
@@ -1387,55 +1400,67 @@ public class RestApiController {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString());
-			 
+			  
+			int listSize=typeIdList.size();
+			List<Integer> itmList=new ArrayList<Integer>();
+			System.err.println("type list"+typeIdList.toString());
+			
+			
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate,
+						itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && !typeIdList.contains("3")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
 
 				System.err.println("1 2");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
+						itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") && !typeIdList.contains("1")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
 				System.err.println(" 2 3");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseAllFrType1O2O3(fromDate,
-						toDate, 1);
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate,
+						toDate,itmList );
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && !typeIdList.contains("2")
-					&& !typeIdList.contains("-1")) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
 				System.err.println(" 1 3");
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseAllFrType1O2O3(fromDate,
-						toDate, 0);
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate,
+						toDate,itmList);
 
-			} else if (typeIdList.contains("1") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("2")) {
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2(fromDate, toDate,
-						 0);
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
+						itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") && !typeIdList.contains("3") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1O2(fromDate, toDate,
-						 1);
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
+						itmList);
 				System.err.println(" 2");
 
-			} else if (typeIdList.contains("3") && !typeIdList.contains("2") && !typeIdList.contains("-1")
-					&& !typeIdList.contains("1")) {
+			} else   {
 				System.err.println(" 3");
 
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate
-						);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
 
-			} else {
-				System.err.println(" else");
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate);
-
-			}
+			}  
  		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();

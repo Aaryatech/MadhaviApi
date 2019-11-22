@@ -28,11 +28,11 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
 	
 	
 	@Override
-	public GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate) {
+	public GetBillHeaderList getBillHeaderForAllFr(String fromDate, String toDate,List<Integer> tempList) {
 
 		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
 
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFrAll(fromDate, toDate);
+		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFrAll(fromDate, toDate,tempList);
 
 		Info info = new Info();
 
@@ -57,11 +57,11 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
 	}
 	
 	@Override
-	public GetBillHeaderList getSaleReportBillwiseFrType1N2( String fromDate, String toDate) {
+	public GetBillHeaderList getSaleReportBillwiseFrType1N2( String fromDate, String toDate,List<Integer> tempList) {
 
 		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
 
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr1N2(fromDate, toDate);
+		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr1N2(fromDate, toDate,tempList);
 
 		Info info = new Info();
 
@@ -86,65 +86,9 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
 	}
 	
 	
-	@Override
-	public GetBillHeaderList getSaleReportBillwiseAllFrType1O2O3(String fromDate, String toDate,int flag) {
-
-		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr1O2O3(fromDate, toDate,flag);
-
-		Info info = new Info();
-
-		if (billHeaders != null) {
-
-			getBillHeaderList.setGetBillHeaders(billHeaders);
-
-			info.setError(false);
-			info.setMessage("Bill header List received successfully");
-
-		}
-
-		else {
-
-			info.setError(true);
-			info.setMessage("Error: failed to receive Bill Header List ");
-		}
-
-		getBillHeaderList.setInfo(info);
-
-		return getBillHeaderList;
-	}
+	 
 	
-	
-	
-	@Override
-	public GetBillHeaderList getSaleReportBillwiseFrType1O2(String fromDate, String toDate,int flag) {
-
-		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr1O2(fromDate, toDate,flag);
-
-		Info info = new Info();
-
-		if (billHeaders != null) {
-
-			getBillHeaderList.setGetBillHeaders(billHeaders);
-
-			info.setError(false);
-			info.setMessage("Bill header List received successfully");
-
-		}
-
-		else {
-
-			info.setError(true);
-			info.setMessage("Error: failed to receive Bill Header List ");
-		}
-
-		getBillHeaderList.setInfo(info);
-
-		return getBillHeaderList;
-	}
+	 
 	
 	
 
@@ -183,11 +127,11 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
  
 
 	@Override
-	public GetBillHeaderList getBillHeaderForFrAllSel(List<String> frId,String fromDate, String toDate) {
+	public GetBillHeaderList getBillHeaderForFrAllSel(List<String> frId,String fromDate, String toDate,List<Integer> tempList) {
 
 		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
 
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForFrAll(frId,fromDate, toDate);
+		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForFrAll(frId,fromDate, toDate,tempList);
 
 		Info info = new Info();
 
@@ -212,42 +156,14 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
 	}
 	
 	
-	@Override
-	public GetBillHeaderList getSaleReportBillwiseFrType1O2O3(List<String> frId,String fromDate, String toDate,int flag) {
-
-		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForFr1O2O3(frId,fromDate, toDate,flag);
-
-		Info info = new Info();
-
-		if (billHeaders != null) {
-
-			getBillHeaderList.setGetBillHeaders(billHeaders);
-
-			info.setError(false);
-			info.setMessage("Bill header List received successfully");
-
-		}
-
-		else {
-
-			info.setError(true);
-			info.setMessage("Error: failed to receive Bill Header List ");
-		}
-
-		getBillHeaderList.setInfo(info);
-
-		return getBillHeaderList;
-	}
-	
+	 
 
 	@Override
-	public GetBillHeaderList getSaleReportBillwiseFr1N2(List<String> frId,String fromDate, String toDate) {
+	public GetBillHeaderList getSaleReportBillwiseFr1N2(List<String> frId,String fromDate, String toDate,List<Integer> tempList) {
 
 		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
 
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeader1N2(frId,fromDate, toDate);
+		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeader1N2(frId,fromDate, toDate,tempList);
 
 		Info info = new Info();
 
@@ -272,35 +188,7 @@ public class GetBillHeaderServiceImpl implements GetBillHeaderService {
 	}
 	
 	
-	@Override
-	public GetBillHeaderList getSaleReportBillwiseFr1O2(List<String> frId,String fromDate, String toDate,int flag) {
-
-		GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-
-		List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeader1O2(frId,fromDate, toDate,flag);
-
-		Info info = new Info();
-
-		if (billHeaders != null) {
-
-			getBillHeaderList.setGetBillHeaders(billHeaders);
-
-			info.setError(false);
-			info.setMessage("Bill header List received successfully");
-
-		}
-
-		else {
-
-			info.setError(true);
-			info.setMessage("Error: failed to receive Bill Header List ");
-		}
-
-		getBillHeaderList.setInfo(info);
-
-		return getBillHeaderList;
-	}
-	
+	 
 	
 	@Override
 	public GetBillHeaderList getSaleReportBillwiseFrType3(List<String> frId,String fromDate, String toDate) {
