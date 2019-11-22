@@ -949,63 +949,1257 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 
 //Changes By harsha 
 		
+		//1 starts
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+			List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFr12(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
 		
-		@Query(value="\n" + 
-				"SELECT UUID() as uid,m_item.id,m_item.item_name,m_item.item_grp2 as sub_cat_id,m_category.cat_name,m_category.cat_id,COALESCE((SELECT SUM(t_bill_detail.bill_qty) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS t_bill_qty,COALESCE((SELECT SUM(t_bill_detail.taxable_amt) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date 	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id  =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS  t_bill_taxable_amt,\n" + 
-				"\n" + 
-				"COALESCE((SELECT SUM(t_grn_gvn.grn_gvn_qty) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN  :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn=1 AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_grn_qty,\n" + 
-				"\n" + 
-				"COALESCE((SELECT SUM(t_grn_gvn.taxable_amt) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN   :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn=1 AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_grn_taxable_amt,\n" + 
-				"\n" + 
-				"COALESCE((SELECT SUM(t_grn_gvn.grn_gvn_qty) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN   :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn  In (0,2) AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_gvn_qty,\n" + 
-				"\n" + 
-				"COALESCE((SELECT SUM(t_grn_gvn.taxable_amt) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN  :fromDate AND :toDate And t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn  In (0,2) AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_gvn_taxable_amt\n" + 
-				"\n" + 
-				"FROM m_item,m_category where m_item.item_grp1=m_category.cat_id AND m_category.cat_id IN(:catIdList) and m_item.del_status=0   group by m_item.id order by m_item.item_grp1,m_item.item_grp2,m_item.item_name",nativeQuery=true)
-			List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFr(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+		
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+			List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFr3(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 		
 		
-		
-		@Query(value="SELECT UUID() as uid,m_item.id,m_item.item_name,m_item.item_grp2 as sub_cat_id,m_category.cat_name,m_category.cat_id,COALESCE((SELECT SUM(t_bill_detail.bill_qty) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS t_bill_qty,COALESCE((SELECT SUM(t_bill_detail.taxable_amt) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date 	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id  =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS  t_bill_taxable_amt," + 
-				"               COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_qty) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN  :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn=1 AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_grn_qty," + 
-				"	            COALESCE((SELECT SUM(t_credit_note_details.taxable_amt) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN   :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn=1 AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_grn_taxable_amt," + 
-				"				COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_qty) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN   :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn  In (0,2) AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_gvn_qty," + 
-				"				COALESCE((SELECT SUM(t_credit_note_details.taxable_amt) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN  :fromDate AND :toDate And t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn  In (0,2) AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_gvn_taxable_amt" + 
-				"				FROM m_item,m_category where m_item.item_grp1=m_category.cat_id AND m_category.cat_id IN(:catIdList) and m_item.del_status=0   group by m_item.id order by m_item.item_grp1,m_item.item_grp2,m_item.item_name",nativeQuery=true)
-		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrAndType2(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        ( (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    )+(  SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0)),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        ((\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    )+(  SELECT\n" + 
+				"            SUM(t_sell_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"             t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_detail.del_status = 0 )),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+			List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFr123(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
+		 
+		
+		//1 ends 
+		
+		//2 starts
+		 
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrAndType212(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
 
-		@Query(value="" + 
-				"				SELECT UUID() as uid, m_item.id,m_item.item_name,m_item.item_grp2 as sub_cat_id,m_category.cat_name,m_category.cat_id,COALESCE((SELECT SUM(t_bill_detail.bill_qty) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS t_bill_qty,COALESCE((SELECT SUM(t_bill_detail.grand_total) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date 	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS  t_bill_taxable_amt," + 
-				"				" + 
-				"				COALESCE((SELECT SUM(t_grn_gvn.grn_gvn_qty) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN  :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn=1 AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_grn_qty," + 
-				"				" + 
-				"				COALESCE((SELECT SUM(t_grn_gvn.apr_grand_total) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN   :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn=1 AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_grn_taxable_amt," + 
-				"				" + 
-				"				COALESCE((SELECT SUM(t_grn_gvn.grn_gvn_qty) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN   :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn  In (0,2) AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_gvn_qty," + 
-				"				" + 
-				"				COALESCE((SELECT SUM(t_grn_gvn.apr_grand_total) FROM t_grn_gvn,t_grn_gvn_header,m_franchisee WHERE t_grn_gvn_header.grngvn_date  BETWEEN  :fromDate AND :toDate And t_grn_gvn_header.grn_gvn_header_id=t_grn_gvn.grn_gvn_header_id AND m_item.id=t_grn_gvn.item_id  AND t_grn_gvn_header.is_grn  In (0,2) AND t_grn_gvn.cat_id IN(:catIdList) AND  t_grn_gvn.del_status=0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id and t_grn_gvn.grn_gvn_status=6),0) AS  t_gvn_taxable_amt" + 
-				"				" + 
-				"				FROM m_item,m_category where m_item.item_grp1=m_category.cat_id AND m_category.cat_id IN(:catIdList) and m_item.del_status=0   group by m_item.id order by m_item.item_grp1,m_item.item_grp2,m_item.item_name",nativeQuery=true)
-		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotal(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
+		 
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0 \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0  \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrAndType23(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+		
+		 
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        ((\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    )+( SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0 )),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        ( (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    )+(  SELECT\n" + 
+				"            SUM(t_sell_bill_detail.taxable_amt)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0)),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.taxable_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrAndType2All(@Param("catIdList") List<String> catIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
+		
+		 
+		
+		//2 ends 
+		
+		//3 starts
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varcha2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varcha2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotal12(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
+				@Param("toDate")String toDate,@Param("temp")List<Integer> temp);
+		
+		
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0  \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0  \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotal3(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
 				@Param("toDate")String toDate);
 		
 		
+		@Query(value="SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(t_bill_detail.bill_qty)\n" + 
+				"            FROM\n" + 
+				"                t_bill_detail,\n" + 
+				"                t_bill_header,\n" + 
+				"                m_franchisee\n" + 
+				"            WHERE\n" + 
+				"                t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varcha2 IN(:temp)\n" + 
+				"        ) +(\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0\n" + 
+				"    )\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(t_bill_detail.grand_total)\n" + 
+				"            FROM\n" + 
+				"                t_bill_detail,\n" + 
+				"                t_bill_header,\n" + 
+				"                m_franchisee\n" + 
+				"            WHERE\n" + 
+				"                t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varcha2 IN(:temp)\n" + 
+				"        ) +(\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0\n" + 
+				"    )\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn = 1 AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.grn_gvn_qty)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_grn_gvn.apr_grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_grn_gvn,\n" + 
+				"            t_grn_gvn_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_grn_gvn_header.grngvn_date BETWEEN :fromDate AND :toDate AND t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id AND m_item.id = t_grn_gvn.item_id AND t_grn_gvn_header.is_grn IN(0, 2) AND t_grn_gvn.cat_id IN(:catIdList) AND t_grn_gvn.del_status = 0 AND t_grn_gvn_header.fr_id = m_franchisee.fr_id AND t_grn_gvn.grn_gvn_status = 6\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotal3All(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
+				@Param("toDate")String toDate,@Param("temp")List<Integer> temp);
 		
-		@Query(value="	SELECT UUID() as uid,m_item.id,m_item.item_name,m_item.item_grp2 as sub_cat_id,m_category.cat_name,m_category.cat_id,COALESCE((SELECT SUM(t_bill_detail.bill_qty) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id =m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS t_bill_qty,COALESCE((SELECT SUM(t_bill_detail.grand_total) FROM t_bill_detail,t_bill_header,m_franchisee WHERE t_bill_header.bill_date 	BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no=t_bill_detail.bill_no AND m_item.id=t_bill_detail.item_id AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status=0),0) AS  t_bill_taxable_amt," + 
-				"								" + 
-				"								COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_qty) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN  :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn=1 AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_grn_qty," + 
-				"								" + 
-				"								COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_amt) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN   :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn=1 AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_grn_taxable_amt," + 
-				"								" + 
-				"								COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_qty) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN   :fromDate AND :toDate AND t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn  In (0,2) AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_gvn_qty," + 
-				"								" + 
-				"								COALESCE((SELECT SUM(t_credit_note_details.grn_gvn_amt) FROM t_credit_note_details,t_credit_note_header,m_franchisee WHERE t_credit_note_header.crn_date  BETWEEN  :fromDate AND :toDate And t_credit_note_header.crn_id=t_credit_note_details.crn_id AND m_item.id=t_credit_note_details.item_id  AND t_credit_note_header.is_grn  In (0,2) AND t_credit_note_details.cat_id IN(:catIdList) AND  t_credit_note_details.del_status=0 AND t_credit_note_header.fr_id = m_franchisee.fr_id),0) AS  t_gvn_taxable_amt" + 
-				"								" + 
-				"								FROM m_item,m_category where m_item.item_grp1=m_category.cat_id AND m_category.cat_id IN(:catIdList) and m_item.del_status=0   group by m_item.id order by m_item.item_grp1,m_item.item_grp2,m_item.item_name",nativeQuery=true)	
+		//3 ends 
+		
+		//4 starts
+		 
+		@Query(value="	SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.bill_qty)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_bill_detail,\n" + 
+				"            t_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0  AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)	
 		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotalAndType2(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
+				@Param("toDate")String toDate,@Param("temp")List<Integer> temp);
+		
+		
+		@Query(value="	SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0 \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0  \n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)	
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotalAndType43(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
 				@Param("toDate")String toDate);
-
+		@Query(value="	SELECT\n" + 
+				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
+				"        (\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(t_bill_detail.bill_qty)\n" + 
+				"            FROM\n" + 
+				"                t_bill_detail,\n" + 
+				"                t_bill_header,\n" + 
+				"                m_franchisee\n" + 
+				"            WHERE\n" + 
+				"                t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"        ) +(\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.qty)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0\n" + 
+				"    )\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"    ) AS t_bill_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(t_bill_detail.grand_total)\n" + 
+				"            FROM\n" + 
+				"                t_bill_detail,\n" + 
+				"                t_bill_header,\n" + 
+				"                m_franchisee\n" + 
+				"            WHERE\n" + 
+				"                t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+				"        ) +(\n" + 
+				"        SELECT\n" + 
+				"            SUM(t_sell_bill_detail.grand_total)\n" + 
+				"        FROM\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_detail.cat_id IN(:catIdList) AND t_sell_bill_header.del_status = 0\n" + 
+				"    )\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"    ) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_qty,\n" + 
+				"    COALESCE(\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            )\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_details,\n" + 
+				"            t_credit_note_header,\n" + 
+				"            m_franchisee\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
+				"    ),\n" + 
+				"    0\n" + 
+				"    ) AS t_gvn_taxable_amt\n" + 
+				"FROM\n" + 
+				"    m_item,\n" + 
+				"    m_category\n" + 
+				"WHERE\n" + 
+				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0\n" + 
+				"GROUP BY\n" + 
+				"    m_item.id\n" + 
+				"ORDER BY\n" + 
+				"    m_item.item_grp1,\n" + 
+				"    m_item.item_grp2,\n" + 
+				"    m_item.item_name",nativeQuery=true)	
+		List<SalesReportRoyalty> getSaleReportRoyConsoByCatAllFrByGrandTotalAndType4All(@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
+				@Param("toDate")String toDate,@Param("temp")List<Integer> temp);
 
 
 }
