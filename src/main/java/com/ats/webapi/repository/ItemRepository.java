@@ -298,7 +298,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.item_mrp1,\n" + 
 			"            i.item_mrp2,\n" + 
 			"            i.item_mrp3,\n" + 
-			"            s.item_hsncd as item_image,\n" + 
+			"            i.item_image,\n" + 
 			"            i.item_tax1,\n" + 
 			"            i.item_tax2,\n" + 
 			"            i.item_tax3,\n" + 
@@ -340,7 +340,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.item_mrp1,\n" + 
 			"            i.item_mrp2,\n" + 
 			"            i.item_mrp3,\n" + 
-			"            s.item_hsncd as item_image,\n" + 
+			"            i.item_image,\n" + 
 			"            i.item_tax1,\n" + 
 			"            i.item_tax2,\n" + 
 			"            i.item_tax3,\n" + 

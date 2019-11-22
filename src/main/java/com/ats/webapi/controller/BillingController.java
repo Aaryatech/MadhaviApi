@@ -21,6 +21,7 @@ import com.ats.webapi.model.SellBillDetailList;
 import com.ats.webapi.model.SellBillDetails;
 import com.ats.webapi.model.SellBillEditBean;
 import com.ats.webapi.model.SellBillHeader;
+import com.ats.webapi.model.TransactionDetail;
 import com.ats.webapi.model.bill.ExpressBillService;
 import com.ats.webapi.model.bill.GetItemHsnCode;
 import com.ats.webapi.model.bill.SlabwiseBill;
@@ -31,6 +32,7 @@ import com.ats.webapi.repository.SellBillDetailEditRepository;
 import com.ats.webapi.repository.SellBillDetailRepository;
 import com.ats.webapi.repository.SellBillDetailsRepository;
 import com.ats.webapi.repository.SlabwiseDetailsRepository;
+import com.ats.webapi.repository.TransactionDetailRepository;
 import com.ats.webapi.repository.UpdateSellBillTimeStampRepo;
 
 @RestController
@@ -56,6 +58,17 @@ public class BillingController {
 	
 	@Autowired
 	SellBillDetailEditRepository sellBillDetailEditRepository;
+	@Autowired
+	TransactionDetailRepository transactionDetailRepository;
+	
+	@RequestMapping(value = { "/saveTransactionDetail" }, method = RequestMethod.POST)
+	public @ResponseBody List<TransactionDetail> saveTransactionDetail(@RequestBody List<TransactionDetail> transactionDetail) {
+
+		List<TransactionDetail> transactionDetailRes=transactionDetailRepository.save(transactionDetail);
+		    
+			return transactionDetailRes;
+	  }
+	
 	
 	@RequestMapping(value = { "/updateSellBillTimeStamp" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateSellBillTimeStamp(@RequestParam("sellBillNo") int sellBillNo,

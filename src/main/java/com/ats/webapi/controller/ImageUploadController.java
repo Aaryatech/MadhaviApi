@@ -44,7 +44,7 @@ public class ImageUploadController {
 	public static final String M_SP_CAKE_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/MSPCAKE/";
 	public static final String MSG_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/MSG/";
 	public static final String FR_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/FR/";
-	public static final String ITEM_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/ITEM/";
+	public static final String ITEM_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/DAIRYITEM/";
 	public static final String RAW_MAT_IMAGE_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/RAWMAT/";
 	public static final String GATE_ENTRY_IMAGE_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/GATEENTRY/";
 	private static final String SP_CAKE_FOLDER = "/opt/apache-tomcat-8.5.37/webapps/uploads/SPCAKE/";
