@@ -179,17 +179,134 @@ public class ReportControllerV2 {
 
 	@RequestMapping(value = { "/getSalesReportV2" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReport> getSalesReportV2(@RequestParam("frIdList") List<String> frIdList,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<SalesReport> saleList = new ArrayList<>();
 
-		if (frIdList.contains("-1")) {
+		int listSize=typeIdList.size();
+		List<Integer> itmList=new ArrayList<Integer>();
+		System.err.println("type list"+typeIdList.toString());
+		
+		
 
-			saleList = getSalesReportRepo.getSalesReportAllFr(fromDate, toDate);
+		if (frIdList.contains("-1")) {
+ 
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
+
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportAllFrAll(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportAllFr12(fromDate, toDate,
+						itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportAllFrAll(fromDate,
+						toDate,itmList );
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = getSalesReportRepo.getSalesReportAllFrAll(fromDate,
+						toDate,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = getSalesReportRepo.getSalesReportAllFr12(fromDate, toDate,
+						itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportAllFr12(fromDate, toDate,
+						itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				saleList = getSalesReportRepo.getSalesReportAllFr3(fromDate, toDate);
+
+			}   
+			
+			
 
 		} else {
+  
+			if (typeIdList.contains("-1")
+					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
-			saleList = getSalesReportRepo.getSalesReportSpecFr(fromDate, toDate, frIdList);
+				System.err.println("all");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportSpecFrAll(fromDate, toDate,
+						frIdList,itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+
+				System.err.println("1 2");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportSpecFr12(fromDate, toDate,
+						frIdList,itmList);
+
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+				System.err.println(" 2 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportSpecFrAll(fromDate, toDate,
+						frIdList,itmList);
+
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+				System.err.println(" 1 3");
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = getSalesReportRepo.getSalesReportSpecFrAll(fromDate, toDate,
+						frIdList,itmList);
+
+			} else if (typeIdList.contains("1") &&  listSize==1 ) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(0);
+				saleList = getSalesReportRepo.getSalesReportSpecFr12(fromDate, toDate,
+						frIdList,itmList);
+				System.err.println(" 1");
+
+			} else if (typeIdList.contains("2") &&  listSize==1) {
+				
+				itmList=new ArrayList<Integer>();
+				itmList.add(1);
+				saleList = getSalesReportRepo.getSalesReportSpecFr12(fromDate, toDate,
+						frIdList,itmList);
+				System.err.println(" 2");
+
+			} else   {
+				System.err.println(" 3");
+
+				saleList = getSalesReportRepo.getSalesReportSpecFr3(fromDate, toDate,frIdList);
+
+			}   
+			
 		}
 
 		return saleList;
