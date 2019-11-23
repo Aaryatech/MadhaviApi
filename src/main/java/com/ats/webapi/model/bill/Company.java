@@ -83,6 +83,18 @@ public class Company implements Serializable{
 	@Column(name="del_chalan_prefix")
 	private String delChalanPrefix;
 	
+	@Column(name="from_pin_code")
+	private int fromPinCode;
+	
+	
+	public int getFromPinCode() {
+		return fromPinCode;
+	}
+
+	public void setFromPinCode(int fromPinCode) {
+		this.fromPinCode = fromPinCode;
+	}
+
 	public String getDelChalanPrefix() {
 		return delChalanPrefix;
 	}
@@ -275,7 +287,7 @@ public class Company implements Serializable{
 				+ ", fdaLicenceNo=" + fdaLicenceNo + ", fromDate=" + fromDate + ", toDate=" + toDate + ", delStatus="
 				+ delStatus + ", panNo=" + panNo + ", exVar1=" + exVar1 + ", exVar2=" + exVar2 + ", exVar3=" + exVar3
 				+ ", exVar4=" + exVar4 + ", exVar5=" + exVar5 + ", exVar6=" + exVar6 + ", delChalanPrefix="
-				+ delChalanPrefix + "]";
+				+ delChalanPrefix + ", fromPinCode=" + fromPinCode + "]";
 	}
-    
+
 }
