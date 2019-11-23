@@ -24,7 +24,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"        FROM\n" + 
 			"            t_bill_header\n" + 
 			"        WHERE\n" + 
-			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar2 IN (:temp) \n" + 
+			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id\n" + 
 			"    ),\n" + 
 			"    0\n" + 
 			"    ) AS sale_value,\n" + 
@@ -55,7 +55,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    0\n" + 
 			"    ) AS gvn_value\n" + 
 			"FROM\n" + 
-			"    m_franchisee\n" + 
+			"    m_franchisee  WHERE   m_franchisee.kg_1 IN (:temp) AND m_franchisee.del_status=0 \n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name", nativeQuery = true)
 
@@ -105,7 +105,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    0\n" + 
 			"    ) AS gvn_value\n" + 
 			"FROM\n" + 
-			"    m_franchisee\n" + 
+			"    m_franchisee WHERE m_franchisee.kg_1=1 AND m_franchisee.del_status=0\n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name", nativeQuery = true)
 
@@ -125,13 +125,13 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"        FROM\n" + 
 			"            t_bill_header\n" + 
 			"        WHERE\n" + 
-			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar2 IN (:temp)\n" + 
+			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id \n" + 
 			"    )+( SELECT\n" + 
 			"            SUM(t_sell_bill_header.grand_total)\n" + 
 			"        FROM\n" + 
-			"            t_sell_bill_header\n" + 
+			"            t_sell_bill_header,m_franchisee fr \n" + 
 			"        WHERE\n" + 
-			"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND m_franchisee.fr_id = t_sell_bill_header.fr_id)),\n" + 
+			"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND fr.fr_id = t_sell_bill_header.fr_id AND  fr.kg_1=1)),\n" + 
 			"    0\n" + 
 			"    ) AS sale_value,\n" + 
 			"    COALESCE(\n" + 
@@ -161,7 +161,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    0\n" + 
 			"    ) AS gvn_value\n" + 
 			"FROM\n" + 
-			"    m_franchisee\n" + 
+			"    m_franchisee WHERE m_franchisee.kg_1 IN (:temp) AND m_franchisee.del_status=0\n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name", nativeQuery = true)
 
@@ -185,7 +185,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"        FROM\n" + 
 			"            t_bill_header\n" + 
 			"        WHERE\n" + 
-			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
+			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id \n" + 
 			"    ),\n" + 
 			"    0\n" + 
 			"    ) AS sale_value,\n" + 
@@ -216,9 +216,9 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    0\n" + 
 			"    ) AS gvn_value\n" + 
 			"FROM\n" + 
-			"    m_franchisee\n" + 
+			"    m_franchisee   \n" + 
 			"WHERE\n" + 
-			"    m_franchisee.fr_id IN(:frIdList)\n" + 
+			"    m_franchisee.fr_id IN(:frIdList) AND  m_franchisee.kg_1 IN (:temp) AND m_franchisee.del_status=0\n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name", nativeQuery = true)
 
@@ -272,7 +272,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"FROM\n" + 
 			"    m_franchisee\n" + 
 			"WHERE\n" + 
-			"    m_franchisee.fr_id IN(:frIdList)\n" + 
+			"    m_franchisee.fr_id IN(:frIdList) AND  m_franchisee.kg_1=1 AND m_franchisee.del_status=0\n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name", nativeQuery = true)
 
@@ -294,13 +294,13 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"        FROM\n" + 
 			"            t_bill_header\n" + 
 			"        WHERE\n" + 
-			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar2 IN (:temp) \n" + 
+			"            t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id  \n" + 
 			"    )+(SELECT\n" + 
 			"            SUM(t_sell_bill_header.grand_total)\n" + 
 			"        FROM\n" + 
-			"            t_sell_bill_header\n" + 
+			"            t_sell_bill_header,m_franchisee fr       \n" + 
 			"        WHERE\n" + 
-			"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND m_franchisee.fr_id = t_sell_bill_header.fr_id)),\n" + 
+			"            t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status = 0 AND fr.fr_id = t_sell_bill_header.fr_id AND fr.kg_1=1 )),\n" + 
 			"    0\n" + 
 			"    ) AS sale_value,\n" + 
 			"    COALESCE(\n" + 
@@ -332,7 +332,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"FROM\n" + 
 			"    m_franchisee\n" + 
 			"WHERE\n" + 
-			"    m_franchisee.fr_id IN(:frIdList)\n" + 
+			"    m_franchisee.fr_id IN(:frIdList)  AND  m_franchisee.kg_1 IN(:temp) AND m_franchisee.del_status=0 \n" + 
 			"ORDER BY\n" + 
 			"    m_franchisee.fr_name ", nativeQuery = true)
 
