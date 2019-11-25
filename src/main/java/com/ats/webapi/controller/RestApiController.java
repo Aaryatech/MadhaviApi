@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.*;
+import com.ats.webapi.model.bill.BillTransaction;
+import com.ats.webapi.model.bill.Expense;
 import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.model.grngvn.GetGrnGvnForCreditNoteList;
 import com.ats.webapi.model.grngvn.GrnGvnHeader;
@@ -37,6 +39,8 @@ import com.ats.webapi.model.phpwebservice.GetLogin;
 import com.ats.webapi.model.phpwebservice.SpecialCakeBean;
 import com.ats.webapi.model.phpwebservice.SpecialCakeBeanList;
 import com.ats.webapi.model.remarks.GetAllRemarksList;
+import com.ats.webapi.repo.BillTransationRepo;
+import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repository.ConfigureFrListRepository;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FranchiseForDispatchRepository;
@@ -991,30 +995,33 @@ public class RestApiController {
 		return grnItemConfigList;
 
 	}
-	
-	//Mahendra
-		@Autowired GetGrnItemConfigRepository getGrnValue;
-		@RequestMapping(value = "/getItemsForManGrnByFrAndBill", method = RequestMethod.POST)
-		public @ResponseBody List<GetGrnItemConfig> getItemsForManGrnByFrAndBill(@RequestParam("frId") int frId,
-				@RequestParam("billNo") int billNo) {
-			System.out.println("inside rest /getItemsForManGrnByFrAndBill");
-			List<GetGrnItemConfig> grnItemConfigList = null;
 
-			try {
-				
-				grnItemConfigList = getGrnValue.getItemForMannualGrn(billNo, frId);			
+	// Mahendra
+	@Autowired
+	GetGrnItemConfigRepository getGrnValue;
 
-				System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());			
+	@RequestMapping(value = "/getItemsForManGrnByFrAndBill", method = RequestMethod.POST)
+	public @ResponseBody List<GetGrnItemConfig> getItemsForManGrnByFrAndBill(@RequestParam("frId") int frId,
+			@RequestParam("billNo") int billNo) {
+		System.out.println("inside rest /getItemsForManGrnByFrAndBill");
+		List<GetGrnItemConfig> grnItemConfigList = null;
 
-			} catch (Exception e) {
+		try {
 
-				System.out.println("restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
-				e.printStackTrace();
-			}
+			grnItemConfigList = getGrnValue.getItemForMannualGrn(billNo, frId);
 
-			return grnItemConfigList;
+			System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());
 
+		} catch (Exception e) {
+
+			System.out.println(
+					"restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
+			e.printStackTrace();
 		}
+
+		return grnItemConfigList;
+
+	}
 
 	@RequestMapping(value = "/deleteBill", method = RequestMethod.POST)
 	public @ResponseBody Info deleteBill(@RequestParam("delStatus") int delStatus, @RequestParam("billNo") int billNo) {
@@ -1233,6 +1240,21 @@ public class RestApiController {
 
 	}
 
+	// harsha
+
+	@Autowired
+	BillTransationRepo billTransationRepo;
+	
+	
+	@RequestMapping(value = { "/saveBillTransaction" }, method = RequestMethod.POST)
+	@ResponseBody
+	public BillTransaction saveBillTransaction(@RequestBody BillTransaction routeMaster) {
+
+		BillTransaction jsonResult = billTransationRepo.save(routeMaster);
+
+		return jsonResult;
+	}
+
 	@RequestMapping(value = { "/updateBillData" }, method = RequestMethod.POST)
 
 	public @ResponseBody Info updateBillData(@RequestBody PostBillDataCommon postBillDataCommon)
@@ -1310,77 +1332,69 @@ public class RestApiController {
 	}
 
 	@RequestMapping(value = "/getBillHeader", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("typeIdList") List<String> typeIdList,@RequestParam("frId") List<String> frId,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("typeIdList") List<String> typeIdList,
+			@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
 		GetBillHeaderList billHeaderList = null;
-		
-			fromDate = Common.convertToYMD(fromDate);
-			toDate = Common.convertToYMD(toDate);
-			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString()+frId.toString());
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		System.err.println("data*****" + fromDate + toDate + typeIdList.toString() + frId.toString());
 		try {
-			 
-			  
-			int listSize=typeIdList.size();
-			List<Integer> itmList=new ArrayList<Integer>();
-			System.err.println("type list"+typeIdList.toString());
-			
-			
+
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
 
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId, fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
 				System.err.println("1 2");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId, fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 2 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate,
-						toDate,itmList );
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId, fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 1 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId,fromDate,
-						toDate,itmList);
+				billHeaderList = getBillHeaderService.getBillHeaderForFrAllSel(frId, fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") &&  listSize==1 ) {
-				
-				itmList=new ArrayList<Integer>();
+			} else if (typeIdList.contains("1") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId, fromDate, toDate, itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") &&  listSize==1) {
-				
-				itmList=new ArrayList<Integer>();
+			} else if (typeIdList.contains("2") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId,fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFr1N2(frId, fromDate, toDate, itmList);
 				System.err.println(" 2");
 
-			} else   {
+			} else {
 				System.err.println(" 3");
 
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType3(frId,fromDate, toDate);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType3(frId, fromDate, toDate);
 
-			}  
+			}
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();
@@ -1389,79 +1403,71 @@ public class RestApiController {
 		return billHeaderList;
 
 	}
-	 
-	
+
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
 		GetBillHeaderList billHeaderList = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			 System.err.println("data*****"+fromDate+toDate+typeIdList.toString());
-			  
-			int listSize=typeIdList.size();
-			List<Integer> itmList=new ArrayList<Integer>();
-			System.err.println("type list"+typeIdList.toString());
-			
-			
+			System.err.println("data*****" + fromDate + toDate + typeIdList.toString());
+
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
+
 			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
 				System.err.println("1 2");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 2 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate,
-						toDate,itmList );
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 1 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate,
-						toDate,itmList);
+				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") &&  listSize==1 ) {
-				
-				itmList=new ArrayList<Integer>();
+			} else if (typeIdList.contains("1") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate, itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") &&  listSize==1) {
-				
-				itmList=new ArrayList<Integer>();
+			} else if (typeIdList.contains("2") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate,
-						itmList);
+				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrType1N2(fromDate, toDate, itmList);
 				System.err.println(" 2");
 
-			} else   {
+			} else {
 				System.err.println(" 3");
 
 				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
 
-			}  
- 		} catch (Exception e) {
+			}
+		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -2150,8 +2156,10 @@ public class RestApiController {
 			@RequestParam("itemImage") String itemImage, @RequestParam("itemTax1") float itemTax1,
 			@RequestParam("itemTax2") float itemTax2, @RequestParam("itemTax3") float itemTax3,
 			@RequestParam("itemIsUsed") int itemIsUsed, @RequestParam("itemSortId") float itemSortId,
-			@RequestParam("grnTwo") int grnTwo,@RequestParam("itemShelfLife")int itemShelfLife,@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable, 
-			@RequestParam("isFactOrFr") int isFactOrFr, @RequestParam("isBillable") int isBillable, @RequestParam("billIitems") String billIitems) {
+			@RequestParam("grnTwo") int grnTwo, @RequestParam("itemShelfLife") int itemShelfLife,
+			@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable,
+			@RequestParam("isFactOrFr") int isFactOrFr, @RequestParam("isBillable") int isBillable,
+			@RequestParam("billIitems") String billIitems) {
 
 		Item item = new Item();
 		item.setItemImage(itemImage);
@@ -2178,13 +2186,13 @@ public class RestApiController {
 		item.setIsSaleable(isSaleable);
 		item.setIsStockable(isStockable);
 		item.setIsFactOrFr(isFactOrFr);
-		item.setExtInt1(isBillable); 
+		item.setExtInt1(isBillable);
 		item.setExtVar1(billIitems);
 		item.setExtVar2("NA");
 		item.setExtVar3("NA");
-		
-		Item jsonResult =itemRepository.save(item);
-		System.err.println("jsonResult"+jsonResult.toString());
+
+		Item jsonResult = itemRepository.save(item);
+		System.err.println("jsonResult" + jsonResult.toString());
 		try {
 			List<String> frTokens = franchiseSupRepository.findTokens();
 
@@ -2204,8 +2212,8 @@ public class RestApiController {
 	public Info updtBillableItem(@RequestParam int itmId) {
 		Info info = new Info();
 		try {
-		int res = itemRepository.updateBillableItem(itmId);
-		
+			int res = itemRepository.updateBillableItem(itmId);
+
 			if (res > 0) {
 				info.setError(false);
 				info.setMessage("success Update");
@@ -2213,12 +2221,12 @@ public class RestApiController {
 				info.setError(true);
 				info.setMessage("Failed Updating");
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return info;
 	}
-	
+
 	@RequestMapping(value = { "/insertItemList" }, method = RequestMethod.POST)
 	@ResponseBody
 	public List<Item> insertItemList(@RequestBody List<Item> itemList) {
@@ -2445,19 +2453,19 @@ public class RestApiController {
 			FrSetting frSetting = new FrSetting();
 
 			frSetting = frSettingRepo.findByFrId(frResponse.getFrId());
-			
-			if (frSetting==null) { 
-			FrSetting frSettingSave = new FrSetting();
-			frSettingSave.setFrCode(frResponse.getFrCode());
-			frSettingSave.setFrId(frResponse.getFrId());
-			frSettingSave.setGrnGvnNo(1);
-			frSettingSave.setSellBillNo(1);
-			frSettingSave.setSpNo(1);
 
-			System.out.println("***************" + frSettingSave.toString());
-			FrSetting frSettingSaveResponse = frSettingRepo.save(frSettingSave);
-			System.out.println(frSettingSaveResponse.toString());
-		 }
+			if (frSetting == null) {
+				FrSetting frSettingSave = new FrSetting();
+				frSettingSave.setFrCode(frResponse.getFrCode());
+				frSettingSave.setFrId(frResponse.getFrId());
+				frSettingSave.setGrnGvnNo(1);
+				frSettingSave.setSellBillNo(1);
+				frSettingSave.setSpNo(1);
+
+				System.out.println("***************" + frSettingSave.toString());
+				FrSetting frSettingSaveResponse = frSettingRepo.save(frSettingSave);
+				System.out.println(frSettingSaveResponse.toString());
+			}
 		}
 
 		return frResponse;
@@ -2781,13 +2789,13 @@ public class RestApiController {
 
 		return categoryList;
 	}
-	
-	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET) 
+
+	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET)
 	public @ResponseBody CategoryList findAllOnlyCategory() {
 
 		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory();
 		CategoryList categoryList = new CategoryList();
-		ErrorMessage errorMessage = new ErrorMessage(); 
+		ErrorMessage errorMessage = new ErrorMessage();
 		errorMessage.setError(false);
 		errorMessage.setMessage("Success");
 		categoryList.setErrorMessage(errorMessage);
@@ -2811,6 +2819,7 @@ public class RestApiController {
 
 		return flavourList;
 	}
+
 	@RequestMapping(value = { "/showFlavourListBySpId" }, method = RequestMethod.POST)
 	@ResponseBody
 	public FlavourList showFlavourListBySpId(@RequestParam("spId") int spId) {
@@ -2825,6 +2834,7 @@ public class RestApiController {
 
 		return flavourList;
 	}
+
 	// Show Scheduler List
 	@RequestMapping(value = { "/showSchedulerList" }, method = RequestMethod.GET)
 	@ResponseBody
@@ -2855,8 +2865,8 @@ public class RestApiController {
 			@RequestParam("itemTax1") float itemTax1, @RequestParam("itemTax2") float itemTax2,
 			@RequestParam("itemTax3") float itemTax3, @RequestParam("itemIsUsed") int itemIsUsed,
 			@RequestParam("itemSortId") float itemSortId, @RequestParam("grnTwo") int grnTwo,
-			@RequestParam("itemShelfLife") int itemShelfLife,@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable, 
-			@RequestParam("isFactOrFr") int isFactOrFr) {
+			@RequestParam("itemShelfLife") int itemShelfLife, @RequestParam("isSaleable") int isSaleable,
+			@RequestParam("isStockable") int isStockable, @RequestParam("isFactOrFr") int isFactOrFr) {
 
 		Item item = itemService.findItems(id);
 		item.setItemImage(itemImage);
@@ -2882,7 +2892,6 @@ public class RestApiController {
 		item.setIsSaleable(isSaleable);
 		item.setIsStockable(isStockable);
 		item.setIsFactOrFr(isFactOrFr);
-		
 
 		ErrorMessage jsonResult = itemService.saveItem(item);
 		return jsonResult;
@@ -2999,7 +3008,7 @@ public class RestApiController {
 
 	// Delete Flavor
 	@RequestMapping(value = "/updateFlavourStatus", method = RequestMethod.POST)
-	public @ResponseBody String updateFlavourStatus(@RequestParam List<Integer> spfId,@RequestParam int status) {
+	public @ResponseBody String updateFlavourStatus(@RequestParam List<Integer> spfId, @RequestParam int status) {
 
 		ErrorMessage errorMessage = null;
 		List<Flavour> flavour = flavourRepository.findBySpfIdIn(spfId);
@@ -3266,7 +3275,7 @@ public class RestApiController {
 		return items;
 
 	}
-	
+
 	// Get Salable Items
 	@RequestMapping(value = "/getSalableItemsByCatId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getSalableItemsByCatId(@RequestParam String itemGrp1) {
@@ -3275,8 +3284,7 @@ public class RestApiController {
 		return items;
 
 	}
-	
-	
+
 	@RequestMapping(value = "/getStockableItemsByCatId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getStockableItemsByCatId(@RequestParam String itemGrp1) {
 
@@ -3284,7 +3292,7 @@ public class RestApiController {
 		return items;
 
 	}
-	
+
 	@RequestMapping(value = "/getItems", method = RequestMethod.GET)
 	public @ResponseBody List<Item> getItems() {
 
@@ -3292,14 +3300,18 @@ public class RestApiController {
 		return items;
 
 	}
-	/*@RequestMapping(value = "/getItemsByCatIdAndFrId", method = RequestMethod.POST)
-	public @ResponseBody List<Item> getItems(@RequestParam int itemGrp1,@RequestParam int frId) {
 
-		List<Item> items = itemRepository.findByItemGrp1AndItemRate2AndDelStatus(itemGrp1,frId);
-		return items;
-
-	}
-*/
+	/*
+	 * @RequestMapping(value = "/getItemsByCatIdAndFrId", method =
+	 * RequestMethod.POST) public @ResponseBody List<Item> getItems(@RequestParam
+	 * int itemGrp1,@RequestParam int frId) {
+	 * 
+	 * List<Item> items =
+	 * itemRepository.findByItemGrp1AndItemRate2AndDelStatus(itemGrp1,frId); return
+	 * items;
+	 * 
+	 * }
+	 */
 	@RequestMapping(value = "/getDiscById", method = RequestMethod.POST)
 	public @ResponseBody float findByIdAndFrId(@RequestParam int id, @RequestParam int frId) {
 		float discPer = 0.0f;
@@ -3336,13 +3348,16 @@ public class RestApiController {
 		List<Item> items = new ArrayList<Item>();
 		try {
 
-			/*if (Integer.parseInt(subCatId) < 11) {
-				items = itemRepository.findByItemGrp1AndDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(subCatId, 0);
+			/*
+			 * if (Integer.parseInt(subCatId) < 11) { items = itemRepository.
+			 * findByItemGrp1AndDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(subCatId,
+			 * 0);
+			 * 
+			 * } else {
+			 */
+			items = itemRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
 
-			} else {*/
-				items = itemRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
-
-			//}
+			// }
 			System.err.println("Items by subcat id  and delStatus  " + items.toString());
 
 		} catch (Exception e) {
@@ -3434,12 +3449,14 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+
 	@RequestMapping(value = "/getItemsNameByIdWithOtherItem", method = RequestMethod.POST)
-	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItem(@RequestParam List<Integer> itemList,@RequestParam int frId) {
+	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItem(@RequestParam List<Integer> itemList,
+			@RequestParam int frId) {
 
 		ItemResponse itemResponse = new ItemResponse();
 		ErrorMessage errorMessage = new ErrorMessage();
-		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList,7,frId);
+		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList, 7, frId);
 		if (items != null) {
 			itemResponse.setItemList(items);
 			errorMessage.setError(false);
@@ -3451,23 +3468,22 @@ public class RestApiController {
 		return itemResponse;
 
 	}
-	
+
 	@RequestMapping(value = "/getItemsNameByIdWithOtherItemCateIdOrSubCatId", method = RequestMethod.POST)
-	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItemCateIdOrSubCatId(@RequestParam List<Integer> itemList,@RequestParam int frId,@RequestParam int searchBy,
+	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItemCateIdOrSubCatId(
+			@RequestParam List<Integer> itemList, @RequestParam int frId, @RequestParam int searchBy,
 			@RequestParam int catId) {
 
 		ItemResponse itemResponse = new ItemResponse();
 		ErrorMessage errorMessage = new ErrorMessage();
-		List<Item> items =  new ArrayList<>();
-		
-		if(searchBy==1) {
-			items = itemRepository.getItemsNameByIdWithOtherItemCateId(itemList,7,frId,catId);
-		}else if(searchBy==2){
-			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId(itemList,7,frId,catId);
+		List<Item> items = new ArrayList<>();
+
+		if (searchBy == 1) {
+			items = itemRepository.getItemsNameByIdWithOtherItemCateId(itemList, 7, frId, catId);
+		} else if (searchBy == 2) {
+			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId(itemList, 7, frId, catId);
 		}
-		
-		
-		
+
 		if (items != null) {
 			itemResponse.setItemList(items);
 			errorMessage.setError(false);
@@ -3479,6 +3495,7 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+
 	//
 	@RequestMapping(value = "/getFrMenus11", method = RequestMethod.POST)
 	public @ResponseBody FrMenusList getFrMenus(@RequestParam int frId) {
@@ -3600,13 +3617,15 @@ public class RestApiController {
 						}
 
 					}
-					float discPer = 0.0f;float discPerDm = 0.0f;
+					float discPer = 0.0f;
+					float discPerDm = 0.0f;
 					try {// new change of discPer
 						discPer = itemDiscConfiguredRepository.findByIdAndFrId(item.getId(), Integer.parseInt(frId));
 						getFrItems.setDiscPer(discPer);
-						discPerDm = itemDiscConfiguredRepository.findByIdAndFrIdForDm(item.getId(), Integer.parseInt(frId));
+						discPerDm = itemDiscConfiguredRepository.findByIdAndFrIdForDm(item.getId(),
+								Integer.parseInt(frId));
 						getFrItems.setDmDiscPer(discPerDm);
-						
+
 					} catch (Exception e) {
 						// TODO: handle exception
 					}
@@ -3626,6 +3645,7 @@ public class RestApiController {
 		return frItemList;
 
 	}
+
 	@RequestMapping("/getMessage")
 	public @ResponseBody Message getMessage(@RequestParam int msgId) {
 
@@ -3648,8 +3668,8 @@ public class RestApiController {
 		ItemsList itemsList = itemService.findAllItems();
 		return itemsList;
 	}
-	
-	//Get All Stockable Items
+
+	// Get All Stockable Items
 	@RequestMapping(value = { "/getAllStockableItems" }, method = RequestMethod.GET)
 	public @ResponseBody ItemsList findAllStockableItems() {
 		ItemsList itemsList = itemService.findAllStockableItems();
@@ -4875,19 +4895,17 @@ public class RestApiController {
 		return info;
 
 	}
-	
-	@Autowired UpdateBillStatusRepository admUpdtbil;
-	@RequestMapping(value = { "/updateBillStatusAdm" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateBillStatusAdm(@RequestParam int billNo, @RequestParam int status)	
-	{
 
-		System.out.println("Data  " + billNo+" "+status);
-		
-		
-		
+	@Autowired
+	UpdateBillStatusRepository admUpdtbil;
+
+	@RequestMapping(value = { "/updateBillStatusAdm" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateBillStatusAdm(@RequestParam int billNo, @RequestParam int status) {
+
+		System.out.println("Data  " + billNo + " " + status);
+
 		Info info = new Info();
-		try
-		{
+		try {
 			int res = admUpdtbil.updateBillStatusAdmin(billNo, status);
 
 			if (res > 0) {
@@ -4899,10 +4917,9 @@ public class RestApiController {
 				info.setMessage("update Unsuccessfull : RestApi");
 
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 
 		return info;
 
@@ -5189,4 +5206,8 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+	
+	
+
+	
 }
