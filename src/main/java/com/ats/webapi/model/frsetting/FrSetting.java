@@ -35,6 +35,10 @@ public class FrSetting implements Serializable{
 	private int spNo;
 
 	
+	@Column(name="ex_int1")
+	private int count;
+
+	
 
 	public int getSpNo() {
 		return spNo;
@@ -94,14 +98,26 @@ public class FrSetting implements Serializable{
 	public void setFrSettingId(int frSettingId) {
 		this.frSettingId = frSettingId;
 	}
+	
+	
+	
+
+
+	public int getCount() {
+		return count;
+	}
+
+
+	public void setCount(int count) {
+		this.count = count;
+	}
 
 
 	@Override
 	public String toString() {
 		return "FrSetting [frSettingId=" + frSettingId + ", frId=" + frId + ", frCode=" + frCode + ", sellBillNo="
-				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + "]";
+				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + ", spNo=" + spNo + ", count=" + count + "]";
 	}
 
-
-	
+ 
 }

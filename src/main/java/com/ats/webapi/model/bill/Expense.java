@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="m_expense")
  public class Expense {
@@ -115,6 +117,7 @@ import javax.persistence.Table;
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public Date getExpDate() {
 		return expDate;
