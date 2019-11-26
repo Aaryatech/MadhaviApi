@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.model.Info;
+import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Expense;
+import com.ats.webapi.repo.BillTransactionRepo;
 import com.ats.webapi.repo.ExpenseRepo;
 
 @RestController
@@ -63,13 +65,20 @@ public class ExpenseApiController {
 
 	@RequestMapping(value = "/getAllExpense", method = RequestMethod.POST)
 	public @ResponseBody List<Expense> getAllExpense(@RequestParam("type") int type,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList) {
 		System.out.println("inside rest /getItemsForManGrnByFrAndBill");
 		List<Expense> grnItemConfigList = null;
 
 		try {
+System.err.println("frIdList"+frIdList.toString());
+			
+			if(frIdList.contains("-1")) {
+				grnItemConfigList = expenseRepo.getAllExpenseList(type, fromDate, toDate);
+			}
+			else {
+				grnItemConfigList = expenseRepo.getAllExpenseList(type, fromDate, toDate,frIdList);
 
-			grnItemConfigList = expenseRepo.getAllExpenseList(type, fromDate, toDate);
+			}
 
 			System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());
 
@@ -121,6 +130,8 @@ public class ExpenseApiController {
 
 		try {
 
+			
+			
 			grnItemConfigList = expenseRepo.findByExpId(expId);
 
 
@@ -135,6 +146,66 @@ public class ExpenseApiController {
 
 	}
 	
+	@Autowired
+	BillTransactionRepo billTransactionRepo;
+	
+	@RequestMapping(value = "/getBillTransactionByFrId", method = RequestMethod.POST)
+	public @ResponseBody List<BillTransaction> getBillTransactionByFrId(@RequestParam("frIdList") List<String> frIdList) {
+		System.out.println("inside rest /getItemsForManGrnByFrAndBill");
+		List<BillTransaction> grnItemConfigList = null;
+
+		try {
+			if(frIdList.contains("-1")) {
+				grnItemConfigList = billTransactionRepo.findByDelStatus(0);
+			}else {
+				grnItemConfigList = billTransactionRepo.findByFrIdInAndDelStatus(frIdList,0);
+
+			}
+		 
+
+	 
+			System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());
+
+		} catch (Exception e) {
+
+			System.out.println(
+					"restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return grnItemConfigList;
+
+	}
+
+	
+	@RequestMapping(value = { "/closeBill" }, method = RequestMethod.POST)
+	public @ResponseBody Info closeBill(@RequestParam("tranId")int tranId)
+	{
+ 		 
+		Info info = new Info();
+		try {
+			 
+ 			int delete = billTransactionRepo.closeBill(tranId);
+			
+			
+			 if(delete==1)
+			 {
+				 info.setError(false);
+				 info.setMessage("deleted Successfully ");
+			 }
+			 else
+			 {
+				 info.setError(true);
+				 info.setMessage("deleted UnSuccessfully ");
+			 }
+			 
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return info;
+           
+	}
 	
 
 }
