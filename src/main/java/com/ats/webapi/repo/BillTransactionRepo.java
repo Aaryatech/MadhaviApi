@@ -9,19 +9,27 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ats.webapi.model.bill.BillTransaction;
-
+ 
 public interface BillTransactionRepo extends JpaRepository<BillTransaction, Integer>{
 
-	List<BillTransaction> findByFrIdInAndDelStatus(List<String> frIdList, int i);
+	
 	
 	List<BillTransaction> findByDelStatus( int i);
 	
 	
-
+	@Query(value="SELECT * FROM t_bill_transcation where t_bill_transcation.fr_id IN(:frIdList)  AND t_bill_transcation.del_status=0 ",nativeQuery=true)
+	public List<BillTransaction> getAllTrancaction (@Param("frIdList") List<String> frIdList);
 	
 	@Transactional
 	@Modifying
 	@Query(" UPDATE BillTransaction SET is_closed=1 WHERE bill_trans_id =:tranId")
 	int closeBill(@Param("tranId")int tranId);
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query(" UPDATE BillTransaction SET pending_amt=:pendingAmt,paid_amt=:paidAmt,is_closed=:flag  WHERE bill_head_id =:billHeadId")
+ 	int upDateBillAmt(@Param("pendingAmt") String pendingAmt,@Param("paidAmt")  String paidAmt,@Param("billHeadId") int billHeadId,@Param("flag") int flag);
  
 }

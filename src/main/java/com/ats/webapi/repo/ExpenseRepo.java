@@ -37,5 +37,14 @@ public interface ExpenseRepo extends JpaRepository<Expense, Integer> {
 	int deleteExpense(@Param("suppId")int suppId);
 
 	 Expense findByExpId(int expId);
+	 
+	 
+	 
 
+		@Transactional
+		@Modifying
+		@Query(" UPDATE Expense SET status=2 WHERE exp_id=:expId")
+		int updateExpStatus(@Param("expId")int expId);
+
+ 
 }

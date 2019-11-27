@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="t_expense_transaction")
 public class ExpenseTransaction {
@@ -23,6 +25,8 @@ public class ExpenseTransaction {
 	private int expId;
  	
 	private String billAmt; 
+	
+	private String paidAmt; 
 	
 	private String  billNo; 
 	
@@ -101,8 +105,8 @@ public class ExpenseTransaction {
 	public void setBillClose(int billClose) {
 		this.billClose = billClose;
 	}
-
-	public Date getDelivarableDate() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+ 	public Date getDelivarableDate() {
 		return delivarableDate;
 	}
 
@@ -173,14 +177,26 @@ public class ExpenseTransaction {
 	public void setExVar4(String exVar4) {
 		this.exVar4 = exVar4;
 	}
+	
+	
+
+	public String getPaidAmt() {
+		return paidAmt;
+	}
+
+	public void setPaidAmt(String paidAmt) {
+		this.paidAmt = paidAmt;
+	}
 
 	@Override
 	public String toString() {
 		return "ExpenseTransaction [expTransId=" + expTransId + ", billHeadId=" + billHeadId + ", frId=" + frId
-				+ ", expId=" + expId + ", billAmt=" + billAmt + ", billNo=" + billNo + ", billClose=" + billClose
-				+ ", delivarableDate=" + delivarableDate + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exInt3="
-				+ exInt3 + ", exInt4=" + exInt4 + ", exVar1=" + exVar1 + ", exVar2=" + exVar2 + ", exVar3=" + exVar3
-				+ ", exVar4=" + exVar4 + "]";
+				+ ", expId=" + expId + ", billAmt=" + billAmt + ", paidAmt=" + paidAmt + ", billNo=" + billNo
+				+ ", billClose=" + billClose + ", delivarableDate=" + delivarableDate + ", exInt1=" + exInt1
+				+ ", exInt2=" + exInt2 + ", exInt3=" + exInt3 + ", exInt4=" + exInt4 + ", exVar1=" + exVar1
+				+ ", exVar2=" + exVar2 + ", exVar3=" + exVar3 + ", exVar4=" + exVar4 + "]";
 	}
+
+	 
 	
 }
