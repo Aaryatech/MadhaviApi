@@ -14,11 +14,11 @@ public interface BillTransactionRepo extends JpaRepository<BillTransaction, Inte
 
 	
 	
-	List<BillTransaction> findByDelStatus( int i);
+	List<BillTransaction> findByDelStatusAndIsClosed( int i,int j);
 	
 	
-	@Query(value="SELECT * FROM t_bill_transcation where t_bill_transcation.fr_id IN(:frIdList)  AND t_bill_transcation.del_status=0 ",nativeQuery=true)
-	public List<BillTransaction> getAllTrancaction (@Param("frIdList") List<String> frIdList);
+	@Query(value="SELECT * FROM t_bill_transcation where t_bill_transcation.fr_id IN(:frIdList)  AND t_bill_transcation.del_status=0 AND t_bill_transcation.is_closed=:temp ",nativeQuery=true)
+	public List<BillTransaction> getAllTrancaction (@Param("frIdList") List<String> frIdList,@Param("temp") int temp);
 	
 	@Transactional
 	@Modifying

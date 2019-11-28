@@ -169,9 +169,9 @@ public class ExpenseApiController {
 
 		try {
 			if (frIdList.contains("-1")) {
-				grnItemConfigList = billTransactionRepo.findByDelStatus(0);
+				grnItemConfigList = billTransactionRepo.findByDelStatusAndIsClosed(0,0);
 			} else {
-				grnItemConfigList = billTransactionRepo.getAllTrancaction(frIdList);
+				grnItemConfigList = billTransactionRepo.getAllTrancaction(frIdList,0);
 
 			}
 
