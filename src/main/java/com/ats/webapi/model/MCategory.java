@@ -37,6 +37,9 @@ public class MCategory implements Serializable{
 	@Column(name="del_status")
     private int delStatus;
 	
+	@Column(name="item_image")
+	private String itemImage;
+	
 	/*@OneToMany(mappedBy="catId",cascade=CascadeType.ALL)=new ArrayList<SubCategory>()*/
 	@Transient
 	private List<SubCategory> subCategoryList;
@@ -76,9 +79,15 @@ public class MCategory implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	public String getItemImage() {
+		return itemImage;
+	}
+	public void setItemImage(String itemImage) {
+		this.itemImage = itemImage;
+	}
 	@Override
 	public String toString() {
 		return "MCategory [catId=" + catId + ", catName=" + catName + ", isSameDay=" + isSameDay + ", delStatus="
-				+ delStatus + ", subCategoryList=" + subCategoryList + "]";
+				+ delStatus + ", itemImage=" + itemImage + ", subCategoryList=" + subCategoryList + "]";
 	}
 }

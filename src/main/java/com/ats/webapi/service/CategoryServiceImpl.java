@@ -1,5 +1,6 @@
 package com.ats.webapi.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,11 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	public List<MCategory> findAllOnlyCategory() {
-		List<MCategory> mCategoryList=categoryRepository.findByDelStatus(0);
+		List<Integer> list = new ArrayList<>();
+		list.add(2);
+		list.add(0);
+		
+		List<MCategory> mCategoryList=categoryRepository.findByDelStatusAndIsSameDayIn(0,list);
 		
 		 
 		return mCategoryList;
