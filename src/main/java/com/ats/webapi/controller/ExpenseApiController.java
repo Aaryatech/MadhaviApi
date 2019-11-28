@@ -31,11 +31,28 @@ public class ExpenseApiController {
 
 	@RequestMapping(value = { "/saveExpense" }, method = RequestMethod.POST)
 	@ResponseBody
-	public Expense saveExpense(@RequestBody Expense routeMaster) {
+	public Info saveExpense(@RequestBody Expense routeMaster) {
 
+		Info info = new Info();
 		Expense jsonResult = expenseRepo.save(routeMaster);
 
-		return jsonResult;
+		try {
+			if (jsonResult != null) {
+				info.setError(false);
+				info.setMessage("ItemSup Saved Successfully.");
+			} else {
+				info.setError(true);
+				info.setMessage("ItemSup Not Saved .");
+			}
+
+		} catch (Exception e) {
+
+			info.setError(true);
+			info.setMessage("ItemSup Not Saved .");
+
+		}
+
+		return info;
 	}
 
 	@RequestMapping(value = "/getExpenseByFrId", method = RequestMethod.POST)
@@ -232,34 +249,35 @@ public class ExpenseApiController {
 
 			for (int i = 0; i < expTransList.size(); i++) {
 				ExpenseTransaction jsonResult = expenseTransactionRepo.save(expTransList.get(i));
-				
-				if(jsonResult!=null) {
-					
-					float  finPending=Float.parseFloat(jsonResult.getExVar1());
-					float  finPaid=Float.parseFloat(jsonResult.getBillAmt())-finPending;
-					 int flag=0;
-					if(finPending <= 0) {
-						
+
+				if (jsonResult != null) {
+
+					float finPending = Float.parseFloat(jsonResult.getExVar1());
+					float finPaid = Float.parseFloat(jsonResult.getBillAmt()) - finPending;
+					int flag = 0;
+					if (finPending <= 0) {
+
 						System.err.println("in sat");
-						flag=1;
+						flag = 1;
 					}
-					
-					int del=billTransactionRepo.upDateBillAmt(String.valueOf(finPending),String.valueOf(finPaid),jsonResult.getBillHeadId(),flag);
-					 
-					if(del==1) {
+
+					int del = billTransactionRepo.upDateBillAmt(String.valueOf(finPending), String.valueOf(finPaid),
+							jsonResult.getBillHeadId(), flag);
+
+					if (del == 1) {
 						jsonResult.setExVar1("");
-						
+
 						expenseRepo.updateExpStatus(expTransList.get(i).getExpId());
-						
+
 					}
 				}
-				
+
 			}
 
 			inf.setError(false);
 			inf.setMessage("success");
 		} catch (Exception e) {
-			
+
 			inf.setError(true);
 			inf.setMessage("fail");
 
