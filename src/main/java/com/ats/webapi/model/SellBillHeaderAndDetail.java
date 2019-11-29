@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class SellBillHeaderAndDetail {
 	
@@ -29,7 +31,7 @@ public class SellBillHeaderAndDetail {
 	private char billType;
 	
 	@Column(name="timestamp")
-	private String timestamp;
+	private Date timestamp;
 	
 	@Column(name="fr_id")
 	private int frId;
@@ -103,8 +105,17 @@ public class SellBillHeaderAndDetail {
 	@Column(name="del_status")
 	private int delStatus;
 	
+	@Column(name="cust_name")
+	private String custName; 
+	
+	@Column(name="gst_no")
+	private String gstNo; 
+	
 	@Transient
 	private List<SellBillDetailForPos> list;
+	
+	@Transient
+	private List<TaxLabListForPos> taxlabList;
 
 	public int getSellBillNo() {
 		return sellBillNo;
@@ -121,7 +132,7 @@ public class SellBillHeaderAndDetail {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy") 
 	public Date getBillDate() {
 		return billDate;
 	}
@@ -138,11 +149,12 @@ public class SellBillHeaderAndDetail {
 		this.billType = billType;
 	}
 
-	public String getTimestamp() {
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy HH:mm:ss")
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(String timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -346,6 +358,30 @@ public class SellBillHeaderAndDetail {
 		this.list = list;
 	}
 
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getGstNo() {
+		return gstNo;
+	}
+
+	public void setGstNo(String gstNo) {
+		this.gstNo = gstNo;
+	}
+
+	public List<TaxLabListForPos> getTaxlabList() {
+		return taxlabList;
+	}
+
+	public void setTaxlabList(List<TaxLabListForPos> taxlabList) {
+		this.taxlabList = taxlabList;
+	}
+
 	@Override
 	public String toString() {
 		return "SellBillHeaderAndDetail [sellBillNo=" + sellBillNo + ", invoiceNo=" + invoiceNo + ", billDate="
@@ -357,7 +393,8 @@ public class SellBillHeaderAndDetail {
 				+ ", custId=" + custId + ", userName=" + userName + ", userGstNo=" + userGstNo + ", userPhone="
 				+ userPhone + ", status=" + status + ", isDairyMartBill=" + isDairyMartBill + ", couponNo=" + couponNo
 				+ ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt=" + custLoyaltyPt + ", delStatus="
-				+ delStatus + ", list=" + list + "]";
+				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", list=" + list + ", taxlabList="
+				+ taxlabList + "]";
 	}
 	
 	
