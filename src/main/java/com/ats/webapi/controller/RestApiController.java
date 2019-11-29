@@ -3456,7 +3456,7 @@ public class RestApiController {
 
 		ItemResponse itemResponse = new ItemResponse();
 		ErrorMessage errorMessage = new ErrorMessage();
-		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList, 7, frId);
+		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(7, frId);
 		if (items != null) {
 			itemResponse.setItemList(items);
 			errorMessage.setError(false);
@@ -3479,9 +3479,9 @@ public class RestApiController {
 		List<Item> items = new ArrayList<>();
 
 		if (searchBy == 1) {
-			items = itemRepository.getItemsNameByIdWithOtherItemCateId(itemList, 7, frId, catId);
+			items = itemRepository.getItemsNameByIdWithOtherItemCateId(7, frId, catId);
 		} else if (searchBy == 2) {
-			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId(itemList, 7, frId, catId);
+			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId( 7, frId, catId);
 		}
 
 		if (items != null) {

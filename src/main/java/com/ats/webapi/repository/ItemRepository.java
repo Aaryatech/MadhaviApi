@@ -184,15 +184,13 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_var2,\n" + 
 			"            i.ext_var3 \n" + 
 			"        from\n" + 
-			"            m_item i,\n" + 
-			"            m_item_sup s \n" + 
+			"            m_item i, " + 
+			"            m_item_sup s  " + 
 			"        where\n" + 
-			"            s.item_id=i.id \n" + 
-			"            and i.id IN (:itemList) \n" + 
-			"            AND i.del_status=0 \n" + 
-			"        	AND i.is_saleable=1\n" + 
-			"        UNION\n" + 
-			"        ALL            select\n" + 
+			"            s.item_id=i.id  " + 
+			"            AND i.del_status=0  " + 
+			"        	AND i.is_saleable=1 " + 
+			"        UNION ALL            select\n" + 
 			"            i.id,\n" + 
 			"            i.item_id,\n" + 
 			"            i.item_name,\n" + 
@@ -230,16 +228,16 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            m_item_sup s \n" + 
 			"        where\n" + 
 			"            s.item_id=i.id \n" + 
-			"            and  i.del_status=0 \n" + 
-			"            and i.item_grp1=:catId \n" +
-			"            and i.item_rate2=:frId\n" + 
-			"         	and i.is_saleable=1\n" + 
-			"    ) a  \n" + 
-			"ORDER BY\n" + 
-			"    a.item_grp1,\n" + 
-			"    a.item_grp2,\n" + 
+			"            and  i.del_status=0  " + 
+			"            and i.item_grp1=:catId " +
+			"            and i.item_rate2=:frId " + 
+			"         	and i.is_saleable=1 " + 
+			"    ) a   " + 
+			"ORDER BY " + 
+			"    a.item_grp1, " + 
+			"    a.item_grp2, " + 
 			"    a.item_name",nativeQuery=true)
-	public List<Item> getItemsNameByIdWithOtherItem(@Param("itemList") List<Integer> itemList,@Param("catId")int catId,@Param("frId")int frId);
+	public List<Item> getItemsNameByIdWithOtherItem(@Param("catId")int catId,@Param("frId")int frId);
 
 	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
 
@@ -323,7 +321,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            m_item_sup s \n" + 
 			"        where\n" + 
 			"            s.item_id=i.id \n" + 
-			"            and i.id IN (:itemList) \n" + 
 			"            AND i.del_status=0 \n" + 
 			"        	AND i.is_saleable=1 and i.item_grp1=:cat\n" + 
 			"        UNION\n" + 
@@ -374,7 +371,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"    a.item_grp1,\n" + 
 			"    a.item_grp2,\n" + 
 			"    a.item_name",nativeQuery=true)
-	public List<Item> getItemsNameByIdWithOtherItemCateId(@Param("itemList") List<Integer> itemList,@Param("catId")int catId,@Param("frId")int frId,
+	public List<Item> getItemsNameByIdWithOtherItemCateId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
 
 	@Query(value="select\n" + 
@@ -449,7 +446,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            m_item_sup s \n" + 
 			"        where\n" + 
 			"            s.item_id=i.id \n" + 
-			"            and i.id IN (:itemList) \n" + 
 			"            AND i.del_status=0 \n" + 
 			"        	AND i.is_saleable=1 and i.item_grp2=:cat\n" + 
 			"        UNION\n" + 
@@ -500,6 +496,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"    a.item_grp1,\n" + 
 			"    a.item_grp2,\n" + 
 			"    a.item_name",nativeQuery=true)
-	public List<Item> getItemsNameByIdWithOtherItemSubCatId(@Param("itemList") List<Integer> itemList,@Param("catId")int catId,@Param("frId")int frId,
+	public List<Item> getItemsNameByIdWithOtherItemSubCatId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
 }
