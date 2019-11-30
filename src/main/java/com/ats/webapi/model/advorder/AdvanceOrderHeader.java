@@ -52,6 +52,10 @@ public class AdvanceOrderHeader {
 	private Date deliveryDate;
 	
 	private float discAmt;
+	
+	private int isBillGenerated;
+	
+	private int isSellBillGenerated;
 
 	@Transient
 	List<AdvanceOrderDetail> detailList;
@@ -208,6 +212,23 @@ public class AdvanceOrderHeader {
 	public void setDetailList(List<AdvanceOrderDetail> detailList) {
 		this.detailList = detailList;
 	}
+	 
+
+	public int getIsBillGenerated() {
+		return isBillGenerated;
+	}
+
+	public void setIsBillGenerated(int isBillGenerated) {
+		this.isBillGenerated = isBillGenerated;
+	}
+
+	public int getIsSellBillGenerated() {
+		return isSellBillGenerated;
+	}
+
+	public void setIsSellBillGenerated(int isSellBillGenerated) {
+		this.isSellBillGenerated = isSellBillGenerated;
+	}
 
 	@Override
 	public String toString() {
@@ -216,8 +237,11 @@ public class AdvanceOrderHeader {
 				+ isDailyMart + ", delStatus=" + delStatus + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exVar1="
 				+ exVar1 + ", exVar2=" + exVar2 + ", exFloat1=" + exFloat1 + ", exFloat2=" + exFloat2 + ", orderDate="
 				+ orderDate + ", prodDate=" + prodDate + ", deliveryDate=" + deliveryDate + ", discAmt=" + discAmt
+				+ ", isBillGenerated=" + isBillGenerated + ", isSellBillGenerated=" + isSellBillGenerated
 				+ ", detailList=" + detailList + "]";
 	}
+
+	 
 
 	 
 

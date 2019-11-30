@@ -1,7 +1,9 @@
 package com.ats.webapi.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,14 +13,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
- import com.ats.webapi.model.Customer;
+import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.Info;
+import com.ats.webapi.model.ItemOrderList;
+import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
+import com.ats.webapi.model.bill.ItemListForCustomerBill;
 import com.ats.webapi.model.rawmaterial.ItemSfHeader;
 import com.ats.webapi.repo.CustomerRepo;
+import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
+import com.ats.webapi.service.OrderService;
 
 @RestController
 public class AdvanceOrderApiController {
@@ -32,11 +39,11 @@ public class AdvanceOrderApiController {
 	@RequestMapping(value = { "/saveAdvanceOrderHeadAndDetail" }, method = RequestMethod.POST)
 	public @ResponseBody AdvanceOrderHeader saveAdvanceOrderHeadAndDetail(@RequestBody AdvanceOrderHeader matHeader) {
 
-		System.err.println("inside saveAdvanceOrderHeadAndDetail");
+		System.err.println("inside saveAdvanceOrderHeadAndDetail" + matHeader.toString());
 
 		AdvanceOrderHeader header = new AdvanceOrderHeader();
 
-		 try { 
+		try {
 
 			header = advanceOrderHeaderRepo.save(matHeader);
 
@@ -48,43 +55,121 @@ public class AdvanceOrderApiController {
 			List<AdvanceOrderDetail> matDetailsList = advanceOrderDetailRepo.save(matHeader.getDetailList());
 			header.setDetailList(matDetailsList);
 
-		
-		  } catch (Exception e) {
-		  
-		  System.err.println("Exce in saveAdvanceOrderHeadAndDetail" + e.getMessage());
-		  
-		  }
-		 
+		} catch (Exception e) {
+
+			System.err.println("Exce in saveAdvanceOrderHeadAndDetail" + e.getMessage());
+
+		}
+
 		return header;
 
 	}
-	
+
 	@Autowired
 	CustomerRepo cust;
 
-	
-	@RequestMapping(value = {"/checkCustPhone"}, method = RequestMethod.POST)
+	@RequestMapping(value = { "/checkCustPhone" }, method = RequestMethod.POST)
 	public @ResponseBody Info checkEmployeeEmail(@RequestParam String phoneNo) {
-		
-		Info info=new Info();
+
+		Info info = new Info();
 		Customer emp = new Customer();
-		try { 
-				
-				emp = cust.findByPhoneNumber(phoneNo);
-				
-				if(emp!=null) {
-					info.setError(false);
-				}else {
-					info.setError(true);
-				 
+		try {
+
+			emp = cust.findByPhoneNumber(phoneNo);
+
+			if (emp != null) {
+				info.setError(false);
+			} else {
+				info.setError(true);
+
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			System.err.println("Exce in checkEmployeeEmail  " + e.getMessage());
 		}
-		
+
 		return info;
-		
+
+	}
+
+	@Autowired
+	private OrderService orderService;
+
+	// Search Advance Order History
+	@RequestMapping("/advanceOrderHistoryDetail")
+	public @ResponseBody ItemOrderList searchAdvOrderHistory(@RequestParam int headId, @RequestParam String deliveryDt,
+			@RequestParam int frId) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = sdf.parse(deliveryDt);
+		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
+
+		ItemOrderList orderList = orderService.searchAdvOrderHistory(headId, deliveryDate, frId);
+
+		return orderList;
+
+	}
+
+	@RequestMapping("/advanceOrderHistoryHeader")
+	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeader(@RequestParam int flag,@RequestParam String deliveryDt,
+			@RequestParam int frId) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = sdf.parse(deliveryDt);
+		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
+		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
+		System.out.println("flag is " + flag);
+		try {
+			
+			if(flag==1) {
+				orderList = advanceOrderHeaderRepo.findByDeliveryDateAndFrIdAndDelStatus(deliveryDate, frId, 0);
+
+			}else {
+				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGenerated(frId, 0,0);
+
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+
+	@Autowired
+	ItemListForCustomerBillRepo itemListForCustomerBillRepo;
+
+	@RequestMapping("/getAdvanceOrderItemsByHeadId")
+	public @ResponseBody List<ItemListForCustomerBill> getAdvanceOrderItemsByHeadId(@RequestParam int headId)
+			throws ParseException {
+		List<ItemListForCustomerBill> itm = null;
+		System.err.println("data is"+headId);
+		try {
+			itm = itemListForCustomerBillRepo.getItem(headId);
+			
+			for(int i=0;i<itm.size();i++) {
+				ItemListForCustomerBill temp=itm.get(i)	;
+				
+				float total=temp.getOrignalMrp()*temp.getQty();
+				Float taxableAmt = (total* 100) / (100 + temp.getTaxPer());
+				temp.setTaxAmt(total-taxableAmt);
+				temp.setTaxableAmt(taxableAmt);
+				temp.setTotal(total);
+				
+			}
+			 
+			
+			System.err.println("data is"+itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
 	}
 
 }

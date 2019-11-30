@@ -1248,11 +1248,26 @@ public class RestApiController {
 	
 	@RequestMapping(value = { "/saveBillTransaction" }, method = RequestMethod.POST)
 	@ResponseBody
-	public BillTransaction saveBillTransaction(@RequestBody BillTransaction routeMaster) {
+	public Info saveBillTransaction(@RequestBody List<BillTransaction> routeMaster) {
+		
+		Info info=new Info();
+		try {
+			for(int i=0;i<routeMaster.size();i++) {
+				BillTransaction jsonResult = billTransationRepo.save(routeMaster.get(i));
 
-		BillTransaction jsonResult = billTransationRepo.save(routeMaster);
+			}
+			info.setError(false);
+			info.setMessage("Error in post bill header insertion : RestApi");
+			
+			
+		}catch(Exception e) {
+			info.setError(true);
+			info.setMessage("Error in post bill header insertion : RestApi");
+		}
+		
 
-		return jsonResult;
+	
+		return info;
 	}
 
 	@RequestMapping(value = { "/updateBillData" }, method = RequestMethod.POST)
@@ -1989,20 +2004,24 @@ public class RestApiController {
 	}
 
 	// Search Advance Order History
-	@RequestMapping("/advanceOrderHistory")
-	public @ResponseBody ItemOrderList searchAdvOrderHistory(@RequestParam List<String> catId,
-			@RequestParam String deliveryDt, @RequestParam int frId) throws ParseException {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		java.util.Date date = sdf.parse(deliveryDt);
-		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
-
-		ItemOrderList orderList = orderService.searchAdvOrderHistory(catId, deliveryDate, frId);
-
-		return orderList;
-
-	}
-
+	/*
+	 * @RequestMapping("/advanceOrderHistory") public @ResponseBody ItemOrderList
+	 * searchAdvOrderHistory(@RequestParam List<String> catId,
+	 * 
+	 * @RequestParam String deliveryDt, @RequestParam int frId) throws
+	 * ParseException {
+	 * 
+	 * SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); java.util.Date
+	 * date = sdf.parse(deliveryDt); java.sql.Date deliveryDate = new
+	 * java.sql.Date(date.getTime());
+	 * 
+	 * ItemOrderList orderList = orderService.searchAdvOrderHistory(catId,
+	 * deliveryDate, frId);
+	 * 
+	 * return orderList;
+	 * 
+	 * }
+	 */
 	// UserLogin of AdminPanel
 	@RequestMapping(value = { "/login" }, method = RequestMethod.GET)
 	@ResponseBody

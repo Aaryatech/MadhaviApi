@@ -155,18 +155,16 @@ public class OrderServiceImpl implements OrderService {
 	
 	
 	@Override
-	public ItemOrderList searchAdvOrderHistory(List<String> catId, Date deliveryDate, int frId) {
+	public ItemOrderList searchAdvOrderHistory(int advHeadId, Date deliveryDate, int frId) {
 		List<ItemOrderHis> orderList = null;
 		ErrorMessage errorMessage;
 		ItemOrderList itemOrderList;
 		try {
 			
-			if(catId.contains("-1")) {
-				orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateAllForAdv(deliveryDate, frId);
+			 
+				orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateAllForAdv(advHeadId,deliveryDate, frId);
 
-			}else {
-			orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateForAdv(catId, deliveryDate, frId);
-			}
+			 
 			if (orderList == null) {
 				errorMessage = new ErrorMessage();
 				itemOrderList = new ItemOrderList();
