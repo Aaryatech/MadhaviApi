@@ -11,15 +11,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.PettyCashEmp;
+import com.ats.webapi.model.PettyCashHandover;
+import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.pettycash.OtherBillDetailAdv;
 import com.ats.webapi.model.pettycash.PettyCashDao;
 import com.ats.webapi.model.pettycash.PettyCashManagmt;
 import com.ats.webapi.model.pettycash.SellBillDetailAdv;
 import com.ats.webapi.model.pettycash.SpCakeAdv;
 import com.ats.webapi.repo.OtherBillDetailAdvRepo;
+import com.ats.webapi.repo.PettyCashEmpRepo;
+import com.ats.webapi.repo.PettyCashHandoverRepo;
 import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repo.SellBillDetailAdvRepo;
 import com.ats.webapi.repo.SpCakeAdvRepo;
+import com.ats.webapi.repository.ExpressBillRepository;
 
 @RestController
 public class PettyCashApiController {
@@ -113,4 +119,88 @@ public class PettyCashApiController {
 		}
 		return pettyList;
 	}
+	
+	@Autowired PettyCashEmpRepo pettyEmpRepo;
+	@RequestMapping(value = { "/getAllPettyCashEmp"}, method = RequestMethod.POST)
+	public List<PettyCashEmp> getAllPettyCashEmp(@RequestParam("frId") int frId){
+		List<PettyCashEmp> empList = new ArrayList<PettyCashEmp>();
+		try {
+			empList = pettyEmpRepo.findByEmpFrIdAndDelStatus(frId,0);
+		}catch (Exception e) {
+			System.err.println("Exception in getAllPettyCashEmp : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return empList;
+	}
+	
+	@Autowired ExpressBillRepository  expressBillRepository;
+	@RequestMapping(value = { "/getPettyCashSellAmt"}, method = RequestMethod.POST)
+	public SellBillHeader getPettyCashSellAmt(@RequestParam("fromTime") String fromTime, @RequestParam("toTime") String toTime,
+			@RequestParam("frId") int frId){
+		SellBillHeader empList = new SellBillHeader();
+		try {
+			empList = expressBillRepository.getPettyCashSellingAmt(fromTime, toTime, frId);
+		}catch (Exception e) {
+			System.err.println("Exception in getPettyCashSellAmt : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return empList;
+	}
+	
+	@Autowired PettyCashHandoverRepo pettyCashHandRepo;
+	
+	@RequestMapping(value = { "/getPettyCashHandOvrLastRecrd" }, method = RequestMethod.POST)
+	public PettyCashHandover getPettyCashHandOvrLastRecrd(@RequestParam("frId") int frId, @RequestParam("lastdate") String lastdate) {
+		PettyCashHandover data = new PettyCashHandover();
+		try {
+			data = pettyCashHandRepo.getLastRecordFrmPettyCashHndOvr(frId, lastdate);
+		}catch (Exception e) {
+			System.err.println("Exception in getPettyCashHandOvrLastRecrd : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	@RequestMapping(value = { "/savePettyCashHandOver" }, method = RequestMethod.POST)
+	public PettyCashHandover savePettyCashHandOver(@RequestBody PettyCashHandover cashHndOvr) {
+		PettyCashHandover cash = new PettyCashHandover();
+		try {
+			cash = pettyCashHandRepo.save(cashHndOvr);
+		}catch (Exception e) {
+			System.err.println("Exception in savePettyCashHandOver : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return cash;
+	}
+	
+	@RequestMapping(value = { "/getPettyCashHandByFrid" }, method = RequestMethod.POST)
+	public List<PettyCashHandover> getPettyCashHandByFrid(@RequestParam int frId) {
+		List<PettyCashHandover> list = new ArrayList<PettyCashHandover>();
+		try {
+			list = pettyCashHandRepo.findByFrIdAndDelStatus(frId, 0);
+		}catch (Exception e) {
+			System.err.println("Exception in getPettyCashHandByFrid : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
+	@RequestMapping(value= {"/getCashHandOverTransctn"}, method=RequestMethod.POST)
+	public List<PettyCashHandover> getCashHandOverTransctn(@RequestParam int frId, @RequestParam String fromDate, @RequestParam String toDate){
+		List<PettyCashHandover> list = new ArrayList<PettyCashHandover>();
+		try {
+			list = pettyCashHandRepo.findByFrIdAndDelStatusAndClosingDateBetween(frId, 0, fromDate, toDate);
+		System.err.println("List-----------"+list);
+		}catch (Exception e) {
+			System.err.println("Exception in getPettyCashHandByFrid : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+		
+	}
+	
+	
+	
 }
+
+
