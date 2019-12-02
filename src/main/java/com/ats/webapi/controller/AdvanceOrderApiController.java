@@ -171,5 +171,45 @@ public class AdvanceOrderApiController {
 		return itm;
 
 	}
+	
+	
+	
+	@RequestMapping(value = { "/updateAdvOrderHeadAndDetail" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateFrSettingBillNo(@RequestParam("advHeadId") int advHeadId
+		) {
+
+		Info info = new Info();
+		int updateResponse = 0;
+		int updateResponse1 = 0;
+		try {
+
+			 
+			updateResponse = advanceOrderHeaderRepo.updateIsSellBillGen(advHeadId);
+			
+			
+			if(updateResponse > 0) {
+				updateResponse1 = advanceOrderDetailRepo.updateIsSellBillGen(advHeadId);
+			}
+
+			if (updateResponse > 0 && updateResponse1 > 0) {
+
+				info.setError(false);
+				info.setMessage("success Updating fr seting sell bill no ");
+
+			} else {
+				info.setError(true);
+				info.setMessage("failure");
+			}
+
+		} catch (Exception e) {
+
+			System.out.println(
+					" /updateFrSettingBillNo Exce in Saving/Update fr Setting /FrSettingController " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return info;
+
+	}
 
 }
