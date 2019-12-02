@@ -14,15 +14,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.model.Customer;
+import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
+import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
 import com.ats.webapi.model.rawmaterial.ItemSfHeader;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repository.CustomerAmountsRepo;
+import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.service.OrderService;
@@ -211,5 +215,72 @@ public class AdvanceOrderApiController {
 		return info;
 
 	}
+	
+	
+	@Autowired
+	CustomerAmountsRepo customerAmountsRepo;
+	@RequestMapping("/getCustomerAmounts")
+	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId,@RequestParam int frId
+		) throws ParseException {
+		CustomerAmounts orderList=new CustomerAmounts();
+		CustomerAmounts orderList1=new CustomerAmounts();
+		CustomerAmounts orderList2=new CustomerAmounts();
+		System.err.println("data is"+custId);
+
+		orderList1 = customerAmountsRepo.findPendingAmt(custId,frId);
+		orderList2 = customerAmountsRepo.findAadvAmt(custId,frId);
+		
+		
+		orderList.setCreaditAmt(orderList1.getCreaditAmt());
+		
+		orderList.setAdvanceAmt(orderList2.getAdvanceAmt());
+		orderList.setCustId(custId);
+		return orderList;
+
+	}
+	
+	@Autowired
+	SellBillHeaderRepository sellBillHeaderRepository;
+	
+	@RequestMapping("/getSellBillByCustId")
+	public @ResponseBody List<SellBillHeader> getSellBillByCustId(@RequestParam int custId,@RequestParam int frId)
+			throws ParseException {
+		List<SellBillHeader> itm = null;
+ 		try {
+			itm = sellBillHeaderRepository.getSellBillHeader(custId,frId);
+			 
+			 
+			
+			System.err.println("data is"+itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
+	}
+	
+	@RequestMapping("/advanceOrderHistoryHeaderByCustId")
+	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeaderByCustId(@RequestParam int custId,
+			@RequestParam int frId) throws ParseException {
+
+	 
+		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
+ 		try {
+		 
+				orderList = advanceOrderHeaderRepo.findByCustIdAndIsSellBillGeneratedAndDelStatus(custId, 0, 0);
+ 
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+
 
 }
