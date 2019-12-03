@@ -305,7 +305,7 @@ public class AdvanceOrderApiController {
 
 				if (jsonResult != null) {
 					System.err.println("inside update" );
-					float finPending = Float.parseFloat(jsonResult.getExVar1());
+					float finPending = Float.parseFloat(jsonResult.getExVar2());
 					float finPaid = expTransList.get(i).getExFloat1() - finPending;
 					int flag = 0;
 					if (finPending <= 0) {

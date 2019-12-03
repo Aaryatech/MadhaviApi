@@ -24,6 +24,6 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	
 	@Transactional
 	@Modifying
-	@Query(" UPDATE SellBillHeader SET pending_amt=:pendingAmt,paid_amt=:paidAmt,status=:flag  WHERE sell_bill_no =:sellBillNo")
+	@Query(" UPDATE SellBillHeader SET remaining_amt=:pendingAmt,paid_amt=:paidAmt,status=:flag  WHERE sell_bill_no =:sellBillNo")
  	int upDateBillAmt(@Param("pendingAmt") String pendingAmt,@Param("paidAmt")  String paidAmt,@Param("sellBillNo") int sellBillNo,@Param("flag") int flag);
 }
