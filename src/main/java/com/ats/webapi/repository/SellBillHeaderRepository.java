@@ -16,6 +16,6 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	public SellBillHeader save (SellBillHeader sellBillHeaderList);
 	
 	
-	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.status=3 AND t_sell_bill_header.delStatus=0 AND t_sell_bill_header.fr_id=:frId",nativeQuery=true)
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.status=3 AND t_sell_bill_header.del_status=0 AND t_sell_bill_header.fr_id=:frId",nativeQuery=true)
 	List<SellBillHeader> getSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);
 }
