@@ -1,6 +1,7 @@
 package com.ats.webapi.controller;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,20 +14,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ats.webapi.model.Customer;
+ import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.SellBillHeader;
+import com.ats.webapi.model.TransactionDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
+import com.ats.webapi.model.bill.ExpenseTransaction;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
 import com.ats.webapi.model.rawmaterial.ItemSfHeader;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
+import com.ats.webapi.repository.TransactionDetailRepository;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.service.OrderService;
@@ -115,8 +119,8 @@ public class AdvanceOrderApiController {
 	}
 
 	@RequestMapping("/advanceOrderHistoryHeader")
-	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeader(@RequestParam int flag,@RequestParam String deliveryDt,
-			@RequestParam int frId) throws ParseException {
+	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeader(@RequestParam int flag,
+			@RequestParam String deliveryDt, @RequestParam int frId) throws ParseException {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date date = sdf.parse(deliveryDt);
@@ -124,12 +128,12 @@ public class AdvanceOrderApiController {
 		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
 		System.out.println("flag is " + flag);
 		try {
-			
-			if(flag==1) {
+
+			if (flag == 1) {
 				orderList = advanceOrderHeaderRepo.findByDeliveryDateAndFrIdAndDelStatus(deliveryDate, frId, 0);
 
-			}else {
-				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGenerated(frId, 0,0);
+			} else {
+				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGenerated(frId, 0, 0);
 
 			}
 
@@ -149,23 +153,22 @@ public class AdvanceOrderApiController {
 	public @ResponseBody List<ItemListForCustomerBill> getAdvanceOrderItemsByHeadId(@RequestParam int headId)
 			throws ParseException {
 		List<ItemListForCustomerBill> itm = null;
-		System.err.println("data is"+headId);
+		System.err.println("data is" + headId);
 		try {
 			itm = itemListForCustomerBillRepo.getItem(headId);
-			
-			for(int i=0;i<itm.size();i++) {
-				ItemListForCustomerBill temp=itm.get(i)	;
-				
-				float total=temp.getOrignalMrp()*temp.getQty();
-				Float taxableAmt = (total* 100) / (100 + temp.getTaxPer());
-				temp.setTaxAmt(total-taxableAmt);
+
+			for (int i = 0; i < itm.size(); i++) {
+				ItemListForCustomerBill temp = itm.get(i);
+
+				float total = temp.getOrignalMrp() * temp.getQty();
+				Float taxableAmt = (total * 100) / (100 + temp.getTaxPer());
+				temp.setTaxAmt(total - taxableAmt);
 				temp.setTaxableAmt(taxableAmt);
 				temp.setTotal(total);
-				
+
 			}
-			 
-			
-			System.err.println("data is"+itm.toString());
+
+			System.err.println("data is" + itm.toString());
 
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
@@ -175,23 +178,18 @@ public class AdvanceOrderApiController {
 		return itm;
 
 	}
-	
-	
-	
+
 	@RequestMapping(value = { "/updateAdvOrderHeadAndDetail" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateFrSettingBillNo(@RequestParam("advHeadId") int advHeadId
-		) {
+	public @ResponseBody Info updateFrSettingBillNo(@RequestParam("advHeadId") int advHeadId) {
 
 		Info info = new Info();
 		int updateResponse = 0;
 		int updateResponse1 = 0;
 		try {
 
-			 
 			updateResponse = advanceOrderHeaderRepo.updateIsSellBillGen(advHeadId);
-			
-			
-			if(updateResponse > 0) {
+
+			if (updateResponse > 0) {
 				updateResponse1 = advanceOrderDetailRepo.updateIsSellBillGen(advHeadId);
 			}
 
@@ -215,44 +213,55 @@ public class AdvanceOrderApiController {
 		return info;
 
 	}
-	
-	
+
 	@Autowired
 	CustomerAmountsRepo customerAmountsRepo;
-	@RequestMapping("/getCustomerAmounts")
-	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId,@RequestParam int frId
-		) throws ParseException {
-		CustomerAmounts orderList=new CustomerAmounts();
-		CustomerAmounts orderList1=new CustomerAmounts();
-		CustomerAmounts orderList2=new CustomerAmounts();
-		System.err.println("data is"+custId);
 
-		orderList1 = customerAmountsRepo.findPendingAmt(custId,frId);
-		orderList2 = customerAmountsRepo.findAadvAmt(custId,frId);
-		
-		
+	@RequestMapping("/getCustomerAmounts")
+	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId, @RequestParam int frId)
+			throws ParseException {
+		CustomerAmounts orderList = new CustomerAmounts();
+		CustomerAmounts orderList1 = new CustomerAmounts();
+		CustomerAmounts orderList2 = new CustomerAmounts();
+		System.err.println("data is" + custId);
+
+		orderList1 = customerAmountsRepo.findPendingAmt(custId, frId);
+		orderList2 = customerAmountsRepo.findAadvAmt(custId, frId);
+
 		orderList.setCreaditAmt(orderList1.getCreaditAmt());
-		
+
 		orderList.setAdvanceAmt(orderList2.getAdvanceAmt());
 		orderList.setCustId(custId);
 		return orderList;
 
 	}
-	
+
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
+	@Autowired
+	CustomerRepo customerRepo;
 	
 	@RequestMapping("/getSellBillByCustId")
-	public @ResponseBody List<SellBillHeader> getSellBillByCustId(@RequestParam int custId,@RequestParam int frId)
+	public @ResponseBody List<SellBillHeader> getSellBillByCustId(@RequestParam int custId, @RequestParam int frId)
 			throws ParseException {
 		List<SellBillHeader> itm = null;
- 		try {
-			itm = sellBillHeaderRepository.getSellBillHeader(custId,frId);
-			 
-			 
-			
-			System.err.println("data is"+itm.toString());
+		
+		Customer cust=new Customer();
+		try {
+			itm = sellBillHeaderRepository.getSellBillHeader(custId, frId);
 
+			System.err.println("data is" + itm.toString());
+
+			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
+			 
+			System.err.println("cust is "+cust.toString());
+			for(int i=0;i<itm.size();i++) {
+				
+				itm.get(i).setUserName(cust.getCustName());
+				
+				
+			}
+ 			System.err.println("cust is "+itm.toString());
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();
@@ -261,17 +270,15 @@ public class AdvanceOrderApiController {
 		return itm;
 
 	}
-	
+
 	@RequestMapping("/advanceOrderHistoryHeaderByCustId")
 	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeaderByCustId(@RequestParam int custId,
 			@RequestParam int frId) throws ParseException {
 
-	 
 		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
- 		try {
-		 
-				orderList = advanceOrderHeaderRepo.findByCustIdAndIsSellBillGeneratedAndDelStatus(custId, 0, 0);
- 
+		try {
+
+			orderList = advanceOrderHeaderRepo.findByCustIdAndIsSellBillGeneratedAndDelStatus(custId, 0, 0);
 
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
@@ -282,5 +289,54 @@ public class AdvanceOrderApiController {
 
 	}
 
+	@Autowired
+	TransactionDetailRepository transactionDetailRepository;
+
+	@RequestMapping(value = { "/saveBillTransDetail" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Info saveBillTransDetail(@RequestBody List<TransactionDetail> expTransList) {
+
+		Info inf = new Info();
+
+		try {
+
+			for (int i = 0; i < expTransList.size(); i++) {
+				TransactionDetail jsonResult = transactionDetailRepository.save(expTransList.get(i));
+
+				if (jsonResult != null) {
+					System.err.println("inside update" );
+					float finPending = Float.parseFloat(jsonResult.getExVar1());
+					float finPaid = expTransList.get(i).getExFloat1() - finPending;
+					int flag = 0;
+					if (finPending <= 0) {
+
+						System.err.println("in sat");
+						flag = 1;
+					} else {
+						flag = 3;
+					}
+
+				
+					  int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(finPending),
+					  String.valueOf(finPaid), expTransList.get(i).getSellBillNo(), flag);
+					 
+				}
+
+			}
+
+			inf.setError(false);
+			inf.setMessage("1");
+		} catch (Exception e) {
+
+			inf.setError(true);
+			inf.setMessage("0");
+
+			System.out.println(
+					"restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return inf;
+	}
 
 }
