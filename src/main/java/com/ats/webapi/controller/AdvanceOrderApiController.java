@@ -214,23 +214,48 @@ public class AdvanceOrderApiController {
 
 	}
 
+	/*
+	 * @Autowired CustomerAmountsRepo customerAmountsRepo;
+	 * 
+	 * @RequestMapping("/getCustomerAmounts") public @ResponseBody CustomerAmounts
+	 * getCustomerAmounts(@RequestParam int custId, @RequestParam int frId) throws
+	 * ParseException { CustomerAmounts orderList = new CustomerAmounts();
+	 * 
+	 * 
+	 * orderList = customerAmountsRepo.findAadvAmt(custId, frId);
+	 * 
+	 * orderList.setCustId(custId);
+	 * 
+	 * System.err.println("orderList"+orderList.toString()); return orderList;
+	 * 
+	 * }
+	 */
+	
 	@Autowired
 	CustomerAmountsRepo customerAmountsRepo;
+	
+	
+	@RequestMapping(value = { "/getCustomerAmounts" }, method = RequestMethod.POST)
+	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId,@RequestParam int frId) {
+		CustomerAmounts orderList=new CustomerAmounts();
+		CustomerAmounts orderList1=new CustomerAmounts();
+		CustomerAmounts orderList2=new CustomerAmounts();
+		System.err.println("data is"+custId);
 
-	@RequestMapping("/getCustomerAmounts")
-	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId, @RequestParam int frId)
-			throws ParseException {
-		CustomerAmounts orderList = new CustomerAmounts();
-		 
+		orderList1 = customerAmountsRepo.findPendingAmt(custId,frId);
+		orderList2 = customerAmountsRepo.findAadvAmt(custId,frId);
 
-		orderList = customerAmountsRepo.findAadvAmt(custId, frId);
- 	  
+
+		orderList.setCreaditAmt(orderList1.getCreaditAmt());
+
+		orderList.setAdvanceAmt(orderList2.getCreaditAmt());
 		orderList.setCustId(custId);
-		
-		System.err.println("orderList"+orderList.toString());
 		return orderList;
-
+		
 	}
+	 
+	
+	
 
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
