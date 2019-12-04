@@ -31,10 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	@Override
-	public List<MCategory> findAllOnlyCategory() {
-		List<Integer> list = new ArrayList<>();
-		list.add(2);
-		list.add(0);
+	public List<MCategory> findAllOnlyCategory(List<Integer> list) {
 		
 		List<MCategory> mCategoryList=categoryRepository.findByDelStatusAndIsSameDayIn(0,list);
 		

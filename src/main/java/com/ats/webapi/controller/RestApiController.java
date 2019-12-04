@@ -2811,8 +2811,10 @@ public class RestApiController {
 
 	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET)
 	public @ResponseBody CategoryList findAllOnlyCategory() {
-
-		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory();
+		List<Integer> list = new ArrayList<>();
+		list.add(2);
+		list.add(0);
+		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory(list);
 		CategoryList categoryList = new CategoryList();
 		ErrorMessage errorMessage = new ErrorMessage();
 		errorMessage.setError(false);
@@ -2822,7 +2824,20 @@ public class RestApiController {
 
 		return categoryList;
 	}
+	@RequestMapping(value = { "/findAllCatForStock" }, method = RequestMethod.GET)
+	public @ResponseBody CategoryList findAllBySameDay() {
+		List<Integer> list = new ArrayList<>();
+		list.add(0);list.add(1);
+		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory(list);
+		CategoryList categoryList = new CategoryList();
+		ErrorMessage errorMessage = new ErrorMessage();
+		errorMessage.setError(false);
+		errorMessage.setMessage("Success");
+		categoryList.setErrorMessage(errorMessage);
+		categoryList.setmCategoryList(jsonCategoryResponse);
 
+		return categoryList;
+	}
 	// Show Flavor List
 	@RequestMapping(value = { "/showFlavourList" }, method = RequestMethod.GET)
 	@ResponseBody

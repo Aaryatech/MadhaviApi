@@ -182,7 +182,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"            s.item_uom as  ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i, " + 
 			"            m_item_sup s  " + 
@@ -222,7 +222,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"             s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 
 			"            m_item_sup s \n" + 
@@ -315,7 +315,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"            s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 
 			"            m_item_sup s \n" + 
@@ -356,7 +356,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"            s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 
 			"            m_item_sup s \n" + 
@@ -440,7 +440,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"            s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 
 			"            m_item_sup s \n" + 
@@ -481,7 +481,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
 			"            i.ext_var2,\n" + 
-			"            i.ext_var3 \n" + 
+			"            s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 
 			"            m_item_sup s \n" + 
