@@ -49,7 +49,7 @@ public class SalesVoucherServiceImpl implements SalesVoucherService{
 	}
 
 	@Override
-	public ErrorMessage updateSalesVouchers(int billNo, int isTallySync) {
+	public ErrorMessage updateSalesVouchers(int billNo, long isTallySync) {
 
 		ErrorMessage errorMessage=new ErrorMessage();
 		

@@ -20,7 +20,7 @@ public class SalesVouchers implements Serializable{
 	private int billNo;
 	
 	@Column(name="is_tally_sync")
-	private int isTallySync;
+	private long isTallySync;
 
 	public int getBillNo() {
 		return billNo;
@@ -30,11 +30,11 @@ public class SalesVouchers implements Serializable{
 		this.billNo = billNo;
 	}
 
-	public int getIsTallySync() {
+	public long getIsTallySync() {
 		return isTallySync;
 	}
 
-	public void setIsTallySync(int isTallySync) {
+	public void setIsTallySync(long isTallySync) {
 		this.isTallySync = isTallySync;
 	}
 	

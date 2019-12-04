@@ -1,6 +1,5 @@
 package com.ats.webapi.controller;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,491 +48,494 @@ public class TallySyncController {
 
 	@Autowired
 	FranchiseeService franchiseeService;
-	
+
 	@Autowired
 	TallyItemService itemService;
-	
+
 	@Autowired
 	SpCakeService specialCakeService;
-	
+
 	@Autowired
 	SalesVoucherService salesVoucherService;
-	
+
 	@Autowired
 	CreditNoteService creditNoteService;
-	
+
 	@Autowired
 	SuppilerMasterService supplierMasterService;
-	
+
 	@Autowired
 	RawMaterialService rawMaterialService;
-	
+
 	@Autowired
 	MaterialRecNoteService materialRecNoteService;
-	
+
 	@Autowired
 	TallySalesVoucherRepository tallySalesVoucherRepository;
-	
+
 	@Autowired
 	TallyCreditNoteRepository tallyCreditNoteRepository;
-	
+
 	@RequestMapping(value = { "/getAllExcelFranchise" }, method = RequestMethod.GET)
-	public @ResponseBody FranchiseeList getAllExcelFranchise()
-	  {
+	public @ResponseBody FranchiseeList getAllExcelFranchise() {
 
-		    FranchiseeList franchiseeList=franchiseeService.getAllFranchisee();
-		    
-		    return franchiseeList;
-	  }
+		FranchiseeList franchiseeList = franchiseeService.getAllFranchisee();
+
+		return franchiseeList;
+	}
+
 	@RequestMapping(value = { "/getAllExcelItems" }, method = RequestMethod.GET)
-	public @ResponseBody ItemList getAllExcelItems()
-	  {
+	public @ResponseBody ItemList getAllExcelItems() {
 
-		    ItemList itemList=itemService.getAllItems();
-		    return itemList;
-		    
-	  }
+		ItemList itemList = itemService.getAllItems();
+		return itemList;
+
+	}
+
 	@RequestMapping(value = { "/getAllExcelSpCake" }, method = RequestMethod.GET)
-	public @ResponseBody SpCakeList getAllExcelSpCake()
-	  {
-		SpCakeList spCakeList=specialCakeService.getAllSpCake();
+	public @ResponseBody SpCakeList getAllExcelSpCake() {
+		SpCakeList spCakeList = specialCakeService.getAllSpCake();
 		return spCakeList;
-	  }
+	}
+
 	@RequestMapping(value = { "/getSalesVouchersByBillNo" }, method = RequestMethod.POST)
-	public @ResponseBody SalesVoucherList getSalesVouchersByBillNo(@RequestParam("billNo")List<Integer> billNo,@RequestParam("all")int all,
-			@RequestParam("fromDate")String fromDate, @RequestParam("toDate")String toDate)
-	  {
+	public @ResponseBody SalesVoucherList getSalesVouchersByBillNo(@RequestParam("billNo") List<Integer> billNo,
+			@RequestParam("all") int all, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
 		SalesVoucherList salesVoucherList = new SalesVoucherList();
 		List<SalesVoucher> salesVoucher = new ArrayList<SalesVoucher>();
 		try {
-			if(all==1)
-			{
-				 salesVoucher=tallySalesVoucherRepository.getSalesVouchersAll(fromDate,toDate);
+			if (all == 1) {
+				salesVoucher = tallySalesVoucherRepository.getSalesVouchersAll(fromDate, toDate);
+			} else {
+				salesVoucher = tallySalesVoucherRepository.getSalesVouchersByBillNo(billNo);
 			}
-			else
-			{
-				 salesVoucher=tallySalesVoucherRepository.getSalesVouchersByBillNo(billNo);
-			}
-		
-		
-		 
-			ErrorMessage errorMessage=new ErrorMessage();
-			
-			if(salesVoucher==null)
-			{
-			
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (salesVoucher == null) {
+
 				errorMessage.setError(true);
 				errorMessage.setMessage("Sales Voucher Not Found");
-				
+
 				salesVoucherList.setErrorMessage(errorMessage);
-			}
-			else
-			{
+			} else {
 				errorMessage.setError(false);
 				errorMessage.setMessage("Sales Voucher Found Successfully");
-				
-				
-				for(int i=0;i<salesVoucher.size();i++) {
-					
-					if(salesVoucher.get(i).getErpLink().equalsIgnoreCase("0")) {
+
+				for (int i = 0; i < salesVoucher.size(); i++) {
+
+					if (salesVoucher.get(i).getErpLink().equalsIgnoreCase("0")) {
 						salesVoucher.get(i).setErpLink("A");
-						
+
 					}
 				}
-				
+
 				salesVoucherList.setSalesVoucherList(salesVoucher);
 				salesVoucherList.setErrorMessage(errorMessage);
-					
+
 			}
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		    return salesVoucherList;
-	  }
-	
-	 @RequestMapping(value = { "/getCreditNotesByCrnId" }, method = RequestMethod.POST)
-		public @ResponseBody CreditNoteList getCreditNotesByCrnId(@RequestParam("crnId")List<Integer> crnId)
-		  {
+		return salesVoucherList;
+	}
 
-			CreditNoteList creditNoteList=new CreditNoteList();
-			try
-			{
-				 List<CreditNote> creditNotes=tallyCreditNoteRepository.getCreditNotesByCrnId(crnId);
-					
-					ErrorMessage errorMessage=new ErrorMessage();
-					
-					if(creditNotes==null)
-					{
-					
-						errorMessage.setError(true);
-						errorMessage.setMessage("Credit Note Not Found");
-						
-						creditNoteList.setErrorMessage(errorMessage);
+	@RequestMapping(value = { "/getCreditNotesByCrnId" }, method = RequestMethod.POST)
+	public @ResponseBody CreditNoteList getCreditNotesByCrnId(@RequestParam("crnId") List<Integer> crnId) {
+
+		CreditNoteList creditNoteList = new CreditNoteList();
+		try {
+			List<CreditNote> creditNotes = tallyCreditNoteRepository.getCreditNotesByCrnId(crnId);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (creditNotes == null) {
+
+				errorMessage.setError(true);
+				errorMessage.setMessage("Credit Note Not Found");
+
+				creditNoteList.setErrorMessage(errorMessage);
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Credit Note Found Successfully");
+
+				for (int i = 0; i < creditNotes.size(); i++) {
+
+					if (creditNotes.get(i).getErpLink().equalsIgnoreCase("0")) {
+
+						creditNotes.get(i).setErpLink("A");
+
 					}
-					else
-					{
-						errorMessage.setError(false);
-						errorMessage.setMessage("Credit Note Found Successfully");
-						
-						for(int i=0;i<creditNotes.size();i++) {
-							
-							if(creditNotes.get(i).getErpLink().equalsIgnoreCase("0")) {
-								
-								creditNotes.get(i).setErpLink("A");
-								
-							}
-						}
-						
-						creditNoteList.setCreditNoteList(creditNotes);
-						creditNoteList.setErrorMessage(errorMessage);
-						
-					}
-			}catch(Exception e)
-			{
-				e.printStackTrace();
+				}
+
+				creditNoteList.setCreditNoteList(creditNotes);
+				creditNoteList.setErrorMessage(errorMessage);
+
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		    
-				return creditNoteList; 
-		  }
+		return creditNoteList;
+	}
+
 	@RequestMapping(value = { "/getAllFranchisee" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<byte[]> showAllFranchisee()
-	  {
+	public @ResponseBody ResponseEntity<byte[]> showAllFranchisee() {
 
-		    FranchiseeList franchiseeList=franchiseeService.getAllFranchisee();
-		    
-		    String regData =JsonUtil.javaToJson(franchiseeList);
+		FranchiseeList franchiseeList = franchiseeService.getAllFranchisee();
 
-		    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(franchiseeList);
 
-		    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-		    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-		    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-		    responseHeaders.set("Content-disposition", "attachment; filename=allFranchisee.json");
+		responseHeaders.setContentLength(output.length);
 
+		responseHeaders.set("Content-disposition", "attachment; filename=allFranchisee.json");
 
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 
-		    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-
-	  }
 	@RequestMapping(value = { "/getAllItems" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<byte[]> showAllItem()
-	  {
+	public @ResponseBody ResponseEntity<byte[]> showAllItem() {
 
-		    ItemList itemList=itemService.getAllItems();
-		    
-            String regData =JsonUtil.javaToJson(itemList);
+		ItemList itemList = itemService.getAllItems();
 
-		    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(itemList);
 
-		    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-		    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-		    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-		    responseHeaders.set("Content-disposition", "attachment; filename=allItems.json");
+		responseHeaders.setContentLength(output.length);
 
-		    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-		    
-	  }
+		responseHeaders.set("Content-disposition", "attachment; filename=allItems.json");
+
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+
+	}
+
 	@RequestMapping(value = { "/getAllSpCake" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<byte[]> showAllSpCake()
-	  {
+	public @ResponseBody ResponseEntity<byte[]> showAllSpCake() {
 
-		SpCakeList spCakeList=specialCakeService.getAllSpCake();
-		    
-		String regData =JsonUtil.javaToJson(spCakeList);
+		SpCakeList spCakeList = specialCakeService.getAllSpCake();
 
-	    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(spCakeList);
 
-	    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-	    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-	    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-	    responseHeaders.set("Content-disposition", "attachment; filename=allSpecialCakes.json");
+		responseHeaders.setContentLength(output.length);
 
-	    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-	    
-	  }
-	
+		responseHeaders.set("Content-disposition", "attachment; filename=allSpecialCakes.json");
+
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+
+	}
+
 	@RequestMapping(value = { "/updateFranchisees" }, method = RequestMethod.GET)
-	public @ResponseBody ResponseEntity<byte[]> updateFranchisees(@RequestParam("customerId")int customerId,@RequestParam("isTallySync")int isTallySync)
-	  {
-		
-		ErrorMessage errorMessage=franchiseeService.updateFranchisees(customerId,isTallySync);
-		
-		String regData =JsonUtil.javaToJson(errorMessage);
+	public @ResponseBody ResponseEntity<byte[]> updateFranchisees(@RequestParam("customerId") int customerId,
+			@RequestParam("isTallySync") int isTallySync) {
 
-	    byte[] output = regData.getBytes();
+		ErrorMessage errorMessage = franchiseeService.updateFranchisees(customerId, isTallySync);
 
-	    HttpHeaders responseHeaders = new HttpHeaders();
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-	    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		byte[] output = regData.getBytes();
 
-	    responseHeaders.setContentLength(output.length);
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-	    responseHeaders.set("Content-disposition", "attachment; filename=updateFranchisees.json");
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-	    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-	  }
-	
-	  @RequestMapping(value = { "/updateItems" }, method = RequestMethod.GET)
-	  public @ResponseBody ResponseEntity<byte[]> updateItems(@RequestParam("id")int id,@RequestParam("isTallySync")int isTallySync)
-	  {
+		responseHeaders.setContentLength(output.length);
 
-		    ErrorMessage errorMessage=itemService.updateItems(id,isTallySync);
-		    
-		    String regData =JsonUtil.javaToJson(errorMessage);
+		responseHeaders.set("Content-disposition", "attachment; filename=updateFranchisees.json");
 
-		    byte[] output = regData.getBytes();
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-		    HttpHeaders responseHeaders = new HttpHeaders();
+	@RequestMapping(value = { "/updateItems" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateItems(@RequestParam("id") int id,
+			@RequestParam("isTallySync") int isTallySync) {
 
-		    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		ErrorMessage errorMessage = itemService.updateItems(id, isTallySync);
 
-		    responseHeaders.setContentLength(output.length);
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-		    responseHeaders.set("Content-disposition", "attachment; filename=updateItems.json");
+		byte[] output = regData.getBytes();
 
-		    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-	  }
-	  
-	  @RequestMapping(value = { "/updateSpCakes" }, method = RequestMethod.GET)
-		public @ResponseBody ResponseEntity<byte[]> updateSpCakes(@RequestParam("id")int id,@RequestParam("isTallySync")int isTallySync)
-		  {
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-		  ErrorMessage errorMessage=specialCakeService.updateSpCakes(id,isTallySync);
-			    
-		  String regData =JsonUtil.javaToJson(errorMessage);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-		    byte[] output = regData.getBytes();
+		responseHeaders.setContentLength(output.length);
 
-		    HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-disposition", "attachment; filename=updateItems.json");
 
-		    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-		    responseHeaders.setContentLength(output.length);
+	@RequestMapping(value = { "/updateSpCakes" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateSpCakes(@RequestParam("id") int id,
+			@RequestParam("isTallySync") int isTallySync) {
 
-		    responseHeaders.set("Content-disposition", "attachment; filename=updateSpecialCakes.json");
+		ErrorMessage errorMessage = specialCakeService.updateSpCakes(id, isTallySync);
 
-		    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-		  }
-		
-	     @RequestMapping(value = { "/getAllSalesVouchers" }, method = RequestMethod.GET)
-		public @ResponseBody ResponseEntity<byte[]> showAllSalesVoucher()
-		  {
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-	    	 SalesVoucherList salesVoucherList=salesVoucherService.getAllSalesVoucher();
-			    
-	    	 String regData =JsonUtil.javaToJson(salesVoucherList);
+		byte[] output = regData.getBytes();
 
-			    byte[] output = regData.getBytes();
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-			    HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-			    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		responseHeaders.setContentLength(output.length);
 
-			    responseHeaders.setContentLength(output.length);
+		responseHeaders.set("Content-disposition", "attachment; filename=updateSpecialCakes.json");
 
-			    responseHeaders.set("Content-disposition", "attachment; filename=allSalesVouchers.json");
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-			    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-		  }
-		
-		 
-	     @RequestMapping(value = { "/updateSalesVoucher" }, method = RequestMethod.GET)
-			public @ResponseBody ResponseEntity<byte[]> updateSalesVouchers(@RequestParam("VNo")int billNo,@RequestParam("isTallySync")int isTallySync)
-			  {
+	@RequestMapping(value = { "/getAllSalesVouchers" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> showAllSalesVoucher() {
 
-			  ErrorMessage errorMessage=salesVoucherService.updateSalesVouchers(billNo,isTallySync);
-				    
-			  String regData =JsonUtil.javaToJson(errorMessage);
+		SalesVoucherList salesVoucherList = salesVoucherService.getAllSalesVoucher();
 
-			    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(salesVoucherList);
 
-			    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-			    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-			    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-			    responseHeaders.set("Content-disposition", "attachment; filename=updateSalesVouchers.json");
+		responseHeaders.setContentLength(output.length);
 
-			    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-			  }
-	     @RequestMapping(value = { "/getAllCreditNotes" }, method = RequestMethod.GET)
-			public @ResponseBody ResponseEntity<byte[]> showAllCreditNote()
-			  {
+		responseHeaders.set("Content-disposition", "attachment; filename=allSalesVouchers.json");
 
-	    	 CreditNoteList creditNoteList=creditNoteService.getAllCreditNote();
-				    
-	    	 String regData =JsonUtil.javaToJson(creditNoteList);
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-			    byte[] output = regData.getBytes();
+	//Sachin 30-11-2019
+	@RequestMapping(value = { "/updateEwayBillNo" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage updateEwayBillNo(@RequestParam  int billNo,
+			@RequestParam long ewayBillNo) {
+System.err.println("Hiiii");
+		ErrorMessage errorMessage = null;
+		try {
+			errorMessage = salesVoucherService.updateSalesVouchers(billNo, ewayBillNo);
+			//errorMessage.set
+		}catch (Exception e) {
+			e.printStackTrace();
+			errorMessage=new ErrorMessage();
+		}
+		return errorMessage;
+	}
 
-			    HttpHeaders responseHeaders = new HttpHeaders();
+	/*
+	 * @RequestMapping(value = { "/updateSalesVoucher" }, method =
+	 * RequestMethod.GET) public @ResponseBody ResponseEntity<byte[]>
+	 * updateSalesVouchers(@RequestParam("VNo") int billNo,
+	 * 
+	 * @RequestParam("isTallySync") int isTallySync) {
+	 * 
+	 * ErrorMessage errorMessage = salesVoucherService.updateSalesVouchers(billNo,
+	 * isTallySync);
+	 * 
+	 * String regData = JsonUtil.javaToJson(errorMessage);
+	 * 
+	 * byte[] output = regData.getBytes();
+	 * 
+	 * HttpHeaders responseHeaders = new HttpHeaders();
+	 * 
+	 * responseHeaders.setContentType(MediaType.valueOf(
+	 * "application/json;charset=UTF-8"));
+	 * 
+	 * responseHeaders.setContentLength(output.length);
+	 * 
+	 * responseHeaders.set("Content-disposition",
+	 * "attachment; filename=updateSalesVouchers.json");
+	 * 
+	 * return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK); }
+	 */
+	@RequestMapping(value = { "/getAllCreditNotes" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> showAllCreditNote() {
 
-			    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		CreditNoteList creditNoteList = creditNoteService.getAllCreditNote();
 
-			    responseHeaders.setContentLength(output.length);
+		String regData = JsonUtil.javaToJson(creditNoteList);
 
-			    responseHeaders.set("Content-disposition", "attachment; filename=allCreditNotes.json");
+		byte[] output = regData.getBytes();
 
-			    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-			    
-			  }
-	     @RequestMapping(value = { "/updateCreditNote" }, method = RequestMethod.GET)
-			public @ResponseBody ResponseEntity<byte[]> updateCreditNote(@RequestParam("VNo")int crnId,@RequestParam("isTallySync")int isTallySync)
-			  {
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-			  ErrorMessage errorMessage=creditNoteService.updateCreditNote(crnId,isTallySync);
-				    
-			  String regData =JsonUtil.javaToJson(errorMessage);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-			    byte[] output = regData.getBytes();
+		responseHeaders.setContentLength(output.length);
 
-			    HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("Content-disposition", "attachment; filename=allCreditNotes.json");
 
-			    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 
-			    responseHeaders.setContentLength(output.length);
+	}
 
-			    responseHeaders.set("Content-disposition", "attachment; filename=updateCreditNotes.json");
+	@RequestMapping(value = { "/updateCreditNote" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateCreditNote(@RequestParam("VNo") int crnId,
+			@RequestParam("isTallySync") int isTallySync) {
 
-			    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-			  }
-			//-------------------------------------------------------------------------------------
-			@RequestMapping(value = { "/getAllSupplier" }, method = RequestMethod.GET)
-			public @ResponseBody ResponseEntity<byte[]> getAllSupplier()
-			{
-				SuppliersList supplierList=supplierMasterService.getAllSupplierForTally();
-				
-				 String regData =JsonUtil.javaToJson(supplierList);
+		ErrorMessage errorMessage = creditNoteService.updateCreditNote(crnId, isTallySync);
 
-				    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-				    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-				    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-				    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-				    responseHeaders.set("Content-disposition", "attachment; filename=allSuppliers.json");
+		responseHeaders.setContentLength(output.length);
 
-				    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-				
-			}
-			//-------------------------------------------------------------------------------------
-			//------------------------------Get All RM Master-------------------------------------
-			@RequestMapping(value = { "/getAllRawMaterial" }, method = RequestMethod.GET)
-			public @ResponseBody ResponseEntity<byte[]> getAllRawMaterial()
-			{
-				RawMaterialResList rawMaterialDetailsList=rawMaterialService.getAllRawMaterialForTally();
-				
-				 String regData =JsonUtil.javaToJson(rawMaterialDetailsList);
+		responseHeaders.set("Content-disposition", "attachment; filename=updateCreditNotes.json");
 
-				    byte[] output = regData.getBytes();
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-				    HttpHeaders responseHeaders = new HttpHeaders();
+	// -------------------------------------------------------------------------------------
+	@RequestMapping(value = { "/getAllSupplier" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> getAllSupplier() {
+		SuppliersList supplierList = supplierMasterService.getAllSupplierForTally();
 
-				    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		String regData = JsonUtil.javaToJson(supplierList);
 
-				    responseHeaders.setContentLength(output.length);
+		byte[] output = regData.getBytes();
 
-				    responseHeaders.set("Content-disposition", "attachment; filename=allRawMaterial.json");
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-				    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-				
-			}
-			//----------------------------------------------------------------------------------------
-			   @RequestMapping(value = { "/updateSupplier" }, method = RequestMethod.GET)
-				public @ResponseBody ResponseEntity<byte[]> updateSupplier(@RequestParam("suppId")int suppId,@RequestParam("isTallySync")int isTallySync)
-				  {
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-				  ErrorMessage errorMessage=supplierMasterService.updateSupplier(suppId,isTallySync);
-					    
-				  String regData =JsonUtil.javaToJson(errorMessage);
+		responseHeaders.setContentLength(output.length);
 
-				    byte[] output = regData.getBytes();
+		responseHeaders.set("Content-disposition", "attachment; filename=allSuppliers.json");
 
-				    HttpHeaders responseHeaders = new HttpHeaders();
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 
-				    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+	}
 
-				    responseHeaders.setContentLength(output.length);
+	// -------------------------------------------------------------------------------------
+	// ------------------------------Get All RM
+	// Master-------------------------------------
+	@RequestMapping(value = { "/getAllRawMaterial" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> getAllRawMaterial() {
+		RawMaterialResList rawMaterialDetailsList = rawMaterialService.getAllRawMaterialForTally();
 
-				    responseHeaders.set("Content-disposition", "attachment; filename=updateSupplier.json");
+		String regData = JsonUtil.javaToJson(rawMaterialDetailsList);
 
-				    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-				  }
-				//----------------------------------------------------------------------------------------
-				   @RequestMapping(value = { "/updateRawMaterial" }, method = RequestMethod.GET)
-					public @ResponseBody ResponseEntity<byte[]> updateRawMaterial(@RequestParam("rmId")int rmId,@RequestParam("isTallySync")int isTallySync)
-					  {
+		byte[] output = regData.getBytes();
 
-					  ErrorMessage errorMessage=rawMaterialService.updateRawMaterial(rmId,isTallySync);
-						    
-					  String regData =JsonUtil.javaToJson(errorMessage);
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-					    byte[] output = regData.getBytes();
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-					    HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.setContentLength(output.length);
 
-					    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		responseHeaders.set("Content-disposition", "attachment; filename=allRawMaterial.json");
 
-					    responseHeaders.setContentLength(output.length);
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 
-					    responseHeaders.set("Content-disposition", "attachment; filename=updateRawMaterial.json");
+	}
 
-					    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-					  }	
-					@RequestMapping(value = { "/getAllInwards" }, method = RequestMethod.GET)
-					public @ResponseBody ResponseEntity<byte[]> getAllInwards()
-					{
+	// ----------------------------------------------------------------------------------------
+	@RequestMapping(value = { "/updateSupplier" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateSupplier(@RequestParam("suppId") int suppId,
+			@RequestParam("isTallySync") int isTallySync) {
 
-						MaterialRecNoteList materialRecNoteRes = materialRecNoteService.getAllInwards();
-						  String regData =JsonUtil.javaToJson(materialRecNoteRes);
+		ErrorMessage errorMessage = supplierMasterService.updateSupplier(suppId, isTallySync);
 
-						    byte[] output = regData.getBytes();
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-						    HttpHeaders responseHeaders = new HttpHeaders();
+		byte[] output = regData.getBytes();
 
-						    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-						    responseHeaders.setContentLength(output.length);
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
 
-						    responseHeaders.set("Content-disposition", "attachment; filename=allInwards.json");
+		responseHeaders.setContentLength(output.length);
 
-						    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-					}
-					
-					//----------------------------------------------------------------------------------------
-					   @RequestMapping(value = { "/updateInward" }, method = RequestMethod.GET)
-						public @ResponseBody ResponseEntity<byte[]> updateInward(@RequestParam("mrnId")int mrnId,@RequestParam("isTallySync")int isTallySync)
-						  {
+		responseHeaders.set("Content-disposition", "attachment; filename=updateSupplier.json");
 
-						  ErrorMessage errorMessage=materialRecNoteService.updateInward(mrnId,isTallySync);
-							    
-						  String regData =JsonUtil.javaToJson(errorMessage);
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 
-						    byte[] output = regData.getBytes();
+	// ----------------------------------------------------------------------------------------
+	@RequestMapping(value = { "/updateRawMaterial" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateRawMaterial(@RequestParam("rmId") int rmId,
+			@RequestParam("isTallySync") int isTallySync) {
 
-						    HttpHeaders responseHeaders = new HttpHeaders();
+		ErrorMessage errorMessage = rawMaterialService.updateRawMaterial(rmId, isTallySync);
 
-						    responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+		String regData = JsonUtil.javaToJson(errorMessage);
 
-						    responseHeaders.setContentLength(output.length);
+		byte[] output = regData.getBytes();
 
-						    responseHeaders.set("Content-disposition", "attachment; filename=updateInward.json");
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-						    return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
-						  }	
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+
+		responseHeaders.setContentLength(output.length);
+
+		responseHeaders.set("Content-disposition", "attachment; filename=updateRawMaterial.json");
+
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = { "/getAllInwards" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> getAllInwards() {
+
+		MaterialRecNoteList materialRecNoteRes = materialRecNoteService.getAllInwards();
+		String regData = JsonUtil.javaToJson(materialRecNoteRes);
+
+		byte[] output = regData.getBytes();
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+
+		responseHeaders.setContentLength(output.length);
+
+		responseHeaders.set("Content-disposition", "attachment; filename=allInwards.json");
+
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
+
+	// ----------------------------------------------------------------------------------------
+	@RequestMapping(value = { "/updateInward" }, method = RequestMethod.GET)
+	public @ResponseBody ResponseEntity<byte[]> updateInward(@RequestParam("mrnId") int mrnId,
+			@RequestParam("isTallySync") int isTallySync) {
+
+		ErrorMessage errorMessage = materialRecNoteService.updateInward(mrnId, isTallySync);
+
+		String regData = JsonUtil.javaToJson(errorMessage);
+
+		byte[] output = regData.getBytes();
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+
+		responseHeaders.setContentType(MediaType.valueOf("application/json;charset=UTF-8"));
+
+		responseHeaders.setContentLength(output.length);
+
+		responseHeaders.set("Content-disposition", "attachment; filename=updateInward.json");
+
+		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
+	}
 }

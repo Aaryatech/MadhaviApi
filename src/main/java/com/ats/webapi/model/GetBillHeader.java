@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 // Bean to search order :Listing Bills @Sachin
@@ -77,8 +76,20 @@ public class GetBillHeader implements Serializable {
 	
 	private String exVarchar2;//NA
 	
+	private String ewayBillNo;//getting from isTallySync	
+	
+	
+	
     
 	
+	public String getEwayBillNo() {
+		return ewayBillNo;
+	}
+
+	public void setEwayBillNo(String ewayBillNo) {
+		this.ewayBillNo = ewayBillNo;
+	}
+
 	public String getVehNo() {
 		return vehNo;
 	}
@@ -252,6 +263,8 @@ public class GetBillHeader implements Serializable {
 		this.time = time;
 	}
 
+	
+	
 	@Override
 	public String toString() {
 		return "GetBillHeader [billNo=" + billNo + ", frName=" + frName + ", time=" + time + ", taxApplicable="
@@ -259,7 +272,8 @@ public class GetBillHeader implements Serializable {
 				+ frCode + ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax
 				+ ", status=" + status + ", DelStatus=" + DelStatus + ", remark=" + remark + ", partyName=" + partyName
 				+ ", partyAddress=" + partyAddress + ", partyGstin=" + partyGstin + ", vehNo=" + vehNo + ", billTime="
-				+ billTime + ", exVarchar1=" + exVarchar1 + ", exVarchar2=" + exVarchar2 + "]";
+				+ billTime + ", exVarchar1=" + exVarchar1 + ", exVarchar2=" + exVarchar2 + ", ewayBillNo=" + ewayBillNo
+				+ "]";
 	}
 
 	
