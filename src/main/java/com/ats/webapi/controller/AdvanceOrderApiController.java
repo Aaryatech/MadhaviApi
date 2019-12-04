@@ -221,19 +221,10 @@ public class AdvanceOrderApiController {
 	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId, @RequestParam int frId)
 			throws ParseException {
 		CustomerAmounts orderList = new CustomerAmounts();
-		CustomerAmounts orderList1 = new CustomerAmounts();
-		CustomerAmounts orderList2 = new CustomerAmounts();
-		System.err.println("data is" + custId);
+		 
 
-		orderList1 = customerAmountsRepo.findPendingAmt(custId, frId);
-		orderList2 = customerAmountsRepo.findAadvAmt(custId, frId);
-		
-		System.err.println("orderList2"+orderList2.toString());
-		System.err.println("orderList1"+orderList1.toString());
-
-		orderList.setCreaditAmt(orderList1.getCreaditAmt());
-
-		orderList.setAdvanceAmt(orderList2.getAdvanceAmt());
+		orderList = customerAmountsRepo.findAadvAmt(custId, frId);
+ 	  
 		orderList.setCustId(custId);
 		
 		System.err.println("orderList"+orderList.toString());
@@ -324,6 +315,9 @@ public class AdvanceOrderApiController {
 				
 					  int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(finPending),
 					  String.valueOf(finPaid), expTransList.get(i).getSellBillNo(), flag);
+					  
+					  expTransList.get(i).setExVar2("");
+					  expTransList.get(i).setExFloat1(0);
 					 
 				}
 
