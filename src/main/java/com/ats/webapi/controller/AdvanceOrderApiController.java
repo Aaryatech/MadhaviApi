@@ -227,11 +227,16 @@ public class AdvanceOrderApiController {
 
 		orderList1 = customerAmountsRepo.findPendingAmt(custId, frId);
 		orderList2 = customerAmountsRepo.findAadvAmt(custId, frId);
+		
+		System.err.println("orderList2"+orderList2.toString());
+		System.err.println("orderList1"+orderList1.toString());
 
 		orderList.setCreaditAmt(orderList1.getCreaditAmt());
 
 		orderList.setAdvanceAmt(orderList2.getAdvanceAmt());
 		orderList.setCustId(custId);
+		
+		System.err.println("orderList"+orderList.toString());
 		return orderList;
 
 	}
