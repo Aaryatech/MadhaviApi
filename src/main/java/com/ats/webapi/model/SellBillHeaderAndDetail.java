@@ -149,7 +149,7 @@ public class SellBillHeaderAndDetail {
 		this.billType = billType;
 	}
 
-	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy HH:mm:ss")
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy hh:mm:ss aa")
 	public Date getTimestamp() {
 		return timestamp;
 	}

@@ -34,7 +34,7 @@ public class SellBillDetail implements Serializable{
 	private float mrp;
 	
 	@Column(name="qty")
-	private int qty;
+	private float qty;
 	
 	@Column(name="mrp_base_rate")
 	private float mrpBaseRate;
@@ -147,11 +147,11 @@ public class SellBillDetail implements Serializable{
 		this.mrp = mrp;
 	}
 
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 
