@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ats.webapi.model.ErrorMessage;
+import com.ats.webapi.model.FrEmpLoginResp;
 import com.ats.webapi.model.FrLoginResponse;
 import com.ats.webapi.model.FrTarget;
 import com.ats.webapi.model.FrTargetList;
@@ -25,6 +26,8 @@ import com.ats.webapi.model.Franchisee;
 import com.ats.webapi.model.GetFranchiseSup;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.LoginInfo;
+import com.ats.webapi.model.pettycash.FrEmpMaster;
+import com.ats.webapi.repo.FrEmpMasterRepo;
 import com.ats.webapi.repository.FrTargetRepository;
 import com.ats.webapi.repository.FrTotalSaleRepository;
 import com.ats.webapi.repository.FranchiseRepository;
@@ -51,6 +54,8 @@ public class FranchiseeServiceImpl implements FranchiseeService {
     
     @Autowired
     FrTotalSaleRepository frTotalSaleRepository;
+    
+    @Autowired FrEmpMasterRepo frEmpRepo;
     
 	@Override
 	public ErrorMessage saveFranchisee(Franchisee franchisee) {
@@ -88,6 +93,89 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 		Franchisee franchisee=franchiseeRepository.findOne(frId);
 	     return franchisee;
 	}
+	
+	
+	/********************************************************************/
+
+	@Override
+	public String findFrEmployeeByMobNo(String mobNo, String empPass, int frId) {
+		String frEmpMob = null;
+		String frEmpPass = null;
+		String jsonFr = "{}";
+		
+		Franchisee franchisee = new Franchisee();
+		FrEmpMaster frEmp = new FrEmpMaster();
+		LoginInfo loginInfo=new LoginInfo();
+		
+		FrEmpLoginResp empLogResp = new FrEmpLoginResp();
+		try { 
+			frEmp=frEmpRepo.findByFrIdAndFrEmpContactAndPasswordAndDelStatus(frId, mobNo, empPass, 0);
+			franchisee = franchiseeRepository.findOne(frId);
+			System.out.println("Franchisee Employee Details : "+frEmp);
+			
+			frEmpMob = frEmp.getFrEmpContact();
+			frEmpPass = frEmp.getPassword();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			
+			System.out.println("Exception while finding prev fr "+e.getMessage());
+			
+			empLogResp.setFrEmp(frEmp);
+			empLogResp.setFranchisee(franchisee);
+			loginInfo.setError(true);
+			loginInfo.setAccessRight(0);
+
+			loginInfo.setMessage("Franchisee Employee Not Registerd");
+			empLogResp.setLoginInfo(loginInfo);
+			jsonFr = JsonUtil.javaToJson(empLogResp);
+		}
+		try {
+			
+			if (frEmp.getFrEmpContact() == null || frEmp.getPassword() == null||frEmp.getFrEmpContact().equalsIgnoreCase("")||frEmp.getPassword().equalsIgnoreCase("")) {
+
+				System.out.println("Exception fr details null ");
+				
+				empLogResp.setFrEmp(frEmp);
+				loginInfo.setError(true);
+				loginInfo.setAccessRight(0);
+				loginInfo.setMessage("Franchisee Employee Not Registered");
+				empLogResp.setLoginInfo(loginInfo);
+				jsonFr = JsonUtil.javaToJson(empLogResp);
+				
+			}else if (frEmpMob.equalsIgnoreCase(mobNo) && frEmpPass.equals(frEmpPass)) {
+				
+				
+				empLogResp.setFrEmp(frEmp);
+				empLogResp.setFranchisee(franchisee);
+				loginInfo.setError(false);
+				loginInfo.setAccessRight(1);
+				loginInfo.setMessage("Franchisee Employee Displayed Successfully");
+				empLogResp.setLoginInfo(loginInfo);
+				jsonFr = JsonUtil.javaToJson(empLogResp);
+
+			}else if (frEmpMob.equalsIgnoreCase(mobNo) && frEmpPass.equals(frEmpPass)) {
+				
+			}
+			
+		}catch (Exception e) {
+			System.out.println("Exception while converting prev fr "+e.getMessage());
+			
+			empLogResp.setFrEmp(frEmp);
+			empLogResp.setFranchisee(franchisee);
+			loginInfo.setError(true);
+			loginInfo.setAccessRight(0);
+
+			loginInfo.setMessage("Franchisee Employee Not Registered");
+			empLogResp.setLoginInfo(loginInfo);
+			jsonFr = JsonUtil.javaToJson(empLogResp);
+		}
+		
+		return jsonFr;
+	}
+	
+	
+	/********************************************************************/
 
 	@Override
 	public String findFranchiseeByFrCode(String frCode, String frPassword) {
@@ -514,6 +602,7 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 			return frLoginResponse;
 
 		}
+
 	
 	
 }

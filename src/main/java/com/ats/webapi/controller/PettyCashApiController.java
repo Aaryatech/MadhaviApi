@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.Info;
 import com.ats.webapi.model.PettyCashEmp;
 import com.ats.webapi.model.PettyCashHandover;
 import com.ats.webapi.model.SellBillHeader;
+import com.ats.webapi.model.pettycash.FrEmpMaster;
 import com.ats.webapi.model.pettycash.OtherBillDetailAdv;
 import com.ats.webapi.model.pettycash.PettyCashDao;
 import com.ats.webapi.model.pettycash.PettyCashManagmt;
 import com.ats.webapi.model.pettycash.SellBillDetailAdv;
 import com.ats.webapi.model.pettycash.SpCakeAdv;
+import com.ats.webapi.repo.FrEmpMasterRepo;
 import com.ats.webapi.repo.OtherBillDetailAdvRepo;
 import com.ats.webapi.repo.PettyCashEmpRepo;
 import com.ats.webapi.repo.PettyCashHandoverRepo;
@@ -199,8 +202,89 @@ public class PettyCashApiController {
 		
 	}
 	
+	/***************************************Franchisee Employee*****************************/
 	
+	@Autowired
+	FrEmpMasterRepo frEmpRepo;
+
+	@RequestMapping(value = { "/getAllFrEmpByFrid" }, method = RequestMethod.POST)
+	public List<FrEmpMaster> getAllFrEmpByFrid(@RequestParam int frId) {
+		List<FrEmpMaster> list = new ArrayList<FrEmpMaster>();
+		try {
+			list = frEmpRepo.findByFrIdAndDelStatus(frId, 0);
+			System.err.println("List-----------" + list);
+		} catch (Exception e) {
+			System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+
+	}
+
+	@RequestMapping(value = { "/getFrEmpByEmpId" }, method = RequestMethod.POST)
+	public FrEmpMaster getFrEmpByEmpId(@RequestParam int empId) {
+		FrEmpMaster emp = new FrEmpMaster();
+		try {
+			emp = frEmpRepo.findByFrEmpId(empId);
+		} catch (Exception e) {
+			System.err.println("Exception in getFrEmpByEmpId : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return emp;
+	}
+
+	@RequestMapping(value = { "/saveFrEmpDetails" }, method = RequestMethod.POST)
+	public FrEmpMaster saveFrEmpDetails(@RequestBody FrEmpMaster emp) {
+		FrEmpMaster frEmp = new FrEmpMaster();
+		try {
+			frEmp = frEmpRepo.save(emp);
+		} catch (Exception e) {
+			System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return frEmp;
+	}
+
+	@RequestMapping(value = { "/delFrEmp" }, method = RequestMethod.POST)
+	public Info delFrEmp(@RequestParam int empId) {
+		Info info = new Info();
+		try {
+			int res = frEmpRepo.deleteEmpByfrEmpId(empId);
+			if (res != 0) {
+				info.setError(false);
+				info.setMessage("Sucess");
+			} else {
+				info.setError(true);
+				info.setMessage("Fail");
+			}
+		} catch (Exception e) {
+			System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return info;
+	}
 	
+	@RequestMapping(value = { "/checkUniqueContactNo" }, method = RequestMethod.POST)
+	public Info checkUniqueContactNo (String mobNo) {
+		Info info = new Info();
+		try {
+			FrEmpMaster emp = new FrEmpMaster(); 
+			emp = frEmpRepo.findByFrEmpContactAndDelStatus(mobNo, 0);
+			if (emp != null) {
+				System.out.println("Contact No. Found");
+				info.setError(false);
+				info.setMessage("Found");
+			} else {
+				System.out.println("Contact No. Not Found");
+				info.setError(true);
+				info.setMessage("Not Found ");
+			}
+		} catch (Exception e) {
+			System.err.println("Exception in checkUniqueContactNo : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return info;
+	}
 }
 
 

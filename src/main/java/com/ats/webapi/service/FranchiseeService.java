@@ -22,8 +22,6 @@ public interface FranchiseeService {
 
 	public Franchisee findFranchisee(int frId);
 
-	public String findFranchiseeByFrCode(String frCode, String passwordKey);
-
 	public FranchiseSup saveFranchiseSup(FranchiseSup franchiseSup);
 
 	public Info deleteFranchiseSup(int frId);
@@ -45,5 +43,11 @@ public interface FranchiseeService {
 	public FranchiseSup getFrSupByFrId(int frId);
 
 	public FrLoginResponse getLogin(String fr_code, String fr_password);
+
+	
+	
+	public String findFranchiseeByFrCode(String frCode, String passwordKey);
+	
+	public String findFrEmployeeByMobNo(String mobNo, String empPass, int frId);
 	
 }
