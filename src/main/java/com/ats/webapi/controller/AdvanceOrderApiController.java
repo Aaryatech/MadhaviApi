@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -361,6 +362,58 @@ public class AdvanceOrderApiController {
 		}
 
 		return inf;
+	}
+
+	
+	
+	//pop ups ws  of pos 
+	
+	
+	@RequestMapping("/getAllSellCustBillTodaysBill")
+	public @ResponseBody List<SellBillHeader> getAllBillByCustId(@RequestParam int custId,
+			@RequestParam int frId,@RequestParam int flag) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		try {
+
+			if(flag==1){
+				orderList = sellBillHeaderRepository.getCustBills(custId,frId);
+
+			}else if(flag==2){
+				orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date),frId);
+			}
+			else{
+				orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+	
+	
+
+	@RequestMapping("/getAllSellCustBillTransaction")
+	public @ResponseBody List<TransactionDetail> getAllSellCustBillTransaction(@RequestParam int custId,
+			@RequestParam int frId) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		List<TransactionDetail> orderList = new ArrayList<TransactionDetail>();
+		try {
+				orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
+ 
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
 	}
 
 }

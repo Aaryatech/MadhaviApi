@@ -17,9 +17,19 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@SuppressWarnings("unchecked")
 	public SellBillHeader save (SellBillHeader sellBillHeaderList);
 	
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.status=3 AND t_sell_bill_header.del_status=0 AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC LIMIT 50",nativeQuery=true)
+	List<SellBillHeader> getCustBillsPending50(@Param("custId") int custId,@Param("frId") int frId);
+	
+	
+	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=0 AND t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC LIMIT 50",nativeQuery=true)
+	List<SellBillHeader> getSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);
 	
 	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.status=3 AND t_sell_bill_header.del_status=0 AND t_sell_bill_header.fr_id=:frId",nativeQuery=true)
-	List<SellBillHeader> getSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);
+	List<SellBillHeader> getCustBills(@Param("custId") int custId,@Param("frId") int frId);
+
+	
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date=:todaysDate",nativeQuery=true)
+	List<SellBillHeader> getCustBillsTodays(@Param("todaysDate") String todaysDate,@Param("frId") int frId);
 
 	
 	@Transactional
