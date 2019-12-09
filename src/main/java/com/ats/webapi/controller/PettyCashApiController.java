@@ -123,7 +123,7 @@ public class PettyCashApiController {
 		return pettyList;
 	}
 	
-	@Autowired PettyCashEmpRepo pettyEmpRepo;
+	/*@Autowired PettyCashEmpRepo pettyEmpRepo;
 	@RequestMapping(value = { "/getAllPettyCashEmp"}, method = RequestMethod.POST)
 	public List<PettyCashEmp> getAllPettyCashEmp(@RequestParam("frId") int frId){
 		List<PettyCashEmp> empList = new ArrayList<PettyCashEmp>();
@@ -134,7 +134,7 @@ public class PettyCashApiController {
 			e.printStackTrace();
 		}
 		return empList;
-	}
+	}*/
 	
 	@Autowired ExpressBillRepository  expressBillRepository;
 	@RequestMapping(value = { "/getPettyCashSellAmt"}, method = RequestMethod.POST)
