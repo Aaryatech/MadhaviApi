@@ -65,6 +65,7 @@ public class FrEmpMaster {
 	public Date getFrEmpJoiningDate() {
 		return frEmpJoiningDate;
 	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "yyyy-MM-dd")
 	public void setFrEmpJoiningDate(Date frEmpJoiningDate) {
 		this.frEmpJoiningDate = frEmpJoiningDate;
 	}
@@ -96,6 +97,7 @@ public class FrEmpMaster {
 	public Date getFromDate() {
 		return fromDate;
 	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "yyyy-MM-dd")
 	public void setFromDate(Date fromDate) {
 		this.fromDate = fromDate;
 	}
@@ -103,6 +105,7 @@ public class FrEmpMaster {
 	public Date getToDate() {
 		return toDate;
 	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "yyyy-MM-dd")
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}

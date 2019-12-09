@@ -265,11 +265,12 @@ public class PettyCashApiController {
 	}
 	
 	@RequestMapping(value = { "/checkUniqueContactNo" }, method = RequestMethod.POST)
-	public Info checkUniqueContactNo (String mobNo) {
+	public Info checkUniqueContactNo (int frId, String mobNo) {
 		Info info = new Info();
 		try {
 			FrEmpMaster emp = new FrEmpMaster(); 
-			emp = frEmpRepo.findByFrEmpContactAndDelStatus(mobNo, 0);
+			emp = frEmpRepo.findByFrIdAndFrEmpContactAndDelStatus(frId, mobNo, 0);
+			System.out.println("Emp-------"+emp);
 			if (emp != null) {
 				System.out.println("Contact No. Found");
 				info.setError(false);
