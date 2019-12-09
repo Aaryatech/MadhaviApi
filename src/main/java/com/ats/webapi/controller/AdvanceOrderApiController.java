@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
- import com.ats.webapi.model.Customer;
+import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.ItemOrderList;
@@ -231,59 +231,53 @@ public class AdvanceOrderApiController {
 	 * 
 	 * }
 	 */
-	
+
 	@Autowired
 	CustomerAmountsRepo customerAmountsRepo;
-	
-	
+
 	@RequestMapping(value = { "/getCustomerAmounts" }, method = RequestMethod.POST)
-	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId,@RequestParam int frId) {
-		CustomerAmounts orderList=new CustomerAmounts();
-		CustomerAmounts orderList1=new CustomerAmounts();
-		CustomerAmounts orderList2=new CustomerAmounts();
-		System.err.println("data is"+custId);
+	public @ResponseBody CustomerAmounts getCustomerAmounts(@RequestParam int custId, @RequestParam int frId) {
+		CustomerAmounts orderList = new CustomerAmounts();
+		CustomerAmounts orderList1 = new CustomerAmounts();
+		CustomerAmounts orderList2 = new CustomerAmounts();
+		System.err.println("data is" + custId);
 
-		orderList1 = customerAmountsRepo.findPendingAmt(custId,frId);
-		orderList2 = customerAmountsRepo.findAadvAmt(custId,frId);
-
+		orderList1 = customerAmountsRepo.findPendingAmt(custId, frId);
+		orderList2 = customerAmountsRepo.findAadvAmt(custId, frId);
 
 		orderList.setCreaditAmt(orderList1.getCreaditAmt());
 
 		orderList.setAdvanceAmt(orderList2.getCreaditAmt());
 		orderList.setCustId(custId);
 		return orderList;
-		
+
 	}
-	 
-	
-	
 
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
 	@Autowired
 	CustomerRepo customerRepo;
-	
+
 	@RequestMapping("/getSellBillByCustId")
 	public @ResponseBody List<SellBillHeader> getSellBillByCustId(@RequestParam int custId, @RequestParam int frId)
 			throws ParseException {
 		List<SellBillHeader> itm = null;
-		
-		Customer cust=new Customer();
+
+		Customer cust = new Customer();
 		try {
 			itm = sellBillHeaderRepository.getSellBillHeader(custId, frId);
 
 			System.err.println("data is" + itm.toString());
 
 			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
-			 
-			System.err.println("cust is "+cust.toString());
-			for(int i=0;i<itm.size();i++) {
-				
+
+			System.err.println("cust is " + cust.toString());
+			for (int i = 0; i < itm.size(); i++) {
+
 				itm.get(i).setUserName(cust.getCustName());
-				
-				
+
 			}
- 			System.err.println("cust is "+itm.toString());
+			System.err.println("cust is " + itm.toString());
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();
@@ -326,7 +320,7 @@ public class AdvanceOrderApiController {
 				TransactionDetail jsonResult = transactionDetailRepository.save(expTransList.get(i));
 
 				if (jsonResult != null) {
-					System.err.println("inside update" );
+					System.err.println("inside update");
 					float finPending = Float.parseFloat(jsonResult.getExVar2());
 					float finPaid = expTransList.get(i).getExFloat1() - finPending;
 					int flag = 0;
@@ -338,13 +332,12 @@ public class AdvanceOrderApiController {
 						flag = 3;
 					}
 
-				
-					  int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(finPending),
-					  String.valueOf(finPaid), expTransList.get(i).getSellBillNo(), flag);
-					  
-					  expTransList.get(i).setExVar2("");
-					  expTransList.get(i).setExFloat1(0);
-					 
+					int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(finPending),
+							String.valueOf(finPaid), expTransList.get(i).getSellBillNo(), flag);
+
+					expTransList.get(i).setExVar2("");
+					expTransList.get(i).setExFloat1(0);
+
 				}
 
 			}
@@ -364,28 +357,46 @@ public class AdvanceOrderApiController {
 		return inf;
 	}
 
-	
-	
-	//pop ups ws  of pos 
-	
-	
+	// pop ups ws of pos
+
 	@RequestMapping("/getAllSellCustBillTodaysBill")
-	public @ResponseBody List<SellBillHeader> getAllBillByCustId(@RequestParam int custId,
-			@RequestParam int frId,@RequestParam int flag) throws ParseException {
+	public @ResponseBody List<SellBillHeader> getAllBillByCustId(@RequestParam int custId, @RequestParam int frId,
+			@RequestParam int flag, @RequestParam int tabType) throws ParseException {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		System.err.println("tabType*" + tabType);
+		Customer cust=new Customer();
 		try {
+			if (tabType == 1) {
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getSellBillHeader(custId, frId);
 
-			if(flag==1){
-				orderList = sellBillHeaderRepository.getCustBills(custId,frId);
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
 
-			}else if(flag==2){
-				orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date),frId);
+				}
 			}
-			else{
-				orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
+
+			else {
+				
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
+				}
+				
 			}
+
+			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
+
+			System.err.println("cust is " + cust.toString());
+			for (int i = 0; i < orderList.size(); i++) {
+
+				orderList.get(i).setUserName(cust.getCustName());
+
+			}
+			
 
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
@@ -395,18 +406,26 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
-	
-	
 
 	@RequestMapping("/getAllSellCustBillTransaction")
 	public @ResponseBody List<TransactionDetail> getAllSellCustBillTransaction(@RequestParam int custId,
-			@RequestParam int frId) throws ParseException {
+			@RequestParam int frId, @RequestParam int tabType) throws ParseException {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
 		List<TransactionDetail> orderList = new ArrayList<TransactionDetail>();
+		System.err.println("tabType*" + sf.format(date));
 		try {
-				orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
- 
+			if (tabType == 1) {
+			
+			orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
+			}
+			else {
+				orderList = transactionDetailRepository.getCustBillsTransactionToday(frId,sf.format(date));
+			}
+			
+			 
+
+			 
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();
