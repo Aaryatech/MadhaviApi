@@ -153,9 +153,7 @@ public class AdvanceOrderDetail {
 		this.qty = qty;
 	}
 
-	/*
-	 * @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	 */	public Date getOrderDate() {
+	 @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")	public Date getOrderDate() {
 		return orderDate;
 	}
 
@@ -163,9 +161,9 @@ public class AdvanceOrderDetail {
 		this.orderDate = orderDate;
 	}
 
-	/*
-	 * @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	 */	public Date getProdDate() {
+	
+	  @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	 	public Date getProdDate() {
 		return prodDate;
 	}
 
@@ -173,9 +171,9 @@ public class AdvanceOrderDetail {
 		this.prodDate = prodDate;
 	}
 
-	/*
-	 * @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	 */	public Date getDeliveryDate() {
+	
+	  @JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
 

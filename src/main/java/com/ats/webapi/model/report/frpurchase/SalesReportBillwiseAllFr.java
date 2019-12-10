@@ -1,6 +1,7 @@
 package com.ats.webapi.model.report.frpurchase;
 
 import java.io.Serializable;
+
 import java.util.Date;
 
 import javax.persistence.Column;

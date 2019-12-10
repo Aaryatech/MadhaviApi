@@ -1,6 +1,7 @@
 package com.ats.webapi.model.advorder;
 
 import java.sql.Date;
+
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+ 
 @Entity
 @Table(name = "t_adv_order_header")
 public class AdvanceOrderHeader {
@@ -68,7 +71,7 @@ public class AdvanceOrderHeader {
 	public void setFrId(int frId) {
 		this.frId = frId;
 	}
-
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -76,7 +79,7 @@ public class AdvanceOrderHeader {
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
-
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getProdDate() {
 		return prodDate;
 	}
@@ -84,6 +87,7 @@ public class AdvanceOrderHeader {
 	public void setProdDate(Date prodDate) {
 		this.prodDate = prodDate;
 	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public Date getDeliveryDate() {
 		return deliveryDate;
