@@ -14,12 +14,14 @@ import com.ats.webapi.model.posdashboard.BillHeaderDashCount;
 import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
 import com.ats.webapi.model.posdashboard.CategorywiseItemSell;
 import com.ats.webapi.model.posdashboard.CategorywiseSell;
+import com.ats.webapi.model.posdashboard.DatewiseSellGraph;
 import com.ats.webapi.model.posdashboard.PosDashCounts;
 import com.ats.webapi.model.posdashboard.SellBillHeaderDashCounts;
 import com.ats.webapi.repo.posdashboard.BillHeaderDashCountRepo;
 import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseItemSellRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseSellRepo;
+import com.ats.webapi.repo.posdashboard.DatewiseSellGraphRepo;
 import com.ats.webapi.repo.posdashboard.SellBillHeaderDashCountsRepo;
 
 @RestController
@@ -97,6 +99,29 @@ public class MadhviPosDashboardApiController {
 		try {
 			
 			crnReport = categorywiseSellRepo.getCategorywiseSell(fromDate, toDate, frId);
+			 
+		} catch (Exception e) {
+
+			System.err.println("Exception in DashBoardReporApi /getCredNoteReport" + e.getMessage());
+
+			e.printStackTrace();
+		}
+
+		return crnReport;
+	}
+	
+	@Autowired
+	DatewiseSellGraphRepo datewiseSellGraphRepo;
+	@RequestMapping(value = { "/getDatewiseSell" }, method = RequestMethod.POST)
+	public @ResponseBody List<DatewiseSellGraph> getDatewiseSell(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
+		
+		List<DatewiseSellGraph> crnReport = new  ArrayList<DatewiseSellGraph>();
+
+ 		 
+		try {
+			
+			crnReport = datewiseSellGraphRepo.getD1ataFordashBarChart(fromDate, toDate, frId);
 			 
 		} catch (Exception e) {
 
