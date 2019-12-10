@@ -20,15 +20,14 @@ public class EwayBillController {
 
 	@Autowired
 	BillHeadEwayBillRepo billHeadEwayBillRepo;
-	
+
 	@Autowired
 	EwayItemListRepo ewayItemListRepo;
-	
-	
-	
+
 	@RequestMapping(value = { "/getBillListForEwaybill" }, method = RequestMethod.POST)
-	public @ResponseBody List<BillHeadEwayBill> getBillListForEwaybill(@RequestParam("billIdList") List<String> billIdList)  {
-System.err.println("In getBillListForEwaybill");
+	public @ResponseBody List<BillHeadEwayBill> getBillListForEwaybill(
+			@RequestParam("billIdList") List<String> billIdList) {
+		System.err.println("In getBillListForEwaybill");
 		List<BillHeadEwayBill> billHeadList = new ArrayList<>();
 		try {
 
@@ -36,8 +35,29 @@ System.err.println("In getBillListForEwaybill");
 
 			for (int i = 0; i < billHeadList.size(); i++) {
 				try {
-					List<EwayItemList> billDetail=ewayItemListRepo.getBillDetailForEwayBill(billHeadList.get(i).getBillNo());
 					
+					List<EwayItemList> billDetail = ewayItemListRepo
+							.getBillDetailForEwayBill(billHeadList.get(i).getBillNo());
+
+					if (billHeadList.get(i).getIgstSum() == 0) {
+
+						for (int j = 0; j < billDetail.size(); j++) {
+
+							billDetail.get(j).setIgstRate(0);
+
+						}
+
+					} else {
+
+						for (int j = 0; j < billDetail.size(); j++) {
+
+							billDetail.get(j).setCgstRate(0);
+							billDetail.get(j).setSgstRate(0);
+
+						}
+
+					}
+
 					billHeadList.get(i).setItemList(billDetail);
 
 				} catch (Exception e) {
@@ -52,5 +72,5 @@ System.err.println("In getBillListForEwaybill");
 
 		return billHeadList;
 	}
-	
+
 }

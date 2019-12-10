@@ -26,5 +26,23 @@ public interface EwayItemListRepo extends JpaRepository<EwayItemList, Integer> {
 			+ "AND t_bill_detail.bill_no=:billNo",nativeQuery=true)
 	public List<EwayItemList>  getBillDetailForEwayBill(@Param("billNo") int billNo);
 
+	/*
+	 @Query(value=" SELECT t_bill_detail.bill_detail_no,t_bill_detail.bill_qty as quantity," + 
+			"t_bill_detail.cgst_per as cgst_rate, " + 
+			"t_bill_detail.sgst_per as sgst_rate, " + 
+			"t_bill_detail.igst_per as igst_rate, " + 
+			"t_bill_detail.cess_per as cess_rate, " + 
+			"t_bill_detail.cess_rs as cess_non_advol, " + 
+			"t_bill_detail.taxable_amt as taxable_amount, " + 
+			"m_item.item_name as product_name, " + 
+			"m_item.item_name as product_desc, " + 
+			"m_item_sup.item_hsncd as hsn_code, " + 
+			"m_item_sup.item_uom as qty_unit " + 
+			"	FROM m_item_sup,m_item,t_bill_detail " + 
+			"WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_bill_detail.item_id "
+			+ "AND t_bill_detail.bill_no=:billNo",nativeQuery=true)
+	public List<EwayItemList>  getBillDetailForEwayBill(@Param("billNo") int billNo);
+
+	 */
 	
 }
