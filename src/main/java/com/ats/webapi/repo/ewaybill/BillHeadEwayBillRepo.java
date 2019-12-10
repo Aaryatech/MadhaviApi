@@ -19,6 +19,18 @@ public interface BillHeadEwayBillRepo extends JpaRepository<BillHeadEwayBill, In
 	public List<BillHeadEwayBill>  getBillHeaderForEwayBill(@Param("billIdList") List<String> billIdList);
 
 	
+	@Query(value="	SELECT t_credit_note_header.crn_id as bill_no,t_credit_note_header.crn_taxable_amt as taxable_amt ,t_credit_note_header.crn_grand_total as grand_total,\n" + 
+			"	t_credit_note_header.crn_no as invoice_no,\n" + 
+			"	t_credit_note_header.crn_date as bill_date,\n" + 
+			"\n" + 
+			"	CASE WHEN m_franchisee.is_same_state=1 THEN t_credit_note_header.crn_total_tax/2 ELSE 0 END as sgst_sum,\n" + 
+			"	CASE WHEN m_franchisee.is_same_state=1 THEN t_credit_note_header.crn_total_tax/2 ELSE 0 END as cgst_sum,\n" + 
+			"	CASE WHEN m_franchisee.is_same_state=0 THEN t_credit_note_header.crn_total_tax ELSE 0 END as igst_sum,\n" + 
+			"\n" + 
+			"	m_franchisee.fr_code,m_franchisee.fr_id\n" + 
+			"	FROM m_franchisee,t_credit_note_header\n" + 
+			"	WHERE t_credit_note_header.fr_id=m_franchisee.fr_id AND t_credit_note_header.crn_id IN (:crnIdList)",nativeQuery=true)
+	public List<BillHeadEwayBill>  getCreditNoteHeaderForEwayBill(@Param("crnIdList") List<String> crnIdList);
 	
 	/*
 	 * @Query(value=" SELECT " +
