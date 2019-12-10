@@ -18,7 +18,7 @@ public interface BillHeadEwayBillRepo extends JpaRepository<BillHeadEwayBill, In
 			"FROM t_bill_header,m_franchisee WHERE t_bill_header.fr_id=m_franchisee.fr_id and t_bill_header.bill_no IN(:billIdList)",nativeQuery=true)
 	public List<BillHeadEwayBill>  getBillHeaderForEwayBill(@Param("billIdList") List<String> billIdList);
 
-	
+	 
 	@Query(value="	SELECT t_credit_note_header.crn_id as bill_no,t_credit_note_header.crn_taxable_amt as taxable_amt ,t_credit_note_header.crn_grand_total as grand_total,\n" + 
 			"	t_credit_note_header.crn_no as invoice_no,\n" + 
 			"	t_credit_note_header.crn_date as bill_date,\n" + 
