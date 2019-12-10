@@ -96,11 +96,11 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
 	@Override
 	public CategoryList findSubCategoryByCatId(int catId) {
-		  List<MCategory> subCategoryList=categoryRepository.findByCatId(catId);
+		  List<MCategory> subCategoryList=categoryRepository.findByCatIdOrderBySeqNoAsc(catId);
 		  
 		  for(int i=0;i<subCategoryList.size();i++)
 		  {
-			  List<SubCategory> subCatList=subCategoryRepository.findByCatIdAndDelStatus(catId, 0);
+			  List<SubCategory> subCatList=subCategoryRepository.findByCatIdAndDelStatusOrderBySeqNo(catId, 0);
 			  subCategoryList.get(i).setSubCategoryList(subCatList);
 		      
 		  }
@@ -138,7 +138,7 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 	@Override
 	public List<SubCategory> findSubCatByCatId(int catId) {
 		
-		List<SubCategory> subList=subCategoryRepository.findByCatIdAndDelStatus(catId, 0);
+		List<SubCategory> subList=subCategoryRepository.findByCatIdAndDelStatusOrderBySeqNo(catId, 0);
 		return subList;
 	}
 

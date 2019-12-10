@@ -40,10 +40,21 @@ public class MCategory implements Serializable{
 	@Column(name="item_image")
 	private String itemImage;
 	
+	@Column(name="seq_no")
+	private int seqNo;
+	
 	/*@OneToMany(mappedBy="catId",cascade=CascadeType.ALL)=new ArrayList<SubCategory>()*/
 	@Transient
 	private List<SubCategory> subCategoryList;
 	
+	
+	
+	public int getSeqNo() {
+		return seqNo;
+	}
+	public void setSeqNo(int seqNo) {
+		this.seqNo = seqNo;
+	}
 	public int getCatId() {
 		return catId;
 	}
@@ -88,6 +99,8 @@ public class MCategory implements Serializable{
 	@Override
 	public String toString() {
 		return "MCategory [catId=" + catId + ", catName=" + catName + ", isSameDay=" + isSameDay + ", delStatus="
-				+ delStatus + ", itemImage=" + itemImage + ", subCategoryList=" + subCategoryList + "]";
+				+ delStatus + ", itemImage=" + itemImage + ", seqNo=" + seqNo + ", subCategoryList=" + subCategoryList
+				+ "]";
 	}
+	
 }

@@ -914,7 +914,7 @@ public class MasterController {
 
 					List<SubCategory> subCategoryList=null;
 					try {
-					 subCategoryList = subCategoryRepository.findBySubCatIdInAndDelStatus(catId,0);
+					 subCategoryList = subCategoryRepository.findBySubCatIdInAndDelStatusOrderBySeqNo(catId,0);
 					}
 					catch (Exception e) {
 						subCategoryList=new ArrayList<>();

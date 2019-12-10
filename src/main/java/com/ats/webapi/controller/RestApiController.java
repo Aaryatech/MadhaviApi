@@ -2192,7 +2192,7 @@ public class RestApiController {
 			@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable,
 			@RequestParam("isFactOrFr") int isFactOrFr, @RequestParam("isBillable") int isBillable,
 			@RequestParam("isDecimal") int isDecimal,
-			@RequestParam("billIitems") String billIitems) {
+			@RequestParam("billItems") String billItems) {
 
 		Item item = new Item();
 		item.setItemImage(itemImage);
@@ -2221,7 +2221,7 @@ public class RestApiController {
 		item.setIsFactOrFr(isFactOrFr);
 		item.setExtInt1(isBillable);
 		item.setExtInt2(isDecimal);
-		item.setExtVar1(billIitems);
+		item.setExtVar1(billItems);
 		item.setExtVar2("NA");
 		item.setExtVar3("NA");
 
@@ -2915,7 +2915,7 @@ public class RestApiController {
 			@RequestParam("itemTax3") float itemTax3, @RequestParam("itemIsUsed") int itemIsUsed,
 			@RequestParam("itemSortId") float itemSortId, @RequestParam("grnTwo") int grnTwo,
 			@RequestParam("itemShelfLife") int itemShelfLife, @RequestParam("isSaleable") int isSaleable,
-			@RequestParam("isStockable") int isStockable,@RequestParam("isDecimal") int isDecimal, @RequestParam("isBillable") int isBillable, @RequestParam("isFactOrFr") int isFactOrFr) {
+			@RequestParam("isStockable") int isStockable,@RequestParam("isDecimal") int isDecimal, @RequestParam("isBillable") int isBillable, @RequestParam("isFactOrFr") int isFactOrFr,@RequestParam("billItems") String billItems) {
 
 		Item item = itemService.findItems(id);
 		item.setItemImage(itemImage);
@@ -2943,7 +2943,7 @@ public class RestApiController {
 		item.setIsFactOrFr(isFactOrFr);
 		item.setExtInt1(isBillable);
 		item.setExtInt2(isDecimal);
-		//item.setExtVar1(billIitems);
+		item.setExtVar1(billItems);
 		item.setExtVar2("NA");
 		item.setExtVar3("NA");
 

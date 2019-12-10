@@ -20,11 +20,11 @@ public class CategoryServiceImpl implements CategoryService {
 	
 	@Override
 	public List<MCategory> findAllCategory() {
-		List<MCategory> mCategoryList=categoryRepository.findByDelStatus(0);
+		List<MCategory> mCategoryList=categoryRepository.findByDelStatusOrderBySeqNoAsc(0);
 		
 		for(int i=0;i<mCategoryList.size();i++)
 		{
-			List<SubCategory> subCatList=subCategoryRepository.findByCatIdAndDelStatus(mCategoryList.get(i).getCatId(),0);
+			List<SubCategory> subCatList=subCategoryRepository.findByCatIdAndDelStatusOrderBySeqNo(mCategoryList.get(i).getCatId(),0);
 			mCategoryList.get(i).setSubCategoryList(subCatList);
 		}
 		return mCategoryList;
@@ -33,7 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public List<MCategory> findAllOnlyCategory(List<Integer> list) {
 		
-		List<MCategory> mCategoryList=categoryRepository.findByDelStatusAndIsSameDayIn(0,list);
+		List<MCategory> mCategoryList=categoryRepository.findByDelStatusAndIsSameDayInOrderBySeqNoAsc(0,list);
 		
 		 
 		return mCategoryList;
