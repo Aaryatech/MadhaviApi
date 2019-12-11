@@ -236,7 +236,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"ORDER BY " + 
 			"    a.item_grp1, " + 
 			"    a.item_grp2, " + 
-			"    a.item_name",nativeQuery=true)
+			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItem(@Param("catId")int catId,@Param("frId")int frId);
 
 	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
@@ -370,7 +370,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"ORDER BY\n" + 
 			"    a.item_grp1,\n" + 
 			"    a.item_grp2,\n" + 
-			"    a.item_name",nativeQuery=true)
+			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItemCateId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
 
@@ -495,7 +495,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"ORDER BY\n" + 
 			"    a.item_grp1,\n" + 
 			"    a.item_grp2,\n" + 
-			"    a.item_name",nativeQuery=true)
+			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItemSubCatId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
 }
