@@ -104,17 +104,18 @@ public class SellBillHeader implements Serializable{
 	
 	
 
-	@Column(name="ex_int1")
-	private char exInt1;
+	@Column(name="ext_int1")
+	private int extInt1;
 	
 	
+ 
 
-	public char getExInt1() {
-		return exInt1;
+	public int getExtInt1() {
+		return extInt1;
 	}
 
-	public void setExInt1(char exInt1) {
-		this.exInt1 = exInt1;
+	public void setExtInt1(int extInt1) {
+		this.extInt1 = extInt1;
 	}
 
 	public int getCustId() {
@@ -359,13 +360,16 @@ public class SellBillHeader implements Serializable{
 	@Override
 	public String toString() {
 		return "SellBillHeader [sellBillNo=" + sellBillNo + ", invoiceNo=" + invoiceNo + ", billDate=" + billDate
-				+ ", frId=" + frId + ", frCode=" + frCode + ", taxableAmt=" + taxableAmt + ", discountPer="
-				+ discountPer + ", discType=" + discType + ", discountAmt=" + discountAmt + ", payableAmt=" + payableAmt
+				+ ", frId=" + frId + ", frCode=" + frCode + ", taxableAmt=" + taxableAmt + ", discType=" + discType
+				+ ", discountPer=" + discountPer + ", discountAmt=" + discountAmt + ", payableAmt=" + payableAmt
 				+ ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + ", paidAmt=" + paidAmt + ", remainingAmt="
 				+ remainingAmt + ", discAmtItem=" + discAmtItem + ", advanceAmt=" + advanceAmt + ", paymentMode="
-				+ paymentMode + ", userName=" + userName + ", userGstNo=" + userGstNo + ", userPhone=" + userPhone
-				+ ", status=" + status + ", isDairyMartBill=" + isDairyMartBill + ", couponNo=" + couponNo
-				+ ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt=" + custLoyaltyPt + ", DelStatus="
-				+ delStatus + ", billType=" + billType + ", sellBillDetailsList=" + sellBillDetailsList + "]";
+				+ paymentMode + ", custId=" + custId + ", userName=" + userName + ", userGstNo=" + userGstNo
+				+ ", userPhone=" + userPhone + ", status=" + status + ", isDairyMartBill=" + isDairyMartBill
+				+ ", couponNo=" + couponNo + ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt="
+				+ custLoyaltyPt + ", delStatus=" + delStatus + ", billType=" + billType + ", extInt1=" + extInt1
+				+ ", sellBillDetailsList=" + sellBillDetailsList + "]";
 	}
+
+	 
 }

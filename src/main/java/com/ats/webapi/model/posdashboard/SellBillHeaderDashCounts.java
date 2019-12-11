@@ -10,74 +10,103 @@ public class SellBillHeaderDashCounts {
 	@Id
  	private String uid;
 	
-	private String  sellAmt;
+	private float  sellAmt;
 	
-	private String discAmt;
+	private float discAmt;
 	
-	private String noBillGen;		
+	private float noBillGen;		
 	
-	private String advanceAmt;
+	private float advanceAmt;
 	
-	private String  creditAmt;
+	private float  creditAmt;
 	
-	private String profitAmt;
+	private float profitAmt;
 
  
-	public String getProfitAmt() {
-		return profitAmt;
-	}
-
-	public void setProfitAmt(String profitAmt) {
-		this.profitAmt = profitAmt;
-	}
-
+	 
 	public String getUid() {
 		return uid;
 	}
+
+
 
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
 
-	public String getSellAmt() {
+
+
+	public float getSellAmt() {
 		return sellAmt;
 	}
 
-	public void setSellAmt(String sellAmt) {
+
+
+	public void setSellAmt(float sellAmt) {
 		this.sellAmt = sellAmt;
 	}
 
-	public String getDiscAmt() {
+
+
+	public float getDiscAmt() {
 		return discAmt;
 	}
 
-	public void setDiscAmt(String discAmt) {
+
+
+	public void setDiscAmt(float discAmt) {
 		this.discAmt = discAmt;
 	}
 
-	public String getNoBillGen() {
+
+
+	public float getNoBillGen() {
 		return noBillGen;
 	}
 
-	public void setNoBillGen(String noBillGen) {
+
+
+	public void setNoBillGen(float noBillGen) {
 		this.noBillGen = noBillGen;
 	}
 
-	public String getAdvanceAmt() {
+
+
+	public float getAdvanceAmt() {
 		return advanceAmt;
 	}
 
-	public void setAdvanceAmt(String advanceAmt) {
+
+
+	public void setAdvanceAmt(float advanceAmt) {
 		this.advanceAmt = advanceAmt;
 	}
 
-	public String getCreditAmt() {
+
+
+	public float getCreditAmt() {
 		return creditAmt;
 	}
 
-	public void setCreditAmt(String creditAmt) {
+
+
+	public void setCreditAmt(float creditAmt) {
 		this.creditAmt = creditAmt;
 	}
+
+
+
+	public float getProfitAmt() {
+		return profitAmt;
+	}
+
+
+
+	public void setProfitAmt(float profitAmt) {
+		this.profitAmt = profitAmt;
+	}
+
+
 
 	@Override
 	public String toString() {
