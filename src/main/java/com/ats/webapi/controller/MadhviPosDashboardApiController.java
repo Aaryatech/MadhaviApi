@@ -14,6 +14,7 @@ import com.ats.webapi.model.posdashboard.BillHeaderDashCount;
 import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
 import com.ats.webapi.model.posdashboard.CategorywiseItemSell;
 import com.ats.webapi.model.posdashboard.CategorywiseSell;
+import com.ats.webapi.model.posdashboard.CreaditAmtDash;
 import com.ats.webapi.model.posdashboard.DatewiseSellGraph;
 import com.ats.webapi.model.posdashboard.PosDashCounts;
 import com.ats.webapi.model.posdashboard.SellBillHeaderDashCounts;
@@ -21,6 +22,7 @@ import com.ats.webapi.repo.posdashboard.BillHeaderDashCountRepo;
 import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseItemSellRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseSellRepo;
+import com.ats.webapi.repo.posdashboard.CreaditAmtDashRepo;
 import com.ats.webapi.repo.posdashboard.DatewiseSellGraphRepo;
 import com.ats.webapi.repo.posdashboard.SellBillHeaderDashCountsRepo;
 
@@ -35,6 +37,10 @@ public class MadhviPosDashboardApiController {
 
 	@Autowired
 	BillHeaderDashCountRepo billHeaderDashCountRepo;
+	
+	
+	@Autowired
+	CreaditAmtDashRepo creaditAmtDashRepo;
 
 	@RequestMapping(value = { "/getPosDashCounts" }, method = RequestMethod.POST)
 	public @ResponseBody PosDashCounts getPosDashCounts(@RequestParam("fromDate") String fromDate,
@@ -46,14 +52,14 @@ public class MadhviPosDashboardApiController {
 		BillTransactionDetailDashCount tranCount = new BillTransactionDetailDashCount();
 		BillHeaderDashCount billCountch = new BillHeaderDashCount();
 		BillHeaderDashCount billCountpur = new BillHeaderDashCount();
-		
+		CreaditAmtDash daseqe=new CreaditAmtDash();
 		System.err.println( "DashBoardReporApi data is " + fromDate+toDate+frId);
 		try {
 			headcount = sellBillHeaderDashCountsRepo.getDataFordash(fromDate, toDate, frId);
 			tranCount = billTransactionDetailDashCountRepo.getD1ataFordash(fromDate, toDate, frId);
 			billCountch = billHeaderDashCountRepo.getD1ataFordash2Ch(fromDate, toDate, frId);
 			billCountpur = billHeaderDashCountRepo.getD1ataFordash2pur(fromDate, toDate, frId);
-			
+			daseqe=creaditAmtDashRepo.getDataFordash(fromDate, toDate, frId);
 			//System.err.println( "DashBoardReporApi /headcount" + headcount.toString());
 			
 			//System.err.println( "DashBoardReporApi /tranCount" + tranCount.toString());
@@ -61,17 +67,48 @@ public class MadhviPosDashboardApiController {
 			//System.err.println( "DashBoardReporApi /billCountpur" + billCountpur.toString());
 
 			crnReport.setAdvanceAmt(headcount.getAdvanceAmt());
-			crnReport.setCardAmt(tranCount.getCardAmt());
-			crnReport.setCashAmt(tranCount.getCashAmt());
-			crnReport.setCreditAmt(headcount.getCreditAmt());
+			
+			if(tranCount.getCardAmt()=="" || tranCount.getCardAmt()==null) {
+				crnReport.setCardAmt(0);
+			}else {
+				crnReport.setCardAmt(Float.parseFloat(tranCount.getCardAmt()));
+			}
+			if(tranCount.getCashAmt()=="" || tranCount.getCashAmt()==null) {
+				crnReport.setCashAmt(0);
+			}else {
+ 				crnReport.setCashAmt(Float.parseFloat(tranCount.getCashAmt()));
+			}
+			
+			if(tranCount.getePayAmt()=="" || tranCount.getePayAmt()==null) {
+				crnReport.setEpayAmt(0);
+			}else {
+ 				crnReport.setEpayAmt(Float.parseFloat(tranCount.getePayAmt()));
+			}
+			
+		
+			crnReport.setCreditAmt(daseqe.getCreditAmt());
 			crnReport.setDiscountAmt(headcount.getDiscAmt());
-			crnReport.setEpayAmt(tranCount.getePayAmt());
+			
 			crnReport.setNoOfBillGenerated(headcount.getNoBillGen());
 			crnReport.setSaleAmt(headcount.getSellAmt());
 
-			crnReport.setExpenseAmt(billCountch.getChAmt());
+			
 			crnReport.setProfitAmt(headcount.getProfitAmt());
-			crnReport.setPurchaseAmt(billCountpur.getPurchaeAmt());
+			
+			
+			if(billCountpur.getPurchaeAmt()=="" || billCountpur.getPurchaeAmt()==null ||billCountpur.getPurchaeAmt()=="0") {
+				crnReport.setPurchaseAmt(0);
+			}else {
+ 				crnReport.setPurchaseAmt(Float.parseFloat(billCountpur.getPurchaeAmt()));
+			}
+			
+			if(billCountch.getChAmt()=="" || billCountch.getChAmt()==null || billCountch.getChAmt()=="0") {
+				crnReport.setPurchaseAmt(0);
+			}else {
+ 				crnReport.setExpenseAmt(Float.parseFloat(billCountch.getChAmt()));
+			}
+			
+			 
 			
 			System.err.println( "DashBoardReporApi /getCredNoteReport" + crnReport.toString());
 

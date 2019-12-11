@@ -17,26 +17,37 @@ public class BillHeaderDashCount {
 	public String getUid() {
 		return uid;
 	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+ 
+ 
 
 	public String getChAmt() {
 		return chAmt;
 	}
 
+
+
 	public void setChAmt(String chAmt) {
 		this.chAmt = chAmt;
 	}
+
+
 
 	public String getPurchaeAmt() {
 		return purchaeAmt;
 	}
 
+
+
 	public void setPurchaeAmt(String purchaeAmt) {
 		this.purchaeAmt = purchaeAmt;
 	}
+
+
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
 
 	@Override
 	public String toString() {

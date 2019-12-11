@@ -15,9 +15,7 @@ public class BillTransactionDetailDashCount {
 	private String cardAmt;
 	
 	private String ePayAmt;
-
-	 
-
+ 
 	public String getUid() {
 		return uid;
 	}
@@ -25,7 +23,7 @@ public class BillTransactionDetailDashCount {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-
+ 
 	public String getCashAmt() {
 		return cashAmt;
 	}
