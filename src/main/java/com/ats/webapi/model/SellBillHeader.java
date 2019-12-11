@@ -104,6 +104,19 @@ public class SellBillHeader implements Serializable{
 	
 	
 
+	@Column(name="ex_int1")
+	private char exInt1;
+	
+	
+
+	public char getExInt1() {
+		return exInt1;
+	}
+
+	public void setExInt1(char exInt1) {
+		this.exInt1 = exInt1;
+	}
+
 	public int getCustId() {
 		return custId;
 	}
