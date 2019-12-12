@@ -119,6 +119,20 @@ public class AdvanceOrderApiController {
 
 	}
 
+	@RequestMapping("/advanceOrderHistoryHedaerByHeadId")
+	public @ResponseBody AdvanceOrderHeader advanceOrderHistoryHedaer(@RequestParam int headId) throws ParseException {
+		AdvanceOrderHeader orderList = new AdvanceOrderHeader();
+		try {
+			orderList = advanceOrderHeaderRepo.findByAdvHeaderIdAndDelStatus(headId, 0);
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+
 	@RequestMapping("/advanceOrderHistoryHeader")
 	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeader(@RequestParam int flag,
 			@RequestParam String deliveryDt, @RequestParam int frId) throws ParseException {
@@ -366,7 +380,7 @@ public class AdvanceOrderApiController {
 		Date date = new Date();
 		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
 		System.err.println("tabType*" + tabType);
-		Customer cust=new Customer();
+		Customer cust = new Customer();
 		try {
 			if (tabType == 1) {
 				if (flag == 1) {
@@ -379,13 +393,13 @@ public class AdvanceOrderApiController {
 			}
 
 			else {
-				
+
 				if (flag == 1) {
 					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
 				} else if (flag == 2) {
 					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
 				}
-				
+
 			}
 
 			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
@@ -396,7 +410,6 @@ public class AdvanceOrderApiController {
 				orderList.get(i).setUserName(cust.getCustName());
 
 			}
-			
 
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
@@ -416,16 +429,12 @@ public class AdvanceOrderApiController {
 		System.err.println("tabType*" + sf.format(date));
 		try {
 			if (tabType == 1) {
-			
-			orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
-			}
-			else {
-				orderList = transactionDetailRepository.getCustBillsTransactionToday(frId,sf.format(date));
-			}
-			
-			 
 
-			 
+				orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
+			} else {
+				orderList = transactionDetailRepository.getCustBillsTransactionToday(frId, sf.format(date));
+			}
+
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();
