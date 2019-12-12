@@ -69,7 +69,7 @@ public class PosApiController {
 			//System.out.println(flag);
 			if (flag == 1) {
 				List<TaxLabListForPos> taxLabListForPosList = taxLabListForPosPosRepository
-						.taxLabListForPosList(billId);
+						.taxLabDetailsListForPosList(billDetailNoList);
 				sellBillHeaderAndDetail.setTaxlabList(taxLabListForPosList);
 			}
 
