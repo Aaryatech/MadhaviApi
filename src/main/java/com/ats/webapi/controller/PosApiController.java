@@ -55,5 +55,31 @@ public class PosApiController {
 		return sellBillHeaderAndDetail;
 
 	}
+	@RequestMapping(value = { "/getSellBillHeaderAndDetailForPosDetail" }, method = RequestMethod.POST)
+	public @ResponseBody SellBillHeaderAndDetail getSellBillHeaderAndDetailForPosDetail(@RequestParam("billId") int billId,@RequestParam("billDetailNoList") List<Integer> billDetailNoList,
+			@RequestParam("flag") int flag) {
 
+		SellBillHeaderAndDetail sellBillHeaderAndDetail = new SellBillHeaderAndDetail();
+
+		try {
+
+			sellBillHeaderAndDetail = sellBillHeaderRepositoryPos.getSellBillHeaderAndDetailForPos(billId);
+			List<SellBillDetailForPos> list = sellBillDetailForPosRepository.getSellBillDetailForPosDetail(billDetailNoList);
+			sellBillHeaderAndDetail.setList(list);                           
+			//System.out.println(flag);
+			if (flag == 1) {
+				List<TaxLabListForPos> taxLabListForPosList = taxLabListForPosPosRepository
+						.taxLabListForPosList(billId);
+				sellBillHeaderAndDetail.setTaxlabList(taxLabListForPosList);
+			}
+
+			
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return sellBillHeaderAndDetail;
+
+	}
 }
