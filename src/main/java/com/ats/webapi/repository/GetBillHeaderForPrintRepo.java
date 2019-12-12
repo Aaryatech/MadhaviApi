@@ -6,12 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.ats.webapi.model.GetBillHeader;
 import com.ats.webapi.model.bill.FrBillHeaderForPrint;
 
 public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderForPrint, Integer> {
 	
-	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date "
+	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date,t_bill_header.is_tally_sync as eway_bill_no  "
 			+ ",t_bill_header.fr_id,t_bill_header.fr_code,t_bill_header.veh_no,t_bill_header.bill_time,t_bill_header.ex_varchar1,t_bill_header.ex_varchar2,"
 			+ " t_bill_header.tax_applicable,t_bill_header.grand_total,t_bill_header.taxable_amt, "
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
@@ -22,7 +21,7 @@ public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderFor
 	
 	List<FrBillHeaderForPrint> getFrBillHeaderForPrint(@Param("fromDate")String fromDate, @Param("toDate")String toDate);
 	
-	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date "
+	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date, t_bill_header.is_tally_sync as eway_bill_no "
 			+ ",t_bill_header.fr_id,t_bill_header.fr_code,t_bill_header.veh_no,t_bill_header.bill_time,t_bill_header.ex_varchar1,t_bill_header.ex_varchar2,"
 			+ " t_bill_header.tax_applicable,t_bill_header.grand_total,t_bill_header.taxable_amt, "
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
@@ -39,7 +38,7 @@ public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderFor
 	//new Code for Print getting Header for Selected Bills
 	
 
-	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date "
+	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date, t_bill_header.is_tally_sync as eway_bill_no  "
 			+ ",t_bill_header.fr_id,t_bill_header.fr_code,t_bill_header.veh_no,t_bill_header.bill_time,t_bill_header.ex_varchar1,t_bill_header.ex_varchar2,"
 			+ " t_bill_header.tax_applicable,t_bill_header.grand_total,t_bill_header.taxable_amt, "
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
