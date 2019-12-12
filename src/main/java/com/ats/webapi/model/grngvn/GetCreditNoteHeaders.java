@@ -75,6 +75,12 @@ public class GetCreditNoteHeaders {
 	private String grnGvnSrNoList;
 	
 	
+
+	String exVarchar2; //for getting ewayBillNo For Palanpur
+	
+	
+	
+	
 	
 	
 	public String getGrnGvnSrNoList() {
@@ -264,6 +270,18 @@ public class GetCreditNoteHeaders {
 
 	public void setIsGrn(int isGrn) {
 		this.isGrn = isGrn;
+	}
+
+	
+	
+
+	public String getExVarchar2() {
+		return exVarchar2;
+	}
+
+
+	public void setExVarchar2(String exVarchar2) {
+		this.exVarchar2 = exVarchar2;
 	}
 
 

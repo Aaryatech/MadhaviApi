@@ -27,5 +27,8 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 
 
 	List<AdvanceOrderHeader> findByCustIdAndIsSellBillGeneratedAndDelStatus(int custId, int i, int j);
+
+
+	AdvanceOrderHeader findByAdvHeaderIdAndDelStatus(int headId, int i);
  
 } 

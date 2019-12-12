@@ -74,6 +74,7 @@ public class PostCreditNoteHeader implements Serializable {
 	
 	String exVarchar1;//new for pune  invno of bill
 	
+	String exVarchar2;//new for MAdhavi to store Eway billNo; Already in DB; Sachin Added in Bean on 11-Dec 2019
 	
 	public int getExInt1() {
 		return exInt1;
@@ -219,6 +220,17 @@ public class PostCreditNoteHeader implements Serializable {
 		this.isGrn = isGrn;
 	}
 
+	
+	
+	public String getExVarchar2() {
+		return exVarchar2;
+	}
+
+	public void setExVarchar2(String exVarchar2) {
+		this.exVarchar2 = exVarchar2;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "PostCreditNoteHeader [crnId=" + crnId + ", crnNo=" + crnNo + ", crnDate=" + crnDate + ", frId=" + frId
@@ -226,7 +238,8 @@ public class PostCreditNoteHeader implements Serializable {
 				+ crnGrandTotal + ", crnFinalAmt=" + crnFinalAmt + ", roundOff=" + roundOff + ", userId=" + userId
 				+ ", createdDateTime=" + createdDateTime + ", isTallySync=" + isTallySync + ", isGrn=" + isGrn
 				+ ", postCreditNoteDetails=" + postCreditNoteDetails + ", grnGvnSrNoList=" + grnGvnSrNoList
-				+ ", isDeposited=" + isDeposited + ", exInt1=" + exInt1 + ", exVarchar1=" + exVarchar1 + "]";
+				+ ", isDeposited=" + isDeposited + ", exInt1=" + exInt1 + ", exVarchar1=" + exVarchar1 + ", exVarchar2="
+				+ exVarchar2 + "]";
 	}
      
 
