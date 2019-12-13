@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name="t_bill_transcation")
 public class BillTransaction {
@@ -189,6 +191,8 @@ public class BillTransaction {
 	public void setDelStatus(int delStatus) {
 		this.delStatus = delStatus;
 	}
+
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public Date getBillDate() {
 		return billDate;

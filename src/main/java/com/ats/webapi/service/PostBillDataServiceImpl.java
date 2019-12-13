@@ -1,17 +1,23 @@
 package com.ats.webapi.service;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ats.webapi.model.FrItemStockConfigureList;
+ import com.ats.webapi.model.FrItemStockConfigureList;
 import com.ats.webapi.model.PostBillDetail;
 import com.ats.webapi.model.PostBillHeader;
+import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Company;
+import com.ats.webapi.repo.BillTransationRepo;
 import com.ats.webapi.repository.CompanyRepository;
 import com.ats.webapi.repository.FrItemStockConfigureRepository;
 import com.ats.webapi.repository.OrderRepository;
@@ -65,11 +71,18 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 	 * 
 	 * return billDetail; }
 	 */
+	
+	@Autowired
+	BillTransationRepo billTransationRepo;
+	
+	
+	
 	@Autowired
 	CompanyRepository companyRepository;
 	@Override
 	public List<PostBillHeader> saveBillHeader(List<PostBillHeader> postBillHeader) {
 		
+	 
 		List<PostBillHeader> pbHeaderList=new ArrayList<>();
 		PostBillHeader postBillHeaders = new PostBillHeader();
 		
@@ -106,6 +119,29 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 			postBillHeader.get(i).setInvoiceNo(invoiceNo);
 			postBillHeaders = postBillHeaderRepository.save(postBillHeader.get(i));
 			
+			//save Bill transaction starts 
+			
+			if(postBillHeaders!=null && postBillHeaders.getBillNo()>0 ) {
+			BillTransaction bt =new BillTransaction();
+			bt.setBillAmt(String.valueOf(postBillHeaders.getGrandTotal()));
+			bt.setBillHeadId(0);
+			bt.setBillNo(String.valueOf(postBillHeaders.getInvoiceNo()));
+			bt.setExInt1(0);
+			bt.setExInt2(0);
+			bt.setExInt3(0);
+			bt.setExInt4(0);
+			bt.setExVar1("NA");
+			bt.setExVar2("NA");
+			bt.setExVar3("NA");
+			bt.setExVar4("NA");
+			bt.setFrId(postBillHeaders.getFrId());
+			bt.setIsClosed(0);
+			bt.setPaidAmt("0");
+			bt.setPendingAmt(String.valueOf(postBillHeaders.getGrandTotal()));
+			bt.setBillDate(new Date());
+			BillTransaction jsonResult = billTransationRepo.save(bt);
+			//save Bill transaction ends 
+			}
 			if(postBillHeaders!=null && postBillHeaders.getBillNo()>0 ) {
 				
 				settingValue=settingValue+1;

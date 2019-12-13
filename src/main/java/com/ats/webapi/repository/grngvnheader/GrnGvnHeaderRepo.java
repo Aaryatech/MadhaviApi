@@ -48,8 +48,8 @@ public interface GrnGvnHeaderRepo extends JpaRepository<GrnGvnHeader, Integer> {
 	
 
 	@Query(value="  SELECT * FROM t_grn_gvn_header WHERE is_grn IN(:isGrn) AND is_credit_note=0 AND t_grn_gvn_header.grngvn_status "
-			+ "IN (:statusList) ",nativeQuery=true)
-	List<GrnGvnHeader> findGrnGvnHeaderOnLoad(@Param("isGrn")List<String> isGrn,@Param("statusList") List<String> statusList);
+			+ "IN (:statusList) AND grngvn_date BETWEEN  :fromDate AND :toDate",nativeQuery=true)
+	List<GrnGvnHeader> findGrnGvnHeaderOnLoad(@Param("isGrn")List<String> isGrn,@Param("statusList") List<String> statusList,@Param("fromDate")Date fromDate,@Param("toDate") Date toDate);
 	
 	
 	
