@@ -29,7 +29,7 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 			+ ",t_sell_bill_header.fr_id,t_sell_bill_header.fr_code,'0' as veh_no,t_sell_bill_header.timestamp as bill_time,'NA' as ex_varchar1,'NA' as ex_varchar2,"
 			+ " '0' as tax_applicable,t_sell_bill_header.grand_total,t_sell_bill_header.taxable_amt, "
 			+ " t_sell_bill_header.total_tax,t_sell_bill_header.status,'NA' as remark,'0' as time,t_sell_bill_header.del_status, "
-			+ " m_franchisee.fr_name,t_sell_bill_header.user_name as party_name,t_sell_bill_header.user_gst_no as party_gstin,m_franchisee.fr_address as party_address,t_bill_header.is_tally_sync AS eway_bill_no FROM t_sell_bill_header,m_franchisee WHERE "
+			+ " m_franchisee.fr_name,t_sell_bill_header.user_name as party_name,t_sell_bill_header.user_gst_no as party_gstin,m_franchisee.fr_address as party_address,'0' AS eway_bill_no FROM t_sell_bill_header,m_franchisee WHERE "
 			+ " t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate "
 			+ " AND t_sell_bill_header.fr_id=m_franchisee.fr_id AND t_sell_bill_header.del_status=0  AND t_sell_bill_header.fr_id IN (:frId) AND (Select m_franchisee.kg_1 from m_franchisee where t_sell_bill_header.fr_id=m_franchisee.fr_id)=1 \n " + 
  			"",nativeQuery=true)
@@ -84,7 +84,7 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 			"        t_sell_bill_header.status,\n" + 
 			"        'NA' AS remark,\n" + 
 			"        '0' AS time,\n"
-			+ "'-' AS 	eway_bill_no," + 
+			+ "'0' AS 	eway_bill_no," + 
 			"        t_sell_bill_header.del_status,\n" + 
 			"        m_franchisee.fr_name,\n" + 
 			"        t_sell_bill_header.user_name AS party_name,\n" + 
@@ -176,7 +176,7 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 					"        t_sell_bill_header.status,\n" + 
 					"        'NA' AS remark,\n" + 
 					"        '0' AS time,\n" + 
-					 "'-' AS 	eway_bill_no, " + 
+					 "'0' AS 	eway_bill_no, " + 
 					"        t_sell_bill_header.del_status,\n" + 
 					"        m_franchisee.fr_name,\n" + 
 					"        t_sell_bill_header.user_name AS party_name,\n" + 
@@ -207,7 +207,7 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 			+ ",t_sell_bill_header.fr_id,t_sell_bill_header.fr_code,'0' as veh_no,t_sell_bill_header.timestamp as bill_time,'NA' as ex_varchar1,'NA' as ex_varchar2,"
 			+ " '0' as tax_applicable,t_sell_bill_header.grand_total,t_sell_bill_header.taxable_amt, "
 			+ " t_sell_bill_header.total_tax,t_sell_bill_header.status,'NA' as remark,'0' as time,t_sell_bill_header.del_status, "
-			+ " m_franchisee.fr_name,t_sell_bill_header.user_name as party_name,t_sell_bill_header.user_gst_no as party_gstin,m_franchisee.fr_address as party_address ,t_bill_header.is_tally_sync AS eway_bill_no FROM t_sell_bill_header,m_franchisee WHERE "
+			+ " m_franchisee.fr_name,t_sell_bill_header.user_name as party_name,t_sell_bill_header.user_gst_no as party_gstin,m_franchisee.fr_address as party_address ,'0' AS eway_bill_no FROM t_sell_bill_header,m_franchisee WHERE "
 			+ " t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate "
 			+ " AND t_sell_bill_header.fr_id=m_franchisee.fr_id AND t_sell_bill_header.del_status=0 AND (Select m_franchisee.kg_1 from m_franchisee where t_sell_bill_header.fr_id=m_franchisee.fr_id)=1 " + 
 			"",nativeQuery=true)
