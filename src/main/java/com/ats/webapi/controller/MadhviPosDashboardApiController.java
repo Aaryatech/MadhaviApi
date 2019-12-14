@@ -1,7 +1,12 @@
 package com.ats.webapi.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +20,7 @@ import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
 import com.ats.webapi.model.posdashboard.CategorywiseItemSell;
 import com.ats.webapi.model.posdashboard.CategorywiseSell;
 import com.ats.webapi.model.posdashboard.CreaditAmtDash;
+import com.ats.webapi.model.posdashboard.DashAdvanceOrderCounts;
 import com.ats.webapi.model.posdashboard.DatewiseSellGraph;
 import com.ats.webapi.model.posdashboard.PosDashCounts;
 import com.ats.webapi.model.posdashboard.SellBillHeaderDashCounts;
@@ -23,6 +29,7 @@ import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseItemSellRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseSellRepo;
 import com.ats.webapi.repo.posdashboard.CreaditAmtDashRepo;
+import com.ats.webapi.repo.posdashboard.DashAdvanceOrderCountsRepo;
 import com.ats.webapi.repo.posdashboard.DatewiseSellGraphRepo;
 import com.ats.webapi.repo.posdashboard.SellBillHeaderDashCountsRepo;
 
@@ -41,11 +48,18 @@ public class MadhviPosDashboardApiController {
 	
 	@Autowired
 	CreaditAmtDashRepo creaditAmtDashRepo;
+	
+	@Autowired
+	DashAdvanceOrderCountsRepo dashAdvanceOrderCountsRepo;
 
 	@RequestMapping(value = { "/getPosDashCounts" }, method = RequestMethod.POST)
 	public @ResponseBody PosDashCounts getPosDashCounts(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId,@RequestParam("frRateCat") int frRateCat) {
 		
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Calcutta"));
+		Date date = calendar.getTime();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String currentDate = df.format(date);
 		PosDashCounts crnReport = new PosDashCounts();
 
 		SellBillHeaderDashCounts headcount = new SellBillHeaderDashCounts();
@@ -53,6 +67,12 @@ public class MadhviPosDashboardApiController {
 		BillHeaderDashCount billCountch = new BillHeaderDashCount();
 		BillHeaderDashCount billCountpur = new BillHeaderDashCount();
 		CreaditAmtDash daseqe=new CreaditAmtDash();
+		
+		List<DashAdvanceOrderCounts> dailyList=new ArrayList<DashAdvanceOrderCounts>();
+		List<DashAdvanceOrderCounts> advOrderList=new ArrayList<DashAdvanceOrderCounts>();
+		
+		 
+		
 		System.err.println( "DashBoardReporApi data is " + fromDate+toDate+frId);
 		try {
 			headcount = sellBillHeaderDashCountsRepo.getDataFordash(fromDate, toDate, frId);
@@ -60,7 +80,11 @@ public class MadhviPosDashboardApiController {
 			billCountch = billHeaderDashCountRepo.getD1ataFordash2Ch(fromDate, toDate, frId);
 			billCountpur = billHeaderDashCountRepo.getD1ataFordash2pur(fromDate, toDate, frId);
 			daseqe=creaditAmtDashRepo.getDataFordash(fromDate, toDate, frId);
+			dailyList=dashAdvanceOrderCountsRepo.getAdvDetail(currentDate, frId, 2);
+			advOrderList=dashAdvanceOrderCountsRepo.getAdvDetail(currentDate, frId, 1);
 			System.err.println( "DashBoardReporApi ***" + daseqe.toString());
+			crnReport.setDailyMartList(dailyList);
+			crnReport.setAdvOrderList(advOrderList);
 			
 			//System.err.println( "DashBoardReporApi /tranCount" + tranCount.toString());
 			//System.err.println( "DashBoardReporApi /billCountch" + billCountch.toString());
