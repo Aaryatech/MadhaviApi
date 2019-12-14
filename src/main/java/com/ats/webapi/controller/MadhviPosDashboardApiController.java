@@ -60,7 +60,7 @@ public class MadhviPosDashboardApiController {
 			billCountch = billHeaderDashCountRepo.getD1ataFordash2Ch(fromDate, toDate, frId);
 			billCountpur = billHeaderDashCountRepo.getD1ataFordash2pur(fromDate, toDate, frId);
 			daseqe=creaditAmtDashRepo.getDataFordash(fromDate, toDate, frId);
-			//System.err.println( "DashBoardReporApi /headcount" + headcount.toString());
+			System.err.println( "DashBoardReporApi ***" + daseqe.toString());
 			
 			//System.err.println( "DashBoardReporApi /tranCount" + tranCount.toString());
 			//System.err.println( "DashBoardReporApi /billCountch" + billCountch.toString());
@@ -85,8 +85,16 @@ public class MadhviPosDashboardApiController {
  				crnReport.setEpayAmt(Float.parseFloat(tranCount.getePayAmt()));
 			}
 			
+			
+			if(daseqe.getCreditAmt()=="" || daseqe.getCreditAmt()==null) {
+				crnReport.setCreditAmt(0);
+			}else {
+ 				//crnReport.setEpayAmt(Float.parseFloat(tranCount.getePayAmt()));
+ 				crnReport.setCreditAmt(Float.parseFloat(daseqe.getCreditAmt()));
+			}
+			
 		
-			crnReport.setCreditAmt(daseqe.getCreditAmt());
+			
 			crnReport.setDiscountAmt(headcount.getDiscAmt());
 			
 			crnReport.setNoOfBillGenerated(headcount.getNoBillGen());

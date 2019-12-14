@@ -13,7 +13,7 @@ public class CreaditAmtDash {
  	private String uid;
 	 
 	
-	private float  creditAmt;
+	private String  creditAmt;
 
 
 	public String getUid() {
@@ -26,12 +26,12 @@ public class CreaditAmtDash {
 	}
 
 
-	public float getCreditAmt() {
+	public String getCreditAmt() {
 		return creditAmt;
 	}
 
 
-	public void setCreditAmt(float creditAmt) {
+	public void setCreditAmt(String creditAmt) {
 		this.creditAmt = creditAmt;
 	}
 
