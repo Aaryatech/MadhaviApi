@@ -17,6 +17,8 @@ public interface OrderService {
 	
 	ItemOrderList searchAdvOrderHistory(int advHeadId, Date deliveryDate,int frId);
 	
+	ItemOrderList searchAdvOrderHistoryForAdmin(int advHeadId);
+	
 	int updateBillStatus(@Param("orderId") int orderId,@Param("status") int status);// from OrderRepository
 	
 	List<Orders> placePustDumpOrder(List<Orders> list);

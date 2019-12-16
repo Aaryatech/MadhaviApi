@@ -24,9 +24,12 @@ import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.TransactionDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
+import com.ats.webapi.model.advorder.GetAdvanceOrderList;
 import com.ats.webapi.model.bill.ExpenseTransaction;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
 import com.ats.webapi.model.rawmaterial.ItemSfHeader;
+import com.ats.webapi.model.stock.UpdateBmsStock;
+import com.ats.webapi.model.stock.UpdateBmsStockList;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
@@ -34,6 +37,7 @@ import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.TransactionDetailRepository;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
+import com.ats.webapi.repository.advorder.GetAdvanceOrderListRepo;
 import com.ats.webapi.service.OrderService;
 
 @RestController
@@ -160,6 +164,42 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	@Autowired
+	GetAdvanceOrderListRepo getAdvanceOrderListRepo;
+	
+ 
+	@RequestMapping(value = { "/advanceOrderHistoryHeaderAdmin" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvanceOrderList> updateBmsStock(@RequestParam  String  prodDate) {
+		List<GetAdvanceOrderList> advList =new ArrayList<GetAdvanceOrderList>();
+		
+		 
+		try {
+			
+			advList=getAdvanceOrderListRepo.getAdvanceOrderList(prodDate);
+			
+		  
+		}catch (Exception e) {
+		System.out.println("Exce in advanceOrderHistoryHeaderAdmin  "+e.getMessage());
+		e.printStackTrace();
+		}
+		
+		return advList;
+	}
+	
+	
+	@RequestMapping("/advanceOrderHistoryDetailForAdmin")
+	public @ResponseBody ItemOrderList advanceOrderHistoryDetailForAdmin(@RequestParam int headId) throws ParseException {
+
+	 
+
+		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
+
+		return orderList;
+
+	}
+
+	
 
 	@Autowired
 	ItemListForCustomerBillRepo itemListForCustomerBillRepo;
