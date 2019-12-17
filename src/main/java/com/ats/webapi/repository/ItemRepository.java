@@ -498,4 +498,5 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItemSubCatId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
-}
+
+ }

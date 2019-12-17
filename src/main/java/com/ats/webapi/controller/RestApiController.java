@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.*;
+import com.ats.webapi.model.advorder.AdvanceOrderDetail;
+import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Expense;
 import com.ats.webapi.model.frsetting.FrSetting;
@@ -74,6 +76,8 @@ import com.ats.webapi.repository.UpdateBillStatusRepository;
 import com.ats.webapi.repository.UpdatePBTimeRepo;
 import com.ats.webapi.repository.UpdateSeetingForPBRepo;
 import com.ats.webapi.repository.UserRepository;
+import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
+import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.repository.frsetting.FrSettingRepo;
 import com.ats.webapi.service.AllFrIdNameService;
 import com.ats.webapi.service.CategoryService;
@@ -1244,29 +1248,25 @@ public class RestApiController {
 
 	@Autowired
 	BillTransationRepo billTransationRepo;
-	
-	
+
 	@RequestMapping(value = { "/saveBillTransaction" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Info saveBillTransaction(@RequestBody List<BillTransaction> routeMaster) {
-		
-		Info info=new Info();
+
+		Info info = new Info();
 		try {
-			for(int i=0;i<routeMaster.size();i++) {
+			for (int i = 0; i < routeMaster.size(); i++) {
 				BillTransaction jsonResult = billTransationRepo.save(routeMaster.get(i));
 
 			}
 			info.setError(false);
 			info.setMessage("Error in post bill header insertion : RestApi");
-			
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			info.setError(true);
 			info.setMessage("Error in post bill header insertion : RestApi");
 		}
-		
 
-	
 		return info;
 	}
 
@@ -1674,19 +1674,20 @@ public class RestApiController {
 		return jsonFr;
 
 	}
-	
-	//Mahendra
-		// Login Front End Franchisee Employee
-			@RequestMapping(value = { "/frEmpLogin" }, method = RequestMethod.POST)
-			@ResponseBody
-			public String frEmpLoginr(@RequestParam("mobNo") String mobNo, @RequestParam("empPass") String empPass, @RequestParam("frId") int frId) {
 
-				String jsonFr = franchiseeService.findFrEmployeeByMobNo(mobNo, empPass, frId);
-				System.out.println("JsonString" + jsonFr);
+	// Mahendra
+	// Login Front End Franchisee Employee
+	@RequestMapping(value = { "/frEmpLogin" }, method = RequestMethod.POST)
+	@ResponseBody
+	public String frEmpLoginr(@RequestParam("mobNo") String mobNo, @RequestParam("empPass") String empPass,
+			@RequestParam("frId") int frId) {
 
-				return jsonFr;
+		String jsonFr = franchiseeService.findFrEmployeeByMobNo(mobNo, empPass, frId);
+		System.out.println("JsonString" + jsonFr);
 
-			}
+		return jsonFr;
+
+	}
 
 	// Configure Sp Day Cake
 	@RequestMapping(value = { "/configureSpDayCk" }, method = RequestMethod.POST)
@@ -1823,14 +1824,21 @@ public class RestApiController {
 	@RequestMapping(value = { "/placeManualOrderNew" }, method = RequestMethod.POST)
 	public @ResponseBody List<GenerateBill> placeManualOrderNew(@RequestBody List<Orders> orderJson)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		System.err.println("placeManualOrderNew" + orderJson.toString());
 		List<GenerateBill> billList = null;
-		List<Orders> jsonResult;
+		List<Orders> jsonResult = null;
 		OrderLog log = new OrderLog();
 		log.setFrId(orderJson.get(0).getFrId());
 		log.setJson(orderJson.toString());
 		logRespository.save(log);
+		try {
+			jsonResult = orderService.placeManualOrder(orderJson);
 
-		jsonResult = orderService.placeManualOrder(orderJson);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
 		if (!jsonResult.isEmpty()) {
@@ -1844,17 +1852,72 @@ public class RestApiController {
 		return billList;
 	}
 
+	@Autowired
+	AdvanceOrderHeaderRepo advanceOrderHeaderRepo;
+
+	@Autowired
+	AdvanceOrderDetailRepo advanceOrderDetailRepo;
+
+	@RequestMapping(value = { "/placeManualAdvanceOrderNew" }, method = RequestMethod.POST)
+	public @ResponseBody List<GenerateBill> placeManualAdvanceOrderNew(@RequestBody AdvanceOrderHeader matHeader)
+			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		System.err.println("inside saveAdvanceOrderHeadAndDetail" + matHeader.toString());
+		List<GenerateBill> billList = null;
+
+		AdvanceOrderHeader header = new AdvanceOrderHeader();
+
+		try {
+
+			header = advanceOrderHeaderRepo.save(matHeader);
+
+			for (int i = 0; i < header.getDetailList().size(); i++) {
+				matHeader.getDetailList().get(i).setAdvHeaderId(header.getAdvHeaderId());
+
+			}
+
+			List<AdvanceOrderDetail> matDetailsList = advanceOrderDetailRepo.save(matHeader.getDetailList());
+			header.setDetailList(matDetailsList);
+
+		} catch (Exception e) {
+
+			System.err.println("Exce in saveAdvanceOrderHeadAndDetail" + e.getMessage());
+
+		}
+
+		ArrayList<Integer> list = new ArrayList<Integer>();
+
+		for (int i = 0; i < matHeader.getDetailList().size(); i++) {
+			list.add(matHeader.getDetailList().get(i).getAdvDetailId());
+		}
+
+		billList = generateBillRepository.getBillOfAdvOrder(list);
+	
+
+	return billList;
+
+	}
+
 	@RequestMapping(value = { "/placeManualOrder" }, method = RequestMethod.POST)
 	public @ResponseBody List<GenerateBill> placeManualOrder(@RequestBody List<Orders> orderJson)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		System.err.println("placeManualOrder" + orderJson.toString());
 		List<GenerateBill> billList = null;
-		List<Orders> jsonResult;
+		List<Orders> jsonResult = null;
 		OrderLog log = new OrderLog();
 		log.setFrId(orderJson.get(0).getFrId());
 		log.setJson(orderJson.toString());
 		logRespository.save(log);
 
-		jsonResult = orderService.placeOrder(orderJson);
+		try {
+			jsonResult = orderService.placeOrder(orderJson);
+			System.err.println(jsonResult.toString());
+
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+
 		ArrayList<Integer> list = new ArrayList<Integer>();
 
 		if (!jsonResult.isEmpty()) {
@@ -2191,8 +2254,7 @@ public class RestApiController {
 			@RequestParam("grnTwo") int grnTwo, @RequestParam("itemShelfLife") int itemShelfLife,
 			@RequestParam("isSaleable") int isSaleable, @RequestParam("isStockable") int isStockable,
 			@RequestParam("isFactOrFr") int isFactOrFr, @RequestParam("isBillable") int isBillable,
-			@RequestParam("isDecimal") int isDecimal,
-			@RequestParam("billItems") String billItems) {
+			@RequestParam("isDecimal") int isDecimal, @RequestParam("billItems") String billItems) {
 
 		Item item = new Item();
 		item.setItemImage(itemImage);
@@ -2839,10 +2901,12 @@ public class RestApiController {
 
 		return categoryList;
 	}
+
 	@RequestMapping(value = { "/findAllCatForStock" }, method = RequestMethod.GET)
 	public @ResponseBody CategoryList findAllBySameDay() {
 		List<Integer> list = new ArrayList<>();
-		list.add(0);list.add(1);
+		list.add(0);
+		list.add(1);
 		List<MCategory> jsonCategoryResponse = categoryService.findAllOnlyCategory(list);
 		CategoryList categoryList = new CategoryList();
 		ErrorMessage errorMessage = new ErrorMessage();
@@ -2853,6 +2917,7 @@ public class RestApiController {
 
 		return categoryList;
 	}
+
 	// Show Flavor List
 	@RequestMapping(value = { "/showFlavourList" }, method = RequestMethod.GET)
 	@ResponseBody
@@ -2915,7 +2980,9 @@ public class RestApiController {
 			@RequestParam("itemTax3") float itemTax3, @RequestParam("itemIsUsed") int itemIsUsed,
 			@RequestParam("itemSortId") float itemSortId, @RequestParam("grnTwo") int grnTwo,
 			@RequestParam("itemShelfLife") int itemShelfLife, @RequestParam("isSaleable") int isSaleable,
-			@RequestParam("isStockable") int isStockable,@RequestParam("isDecimal") int isDecimal, @RequestParam("isBillable") int isBillable, @RequestParam("isFactOrFr") int isFactOrFr,@RequestParam("billItems") String billItems) {
+			@RequestParam("isStockable") int isStockable, @RequestParam("isDecimal") int isDecimal,
+			@RequestParam("isBillable") int isBillable, @RequestParam("isFactOrFr") int isFactOrFr,
+			@RequestParam("billItems") String billItems) {
 
 		Item item = itemService.findItems(id);
 		item.setItemImage(itemImage);
@@ -3535,7 +3602,7 @@ public class RestApiController {
 		if (searchBy == 1) {
 			items = itemRepository.getItemsNameByIdWithOtherItemCateId(7, frId, catId);
 		} else if (searchBy == 2) {
-			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId( 7, frId, catId);
+			items = itemRepository.getItemsNameByIdWithOtherItemSubCatId(7, frId, catId);
 		}
 
 		if (items != null) {
@@ -5260,8 +5327,5 @@ public class RestApiController {
 		return itemResponse;
 
 	}
-	
-	
 
-	
 }

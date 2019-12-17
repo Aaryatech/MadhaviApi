@@ -44,22 +44,30 @@ public class OrderServiceImpl implements OrderService {
 	
 	@Override
 	public List<Orders> placeOrder(List<Orders> list) {
+		
+		System.err.println(" innnnn placeOrder" + list.toString());
 		List<Orders> returnList = new ArrayList();
 		
 		for (Orders o : list) {
+			
+			System.err.println(" innnnn for" + list.toString());
 
 			Orders prevOrder = orderRepository.findPreviousOrder(o.getItemId(), o.getFrId(), o.getProductionDate(),
 					o.getMenuId());
 
 			try {
 
-				System.out.println("prev order orderId " + prevOrder.getOrderId());
+				System.err.println("prev placeOrder" + prevOrder.getOrderId());
 
 				if (prevOrder.getItemId().equalsIgnoreCase("") || prevOrder.getItemId().equalsIgnoreCase(null)) {
 
+					
+					System.err.println("prev inif");
+
 				} else {
 					System.out.println("Updating order with qty " + o.getOrderQty());
-
+					System.err.println("prev else");
+//
 					Orders updatedOrder = null;
 					if (o.getOrderQty() == 0) {
 
@@ -78,11 +86,16 @@ public class OrderServiceImpl implements OrderService {
 
 						System.out.println("Order Deleted ? = " + result);
 					} else {
+						
+						System.err.println("2nd else ");
+//
 						prevOrder.setOrderQty(o.getOrderQty());
 						prevOrder.setEditQty(o.getOrderQty());//21-July-change-for editQty
 						prevOrder.setIsPositive(o.getIsPositive());//10-jan-19-change-for editQty
-						updatedOrder = orderRepository.save(prevOrder);
 						
+						
+						updatedOrder = orderRepository.save(prevOrder);
+						System.out.println("Order updatedOrder ? = " +updatedOrder.toString()  );
 					}
 					
 					returnList.add(updatedOrder);
@@ -98,6 +111,8 @@ public class OrderServiceImpl implements OrderService {
 					Orders newOrder = orderRepository.save(o);
 			
 					returnList.add(newOrder);
+					
+					System.out.println("Order newOrder ? = " +newOrder.toString()  );
 				}
 			}
 
@@ -287,6 +302,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public List<Orders> placeManualOrder(List<Orders> list) {
     List<Orders> returnList = new ArrayList();
+    System.err.println("returnList"+list.toString());
 		
 		for (Orders o : list) {
 			try {

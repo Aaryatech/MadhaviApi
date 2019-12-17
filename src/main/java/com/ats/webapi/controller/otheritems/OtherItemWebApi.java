@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.model.Info;
+import com.ats.webapi.model.Item;
 import com.ats.webapi.model.otheritems.Otheritems;
 import com.ats.webapi.repositories.OtheritemsRepo;
+import com.ats.webapi.repository.ItemRepository;
 
 
 @RestController 
@@ -41,6 +43,7 @@ public class OtherItemWebApi {
 		
 	}
 	
+	 
 	@RequestMapping(value="/getItemByFrId", method=RequestMethod.POST)
 	public @ResponseBody List<Otheritems> getItemByFrId(@RequestParam("frId") int frId) {
 		System.out.println("Other Itm FRID="+frId); 

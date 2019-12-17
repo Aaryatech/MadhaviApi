@@ -56,6 +56,60 @@ public interface GenerateBillRepository extends JpaRepository<GenerateBill, Inte
 			"",nativeQuery=true)
 	List<GenerateBill> generateBillForAllMenu(@Param("frId")List<String> frId,@Param("delDate")String delDate);
 
+	@Query(value=" SELECT\n" + 
+			"    t_adv_order_detail.adv_header_id as order_id,\n" + 
+			"    t_adv_order_detail.disc_per as is_positive,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            item_hsncd\n" + 
+			"        FROM\n" + 
+			"            m_item_sup\n" + 
+			"        WHERE\n" + 
+			"            m_item_sup.item_id = m_item.id AND m_item_sup.del_status = 0\n" + 
+			"    ),\n" + 
+			"    '-'\n" + 
+			"    ) AS hsn_code,\n" + 
+			"    t_adv_order_detail.fr_id,\n" + 
+			"    t_adv_order_detail.menu_id,\n" + 
+			"    t_adv_order_detail.grn_type,\n" + 
+			"    t_adv_order_detail.item_id,\n" + 
+			"    t_adv_order_detail.qty AS order_qty,\n" + 
+			"    t_adv_order_detail.rate as order_rate,\n" + 
+			"    t_adv_order_detail.mrp as order_mrp,\n" + 
+			"    t_adv_order_detail.delivery_date,\n" + 
+			"    m_franchisee.fr_name,\n" + 
+			"    m_franchisee.fr_code,\n" + 
+			"    m_franchisee.is_same_state,\n" + 
+			"    m_franchisee.fr_rate_cat,\n" + 
+			"    m_fr_menu_show.menu_title,\n" + 
+			"    m_item.item_name,\n" + 
+			"    m_item.item_grp1,\n" + 
+			"    m_item.item_grp2,\n" + 
+			"    m_item.item_tax1,\n" + 
+			"    m_item.item_tax2,\n" + 
+			"    m_item.item_tax3,\n" + 
+			"    m_item.item_shelf_life,\n" + 
+			"    m_franchisee.fr_name AS party_name,\n" + 
+			"    m_franchisee.fr_address AS party_address,\n" + 
+			"    m_franchisee.fr_gst_no AS party_gstin,\n" + 
+			"    m_franchisee.kg_1 AS is_own_fr\n" + 
+			"FROM\n" + 
+			"    t_adv_order_detail,\n" + 
+			"    m_franchisee,\n" + 
+			"    m_fr_menu_show,\n" + 
+			"    m_item\n" + 
+			"WHERE\n" + 
+			"    t_adv_order_detail.adv_detail_id IN(:idList) AND m_franchisee.fr_id = t_adv_order_detail.fr_id AND t_adv_order_detail.menu_id = m_fr_menu_show.menu_id AND t_adv_order_detail.item_id = m_item.id AND t_adv_order_detail.is_bill_generated IN(0, 1) AND t_adv_order_detail.qty != 0\n" + 
+			"ORDER BY\n" + 
+			"    m_franchisee.fr_id,\n" + 
+			"    m_item.item_grp1,\n" + 
+			"    m_item.item_grp2,\n" + 
+			"    m_item.item_name " + 
+			"",nativeQuery=true)
+	List<GenerateBill> getBillOfAdvOrder(@Param("idList")ArrayList<Integer> list);
+	
+	
 	@Query(value=" SELECT t_order.order_id ,t_order.is_positive,coalesce((select item_hsncd from m_item_sup where m_item_sup.item_id=m_item.id and m_item_sup.del_status=0),'-') as hsn_code,t_order.fr_id, t_order.menu_id,t_order.grn_type,t_order.item_id,t_order.edit_qty as order_qty,"
 			+ " t_order.order_rate,t_order.order_mrp ,t_order.delivery_date, m_franchisee.fr_name,m_franchisee.fr_code,m_franchisee.is_same_state,m_franchisee.fr_rate_cat, m_fr_menu_show.menu_title,"
 			+ " m_item.item_name,m_item.item_grp1,m_item.item_grp2,m_item.item_tax1, m_item.item_tax2, m_item.item_tax3,m_item.item_shelf_life,m_franchisee.fr_name as party_name,m_franchisee.fr_address as party_address,m_franchisee.fr_gst_no as party_gstin,m_franchisee.kg_1 as is_own_fr from t_order,m_franchisee, m_fr_menu_show ,"
