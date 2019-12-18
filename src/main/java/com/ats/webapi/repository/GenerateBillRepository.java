@@ -57,7 +57,7 @@ public interface GenerateBillRepository extends JpaRepository<GenerateBill, Inte
 	List<GenerateBill> generateBillForAllMenu(@Param("frId")List<String> frId,@Param("delDate")String delDate);
 
 	@Query(value=" SELECT\n" + 
-			"    t_adv_order_detail.adv_header_id as order_id,\n" + 
+			"    t_adv_order_detail.adv_detail_id as order_id,\n" + 
 			"    t_adv_order_detail.disc_per as is_positive,\n" + 
 			"    COALESCE(\n" + 
 			"        (\n" + 

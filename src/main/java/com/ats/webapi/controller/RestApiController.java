@@ -1891,8 +1891,9 @@ public class RestApiController {
 			list.add(matHeader.getDetailList().get(i).getAdvDetailId());
 		}
 
+		System.err.println("inside bills " + list.toString());
 		billList = generateBillRepository.getBillOfAdvOrder(list);
-	
+		System.err.println("inside billList " + billList.toString());
 
 	return billList;
 
@@ -3862,10 +3863,20 @@ public class RestApiController {
 		Item item = itemService.findItem(id);
 		return item;
 	}
+	
+	@RequestMapping(value = { "/getFranchiseeNew" }, method = RequestMethod.POST)
+	public @ResponseBody Franchisee getFranchiseeNew(@RequestParam("frId") int frId) {
+
+		System.err.println("frId"+frId);
+		Franchisee franchisee = franchiseeService.findFranchisee(frId);
+		return franchisee;
+	}
 
 	// Get Franchisee
 	@RequestMapping(value = { "/getFranchisee" }, method = RequestMethod.GET)
 	public @ResponseBody Franchisee findFranchisee(@RequestParam("frId") int frId) {
+		
+		System.err.println("frId"+frId);
 		Franchisee franchisee = franchiseeService.findFranchisee(frId);
 
 		return franchisee;
