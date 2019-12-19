@@ -44,7 +44,7 @@ public class PosMasterApiController {
 	public @ResponseBody List<Customer> getAllCustomers() {
 		List<Customer> servicsList = new ArrayList<Customer>();
 		try {
-			servicsList = customerRepo.findByDelStatusOrderByCustIdDesc(1);
+			servicsList = customerRepo.findByDelStatusOrderByCustIdDesc(0);
 		}catch(Exception e) {
 			System.err.println("Exce in getAllServices " + e.getMessage());
 		}
@@ -57,7 +57,7 @@ public class PosMasterApiController {
 	public @ResponseBody Customer getCustomerByCustId(@RequestParam int custId) {
 		Customer servc = new Customer() ;
 		try {
-			 servc = customerRepo.findByCustIdAndDelStatus(custId, 1);
+			 servc = customerRepo.findByCustIdAndDelStatus(custId, 0);
 		}catch (Exception e) {
 			System.err.println("Exce in getServiceById" + e.getMessage());
 		}
@@ -68,7 +68,7 @@ public class PosMasterApiController {
 	public @ResponseBody List<Customer>  getAllCustomerByFrId(@RequestParam int frId) {
 		List<Customer> servicsList = new ArrayList<Customer>();
 		try {
-			servicsList = customerRepo.findByFrIdAndDelStatus(frId, 1);
+			servicsList = customerRepo.findByFrIdAndDelStatus(frId, 0);
 		}catch (Exception e) {
 			System.err.println("Exce in getServiceById" + e.getMessage());
 		}
