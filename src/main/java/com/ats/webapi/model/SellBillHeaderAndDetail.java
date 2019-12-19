@@ -111,11 +111,23 @@ public class SellBillHeaderAndDetail {
 	@Column(name="gst_no")
 	private String gstNo; 
 	
+	private int extInt1;
+	
 	@Transient
 	private List<SellBillDetailForPos> list;
 	
 	@Transient
 	private List<TaxLabListForPos> taxlabList;
+
+	
+	
+	public int getExtInt1() {
+		return extInt1;
+	}
+
+	public void setExtInt1(int extInt1) {
+		this.extInt1 = extInt1;
+	}
 
 	public int getSellBillNo() {
 		return sellBillNo;
@@ -393,13 +405,7 @@ public class SellBillHeaderAndDetail {
 				+ ", custId=" + custId + ", userName=" + userName + ", userGstNo=" + userGstNo + ", userPhone="
 				+ userPhone + ", status=" + status + ", isDairyMartBill=" + isDairyMartBill + ", couponNo=" + couponNo
 				+ ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt=" + custLoyaltyPt + ", delStatus="
-				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", list=" + list + ", taxlabList="
-				+ taxlabList + "]";
+				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", extInt1=" + extInt1 + ", list=" + list
+				+ ", taxlabList=" + taxlabList + "]";
 	}
-	
-	
-	
-
-	
-
 }

@@ -430,6 +430,15 @@ public class AdvanceOrderApiController {
 					orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
 
 				}
+				cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
+
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
 			}
 
 			else {
@@ -440,17 +449,18 @@ public class AdvanceOrderApiController {
 					orderList = sellBillHeaderRepository.getCustBillsTodaysPending(sf.format(date), frId);
 				}
 
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+					cust = customerRepo.findByCustIdAndDelStatus(orderList.get(i).getCustId(), 0);
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
+
 			}
 
-			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
-
-			System.err.println("cust is " + cust.toString());
-			for (int i = 0; i < orderList.size(); i++) {
-
-				orderList.get(i).setUserName(cust.getCustName());
-
-			}
-
+			
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();

@@ -2503,11 +2503,11 @@ public class RestApiController {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		try {
+		/*try {
 			SQLfbaLicenseDate = Common.convertToSqlDate(fbaLicenseDate);
 		} catch (Exception e) {
 			// TODO: handle exception
-		}
+		}*/
 		Franchisee franchisee = new Franchisee();
 		// franchisee.setFrId(frId);
 		franchisee.setFrName(frName);
@@ -2538,7 +2538,7 @@ public class RestApiController {
 		franchisee.setFrGstNo(frGstNo);
 		franchisee.setFrGstType(frGstType);
 		franchisee.setOwnerBirthDate(sqlOwnerBirthDate);
-		franchisee.setFbaLicenseDate(SQLfbaLicenseDate);
+		franchisee.setFbaLicenseDate(fbaLicenseDate);
 		franchisee.setStockType(stockType);
 		franchisee.setFrTarget(frTarget);
 		franchisee.setIsSameState(isSameState);
@@ -4314,11 +4314,11 @@ public class RestApiController {
 			}
 			Date utilFbaLicenseDate = null;
 
-			try {
+			/*try {
 				utilFbaLicenseDate = sdf.parse(fbaLicenseDate);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			}*/
 
 			Franchisee franchisee = franchiseeService.findFranchisee(frId);
 
@@ -4352,7 +4352,7 @@ public class RestApiController {
 			franchisee.setFrGstNo(frGstNo);
 			franchisee.setFrGstType(frGstType);
 			franchisee.setOwnerBirthDate(utilOwnerBirthDate);
-			franchisee.setFbaLicenseDate(utilFbaLicenseDate);
+			franchisee.setFbaLicenseDate(fbaLicenseDate);
 			franchisee.setStockType(stockType);
 			franchisee.setFrTarget(frTarget);
 			franchisee.setIsSameState(isSameState);

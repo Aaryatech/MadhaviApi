@@ -99,7 +99,7 @@ public class Franchise implements Serializable{
 	private Date ownerBirthDate;
 	  
 	@Column(name="fba_license_date")
-	private Date fbaLicenseDate;
+	private String fbaLicenseDate;
 	  
 	@Column(name="fr_agreement_date")
  	private Date frAgreementDate;
@@ -347,12 +347,11 @@ public class Franchise implements Serializable{
 		this.ownerBirthDate = ownerBirthDate;
 	}
 	
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	public Date getFbaLicenseDate() {
+	public String getFbaLicenseDate() {
 		return fbaLicenseDate;
 	}
 
-	public void setFbaLicenseDate(Date fbaLicenseDate) {
+	public void setFbaLicenseDate(String fbaLicenseDate) {
 		this.fbaLicenseDate = fbaLicenseDate;
 	}
 	

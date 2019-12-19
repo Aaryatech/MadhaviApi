@@ -49,7 +49,7 @@ public interface TransactionDetailRepository extends JpaRepository<TransactionDe
 			"        t_transaction_detail.del_status,\n" + 
 			"        t_sell_bill_header.payment_mode as ex_int1,\n" + 
 			"        t_transaction_detail.ex_int2,\n" + 
-			"        t_sell_bill_header.invoice_no as ex_var2,\n" + 
+			"        concat(t_sell_bill_header.invoice_no,'--(',t_sell_bill_header.user_name,')') as ex_var2,\n" + 
 			"        t_transaction_detail.ex_var1,\n" + 
 			"          t_sell_bill_header.grand_total as ex_float1,\n" + 
 			"        t_sell_bill_header.remaining_amt  as ex_float2 \n" + 
