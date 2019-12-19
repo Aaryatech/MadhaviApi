@@ -85,15 +85,15 @@ public class AdvanceOrderApiController {
 	public @ResponseBody Info checkEmployeeEmail(@RequestParam String phoneNo) {
 
 		Info info = new Info();
-		Customer emp = new Customer();
+		List<Customer> emp = new ArrayList<Customer>();
 		try {
 
-			emp = cust.findByPhoneNumber(phoneNo);
-
-			if (emp != null) {
-				info.setError(false);
-			} else {
+			emp = cust.findByPhoneNumberAndDelStatus(phoneNo,0);
+            System.err.println(emp.toString()+"phoneNo"+phoneNo);
+			if (emp.size()>0) {
 				info.setError(true);
+			} else {
+				info.setError(false);
 
 			}
 
@@ -319,11 +319,11 @@ public class AdvanceOrderApiController {
 
 		Customer cust = new Customer();
 		try {
-			itm = sellBillHeaderRepository.getSellBillHeader(custId, frId);
+			itm = sellBillHeaderRepository.getSellBillHeaderPending(custId, frId);
 
 			System.err.println("data is" + itm.toString());
 
-			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
+			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
 
 			System.err.println("cust is " + cust.toString());
 			for (int i = 0; i < itm.size(); i++) {
@@ -437,12 +437,12 @@ public class AdvanceOrderApiController {
 				if (flag == 1) {
 					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
 				} else if (flag == 2) {
-					orderList = sellBillHeaderRepository.getCustBillsTodays(sf.format(date), frId);
+					orderList = sellBillHeaderRepository.getCustBillsTodaysPending(sf.format(date), frId);
 				}
 
 			}
 
-			cust = customerRepo.findByCustIdAndDelStatus(custId, 1);
+			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
 
 			System.err.println("cust is " + cust.toString());
 			for (int i = 0; i < orderList.size(); i++) {
@@ -469,7 +469,7 @@ public class AdvanceOrderApiController {
 		System.err.println("tabType*" + sf.format(date));
 		try {
 			if (tabType == 1) {
-
+				
 				orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
 			} else {
 				orderList = transactionDetailRepository.getCustBillsTransactionToday(frId, sf.format(date));
@@ -483,5 +483,4 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
-
 }
