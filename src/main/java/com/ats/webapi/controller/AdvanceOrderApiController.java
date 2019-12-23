@@ -145,7 +145,7 @@ public class AdvanceOrderApiController {
 		java.util.Date date = sdf.parse(deliveryDt);
 		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
 		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
-		System.out.println("flag is " + flag);
+		System.out.println(deliveryDt+"flag is " + flag);
 		try {
 
 			if (flag == 1) {
