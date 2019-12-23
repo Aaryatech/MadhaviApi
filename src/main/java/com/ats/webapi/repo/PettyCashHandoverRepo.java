@@ -17,4 +17,7 @@ public interface PettyCashHandoverRepo extends JpaRepository<PettyCashHandover, 
 	
 	public List<PettyCashHandover> findByFrIdAndDelStatusAndClosingDateBetween(int frId, int del,String fromDate, String toDate);
 	
+	@Query(value="SELECT * FROM t_fr_pettycash_handover WHERE fr_id =:frId AND transaction_date LIKE %:lastdate% ORDER BY cash_handover_id DESC LIMIT 1",nativeQuery=true)
+	public PettyCashHandover getLastRecord(@Param("frId") int frId, @Param("lastdate") String lastdate);
+
 }

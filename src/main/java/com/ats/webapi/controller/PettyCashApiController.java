@@ -16,6 +16,7 @@ import com.ats.webapi.model.PettyCashEmp;
 import com.ats.webapi.model.PettyCashHandover;
 import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.pettycash.FrEmpMaster;
+import com.ats.webapi.model.pettycash.GetCashAdvAndExpAmt;
 import com.ats.webapi.model.pettycash.OtherBillDetailAdv;
 import com.ats.webapi.model.pettycash.PettyCashDao;
 import com.ats.webapi.model.pettycash.PettyCashManagmt;
@@ -29,6 +30,7 @@ import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repo.SellBillDetailAdvRepo;
 import com.ats.webapi.repo.SpCakeAdvRepo;
 import com.ats.webapi.repository.ExpressBillRepository;
+import com.ats.webapi.repository.GetCashAdvAndExpAmtRepo;
 
 @RestController
 public class PettyCashApiController {
@@ -40,6 +42,8 @@ public class PettyCashApiController {
 	@Autowired SellBillDetailAdvRepo sellBillRepo;
 	
 	@Autowired OtherBillDetailAdvRepo otherBillRepo;
+	
+	@Autowired GetCashAdvAndExpAmtRepo getCashAdvAndExpAmtRepo;
 	
 	@RequestMapping(value = { "/getPettyCashDetails" }, method = RequestMethod.POST)
 	public PettyCashManagmt getPettyCashDetails(@RequestParam("frId") int frId) {
@@ -286,6 +290,39 @@ public class PettyCashApiController {
 		}
 		return info;
 	}
+	
+	
+	
+	
+	@RequestMapping(value = { "/getTrCashAmtAndAdvAmtAndExpAmt" }, method = RequestMethod.POST)
+	public GetCashAdvAndExpAmt getTrCashAmtAndAdvAmtAndExpAmt (int frId, String date) {
+		GetCashAdvAndExpAmt data = new GetCashAdvAndExpAmt();
+		System.err.println("PARAM------DATE---- "+date);
+		System.err.println("PARAM---------- "+frId+"---------------------------- "+date);
+		try {
+			data = getCashAdvAndExpAmtRepo.getAmt(frId, date);
+			System.err.println("AMT--------------"+data);
+		} catch (Exception e) {
+			System.err.println("Exception in getTrCashAmtAndAdvAmtAndExpAmt : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	
+	@RequestMapping(value = { "/getLastCashHandover" }, method = RequestMethod.POST)
+	public PettyCashHandover getLastCashHandover(@RequestParam("frId") int frId, @RequestParam("lastdate") String lastdate) {
+		PettyCashHandover data = new PettyCashHandover();
+		try {
+			data = pettyCashHandRepo.getLastRecord(frId, lastdate);
+		}catch (Exception e) {
+			System.err.println("Exception in getLastCashHandover : "+e.getMessage());
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	
 }
 
 
