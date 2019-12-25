@@ -13,7 +13,7 @@ public interface GetCashAdvAndExpAmtRepo extends JpaRepository<GetCashAdvAndExpA
 	
 	@Query(value=" SELECT UUID() as id, COALESCE((SELECT SUM(t.cash_amt) FROM t_transaction_detail t,t_sell_bill_header h "
 			+ "WHERE t.sell_bill_no=h.sell_bill_no AND h.fr_id=:frId AND t.transaction_date=:date),0) as tr_cash_amt, "
-			+ "COALESCE((SELECT SUM(advance_amt) FROM t_adv_order_header WHERE fr_id =:frId AND order_date =:date ),0) as adv_amt, "
+			+ "COALESCE((SELECT SUM(advance_amt) FROM t_adv_order_header WHERE fr_id =:frId AND order_date =:date AND is_sell_bill_generated=0 ),0) as adv_amt, "
 			+ "COALESCE((SELECT SUM(ch_amt) FROM m_expense WHERE fr_id =:frId AND del_status = 0 AND exp_date =:date ),0) as exp_amt " + 
 			"",nativeQuery=true)
 	GetCashAdvAndExpAmt getAmt(@Param("frId") int frId, @Param("date") String date);
