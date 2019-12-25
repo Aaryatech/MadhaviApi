@@ -14,10 +14,10 @@ import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 
 public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader, Integer> {
 
-	List<AdvanceOrderHeader> findByDeliveryDateAndFrIdAndDelStatus(Date deliveryDate, int frId, int i);
+	List<AdvanceOrderHeader> findByDeliveryDateAndFrIdAndDelStatusOrderByOrderDateDesc(Date deliveryDate, int frId, int i);
 
 	 
-	List<AdvanceOrderHeader> findByFrIdAndDelStatusAndIsSellBillGenerated(int frId, int i,int j);
+	List<AdvanceOrderHeader> findByFrIdAndDelStatusAndIsSellBillGeneratedOrderByOrderDateDesc(int frId, int i,int j);
 
 	
 	@Transactional

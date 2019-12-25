@@ -6,7 +6,6 @@ import javax.persistence.Id;
 @Entity
 public class ItemListForCustomerBill {
 	
-	
 	@Id
 	private int itemId;
 	private float orignalMrp;
@@ -16,6 +15,21 @@ public class ItemListForCustomerBill {
 	private float taxableAmt;
 	private float taxAmt;
 	private float total;
+	private String uom;//new
+	private int isDecimal;//new
+	
+	public String getUom() {
+		return uom;
+	}
+	public void setUom(String uom) {
+		this.uom = uom;
+	}
+	public int getIsDecimal() {
+		return isDecimal;
+	}
+	public void setIsDecimal(int isDecimal) {
+		this.isDecimal = isDecimal;
+	}
 	public int getItemId() {
 		return itemId;
 	}
@@ -68,9 +82,7 @@ public class ItemListForCustomerBill {
 	public String toString() {
 		return "ItemListForCustomerBill [itemId=" + itemId + ", orignalMrp=" + orignalMrp + ", qty=" + qty
 				+ ", itemName=" + itemName + ", taxPer=" + taxPer + ", taxableAmt=" + taxableAmt + ", taxAmt=" + taxAmt
-				+ ", total=" + total + "]";
+				+ ", total=" + total + ", uom=" + uom + ", isDecimal=" + isDecimal + "]";
 	}
-	
-	
-
+	   
 }

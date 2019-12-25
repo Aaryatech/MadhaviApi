@@ -30,7 +30,7 @@ public class SellBillDetails {
 	private float mrp;
 	
 	@Column(name="qty")
-	private int qty;
+	private float qty;
 	
 	@Column(name="mrp_base_rate")
 	private float mrpBaseRate;
@@ -116,11 +116,11 @@ public class SellBillDetails {
 		this.mrp = mrp;
 	}
 
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 

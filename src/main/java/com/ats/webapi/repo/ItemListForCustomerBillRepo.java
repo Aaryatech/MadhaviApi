@@ -17,12 +17,12 @@ public interface ItemListForCustomerBillRepo extends JpaRepository<ItemListForCu
 			"    t_adv_order_detail.mrp AS orignal_mrp,\n" + 
 			"    t_adv_order_detail.qty,\n" + 
 			"    m_item.item_name,\n" + 
-			"    m_item.item_tax1 as tax_per,0 as taxable_amt,0 as tax_amt,0 as total\n" + 
+			"    m_item.item_tax1 as tax_per,m_item.ext_int2 as is_decimal,m_item_sup.item_uom as uom, 0 as taxable_amt,0 as tax_amt,0 as total\n" + 
 			"FROM\n" + 
 			"    t_adv_order_detail,\n" + 
-			"    m_item\n" + 
-			"WHERE\n" + 
-			"    t_adv_order_detail.adv_header_id =:advHeadId AND t_adv_order_detail.item_id = m_item.id AND t_adv_order_detail.del_status = 0", nativeQuery = true)
+			"    m_item,m_item_sup " + 
+			"WHERE " + 
+			"  m_item_sup.item_id=m_item.id and  t_adv_order_detail.adv_header_id =:advHeadId AND t_adv_order_detail.item_id = m_item.id AND t_adv_order_detail.del_status = 0", nativeQuery = true)
 	List<ItemListForCustomerBill> getItem(@Param("advHeadId") int advHeadId);
 
 	

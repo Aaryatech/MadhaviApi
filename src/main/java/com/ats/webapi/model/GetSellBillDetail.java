@@ -35,7 +35,7 @@ public class GetSellBillDetail {
 	
 
 	@Column(name="qty")
-	private int qty;
+	private float qty;
 	
 	@Column(name="sgst_per")
 	private float sgstPer;
@@ -94,11 +94,11 @@ public class GetSellBillDetail {
 		this.mrp = mrp;
 	}
 
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 

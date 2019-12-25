@@ -149,10 +149,10 @@ public class AdvanceOrderApiController {
 		try {
 
 			if (flag == 1) {
-				orderList = advanceOrderHeaderRepo.findByDeliveryDateAndFrIdAndDelStatus(deliveryDate, frId, 0);
+				orderList = advanceOrderHeaderRepo.findByDeliveryDateAndFrIdAndDelStatusOrderByOrderDateDesc(deliveryDate, frId, 0);
 
 			} else {
-				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGenerated(frId, 0, 0);
+				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGeneratedOrderByOrderDateDesc(frId, 0, 0);
 
 			}
 
