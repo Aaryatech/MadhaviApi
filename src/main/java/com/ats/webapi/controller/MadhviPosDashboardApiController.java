@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.posdashboard.BillHeaderDashCount;
 import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
 import com.ats.webapi.model.posdashboard.CategorywiseItemSell;
@@ -24,6 +25,7 @@ import com.ats.webapi.model.posdashboard.DashAdvanceOrderCounts;
 import com.ats.webapi.model.posdashboard.DatewiseSellGraph;
 import com.ats.webapi.model.posdashboard.PosDashCounts;
 import com.ats.webapi.model.posdashboard.SellBillHeaderDashCounts;
+import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.posdashboard.BillHeaderDashCountRepo;
 import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
 import com.ats.webapi.repo.posdashboard.CategorywiseItemSellRepo;
@@ -51,6 +53,9 @@ public class MadhviPosDashboardApiController {
 	
 	@Autowired
 	DashAdvanceOrderCountsRepo dashAdvanceOrderCountsRepo;
+	
+	@Autowired
+	GetTotalAmtRepo getTotalAmtRepo;
 
 	@RequestMapping(value = { "/getPosDashCounts" }, method = RequestMethod.POST)
 	public @ResponseBody PosDashCounts getPosDashCounts(@RequestParam("fromDate") String fromDate,
@@ -84,13 +89,30 @@ public class MadhviPosDashboardApiController {
 			advOrderList=dashAdvanceOrderCountsRepo.getAdvDetail(currentDate, frId, 1);
 			System.err.println( "DashBoardReporApi ***" + daseqe.toString());
 			crnReport.setDailyMartList(dailyList);
-			crnReport.setAdvOrderList(advOrderList);
+			crnReport.setAdvOrderList(advOrderList); 
+			
+			
+			GetTotalAmt getAdvAmt=getTotalAmtRepo.getTotalAmount(frId, fromDate, toDate);
+			float advAmt=0;
+			if(getAdvAmt!=null) {
+				advAmt=getAdvAmt.getTotalAmt();
+			}
+			
+			GetTotalAmt getProfitAmt=getTotalAmtRepo.getTotalProfit(frId, fromDate, toDate);
+			float profitAmt=0;
+			if(getProfitAmt!=null) {
+				profitAmt=getProfitAmt.getTotalAmt();
+			}
+			
+			crnReport.setProfitAmt((int)profitAmt);
+			
 			
 			//System.err.println( "DashBoardReporApi /tranCount" + tranCount.toString());
 			//System.err.println( "DashBoardReporApi /billCountch" + billCountch.toString());
 			//System.err.println( "DashBoardReporApi /billCountpur" + billCountpur.toString());
 
-			crnReport.setAdvanceAmt(headcount.getAdvanceAmt());
+			//crnReport.setAdvanceAmt(headcount.getAdvanceAmt());
+			crnReport.setAdvanceAmt(advAmt);
 			
 			if(tranCount.getCardAmt()=="" || tranCount.getCardAmt()==null) {
 				crnReport.setCardAmt(0);
@@ -125,7 +147,7 @@ public class MadhviPosDashboardApiController {
 			crnReport.setSaleAmt(headcount.getSellAmt());
 
 			
-			crnReport.setProfitAmt(headcount.getProfitAmt());
+			//crnReport.setProfitAmt(headcount.getProfitAmt());
 			
 			
 			if(billCountpur.getPurchaeAmt()=="" || billCountpur.getPurchaeAmt()==null ||billCountpur.getPurchaeAmt()=="0") {

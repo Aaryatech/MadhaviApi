@@ -22,8 +22,7 @@ public interface BillHeaderDashCountRepo extends JpaRepository<BillHeaderDashCou
 	@Query(value = "SELECT\n" + 
 			"    UUID() AS uid, '0' AS ch_amt, SUM(t_bill_header.grand_total) AS purchae_amt\n" + 
 			"FROM\n" + 
-			"    t_bill_header,\n" + 
-			"    m_franchisee\n" + 
+			"    t_bill_header " + 
 			"WHERE\n" + 
 			"    t_bill_header.del_status = 0 AND t_bill_header.fr_id =:frId AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate", nativeQuery = true)
 	BillHeaderDashCount getD1ataFordash2pur(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("frId") int  frId);

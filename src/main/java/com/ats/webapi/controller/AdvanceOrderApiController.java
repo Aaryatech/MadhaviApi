@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
+import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
@@ -31,6 +32,7 @@ import com.ats.webapi.model.rawmaterial.ItemSfHeader;
 import com.ats.webapi.model.stock.UpdateBmsStock;
 import com.ats.webapi.model.stock.UpdateBmsStockList;
 import com.ats.webapi.repo.CustomerRepo;
+import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
@@ -48,6 +50,9 @@ public class AdvanceOrderApiController {
 
 	@Autowired
 	AdvanceOrderDetailRepo advanceOrderDetailRepo;
+	
+	@Autowired
+	GetTotalAmtRepo getTotalAmtRepo;
 
 	@RequestMapping(value = { "/saveAdvanceOrderHeadAndDetail" }, method = RequestMethod.POST)
 	public @ResponseBody AdvanceOrderHeader saveAdvanceOrderHeadAndDetail(@RequestBody AdvanceOrderHeader matHeader) {
@@ -493,4 +498,19 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	
+	@RequestMapping("/getTotalAdvAmt")
+	public @ResponseBody GetTotalAmt getTotalAdvAmt(@RequestParam int frId,@RequestParam String fromDate,@RequestParam String toDate) throws ParseException {
+		GetTotalAmt amt = new GetTotalAmt();
+		try {
+			amt = getTotalAmtRepo.getTotalAmount(frId, fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println("Exc in getTotalAdvAmt" + e.getMessage());
+			e.printStackTrace();
+		}
+		return amt;
+	}
+	
+	
 }
