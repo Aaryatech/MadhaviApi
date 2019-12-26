@@ -1,5 +1,7 @@
 package com.ats.webapi.repository.advorder;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +19,7 @@ public interface AdvanceOrderDetailRepo extends JpaRepository<AdvanceOrderDetail
 	@Query(value="UPDATE t_adv_order_detail SET is_sell_bill_generated=1  WHERE adv_header_id=:advHeadId",nativeQuery=true)
 	int updateIsSellBillGen(@Param("advHeadId") int advHeadId);
 
+	
+	List<AdvanceOrderDetail> findByAdvHeaderIdAndDelStatus( int advHeadId, int delStatus);
+	
 }

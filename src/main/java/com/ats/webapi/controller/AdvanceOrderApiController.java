@@ -193,6 +193,7 @@ public class AdvanceOrderApiController {
 	}
 	
 	
+	
 	@RequestMapping("/advanceOrderHistoryDetailForAdmin")
 	public @ResponseBody ItemOrderList advanceOrderHistoryDetailForAdmin(@RequestParam int headId) throws ParseException {
 
@@ -513,4 +514,22 @@ public class AdvanceOrderApiController {
 	}
 	
 	
+	
+	//Sachin 26-12-2019
+	@RequestMapping(value = { "/getAdvOrdDetailByHeadId" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdvanceOrderDetail> getAdvOrdDetailByHeadId(@RequestParam  int  advHeadId) {
+		List<AdvanceOrderDetail> advList =new ArrayList<AdvanceOrderDetail>();
+		
+		try {
+			
+			advList=advanceOrderDetailRepo.findByAdvHeaderIdAndDelStatus(advHeadId, 0);
+			
+		}catch (Exception e) {
+			
+		System.out.println("Exce in getAdvOrdDetailByHeadId  "+e.getMessage());
+		e.printStackTrace();
+		}
+		
+		return advList;
+	}
 }
