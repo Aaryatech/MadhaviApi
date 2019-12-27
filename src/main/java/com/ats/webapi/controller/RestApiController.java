@@ -29,6 +29,7 @@ import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Expense;
+import com.ats.webapi.model.bill.ItemListForCustomerBill;
 import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.model.grngvn.GetGrnGvnForCreditNoteList;
 import com.ats.webapi.model.grngvn.GrnGvnHeader;
@@ -43,6 +44,7 @@ import com.ats.webapi.model.phpwebservice.SpecialCakeBeanList;
 import com.ats.webapi.model.remarks.GetAllRemarksList;
 import com.ats.webapi.repo.BillTransationRepo;
 import com.ats.webapi.repo.ExpenseRepo;
+import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repository.ConfigureFrListRepository;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FranchiseForDispatchRepository;
@@ -66,6 +68,7 @@ import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.RouteMasterRepository;
 import com.ats.webapi.repository.RouteRepository;
 import com.ats.webapi.repository.SellBillDetailRepository;
+import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.SettingRepository;
 import com.ats.webapi.repository.SpCakeOrderHisRepository;
 import com.ats.webapi.repository.SpCakeOrderUpdateRepository;
@@ -421,6 +424,9 @@ public class RestApiController {
 	RouteMasterRepository routeMasterRepository;
 	@Autowired
 	SellBillDetailRepository sellBillDetailRepository;
+	
+	@Autowired
+	SellBillHeaderRepository sellBillHeaderRepository;
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
 	public @ResponseBody Info changeAdminUserPass(@RequestBody User user) {
@@ -5338,5 +5344,83 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+	
+	
+	@Autowired
+	ItemListForCustomerBillRepo itemListForCustomerBillRepo;
+
+	@RequestMapping("/getBillItemsBySellBillNo")
+	public @ResponseBody List<ItemListForCustomerBill> getBillItemsBySellBillNo(@RequestParam int sellBillNo)
+			throws ParseException {
+		List<ItemListForCustomerBill> itm = null;
+		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
+		try {
+			itm = itemListForCustomerBillRepo.getItemByBill(sellBillNo);
+
+			for (int i = 0; i < itm.size(); i++) {
+				ItemListForCustomerBill temp = itm.get(i);
+
+				float total = temp.getOrignalMrp() * temp.getQty();
+				Float taxableAmt = (total * 100) / (100 + temp.getTaxPer());
+				temp.setTaxAmt(total - taxableAmt);
+				temp.setTaxableAmt(taxableAmt);
+				temp.setTotal(total);
+
+			}
+
+			System.err.println("data is" + itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillItemsBySellBillNo" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
+	}
+	
+	
+	
+	@RequestMapping("/getSellBillItemsBySellBillNoForEdit")
+	public @ResponseBody SellBillHeader getBillHeaderById(@RequestParam int sellBillNo)
+			throws ParseException {
+		SellBillHeader res = null;
+		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
+		try {
+			res = sellBillHeaderRepository.getBillHeaderById(sellBillNo);
+
+
+			System.err.println("data is" + res.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillHeaderById" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return res;
+
+	}
+	
+	
+	@RequestMapping("/getSellBillDetailListByHeaderId")
+	public @ResponseBody List<SellBillDetail> getSellBillDetailListByHeaderId(@RequestParam int sellBillNo)
+			throws ParseException {
+		List<SellBillDetail> itm = null;
+		System.err.println("sellBillNo-------- is ----SellBillDetail-----" + sellBillNo);
+		try {
+			itm = sellBillDetailRepository.getSellBillDetailListByHeaderId(sellBillNo);
+
+			System.err.println("data is" + itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in getSellBillDetailListByHeaderId" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
+	}
+	
+	
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ats.webapi.model.SellBillDetail;
+import com.ats.webapi.model.SellBillHeader;
 @Repository
 public interface SellBillDetailRepository extends JpaRepository<SellBillDetail, Integer>{
 
@@ -21,6 +22,11 @@ public interface SellBillDetailRepository extends JpaRepository<SellBillDetail, 
 	@Query(" DELETE FROM SellBillDetail WHERE  sellBillDetailNo=:sellBillDetailNo")
 	
 	int  deleteSellBillDetail(@Param("sellBillDetailNo") int sellBillDetailNo);
+	
+	
+	@Query(value="select * from t_sell_bill_detail where del_status=0 AND sell_bill_no=:sellBillNo",nativeQuery=true)
+	List<SellBillDetail> getSellBillDetailListByHeaderId(@Param("sellBillNo") int sellBillNo);
+	
 
 	
 }

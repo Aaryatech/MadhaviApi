@@ -31,11 +31,11 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	List<SellBillHeader> getCustBills(@Param("custId") int custId,@Param("frId") int frId);
 
 	
-	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date=:todaysDate",nativeQuery=true)
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date=:todaysDate AND del_status=0",nativeQuery=true)
 	List<SellBillHeader> getCustBillsTodays(@Param("todaysDate") String todaysDate,@Param("frId") int frId);
 	
 	
-	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.status=3 AND   t_sell_bill_header.remaining_amt>1 and t_sell_bill_header.bill_date=:todaysDate",nativeQuery=true)
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.status=3 AND   t_sell_bill_header.remaining_amt>1 and t_sell_bill_header.bill_date=:todaysDate AND del_status=0",nativeQuery=true)
 	List<SellBillHeader> getCustBillsTodaysPending(@Param("todaysDate") String todaysDate,@Param("frId") int frId);
 
 
@@ -44,4 +44,20 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@Modifying
 	@Query(" UPDATE SellBillHeader SET remaining_amt=:pendingAmt,paid_amt=:paidAmt,status=:flag  WHERE sell_bill_no =:sellBillNo")
  	int upDateBillAmt(@Param("pendingAmt") String pendingAmt,@Param("paidAmt")  String paidAmt,@Param("sellBillNo") int sellBillNo,@Param("flag") int flag);
+
+	
+	@Transactional
+	@Modifying
+	@Query(" UPDATE SellBillHeader SET del_status=:status  WHERE sell_bill_no =:sellBillNo")
+ 	int deleteBill(@Param("status") int status,@Param("sellBillNo") int sellBillNo);
+
+
+	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=1  and t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC ",nativeQuery=true)
+	List<SellBillHeader> getDeletedSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);
+	
+	
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.sell_bill_no=:sellBillNo",nativeQuery=true)
+	SellBillHeader getBillHeaderById(@Param("sellBillNo") int sellBillNo);
+	
+
 }
