@@ -514,6 +514,65 @@ public class AdvanceOrderApiController {
 	}
 	
 	
+	@RequestMapping("/getAllDeletedBillByCustId")
+	public @ResponseBody List<SellBillHeader> getAllDeletedBillByCustId(@RequestParam int custId,
+			@RequestParam int frId) throws ParseException {
+
+		System.err.println("DELETED BILLS PARAM ---------------------- custId = " + custId + "       frId = " + frId);
+
+		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		Customer cust = new Customer();
+		try {
+			orderList = sellBillHeaderRepository.getDeletedSellBillHeader(custId, frId);
+
+			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
+
+			System.err.println("cust is " + cust.toString());
+			for (int i = 0; i < orderList.size(); i++) {
+
+				orderList.get(i).setUserName(cust.getCustName());
+
+			}
+
+			System.err.println("DELETED BILLS ---------------------- " + orderList);
+
+		} catch (Exception e) {
+			System.out.println("Exc in getAllDeletedBillByCustId" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+
+	@RequestMapping(value = { "/deleteBillById" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Info deleteBillById(@RequestParam int sellBillNo, @RequestParam int status) {
+
+		Info inf = new Info();
+
+		try {
+
+			int del = sellBillHeaderRepository.deleteBill(status, sellBillNo);
+			if (del > 0) {
+				inf.setError(false);
+				inf.setMessage("success");
+			}else {
+				inf.setError(true);
+				inf.setMessage("failed");
+			}
+			
+		} catch (Exception e) {
+
+			inf.setError(true);
+			inf.setMessage("failed");
+			e.printStackTrace();
+		}
+
+		return inf;
+	}
+	
+	
 	
 	//Sachin 26-12-2019
 	@RequestMapping(value = { "/getAdvOrdDetailByHeadId" }, method = RequestMethod.POST)
@@ -532,4 +591,7 @@ public class AdvanceOrderApiController {
 		
 		return advList;
 	}
+	
+	
+	
 }
