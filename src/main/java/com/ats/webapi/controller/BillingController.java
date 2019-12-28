@@ -265,5 +265,16 @@ public class BillingController {
 
 		return transactionDetailRes;
 	}
+	
+	
+	@RequestMapping(value = { "/deleteSellBillDetailByItemId" }, method = RequestMethod.POST)
+	public @ResponseBody int deleteSellBillDetailByItemId(@RequestParam("sellBillNo") int sellBillNo,
+			@RequestParam("itemId") int itemId) {
+
+		int response = sellBillDetailRepository.deleteSellBillDetailByItemId(sellBillNo, itemId);
+
+		return response;
+	}
+	
 
 }
