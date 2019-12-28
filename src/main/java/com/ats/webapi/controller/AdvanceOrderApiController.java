@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.GetTotalAmt;
@@ -41,6 +42,8 @@ import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.repository.advorder.GetAdvanceOrderListRepo;
 import com.ats.webapi.service.OrderService;
+
+import ch.qos.logback.classic.pattern.DateConverter;
 
 @RestController
 public class AdvanceOrderApiController {
@@ -176,13 +179,16 @@ public class AdvanceOrderApiController {
 	GetAdvanceOrderListRepo getAdvanceOrderListRepo;
 
 	@RequestMapping(value = { "/advanceOrderHistoryHeaderAdmin" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetAdvanceOrderList> updateBmsStock(@RequestParam String prodDate) {
+	public @ResponseBody List<GetAdvanceOrderList> updateBmsStock(@RequestParam String prodDate,
+			@RequestParam int isBilled) {
 		List<GetAdvanceOrderList> advList = new ArrayList<GetAdvanceOrderList>();
 
 		try {
-
-			advList = getAdvanceOrderListRepo.getAdvanceOrderList(prodDate);
-
+			if (isBilled < 0) {
+				advList = getAdvanceOrderListRepo.getAdvanceOrderList(prodDate);
+			} else {
+				advList = getAdvanceOrderListRepo.getAdvanceOrderBillNotGen(isBilled);
+			}
 		} catch (Exception e) {
 			System.out.println("Exce in advanceOrderHistoryHeaderAdmin  " + e.getMessage());
 			e.printStackTrace();
@@ -550,4 +556,25 @@ public class AdvanceOrderApiController {
 		return info;
 	}
 
+	@RequestMapping(value = { "/advOrderHistoryHeaderAdminFdTdFrId" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvanceOrderList> advOrderHistoryHeaderAdminFdTdFrId(@RequestParam String fromDate,
+			@RequestParam String toDate, @RequestParam int frId) {
+		System.err.println("Hi in advOrderHistoryHeaderAdminFdTdFrId");
+		List<GetAdvanceOrderList> advList = new ArrayList<GetAdvanceOrderList>();
+
+		try {
+			if (frId < 0) {
+				advList = getAdvanceOrderListRepo.getAdvOrderListfdTdAllFr(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate));
+			} else {
+				advList = getAdvanceOrderListRepo.getAdvOrderListfdTdSpecFr(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate), frId);
+			}
+		} catch (Exception e) {
+			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrId  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
 }

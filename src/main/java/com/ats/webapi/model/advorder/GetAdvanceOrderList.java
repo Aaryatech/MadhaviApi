@@ -40,6 +40,29 @@ public class GetAdvanceOrderList {
 
 	private String custName;
 	private String phoneNumber;
+	
+	
+	private String exVar2;//Sac
+	private int isBillGenerated;//Sac
+	
+	
+	
+
+	public String getExVar2() {
+		return exVar2;
+	}
+
+	public void setExVar2(String exVar2) {
+		this.exVar2 = exVar2;
+	}
+
+	public int getIsBillGenerated() {
+		return isBillGenerated;
+	}
+
+	public void setIsBillGenerated(int isBillGenerated) {
+		this.isBillGenerated = isBillGenerated;
+	}
 
 	public int getAdvHeaderId() {
 		return advHeaderId;
@@ -178,15 +201,8 @@ public class GetAdvanceOrderList {
 				+ remainingAmt + ", frId=" + frId + ", total=" + total + ", custId=" + custId + ", isDailyMart="
 				+ isDailyMart + ", delStatus=" + delStatus + ", exVar1=" + exVar1 + ", orderDate=" + orderDate
 				+ ", prodDate=" + prodDate + ", deliveryDate=" + deliveryDate + ", discAmt=" + discAmt + ", frName="
-				+ frName + ", custName=" + custName + ", phoneNumber=" + phoneNumber + ", getAdvHeaderId()="
-				+ getAdvHeaderId() + ", getAdvanceAmt()=" + getAdvanceAmt() + ", getRemainingAmt()=" + getRemainingAmt()
-				+ ", getFrId()=" + getFrId() + ", getTotal()=" + getTotal() + ", getCustId()=" + getCustId()
-				+ ", getIsDailyMart()=" + getIsDailyMart() + ", getDelStatus()=" + getDelStatus() + ", getExVar1()="
-				+ getExVar1() + ", getOrderDate()=" + getOrderDate() + ", getProdDate()=" + getProdDate()
-				+ ", getDeliveryDate()=" + getDeliveryDate() + ", getDiscAmt()=" + getDiscAmt() + ", getFrName()="
-				+ getFrName() + ", getCustName()=" + getCustName() + ", getPhoneNumber()=" + getPhoneNumber()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+				+ frName + ", custName=" + custName + ", phoneNumber=" + phoneNumber + ", exVar2=" + exVar2
+				+ ", isBillGenerated=" + isBillGenerated + "]";
 	}
 
 	 
