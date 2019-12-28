@@ -50,7 +50,7 @@ public class AdvanceOrderApiController {
 
 	@Autowired
 	AdvanceOrderDetailRepo advanceOrderDetailRepo;
-	
+
 	@Autowired
 	GetTotalAmtRepo getTotalAmtRepo;
 
@@ -64,8 +64,8 @@ public class AdvanceOrderApiController {
 		try {
 
 			header = advanceOrderHeaderRepo.save(matHeader);
-
-			for (int i = 0; i < header.getDetailList().size(); i++) {
+			System.err.println("After head" + header.toString());
+			for (int i = 0; i < matHeader.getDetailList().size(); i++) {
 				matHeader.getDetailList().get(i).setAdvHeaderId(header.getAdvHeaderId());
 
 			}
@@ -74,7 +74,7 @@ public class AdvanceOrderApiController {
 			header.setDetailList(matDetailsList);
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			System.err.println("Exce in saveAdvanceOrderHeadAndDetail" + e.getMessage());
 
 		}
@@ -93,9 +93,9 @@ public class AdvanceOrderApiController {
 		List<Customer> emp = new ArrayList<Customer>();
 		try {
 
-			emp = cust.findByPhoneNumberAndDelStatus(phoneNo,0);
-            System.err.println(emp.toString()+"phoneNo"+phoneNo);
-			if (emp.size()>0) {
+			emp = cust.findByPhoneNumberAndDelStatus(phoneNo, 0);
+			System.err.println(emp.toString() + "phoneNo" + phoneNo);
+			if (emp.size() > 0) {
 				info.setError(true);
 			} else {
 				info.setError(false);
@@ -150,14 +150,16 @@ public class AdvanceOrderApiController {
 		java.util.Date date = sdf.parse(deliveryDt);
 		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
 		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
-		System.out.println(deliveryDt+"flag is " + flag);
+		System.out.println(deliveryDt + "flag is " + flag);
 		try {
 
 			if (flag == 1) {
-				orderList = advanceOrderHeaderRepo.findByDeliveryDateAndFrIdAndDelStatusOrderByOrderDateDesc(deliveryDate, frId, 0);
+				orderList = advanceOrderHeaderRepo
+						.findByDeliveryDateAndFrIdAndDelStatusOrderByOrderDateDesc(deliveryDate, frId, 0);
 
 			} else {
-				orderList = advanceOrderHeaderRepo.findByFrIdAndDelStatusAndIsSellBillGeneratedOrderByOrderDateDesc(frId, 0, 0);
+				orderList = advanceOrderHeaderRepo
+						.findByFrIdAndDelStatusAndIsSellBillGeneratedOrderByOrderDateDesc(frId, 0, 0);
 
 			}
 
@@ -169,43 +171,35 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
-	
+
 	@Autowired
 	GetAdvanceOrderListRepo getAdvanceOrderListRepo;
-	
- 
+
 	@RequestMapping(value = { "/advanceOrderHistoryHeaderAdmin" }, method = RequestMethod.POST)
-	public @ResponseBody List<GetAdvanceOrderList> updateBmsStock(@RequestParam  String  prodDate) {
-		List<GetAdvanceOrderList> advList =new ArrayList<GetAdvanceOrderList>();
-		
-		 
+	public @ResponseBody List<GetAdvanceOrderList> updateBmsStock(@RequestParam String prodDate) {
+		List<GetAdvanceOrderList> advList = new ArrayList<GetAdvanceOrderList>();
+
 		try {
-			
-			advList=getAdvanceOrderListRepo.getAdvanceOrderList(prodDate);
-			
-		  
-		}catch (Exception e) {
-		System.out.println("Exce in advanceOrderHistoryHeaderAdmin  "+e.getMessage());
-		e.printStackTrace();
+
+			advList = getAdvanceOrderListRepo.getAdvanceOrderList(prodDate);
+
+		} catch (Exception e) {
+			System.out.println("Exce in advanceOrderHistoryHeaderAdmin  " + e.getMessage());
+			e.printStackTrace();
 		}
-		
+
 		return advList;
 	}
-	
-	
-	
-	@RequestMapping("/advanceOrderHistoryDetailForAdmin")
-	public @ResponseBody ItemOrderList advanceOrderHistoryDetailForAdmin(@RequestParam int headId) throws ParseException {
 
-	 
+	@RequestMapping("/advanceOrderHistoryDetailForAdmin")
+	public @ResponseBody ItemOrderList advanceOrderHistoryDetailForAdmin(@RequestParam int headId)
+			throws ParseException {
 
 		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
 
 		return orderList;
 
 	}
-
-	
 
 	@Autowired
 	ItemListForCustomerBillRepo itemListForCustomerBillRepo;
@@ -463,10 +457,8 @@ public class AdvanceOrderApiController {
 
 				}
 
-
 			}
 
-			
 		} catch (Exception e) {
 			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
 			e.printStackTrace();
@@ -485,7 +477,7 @@ public class AdvanceOrderApiController {
 		System.err.println("tabType*" + sf.format(date));
 		try {
 			if (tabType == 1) {
-				
+
 				orderList = transactionDetailRepository.getCustBillsTransaction(custId, frId);
 			} else {
 				orderList = transactionDetailRepository.getCustBillsTransactionToday(frId, sf.format(date));
@@ -499,10 +491,10 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
-	
-	
+
 	@RequestMapping("/getTotalAdvAmt")
-	public @ResponseBody GetTotalAmt getTotalAdvAmt(@RequestParam int frId,@RequestParam String fromDate,@RequestParam String toDate) throws ParseException {
+	public @ResponseBody GetTotalAmt getTotalAdvAmt(@RequestParam int frId, @RequestParam String fromDate,
+			@RequestParam String toDate) throws ParseException {
 		GetTotalAmt amt = new GetTotalAmt();
 		try {
 			amt = getTotalAmtRepo.getTotalAmount(frId, fromDate, toDate);
@@ -512,86 +504,50 @@ public class AdvanceOrderApiController {
 		}
 		return amt;
 	}
-	
-	
-	@RequestMapping("/getAllDeletedBillByCustId")
-	public @ResponseBody List<SellBillHeader> getAllDeletedBillByCustId(@RequestParam int custId,
-			@RequestParam int frId) throws ParseException {
 
-		System.err.println("DELETED BILLS PARAM ---------------------- custId = " + custId + "       frId = " + frId);
-
-		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
-		Customer cust = new Customer();
-		try {
-			orderList = sellBillHeaderRepository.getDeletedSellBillHeader(custId, frId);
-
-			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
-
-			System.err.println("cust is " + cust.toString());
-			for (int i = 0; i < orderList.size(); i++) {
-
-				orderList.get(i).setUserName(cust.getCustName());
-
-			}
-
-			System.err.println("DELETED BILLS ---------------------- " + orderList);
-
-		} catch (Exception e) {
-			System.out.println("Exc in getAllDeletedBillByCustId" + e.getMessage());
-			e.printStackTrace();
-		}
-
-		return orderList;
-
-	}
-
-	@RequestMapping(value = { "/deleteBillById" }, method = RequestMethod.POST)
-	@ResponseBody
-	public Info deleteBillById(@RequestParam int sellBillNo, @RequestParam int status) {
-
-		Info inf = new Info();
-
-		try {
-
-			int del = sellBillHeaderRepository.deleteBill(status, sellBillNo);
-			if (del > 0) {
-				inf.setError(false);
-				inf.setMessage("success");
-			}else {
-				inf.setError(true);
-				inf.setMessage("failed");
-			}
-			
-		} catch (Exception e) {
-
-			inf.setError(true);
-			inf.setMessage("failed");
-			e.printStackTrace();
-		}
-
-		return inf;
-	}
-	
-	
-	
-	//Sachin 26-12-2019
+	// Sachin 26-12-2019
 	@RequestMapping(value = { "/getAdvOrdDetailByHeadId" }, method = RequestMethod.POST)
-	public @ResponseBody List<AdvanceOrderDetail> getAdvOrdDetailByHeadId(@RequestParam  int  advHeadId) {
-		List<AdvanceOrderDetail> advList =new ArrayList<AdvanceOrderDetail>();
-		
+	public @ResponseBody List<AdvanceOrderDetail> getAdvOrdDetailByHeadId(@RequestParam int advHeadId) {
+		List<AdvanceOrderDetail> advList = new ArrayList<AdvanceOrderDetail>();
+
 		try {
-			
-			advList=advanceOrderDetailRepo.findByAdvHeaderIdAndDelStatus(advHeadId, 0);
-			
-		}catch (Exception e) {
-			
-		System.out.println("Exce in getAdvOrdDetailByHeadId  "+e.getMessage());
-		e.printStackTrace();
+
+			advList = advanceOrderDetailRepo.findByAdvHeaderIdAndDelStatus(advHeadId, 0);
+
+		} catch (Exception e) {
+
+			System.out.println("Exce in getAdvOrdDetailByHeadId  " + e.getMessage());
+			e.printStackTrace();
 		}
-		
+
 		return advList;
 	}
-	
-	
-	
+
+	@RequestMapping(value = { "/deleteAdvOrder" }, method = RequestMethod.POST)
+	public @ResponseBody Info deleteAdvOrder(@RequestParam int ordHeaderId) {
+
+		Info info = new Info();
+		int x = 0;
+		try {
+			x = advanceOrderHeaderRepo.deleteAdvOrder(ordHeaderId);
+
+			if (x > 0) {
+				x = advanceOrderDetailRepo.deleteAdvOrdDetail(ordHeaderId);
+			}
+			if (x > 0) {
+				info.setError(false);
+				info.setMessage("success");
+			} else {
+				info.setError(true);
+				info.setMessage("failure");
+			}
+		} catch (Exception e) {
+			info.setError(true);
+			info.setMessage("exception");
+			System.err.println("Exception in /deleteAdvOrder");
+		}
+
+		return info;
+	}
+
 }

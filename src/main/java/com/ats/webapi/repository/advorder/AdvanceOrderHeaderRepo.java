@@ -30,5 +30,9 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 
 
 	AdvanceOrderHeader findByAdvHeaderIdAndDelStatus(int headId, int i);
- 
+
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE t_adv_order_header SET del_status=1  WHERE adv_header_id=:ordHeaderId",nativeQuery=true)
+	int deleteAdvOrder(@Param("ordHeaderId") int ordHeaderId);
 } 
