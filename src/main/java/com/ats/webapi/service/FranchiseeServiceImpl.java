@@ -618,10 +618,12 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 			frEmp=frEmpRepo.findByFrIdAndFrEmpIdAndDelStatus(frId,empId, 0);
 			franchisee = franchiseeRepository.findOne(frId);
 			System.out.println("Franchisee Employee Details : "+frEmp);
-			
+			loginInfo.setError(false);
+			loginInfo.setAccessRight(1);
 			frEmpMob = frEmp.getFrEmpContact();
 			frEmpPass = frEmp.getPassword();
 			empLogResp.setFrEmp(frEmp);
+			
 			empLogResp.setFranchisee(franchisee);
 			empLogResp.setLoginInfo(loginInfo);
 			jsonFr = JsonUtil.javaToJson(empLogResp);
