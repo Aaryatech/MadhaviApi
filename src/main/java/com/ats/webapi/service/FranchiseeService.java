@@ -49,5 +49,7 @@ public interface FranchiseeService {
 	public String findFranchiseeByFrCode(String frCode, String passwordKey);
 	
 	public String findFrEmployeeByMobNo(String mobNo, String empPass, int frId);
+
+	public String findFrEmployeeByEmpId(int empId, int frId);
 	
 }

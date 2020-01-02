@@ -603,6 +603,73 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 
 		}
 
+	@Override
+	public String findFrEmployeeByEmpId(int empId, int frId) {
+		String frEmpMob = null;
+		String frEmpPass = null;
+		String jsonFr = "{}";
+		
+		Franchisee franchisee = new Franchisee();
+		FrEmpMaster frEmp = new FrEmpMaster();
+		LoginInfo loginInfo=new LoginInfo();
+		
+		FrEmpLoginResp empLogResp = new FrEmpLoginResp();
+		try { 
+			frEmp=frEmpRepo.findByFrIdAndFrEmpIdAndDelStatus(frId,empId, 0);
+			franchisee = franchiseeRepository.findOne(frId);
+			System.out.println("Franchisee Employee Details : "+frEmp);
+			
+			frEmpMob = frEmp.getFrEmpContact();
+			frEmpPass = frEmp.getPassword();
+			empLogResp.setFrEmp(frEmp);
+			empLogResp.setFranchisee(franchisee);
+			empLogResp.setLoginInfo(loginInfo);
+			jsonFr = JsonUtil.javaToJson(empLogResp);
+		}catch (Exception e) {
+			e.printStackTrace();
+			
+			System.out.println("Exception while finding prev fr "+e.getMessage());
+			
+			empLogResp.setFrEmp(frEmp);
+			empLogResp.setFranchisee(franchisee);
+			loginInfo.setError(true);
+			loginInfo.setAccessRight(0);
+
+			loginInfo.setMessage("Franchisee Employee Not Registerd");
+			empLogResp.setLoginInfo(loginInfo);
+			jsonFr = JsonUtil.javaToJson(empLogResp);
+		}
+		try {
+			
+			if (frEmp.getFrEmpContact() == null || frEmp.getPassword() == null||frEmp.getFrEmpContact().equalsIgnoreCase("")||frEmp.getPassword().equalsIgnoreCase("")) {
+
+				System.out.println("Exception fr details null ");
+				
+				empLogResp.setFrEmp(frEmp);
+				loginInfo.setError(true);
+				loginInfo.setAccessRight(0);
+				loginInfo.setMessage("Franchisee Employee Not Registered");
+				empLogResp.setLoginInfo(loginInfo);
+				jsonFr = JsonUtil.javaToJson(empLogResp);
+				
+			}
+			
+		}catch (Exception e) {
+			System.out.println("Exception while converting prev fr "+e.getMessage());
+			
+			empLogResp.setFrEmp(frEmp);
+			empLogResp.setFranchisee(franchisee);
+			loginInfo.setError(true);
+			loginInfo.setAccessRight(0);
+
+			loginInfo.setMessage("Franchisee Employee Not Registered");
+			empLogResp.setLoginInfo(loginInfo);
+			jsonFr = JsonUtil.javaToJson(empLogResp);
+		}
+		
+		return jsonFr;
+	}
+
 	
 	
 }

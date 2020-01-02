@@ -1694,6 +1694,17 @@ public class RestApiController {
 		return jsonFr;
 
 	}
+	@RequestMapping(value = { "/frEmpById" }, method = RequestMethod.POST)
+	@ResponseBody
+	public String frEmpById(@RequestParam("empId") int empId,
+			@RequestParam("frId") int frId) {
+
+		String jsonFr = franchiseeService.findFrEmployeeByEmpId(empId, frId);
+		System.out.println("JsonString" + jsonFr);
+
+		return jsonFr;
+
+	}
 
 	// Configure Sp Day Cake
 	@RequestMapping(value = { "/configureSpDayCk" }, method = RequestMethod.POST)
