@@ -1,6 +1,7 @@
 package com.ats.webapi.controller;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -56,6 +57,8 @@ public class MadhviPosDashboardApiController {
 	
 	@Autowired
 	GetTotalAmtRepo getTotalAmtRepo;
+	
+	
 
 	@RequestMapping(value = { "/getPosDashCounts" }, method = RequestMethod.POST)
 	public @ResponseBody PosDashCounts getPosDashCounts(@RequestParam("fromDate") String fromDate,
@@ -255,4 +258,19 @@ public class MadhviPosDashboardApiController {
 		return crnReport;
 	}
 
+	
+	@RequestMapping("/getTotalCreditAdvAmt")
+	public @ResponseBody GetTotalAmt getTotalCreditAdvAmt(@RequestParam int frId, @RequestParam String fromDate,
+			@RequestParam String toDate) throws ParseException {
+		GetTotalAmt amt = new GetTotalAmt();
+		try {
+			amt = getTotalAmtRepo.getTotalCreditAdvAmt(frId, fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println("Exc in getTotalCreditAdvAmt" + e.getMessage());
+			e.printStackTrace();
+		}
+		return amt;
+	}
+	
+	
 }

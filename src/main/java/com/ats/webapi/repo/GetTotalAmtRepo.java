@@ -17,5 +17,10 @@ public interface GetTotalAmtRepo extends JpaRepository<GetTotalAmt, Integer> {
 	public GetTotalAmt getTotalProfit(@Param("frId") int frId, @Param("fromDate") String fromDate,
 			@Param("toDate") String toDate);
 	
+	
+	@Query(value = "SELECT UUID() as id, COALESCE(SUM((t.cash_amt)),0) as total_amt FROM t_transaction_detail t WHERE t.sell_bill_no IN(SELECT b.sell_bill_no FROM t_sell_bill_header b WHERE b.del_status=0 AND b.paid_amt=0 AND b.fr_id=:frId AND b.bill_date BETWEEN :fromDate AND :toDate) ", nativeQuery = true)
+	public GetTotalAmt getTotalCreditAdvAmt(@Param("frId") int frId, @Param("fromDate") String fromDate,
+			@Param("toDate") String toDate);
+	
 
 }
