@@ -18,7 +18,7 @@ import com.ats.webapi.repository.FranchiseSupRepository;
 
 @Component
 public class ScheduleTask {
- 
+  
 	@Autowired
 	FranchiseSupRepository franchiseSupRepository;
 
