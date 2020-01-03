@@ -19,5 +19,7 @@ public interface GenerateBillService {
 
 	GenerateBillList generateBillForAllMenu(List<String> frId,String delDate);
 	
+	GenerateBillList generateBillForAdvOrderByOrderId(int advOrderId);
+	
 
 }

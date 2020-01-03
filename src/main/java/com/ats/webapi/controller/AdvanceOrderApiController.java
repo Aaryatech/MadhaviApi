@@ -637,4 +637,22 @@ public class AdvanceOrderApiController {
 
 		return advList;
 	}
+	
+	@RequestMapping(value = { "/getAdvOrderHeadList" }, method = RequestMethod.POST)
+	public @ResponseBody List<GetAdvanceOrderList> getAdvOrderHeadList(@RequestParam String delDate,
+			 @RequestParam int frId) {
+		System.err.println("Hi in getAdvOrderHeadList delDate " +delDate +"frId"+frId);
+		List<GetAdvanceOrderList> advList = new ArrayList<GetAdvanceOrderList>();
+
+		try {
+				advList = getAdvanceOrderListRepo.getAdvOrderHeadList(Common.convertToYMD(delDate), frId);
+		} catch (Exception e) {
+			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrId  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
+	
+	
 }

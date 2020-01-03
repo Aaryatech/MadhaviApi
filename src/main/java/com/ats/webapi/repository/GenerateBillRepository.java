@@ -252,7 +252,40 @@ public interface GenerateBillRepository extends JpaRepository<GenerateBill, Inte
 //			+ "AND m_franchisee.fr_id=t_sp_cake.fr_id AND m_fr_menu_show.menu_id=t_sp_cake.menu_id AND m_sp_cake.sp_id=t_sp_cake.sp_id AND m_cat_sub.cat_id=m_fr_menu_show.cat_id",nativeQuery=true)
 //	List<GenerateBill> generateSpBillForAllMenu(@Param("frId")List<String> frId,@Param("delDate")String delDate);
 
+	//Sachin 2-01-2019
 	
+	@Query(value="SELECT t_adv_order_detail.adv_detail_id as order_id,\n" + 
+			"t_adv_order_detail.disc_per as  is_positive,\n" + 
+			"coalesce((select item_hsncd from m_item_sup where m_item_sup.item_id=m_item.id and m_item_sup.del_status=0),'-') as hsn_code,\n" + 
+			"t_adv_order_detail.fr_id,\n" + 
+			" t_adv_order_detail.menu_id,\n" + 
+			"t_adv_order_detail.grn_type,\n" + 
+			"t_adv_order_detail.item_id,\n" + 
+			"t_adv_order_detail.qty as order_qty,\n" + 
+			"t_adv_order_detail.rate as order_rate,\n" + 
+			"t_adv_order_detail.mrp as order_mrp,\n" + 
+			"t_adv_order_detail.delivery_date,\n" + 
+			"m_franchisee.fr_name,\n" + 
+			"m_franchisee.is_same_state,\n" + 
+			"m_franchisee.fr_code,\n" + 
+			"m_franchisee.fr_rate_cat,\n" + 
+			"m_fr_menu_show.menu_title,\n" + 
+			"m_item.item_name,\n" + 
+			"m_item.item_grp1,\n" + 
+			"m_item.item_grp2,\n" + 
+			"m_item.item_tax1,\n" + 
+			"m_item.item_tax2,\n" + 
+			"m_item.item_tax3,\n" + 
+			"m_item.item_shelf_life,\n" + 
+			"m_franchisee.fr_name as party_name,\n" + 
+			"m_franchisee.fr_address as party_address,\n" + 
+			"m_franchisee.fr_gst_no as party_gstin,m_franchisee.kg_1 as is_own_fr \n" + 
+			"from t_adv_order_detail,m_franchisee, m_fr_menu_show ,\n" + 
+			"m_item where    " + 
+			"    m_franchisee.fr_id=t_adv_order_detail.fr_id AND " + 
+			"t_adv_order_detail.menu_id=m_fr_menu_show.menu_id AND t_adv_order_detail.item_id=m_item.id AND t_adv_order_detail.is_bill_generated IN(0,1) and t_adv_order_detail.adv_header_id=:advOrderId ORDER BY m_franchisee.fr_id,m_item.item_grp1,m_item.item_grp2,m_item.item_name",nativeQuery=true)
+	List<GenerateBill> generateBillOfAdvOrderByAdvOrderId(@Param("advOrderId")int  advOrderId);
+
 	
 	
 	

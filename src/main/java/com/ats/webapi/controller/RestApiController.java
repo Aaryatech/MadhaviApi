@@ -1551,6 +1551,15 @@ public class RestApiController {
 		return billList;
 
 	}
+	
+	@RequestMapping(value = "/generateBillForAdvOrder", method = RequestMethod.POST)
+	public @ResponseBody GenerateBillList generateBillAdvOrder(@RequestParam("advOrdHeaderId")int advOrdHeaderId) {
+
+		GenerateBillList billList = generateBillService.generateBillForAdvOrderByOrderId(advOrdHeaderId);
+
+		return billList;
+
+	}
 
 	@RequestMapping(value = "/getAllFrIdName", method = RequestMethod.GET)
 	public @ResponseBody AllFrIdNameList getAllFrIdName() {

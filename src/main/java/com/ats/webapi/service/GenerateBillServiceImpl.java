@@ -1,6 +1,7 @@
 package com.ats.webapi.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -285,6 +286,20 @@ public class GenerateBillServiceImpl implements GenerateBillService {
 
 		return generateBillList;
 
+	}
+
+	@Override
+	public GenerateBillList generateBillForAdvOrderByOrderId(int advOrderId) {
+		GenerateBillList generateBillList = new GenerateBillList();
+		
+		List<GenerateBill> generateBillsOfAdvOrder=	billRepository.generateBillOfAdvOrderByAdvOrderId(advOrderId);
+
+		List<GenerateBill> generateBills=new ArrayList<GenerateBill>();
+		
+		generateBills.addAll(generateBillsOfAdvOrder);
+		generateBillList.setGenerateBills(generateBills);
+		
+		return generateBillList;
 	}
 
 }
