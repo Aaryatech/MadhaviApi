@@ -499,4 +499,9 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> getItemsNameByIdWithOtherItemSubCatId(@Param("catId")int catId,@Param("frId")int frId,
 			@Param("cat") int cat);
 
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE Item SET item_rate1=:rate,item_mrp1=:mrp WHERE id=:id")
+	public int updateItemRateAndMrp(@Param("id")int id,@Param("rate") float rate,@Param("mrp") float mrp);
+
  }

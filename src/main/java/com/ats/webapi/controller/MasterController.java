@@ -484,6 +484,24 @@ public class MasterController {
 			}
 			return info;
 		}
+		@RequestMapping(value = { "/updateItemRateAndMrp" }, method = RequestMethod.POST)
+		public @ResponseBody Info updateItemRateAndMrp(@RequestParam("id")int id,@RequestParam("rate")float rate,@RequestParam("mrp")float mrp) {
+			Info info=null;
+			try {
+			
+			    int isUpdate=itemRepository.updateItemRateAndMrp(id,rate,mrp);
+				info=new Info();
+				info.setError(false);
+				info.setMessage("Updated");
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				info=new Info();
+				info.setError(true);
+				info.setMessage("Updation Failed");
+			}
+			return info;
+		}
         //------------------------------------------------------------------------
 		
 		// ------------------------Delete ItemSup------------------------------------
