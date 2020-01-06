@@ -20,12 +20,22 @@ public interface AdvanceOrderDetailRepo extends JpaRepository<AdvanceOrderDetail
 	int updateIsSellBillGen(@Param("advHeadId") int advHeadId);
 
 	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE t_adv_order_detail SET is_bill_generated=2  WHERE adv_detail_id=:advDetailId",nativeQuery=true)
+	int updateIsBillGenInAdvOrdDetail(@Param("advDetailId") int advDetailId);//Sachin 06-01-2020
+
+	
+	
 	List<AdvanceOrderDetail> findByAdvHeaderIdAndDelStatus( int advHeadId, int delStatus);
 	
 	@Transactional
 	@Modifying
 	@Query(value="UPDATE t_adv_order_detail SET del_status=1  WHERE adv_header_id=:ordHeaderId",nativeQuery=true)
 	int deleteAdvOrdDetail(@Param("ordHeaderId") int ordHeaderId);
+
+	@Query(value="select adv_header_id from  t_adv_order_detail WHERE adv_detail_id=:advDetailId",nativeQuery=true)
+	int getAdvOrderHeaderNo(@Param("advDetailId") int advDetailId);
 
 	
 }

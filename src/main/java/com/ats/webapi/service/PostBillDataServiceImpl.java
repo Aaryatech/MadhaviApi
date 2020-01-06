@@ -27,6 +27,8 @@ import com.ats.webapi.repository.RegularSpCkOrderRepository;
 import com.ats.webapi.repository.SpCakeOrdersRepository;
 import com.ats.webapi.repository.UpdateBillDetailForGrnGvnRepository;
 import com.ats.webapi.repository.UpdateSeetingForPBRepo;
+import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
+import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 
 @Service
 public class PostBillDataServiceImpl implements PostBillDataService {
@@ -55,6 +57,13 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 	
 	@Autowired// added here 3 march
 	FrItemStockConfigureRepository frItemStockConfRepo;
+	
+	//Sachin 06-01-2020
+	@Autowired
+	AdvanceOrderHeaderRepo advanceOrderHeaderRepo;
+
+	@Autowired
+	AdvanceOrderDetailRepo advanceOrderDetailRepo;
 
 	
 	
@@ -82,12 +91,13 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 	@Override
 	public List<PostBillHeader> saveBillHeader(List<PostBillHeader> postBillHeader) {
 		
-	 
 		List<PostBillHeader> pbHeaderList=new ArrayList<>();
 		PostBillHeader postBillHeaders = new PostBillHeader();
 		
 		for (int i = 0; i < postBillHeader.size(); i++) {
-			
+			int advOrderId=0;
+			int advaOrdHeaderId = 0;
+
 			String invoiceNo = null;
 			int settingValue=0;
 			Company company=new Company();
@@ -166,20 +176,32 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 				else {
 				postBillDetailRepository.save(billDetail);				
 				int res=0;
-				if (billDetail.getCatId() != 5) { 
+				//if (billDetail.getCatId() != 5) { 
 					
 					if(billDetail.getMenuId()!= 42) {//item						
 					 res = orderRepository.updateBillStatus(billDetail.getOrderId(), 2);					
 					}else { // regular sp cake
-						regularSpCkOrderRepository.updateRegSpCakeBillStatus(billDetail.getOrderId(), 2);
+						//regularSpCkOrderRepository.updateRegSpCakeBillStatus(billDetail.getOrderId(), 2);
+						//now advance order 06-01-2020 Sachin
+						System.err.println("billDetail.getOrderId() is " +billDetail.getOrderId());//billDetail.getOrderId()
+						advanceOrderDetailRepo.updateIsBillGenInAdvOrdDetail(billDetail.getOrderId());
+						
+						if(advOrderId<1) {
+							advaOrdHeaderId=advanceOrderDetailRepo.getAdvOrderHeaderNo(billDetail.getOrderId());
+						}
 					}
-					
-				} else if (billDetail.getCatId() == 5){ //special cake
-					 res = spCakeOrdersRepository.updateSpBillStatus(billDetail.getOrderId(), 2);
-				}
+					//} 
+					/*
+						 * else if (billDetail.getCatId() == 5){ //special cake res =
+						 * spCakeOrdersRepository.updateSpBillStatus(billDetail.getOrderId(), 2); }
+						 */
 			}
 			}
 			pbHeaderList.add(postBillHeaders);
+			System.err.println("Adv Order id " +advaOrdHeaderId);//Sachin 06-01-2020
+			if(postBillHeaders.getExVarchar1().equals("2"));//to be called for adv order so check if section id =2
+			advanceOrderHeaderRepo.updateIsBillGen(advaOrdHeaderId);//update adv order header by taking adv ord header id from detail
+			//gdd 6-1-2020
 		}
 		return pbHeaderList;
 	}

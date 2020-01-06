@@ -25,6 +25,11 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 	@Query(value="UPDATE t_adv_order_header SET is_sell_bill_generated=1  WHERE adv_header_id=:advHeadId",nativeQuery=true)
 	int updateIsSellBillGen(@Param("advHeadId") int advHeadId);
 
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE t_adv_order_header SET is_bill_generated=2  WHERE adv_header_id=:advHeadId",nativeQuery=true)
+	int updateIsBillGen(@Param("advHeadId") int advHeadId);//Sachin 06-01-2020
+
 
 	List<AdvanceOrderHeader> findByCustIdAndIsSellBillGeneratedAndDelStatus(int custId, int i, int j);
 
