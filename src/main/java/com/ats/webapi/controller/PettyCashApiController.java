@@ -15,6 +15,7 @@ import com.ats.webapi.model.Info;
 import com.ats.webapi.model.PettyCashEmp;
 import com.ats.webapi.model.PettyCashHandover;
 import com.ats.webapi.model.SellBillHeader;
+import com.ats.webapi.model.Setting;
 import com.ats.webapi.model.pettycash.FrEmpMaster;
 import com.ats.webapi.model.pettycash.GetCashAdvAndExpAmt;
 import com.ats.webapi.model.pettycash.OtherBillDetailAdv;
@@ -31,6 +32,7 @@ import com.ats.webapi.repo.SellBillDetailAdvRepo;
 import com.ats.webapi.repo.SpCakeAdvRepo;
 import com.ats.webapi.repository.ExpressBillRepository;
 import com.ats.webapi.repository.GetCashAdvAndExpAmtRepo;
+import com.ats.webapi.repository.SettingRepository;
 
 @RestController
 public class PettyCashApiController {
@@ -237,11 +239,25 @@ public class PettyCashApiController {
 		return emp;
 	}
 
+	@Autowired
+	SettingRepository settingRepository;
+	
 	@RequestMapping(value = { "/saveFrEmpDetails" }, method = RequestMethod.POST)
 	public FrEmpMaster saveFrEmpDetails(@RequestBody FrEmpMaster emp) {
 		FrEmpMaster frEmp = new FrEmpMaster();
+		int id=emp.getFrEmpId();
 		try {
 			frEmp = frEmpRepo.save(emp);
+			if(id==0) {
+				if(frEmp!=null) {
+					Setting setting = settingRepository.findBySettingId(57);
+					int val=setting.getSettingValue()+1;
+					
+					int value = settingRepository.udatekeyvalueForFrEmpCode(val);
+				}
+			}
+			
+			
 		} catch (Exception e) {
 			System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
 			e.printStackTrace();

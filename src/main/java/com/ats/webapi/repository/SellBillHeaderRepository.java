@@ -55,6 +55,9 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=1  and t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC ",nativeQuery=true)
 	List<SellBillHeader> getDeletedSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);
 	
+	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=1 AND t_sell_bill_header.bill_date=:date  AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC ",nativeQuery=true)
+	List<SellBillHeader> getDeletedSellBillHeaderAllCust(@Param("frId") int frId,@Param("date") String date);
+	
 	
 	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.sell_bill_no=:sellBillNo",nativeQuery=true)
 	SellBillHeader getBillHeaderById(@Param("sellBillNo") int sellBillNo);

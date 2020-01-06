@@ -1097,6 +1097,8 @@ public class RestApiController {
 		return Updatevalue;
 
 	}
+	
+	
 
 	@Autowired
 	SettingRepository settingRepository;
@@ -1109,6 +1111,28 @@ public class RestApiController {
 		return Updatevalue;
 
 	}
+	
+	@RequestMapping(value = "/getSettingDataById", method = RequestMethod.GET)
+	public @ResponseBody Setting getSettingDataById(@RequestParam("settingId") int settingId) {
+
+		Setting Updatevalue = settingRepository.findBySettingId(settingId);
+
+		return Updatevalue;
+
+	}
+	
+	@RequestMapping(value = "/updateValueForFrEmpCode", method = RequestMethod.GET)
+	public @ResponseBody int updateValueForFrEmpCode() {
+
+		Setting setting = settingRepository.findBySettingId(57);
+		int val=setting.getSettingValue()+1;
+		
+		int value = settingRepository.udatekeyvalueForFrEmpCode(val);
+		
+		return value;
+
+	}
+	
 
 	@RequestMapping(value = "/getProductionTimeSlot", method = RequestMethod.GET)
 	public @ResponseBody int getProductionTimeSlot() {

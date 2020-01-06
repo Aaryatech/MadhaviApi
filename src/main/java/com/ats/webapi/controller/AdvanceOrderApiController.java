@@ -542,6 +542,35 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	
+	@RequestMapping("/getDeletedBillAllCust")
+	public @ResponseBody List<SellBillHeader> getDeletedBillAllCust(@RequestParam int frId,@RequestParam String date) throws ParseException {
+
+		System.err.println("DELETED BILLS PARAM ---------------------- frId = " + frId);
+
+		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		Customer cust = new Customer();
+		try {
+			orderList = sellBillHeaderRepository.getDeletedSellBillHeaderAllCust(frId,date);
+			
+			if(orderList!=null) {
+				for(int i=0;i<orderList.size();i++) {
+					cust = customerRepo.findByCustIdAndDelStatus(orderList.get(i).getCustId(), 0);
+					orderList.get(i).setUserName(cust.getCustName());
+				}
+			}
+
+			System.err.println("DELETED BILLS ---------------------- " + orderList);
+
+		} catch (Exception e) {
+			System.out.println("Exc in getDeletedBillAllCust" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
 
 	@RequestMapping(value = { "/deleteBillById" }, method = RequestMethod.POST)
 	@ResponseBody
