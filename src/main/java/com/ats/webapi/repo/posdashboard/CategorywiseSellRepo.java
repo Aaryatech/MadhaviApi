@@ -23,7 +23,7 @@ public interface CategorywiseSellRepo  extends JpaRepository<CategorywiseSell, I
 			"    t_sell_bill_header,\n" + 
 			"    m_category\n" + 
 			"WHERE\n" + 
-			"    t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.fr_id =:frId AND m_category.cat_id = t_sell_bill_detail.cat_id\n" + 
+			"    t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.fr_id =:frId AND m_category.cat_id = t_sell_bill_detail.cat_id\n" + 
 			"GROUP BY\n" + 
 			"    m_category.cat_id", nativeQuery = true)
 	List<CategorywiseSell> getCategorywiseSell(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("frId") int  frId);

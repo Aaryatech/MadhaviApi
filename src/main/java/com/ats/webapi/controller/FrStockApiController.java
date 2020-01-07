@@ -615,11 +615,14 @@ public class FrStockApiController {
 			regSpPurchase = stockPurchaseRepository.getTotalPurchase(frId, fromDate, toDate, itemId);
 
 			int totalRegGrnGvn = calculationRepository.getRegTotalGrnGvn(frId, fromDate, toDate, itemId);
-
+			try {
 			totalRegSell = stockSellRepository.getRegTotalSell(frId, fromDate, toDate, itemId);
-
+			} catch (Exception e) {
+				totalRegSell = new StockRegSpSell();
+				totalRegSell.setReg(0);
+			}
 			System.out.println("Purchase " + regSpPurchase.toString());
-			System.out.println("Sell " + totalRegSell.toString());
+			//System.out.println("Sell " + totalRegSell.toString());
 			int reorderQty = 0;
 
 			try {
