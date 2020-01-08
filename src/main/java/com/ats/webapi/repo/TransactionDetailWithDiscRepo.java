@@ -26,7 +26,7 @@ public interface TransactionDetailWithDiscRepo extends JpaRepository<Transaction
 			"    t_transaction_detail.del_status,\r\n" + 
 			"    t_sell_bill_header.payment_mode AS ex_int1,\r\n" + 
 			"    t_transaction_detail.ex_int2,\r\n" + 
-			"    t_sell_bill_header.invoice_no AS ex_var2,\r\n" + 
+			"    CONCAT(t_sell_bill_header.invoice_no,' (',(SELECT cust_name from m_customer WHERE cust_id=t_sell_bill_header.cust_id),')') AS ex_var2,\r\n" + 
 			"    t_transaction_detail.ex_var1,\r\n" + 
 			"    t_sell_bill_header.grand_total AS ex_float1,\r\n" + 
 			"    t_sell_bill_header.remaining_amt AS ex_float2,\r\n" + 
@@ -61,7 +61,7 @@ public interface TransactionDetailWithDiscRepo extends JpaRepository<Transaction
 					"    t_transaction_detail.del_status,\r\n" + 
 					"    t_sell_bill_header.payment_mode AS ex_int1,\r\n" + 
 					"    t_transaction_detail.ex_int2,\r\n" + 
-					"    t_sell_bill_header.invoice_no AS ex_var2,\r\n" + 
+					"    CONCAT(t_sell_bill_header.invoice_no,' (',(SELECT cust_name from m_customer WHERE cust_id=t_sell_bill_header.cust_id),')') AS ex_var2,\r\n" + 
 					"    t_transaction_detail.ex_var1,\r\n" + 
 					"    t_sell_bill_header.grand_total AS ex_float1,\r\n" + 
 					"    t_sell_bill_header.remaining_amt AS ex_float2,\r\n" + 
