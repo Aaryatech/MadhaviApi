@@ -24,6 +24,7 @@ import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.TransactionDetail;
+import com.ats.webapi.model.TransactionDetailWithDisc;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.advorder.GetAdvanceOrderList;
@@ -35,6 +36,7 @@ import com.ats.webapi.model.stock.UpdateBmsStockList;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repo.TransactionDetailWithDiscRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.TransactionDetailRepository;
@@ -497,6 +499,35 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	@Autowired
+	TransactionDetailWithDiscRepo transactionDetailWithDiscRepo;
+	
+	@RequestMapping("/getAllSellCustBillTransactionWithDisc")
+	public @ResponseBody List<TransactionDetailWithDisc> getAllSellCustBillTransactionWithDisc(@RequestParam int custId,
+			@RequestParam int frId, @RequestParam int tabType) throws ParseException {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		List<TransactionDetailWithDisc> orderList = new ArrayList<TransactionDetailWithDisc>();
+		System.err.println("tabType*" + sf.format(date));
+		try {
+			if (tabType == 1) {
+
+				orderList = transactionDetailWithDiscRepo.getCustBillsTransaction(custId, frId);
+			} else {
+				orderList = transactionDetailWithDiscRepo.getCustBillsTransactionToday(frId, sf.format(date));
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
+	
+	
 
 	@RequestMapping("/getTotalAdvAmt")
 	public @ResponseBody GetTotalAmt getTotalAdvAmt(@RequestParam int frId, @RequestParam String fromDate,
