@@ -294,11 +294,11 @@ public class PettyCashApiController {
 			if (emp != null) {
 				System.out.println("Contact No. Found");
 				info.setError(false);
-				info.setMessage("Found");
+				info.setMessage(""+emp.getFrEmpId());
 			} else {
 				System.out.println("Contact No. Not Found");
 				info.setError(true);
-				info.setMessage("Not Found ");
+				info.setMessage("0");
 			}
 		} catch (Exception e) {
 			System.err.println("Exception in checkUniqueContactNo : " + e.getMessage());

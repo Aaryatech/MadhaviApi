@@ -102,8 +102,10 @@ public class AdvanceOrderApiController {
 			System.err.println(emp.toString() + "phoneNo" + phoneNo);
 			if (emp.size() > 0) {
 				info.setError(true);
+				info.setMessage(""+emp.get(0).getCustId());
 			} else {
 				info.setError(false);
+				info.setMessage("0");
 
 			}
 
