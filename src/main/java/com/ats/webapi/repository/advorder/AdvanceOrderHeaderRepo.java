@@ -40,4 +40,90 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 	@Modifying
 	@Query(value="UPDATE t_adv_order_header SET del_status=1  WHERE adv_header_id=:ordHeaderId",nativeQuery=true)
 	int deleteAdvOrder(@Param("ordHeaderId") int ordHeaderId);
+	
+	
+	@Query(value="SELECT\n" + 
+			"    adv_header_id,\n" + 
+			"    fr_id,\n" + 
+			"    cust_id,\n" + 
+			"    is_daily_mart,\n" + 
+			"    order_date,\n" + 
+			"    prod_date,\n" + 
+			"    delivery_date,\n" + 
+			"    disc_amt,\n" + 
+			"    advance_amt,\n" + 
+			"    remaining_amt,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            SUM(mrp * qty)\n" + 
+			"        FROM\n" + 
+			"            t_adv_order_detail\n" + 
+			"        WHERE\n" + 
+			"            t_adv_order_detail.adv_header_id = t_adv_order_header.adv_header_id\n" + 
+			"    ),\n" + 
+			"    0\n" + 
+			"    ) AS total,\n" + 
+			"    is_bill_generated,\n" + 
+			"    is_sell_bill_generated,\n" + 
+			"    del_status,\n" + 
+			"    ex_int1,\n" + 
+			"    ex_int2,\n" + 
+			"    ex_float1,\n" + 
+			"    ex_float2,\n" + 
+			"    ex_var1,\n" + 
+			"    ex_var2\n" + 
+			"FROM\n" + 
+			"    t_adv_order_header\n" + 
+			"WHERE\n" + 
+			"    fr_id =:frId AND del_status =:delStatus AND is_sell_bill_generated =:isSellBillGen\n" + 
+			"ORDER BY\n" + 
+			"    order_date\n" + 
+			"DESC\n" + 
+			"    ",nativeQuery=true)
+	List<AdvanceOrderHeader> getAdvOrderHeaderForDispFr(@Param("frId") int frId,@Param("delStatus") int delStatus,@Param("isSellBillGen") int isSellBillGen);
+	
+	
+	@Query(value="SELECT\n" + 
+			"    adv_header_id,\n" + 
+			"    fr_id,\n" + 
+			"    cust_id,\n" + 
+			"    is_daily_mart,\n" + 
+			"    order_date,\n" + 
+			"    prod_date,\n" + 
+			"    delivery_date,\n" + 
+			"    disc_amt,\n" + 
+			"    advance_amt,\n" + 
+			"    remaining_amt,\n" + 
+			"    COALESCE(\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            SUM(mrp * qty)\n" + 
+			"        FROM\n" + 
+			"            t_adv_order_detail\n" + 
+			"        WHERE\n" + 
+			"            t_adv_order_detail.adv_header_id = t_adv_order_header.adv_header_id\n" + 
+			"    ),\n" + 
+			"    0\n" + 
+			"    ) AS total,\n" + 
+			"    is_bill_generated,\n" + 
+			"    is_sell_bill_generated,\n" + 
+			"    del_status,\n" + 
+			"    ex_int1,\n" + 
+			"    ex_int2,\n" + 
+			"    ex_float1,\n" + 
+			"    ex_float2,\n" + 
+			"    ex_var1,\n" + 
+			"    ex_var2\n" + 
+			"FROM\n" + 
+			"    t_adv_order_header\n" + 
+			"WHERE\n" + 
+			"    fr_id =:frId AND del_status =:delStatus AND delivery_date =:delDate\n" + 
+			"ORDER BY\n" + 
+			"    order_date\n" + 
+			"DESC\n" + 
+			"    ",nativeQuery=true)
+	List<AdvanceOrderHeader> getAdvOrderHeaderByDelDateForDispFr(@Param("delDate") String delDate,@Param("frId") int frId, @Param("delStatus") int delStatus);
+	
+	
 } 

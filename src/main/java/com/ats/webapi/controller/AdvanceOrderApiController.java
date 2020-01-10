@@ -176,6 +176,39 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	@RequestMapping("/advanceOrderHistoryHeaderForDispFr")
+	public @ResponseBody List<AdvanceOrderHeader> advanceOrderHistoryHeaderForDispFr(@RequestParam int flag,
+			@RequestParam String deliveryDt, @RequestParam int frId) throws ParseException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		java.util.Date date = sdf.parse(deliveryDt);
+		java.sql.Date deliveryDate = new java.sql.Date(date.getTime());
+		List<AdvanceOrderHeader> orderList = new ArrayList<AdvanceOrderHeader>();
+		System.out.println(deliveryDt + "flag is " + flag);
+		
+		String dt=sdf.format(deliveryDate);
+		
+		try {
+
+			if (flag == 1) {
+				orderList = advanceOrderHeaderRepo
+						.getAdvOrderHeaderByDelDateForDispFr(dt, frId, 0);
+
+			} else {
+				orderList = advanceOrderHeaderRepo
+						.getAdvOrderHeaderForDispFr(frId, 0, 0);
+
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
 
 	@Autowired
 	GetAdvanceOrderListRepo getAdvanceOrderListRepo;
