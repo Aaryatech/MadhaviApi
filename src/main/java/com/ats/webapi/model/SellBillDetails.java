@@ -67,6 +67,18 @@ public class SellBillDetails {
 	
 	@Column(name="del_status")
 	private int delStatus;
+	
+
+	@Column(name="disc_per")
+	private float discPer;//new
+	
+	@Column(name="disc_amt")
+	private float discAmt;//new
+	
+	@Column(name="ext_float1")
+	private float extFloat1;
+	
+	
 
 	public int getSellBillDetailNo() {
 		return sellBillDetailNo;
@@ -219,6 +231,32 @@ public class SellBillDetails {
 	public void setDelStatus(int delStatus) {
 		this.delStatus = delStatus;
 	}
+
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
+	public float getExtFloat1() {
+		return extFloat1;
+	}
+
+	public void setExtFloat1(float extFloat1) {
+		this.extFloat1 = extFloat1;
+	}
+	
+	
 
 	
 	

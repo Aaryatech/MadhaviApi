@@ -5466,5 +5466,25 @@ public class RestApiController {
 	}
 	
 	
+	@RequestMapping(value = { "/getBillHeaderBySellBillNo" }, method = RequestMethod.POST)
+	public @ResponseBody SellBillHeader getBillHeaderBySellBillNo(@RequestParam int sellBillNo)
+			throws ParseException {
+		SellBillHeader res = null;
+		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
+		try {
+			res = sellBillHeaderRepository.getBillHeaderById(sellBillNo);
+
+
+			System.err.println("data is" + res.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillHeaderById" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return res;
+
+	}
+	
 
 }
