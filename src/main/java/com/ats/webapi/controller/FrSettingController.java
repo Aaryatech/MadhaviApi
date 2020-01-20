@@ -177,5 +177,39 @@ public class FrSettingController {
 		return info;
 
 	}
+	
+	
+	@RequestMapping(value = { "/updateFrSettingAdvOrderMemoSerialNo" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateFrSettingAdvOrderMemoSerialNo(@RequestParam("frId") int frId) {
+
+		Info info = new Info();
+
+		int updateResponse = 0;
+
+		try {
+
+			updateResponse = frSettingRepo.updateFrSettingAdvanceOrderMemoSerialNo(frId);
+
+			if (updateResponse > 0) {
+
+				info.setError(false);
+				info.setMessage("success");
+
+			} else {
+
+				info.setError(true);
+				info.setMessage("failure");
+			}
+
+		} catch (Exception e) {
+			System.out.println(
+					" /updateFrSettingAdvOrderMemoSerialNo Exce in Update fr Setting /FrSettingController " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return info;
+
+	}
+	
 
 }

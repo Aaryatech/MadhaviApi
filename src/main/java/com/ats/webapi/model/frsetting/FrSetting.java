@@ -37,6 +37,9 @@ public class FrSetting implements Serializable{
 	
 	@Column(name="ex_int1")
 	private int count;
+	
+	@Column(name="ex_varchar")
+	private String exVarchar;
 
 	
 
@@ -111,12 +114,26 @@ public class FrSetting implements Serializable{
 	public void setCount(int count) {
 		this.count = count;
 	}
+	
+	
 
+
+	public String getExVarchar() {
+		return exVarchar;
+	}
+
+
+	public void setExVarchar(String exVarchar) {
+		this.exVarchar = exVarchar;
+	}
+
+	
 
 	@Override
 	public String toString() {
 		return "FrSetting [frSettingId=" + frSettingId + ", frId=" + frId + ", frCode=" + frCode + ", sellBillNo="
-				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + ", spNo=" + spNo + ", count=" + count + "]";
+				+ sellBillNo + ", grnGvnNo=" + grnGvnNo + ", spNo=" + spNo + ", count=" + count + ", exVarchar="
+				+ exVarchar + "]";
 	}
 
  
