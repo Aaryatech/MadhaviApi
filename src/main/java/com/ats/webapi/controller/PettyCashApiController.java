@@ -1,5 +1,6 @@
 package com.ats.webapi.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.PettyCashEmp;
 import com.ats.webapi.model.PettyCashHandover;
@@ -26,6 +28,7 @@ import com.ats.webapi.model.pettycash.PettyCashManagmt;
 import com.ats.webapi.model.pettycash.SellBillDetailAdv;
 import com.ats.webapi.model.pettycash.SpCakeAdv;
 import com.ats.webapi.repo.FrEmpMasterRepo;
+import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.OtherBillDetailAdvRepo;
 import com.ats.webapi.repo.PettyCashEmpRepo;
 import com.ats.webapi.repo.PettyCashHandoverRepo;
@@ -434,5 +437,23 @@ public class PettyCashApiController {
 		
 		return petty;
 	}
+	
+	@Autowired
+	GetTotalAmtRepo getTotalAmtRepo;
+	
+	
+	@RequestMapping("/getTotalPOSCreditNoteAmt")
+	public @ResponseBody GetTotalAmt getTotalPOSCreditNoteAmt(@RequestParam int frId, @RequestParam String date) throws ParseException {
+		GetTotalAmt amt = new GetTotalAmt();
+		try {
+			amt = getTotalAmtRepo.getTotalPOSCreditNoteAmt(frId, date);
+		} catch (Exception e) {
+			System.out.println("Exc in getTotalPOSCreditNoteAmt" + e.getMessage());
+			e.printStackTrace();
+		}
+		return amt;
+	}
+	
+	
 
 }
