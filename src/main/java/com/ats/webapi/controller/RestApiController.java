@@ -5168,6 +5168,33 @@ public class RestApiController {
 		info = userService.insertUser(user);
 		return info;
 	}
+	
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	//Anmol 27-1-20---------------------
+	//@RequestMapping(value = { "/checkDuplicateUsername" }, method = RequestMethod.POST)
+	@RequestMapping("/checkDuplicateUsername")
+	public @ResponseBody Info checkDuplicateUsername(@RequestParam("userName") String userName) {
+		Info info = new Info();
+		List<User> userList = userRepository.findByUsernameIgnoreCaseAndDelStatus(userName, 0);
+		if (userList!=null) {
+			if(userList.isEmpty()) {
+				info.setError(false);
+				info.setMessage("not present");
+			}else {
+				info.setError(true);
+				info.setMessage("present");
+			}
+			
+		} else {
+			info.setError(false);
+			info.setMessage("not present");
+		}
+		return info;
+	}
+	
 
 	@RequestMapping(value = { "/getAllDept" }, method = RequestMethod.GET)
 	public @ResponseBody DepartmentList getAllDept() {

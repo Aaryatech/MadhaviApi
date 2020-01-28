@@ -57,5 +57,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 //	User findByUsernameAndPassword(String username, String password);
 
 	User findByUsernameAndPasswordAndDelStatus(String userName, String password, int i);
+	
+	List<User> findByUsernameIgnoreCaseAndDelStatus(String userName, int i);
 
 }
