@@ -570,17 +570,15 @@ public class AdvanceOrderApiController {
 
 	@RequestMapping("/getAllSellCustBillTransactionWithDisc")
 	public @ResponseBody List<TransactionDetailWithDisc> getAllSellCustBillTransactionWithDisc(@RequestParam int custId,
-			@RequestParam int frId, @RequestParam int tabType) throws ParseException {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
+			@RequestParam int frId, @RequestParam int tabType, @RequestParam String date) throws ParseException {
+		
 		List<TransactionDetailWithDisc> orderList = new ArrayList<TransactionDetailWithDisc>();
-		System.err.println("tabType*" + sf.format(date));
 		try {
 			if (tabType == 1) {
 
 				orderList = transactionDetailWithDiscRepo.getCustBillsTransaction(custId, frId);
 			} else {
-				orderList = transactionDetailWithDiscRepo.getCustBillsTransactionToday(frId, sf.format(date));
+				orderList = transactionDetailWithDiscRepo.getCustBillsTransactionToday(frId, date);
 			}
 
 		} catch (Exception e) {
