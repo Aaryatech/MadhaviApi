@@ -29,4 +29,8 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 	List<Customer> findByPhoneNumberAndDelStatus(@Param("phoneNo")String phoneNo,@Param("i") int i);
 	
 
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE m_customer SET address=:address, ex_var1=:km  WHERE cust_id=:custId",nativeQuery=true)
+	int updateAddressAndKm(@Param("address") String address,@Param("km") String km,@Param("custId") int custId);
 }

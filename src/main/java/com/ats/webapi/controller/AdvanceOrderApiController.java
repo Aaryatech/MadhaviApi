@@ -25,6 +25,7 @@ import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.TransactionDetail;
 import com.ats.webapi.model.TransactionDetailWithDisc;
+import com.ats.webapi.model.advorder.AdvOrderForAdminDash;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.advorder.GetAdvanceOrderList;
@@ -40,6 +41,7 @@ import com.ats.webapi.repo.TransactionDetailWithDiscRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.TransactionDetailRepository;
+import com.ats.webapi.repository.advorder.AdvOrderForAdminDashRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.repository.advorder.GetAdvanceOrderListRepo;
@@ -226,6 +228,29 @@ public class AdvanceOrderApiController {
 			}
 		} catch (Exception e) {
 			System.out.println("Exce in advanceOrderHistoryHeaderAdmin  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
+	
+	
+	@Autowired
+	AdvOrderForAdminDashRepo advOrderForAdminDashRepo;
+
+	@RequestMapping(value = { "/advanceOrderHistoryHeaderAdminForAdminDash" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdvOrderForAdminDash> advanceOrderHistoryHeaderAdminForAdminDash(@RequestParam String prodDate,
+			@RequestParam int isBilled) {
+		List<AdvOrderForAdminDash> advList = new ArrayList<AdvOrderForAdminDash>();
+
+		try {
+			if (isBilled < 0) {
+				advList = advOrderForAdminDashRepo.getAdvanceOrderListAdminDash(prodDate);
+			} else {
+				advList = advOrderForAdminDashRepo.getAdvanceOrderBillNotGenAdminDash(isBilled);
+			}
+		} catch (Exception e) {
+			System.out.println("Exce in advanceOrderHistoryHeaderAdminForAdminDash  " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -751,6 +776,30 @@ public class AdvanceOrderApiController {
 			}
 		} catch (Exception e) {
 			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrId  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
+	
+	
+	
+	@RequestMapping(value = { "/advOrderHistoryHeaderAdminFdTdFrIdForAdminDash" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdvOrderForAdminDash> advOrderHistoryHeaderAdminFdTdFrIdForAdminDash(@RequestParam String fromDate,
+			@RequestParam String toDate, @RequestParam int frId) {
+		System.err.println("Hi in advOrderHistoryHeaderAdminFdTdFrIdForAdminDash");
+		List<AdvOrderForAdminDash> advList = new ArrayList<AdvOrderForAdminDash>();
+
+		try {
+			if (frId < 0) {
+				advList = advOrderForAdminDashRepo.getAdvOrderListfdTdAllFrAdminDash(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate));
+			} else {
+				advList = advOrderForAdminDashRepo.getAdvOrderListfdTdSpecFrAdminDash(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate), frId);
+			}
+		} catch (Exception e) {
+			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrIdForAdminDash  " + e.getMessage());
 			e.printStackTrace();
 		}
 
