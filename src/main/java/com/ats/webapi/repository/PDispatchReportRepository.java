@@ -12,15 +12,161 @@ import com.ats.webapi.model.report.PDispatchReport;
 @Repository
 public interface PDispatchReportRepository extends JpaRepository<PDispatchReport, Integer>{
 
-	@Query(value="select t_order.order_id,m_category.cat_id,m_category.cat_name,m_cat_sub.sub_cat_id,t_order.fr_id,m_franchisee.fr_name,t_order.item_id,m_item.item_name,SUM(t_order.order_qty) as order_qty,SUM(t_order.edit_qty) as edit_qty,t_order.is_bill_generated from t_order,m_category,m_franchisee,m_item,m_cat_sub\n" + 
+	/*@Query(value="select t_order.order_id,m_category.cat_id,m_category.cat_name,m_cat_sub.sub_cat_id,t_order.fr_id,m_franchisee.fr_name,t_order.item_id,m_item.item_name,SUM(t_order.order_qty) as order_qty,SUM(t_order.edit_qty) as edit_qty,t_order.is_bill_generated from t_order,m_category,m_franchisee,m_item,m_cat_sub\n" + 
 			"	where  t_order.menu_id IN(:menuId) and t_order.order_id In(select order_id from t_order where delivery_date=:productionDateYMD and fr_id in(:frId)) And (select sub_cat_id from m_fr_menu_show where menu_id=t_order.menu_id) In :categories \n" + 
 			"	And (select cat_id from m_fr_menu_show where menu_id=t_order.menu_id)=m_category.cat_id And t_order.fr_id=m_franchisee.fr_id and m_item.id=t_order.item_id And m_cat_sub.sub_cat_id=m_item.item_grp2 \n" + 
 			"	group by t_order.item_id,t_order.fr_id order by t_order.fr_id,m_item.item_grp1 asc,m_item.item_grp2,m_item.item_name,m_item.item_sort_id asc,m_item.item_mrp2 asc" + 
 			"",nativeQuery=true)
 	List<PDispatchReport> getPDispatchItemReport(@Param("productionDateYMD")String productionDateYMD,@Param("frId") List<String> frId,@Param("categories") List<Integer> categories,@Param("menuId") List<Integer> menuId);// cat_id changed to to sub_cat_id (select sub_cat_id from m_fr_menu_show where menu_id=)13 feb 19 
+	*/
+	
+	//Anmol
+	@Query(value="SELECT\n" + 
+			"    t1.order_id,\n" + 
+			"    t1.cat_id,\n" + 
+			"    t1.cat_name,\n" + 
+			"    t1.sub_cat_id,\n" + 
+			"    t1.fr_id,\n" + 
+			"    t1.fr_name,\n" + 
+			"    t1.item_id,\n" + 
+			"    t1.item_name,\n" + 
+			"    t1.order_qty AS order_qty,\n" + 
+			"    t1.edit_qty AS edit_qty,\n" + 
+			"    t1.is_bill_generated,\n" + 
+			"    COALESCE((t2.adv_qty),\n" + 
+			"    0) AS adv_qty\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        t_order.order_id,\n" + 
+			"        m_category.cat_id,\n" + 
+			"        m_category.cat_name,\n" + 
+			"        m_cat_sub.sub_cat_id,\n" + 
+			"        t_order.fr_id,\n" + 
+			"        m_franchisee.fr_name,\n" + 
+			"        t_order.item_id,\n" + 
+			"        m_item.item_name,\n" + 
+			"        SUM(t_order.order_qty) AS order_qty,\n" + 
+			"        SUM(t_order.edit_qty) AS edit_qty,\n" + 
+			"        t_order.is_bill_generated\n" + 
+			"    FROM\n" + 
+			"        t_order,\n" + 
+			"        m_category,\n" + 
+			"        m_franchisee,\n" + 
+			"        m_item,\n" + 
+			"        m_cat_sub\n" + 
+			"    WHERE\n" + 
+			"        t_order.menu_id IN(:menuId) AND t_order.order_id IN(\n" + 
+			"        SELECT\n" + 
+			"            order_id\n" + 
+			"        FROM\n" + 
+			"            t_order\n" + 
+			"        WHERE\n" + 
+			"            delivery_date =:productionDateYMD AND fr_id IN(:frId)\n" + 
+			"    ) AND(\n" + 
+			"    SELECT\n" + 
+			"        sub_cat_id\n" + 
+			"    FROM\n" + 
+			"        m_fr_menu_show\n" + 
+			"    WHERE\n" + 
+			"        menu_id = t_order.menu_id\n" + 
+			") IN(:categories) AND(\n" + 
+			"    SELECT\n" + 
+			"        cat_id\n" + 
+			"    FROM\n" + 
+			"        m_fr_menu_show\n" + 
+			"    WHERE\n" + 
+			"        menu_id = t_order.menu_id\n" + 
+			") = m_category.cat_id AND t_order.fr_id = m_franchisee.fr_id AND m_item.id = t_order.item_id AND m_cat_sub.sub_cat_id = m_item.item_grp2\n" + 
+			"GROUP BY\n" + 
+			"    t_order.item_id,\n" + 
+			"    t_order.fr_id\n" + 
+			"ORDER BY\n" + 
+			"    t_order.fr_id,\n" + 
+			"    m_item.item_grp1 ASC,\n" + 
+			"    m_item.item_grp2,\n" + 
+			"    m_item.item_name,\n" + 
+			"    m_item.item_sort_id ASC,\n" + 
+			"    m_item.item_mrp2 ASC\n" + 
+			") t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT d.adv_detail_id,\n" + 
+			"        d.item_id,\n" + 
+			"        COALESCE(SUM(d.qty),\n" + 
+			"        0) AS adv_qty\n" + 
+			"    FROM\n" + 
+			"        t_adv_order_detail d,\n" + 
+			"        m_franchisee f,\n" + 
+			"        m_category c,\n" + 
+			"        m_item i\n" + 
+			"    WHERE\n" + 
+			"        d.delivery_date =:productionDateYMD AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"    GROUP BY\n" + 
+			"        d.item_id\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.item_id = t2.item_id\n" + 
+			"UNION\n" + 
+			"SELECT\n" + 
+			"    t1.order_id,\n" + 
+			"    t1.cat_id,\n" + 
+			"    t1.cat_name,\n" + 
+			"    t1.sub_cat_id,\n" + 
+			"    t1.fr_id,\n" + 
+			"    t1.fr_name,\n" + 
+			"    t1.item_id,\n" + 
+			"    t1.item_name,\n" + 
+			"    t1.order_qty AS order_qty,\n" + 
+			"    t1.edit_qty AS edit_qty,\n" + 
+			"    t1.is_bill_generated,\n" + 
+			"    COALESCE((t1.adv_qty),\n" + 
+			"    0) AS adv_qty\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        d.adv_detail_id AS order_id,\n" + 
+			"        d.item_id,\n" + 
+			"        COALESCE(SUM(d.qty),\n" + 
+			"        0) AS adv_qty,\n" + 
+			"        f.fr_id,\n" + 
+			"        f.fr_name,\n" + 
+			"        i.item_name,\n" + 
+			"        c.cat_name,\n" + 
+			"        d.sub_cat_id,\n" + 
+			"        0 AS order_qty,\n" + 
+			"        COALESCE(SUM(d.qty),0) AS edit_qty,\n" + 
+			"        d.is_bill_generated,\n" + 
+			"        d.cat_id\n" + 
+			"    FROM\n" + 
+			"        t_adv_order_detail d,\n" + 
+			"        m_franchisee f,\n" + 
+			"        m_category c,\n" + 
+			"        m_item i\n" + 
+			"    WHERE\n" + 
+			"        d.delivery_date =:productionDateYMD AND d.cat_id IN(:categories) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.fr_id IN(:frId)\n" + 
+			"    GROUP BY\n" + 
+			"        d.item_id\n" + 
+			") t1\n" + 
+			"WHERE\n" + 
+			"    t1.item_id NOT IN(\n" + 
+			"    SELECT\n" + 
+			"        m_item.id\n" + 
+			"    FROM\n" + 
+			"        m_franchisee,\n" + 
+			"        m_category,\n" + 
+			"        m_item,\n" + 
+			"        t_order\n" + 
+			"    WHERE\n" + 
+			"        t_order.delivery_date =:productionDateYMD AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id AND t_order.order_type IN(:categories) AND t_order.fr_id IN(:frId)\n" + 
+			")" + 
+			"",nativeQuery=true)
+	List<PDispatchReport> getPDispatchItemReport(@Param("productionDateYMD")String productionDateYMD,@Param("frId") List<String> frId,@Param("categories") List<Integer> categories,@Param("menuId") List<Integer> menuId);// cat_id changed to to sub_cat_id (select sub_cat_id from m_fr_menu_show where menu_id=)13 feb 19 
+	
+	
+	
 	
 	//sumit
-	@Query(value="select t_order.order_id,m_category.cat_id,m_category.cat_name,m_cat_sub.sub_cat_id,t_order.fr_id,m_franchisee.fr_name,t_order.item_id,m_item.item_name,SUM(t_order.order_qty) as order_qty,SUM(t_order.edit_qty) as edit_qty,t_order.is_bill_generated from t_order,m_category,m_franchisee,m_item,m_cat_sub\n" + 
+	@Query(value="select t_order.order_id,m_category.cat_id,m_category.cat_name,m_cat_sub.sub_cat_id,t_order.fr_id,m_franchisee.fr_name,t_order.item_id,m_item.item_name,SUM(t_order.order_qty) as order_qty,SUM(t_order.edit_qty) as edit_qty,t_order.is_bill_generated, 0 as adv_qty from t_order,m_category,m_franchisee,m_item,m_cat_sub\n" + 
 			"	where t_order.order_id In(select order_id from t_order where delivery_date=:productionDateYMD and fr_id in(:frId) And t_order.menu_id in(:menu) and t_order.item_id in(:ItemId) )  \n" + 
 			"	And (select cat_id from m_fr_menu_show where menu_id=t_order.menu_id)=m_category.cat_id And t_order.fr_id=m_franchisee.fr_id and m_item.id=t_order.item_id And m_cat_sub.sub_cat_id=m_item.item_grp2 \n" + 
 			"	group by t_order.item_id,t_order.fr_id order by t_order.fr_id,m_item.item_grp1 asc,m_item.item_grp2,m_item.item_name,m_item.item_sort_id asc,m_item.item_mrp2 asc" + 

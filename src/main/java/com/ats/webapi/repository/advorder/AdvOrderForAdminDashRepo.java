@@ -23,7 +23,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    t_adv_order_header.total,\n" + 
 			"    t_adv_order_header.ex_var1,t_adv_order_header.ex_var2, t_adv_order_header.is_bill_generated,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_franchisee.fr_name,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"    m_customer.phone_number,\n" + 
 			"    t_adv_order_header.disc_amt,t_adv_order_header.del_status, \n" +
 			"    m_customer.address as address,\r\n" + 
@@ -51,7 +51,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    t_adv_order_header.total,\n" + 
 			"    t_adv_order_header.ex_var1,t_adv_order_header.ex_var2, t_adv_order_header.is_bill_generated,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_franchisee.fr_name,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"    m_customer.phone_number,\n" + 
 			"    t_adv_order_header.disc_amt,t_adv_order_header.del_status, \n" + 
 			"    m_customer.address as address,\r\n" + 
@@ -79,7 +79,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    t_adv_order_header.total,\n" + 
 			"    t_adv_order_header.ex_var1,t_adv_order_header.ex_var2, t_adv_order_header.is_bill_generated,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_franchisee.fr_name,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"    m_customer.phone_number,\n" + 
 			"    t_adv_order_header.disc_amt,t_adv_order_header.del_status, \n" + 
 			"    m_customer.address as address,\r\n" + 
@@ -107,7 +107,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    t_adv_order_header.total,\n" + 
 			"    t_adv_order_header.ex_var1,t_adv_order_header.ex_var2, t_adv_order_header.is_bill_generated,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_franchisee.fr_name,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"    m_customer.phone_number,\n" + 
 			"    t_adv_order_header.disc_amt,t_adv_order_header.del_status, \n" + 
 			"    m_customer.address as address,\r\n" + 
@@ -136,7 +136,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    t_adv_order_header.total,\n" + 
 			"    t_adv_order_header.ex_var1,t_adv_order_header.ex_var2, t_adv_order_header.is_bill_generated,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_franchisee.fr_name,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"    m_customer.phone_number,\n" + 
 			"    t_adv_order_header.disc_amt,t_adv_order_header.del_status, \n" + 
 			"    m_customer.address as address,\r\n" + 

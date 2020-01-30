@@ -58,6 +58,8 @@ public class GetOrder {
 	
 	@Column(name="edit_qty")
 	private float editQty;
+	
+	private int advQty;
 
 
 	public int getOrderId() {
@@ -160,6 +162,18 @@ public class GetOrder {
 
 	public void setEditQty(float editQty) {
 		this.editQty = editQty;
+	}
+	
+	
+
+
+	public int getAdvQty() {
+		return advQty;
+	}
+
+
+	public void setAdvQty(int advQty) {
+		this.advQty = advQty;
 	}
 
 

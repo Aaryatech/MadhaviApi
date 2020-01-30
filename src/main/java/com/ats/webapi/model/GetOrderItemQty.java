@@ -23,6 +23,7 @@ public class GetOrderItemQty implements Serializable{
 	int orderId;
 	
 	private int qty;
+	private int advQty;
 	
 	@Column(name="item_id")
 	private String itemId;
@@ -96,10 +97,23 @@ public class GetOrderItemQty implements Serializable{
 		this.productionDate = productionDate;
 	}
 
+	
+	
+	public int getAdvQty() {
+		return advQty;
+	}
+
+	public void setAdvQty(int advQty) {
+		this.advQty = advQty;
+	}
+	
+	
+
 	@Override
 	public String toString() {
-		return "GetOrderItemQty [orderId=" + orderId + ", qty=" + qty + ", itemId=" + itemId + ", menuId=" + menuId
-				+ ", productionDate=" + productionDate + ", itemGrp1=" + itemGrp1 + ", itemName=" + itemName + "]";
+		return "GetOrderItemQty [orderId=" + orderId + ", qty=" + qty + ", advQty=" + advQty + ", itemId=" + itemId
+				+ ", menuId=" + menuId + ", productionDate=" + productionDate + ", itemGrp1=" + itemGrp1 + ", itemName="
+				+ itemName + "]";
 	}
 
 	 

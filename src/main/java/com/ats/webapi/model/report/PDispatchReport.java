@@ -31,6 +31,8 @@ public class PDispatchReport implements Serializable{
 	
 	private int isBillGenerated;
 	
+	private int advQty;
+	
 
 	public int getIsBillGenerated() {
 		return isBillGenerated;
@@ -119,12 +121,25 @@ public class PDispatchReport implements Serializable{
 	public void setEditQty(int editQty) {
 		this.editQty = editQty;
 	}
+	
+	
 
+	public int getAdvQty() {
+		return advQty;
+	}
+
+	public void setAdvQty(int advQty) {
+		this.advQty = advQty;
+	}
+
+	
+	
 	@Override
 	public String toString() {
 		return "PDispatchReport [orderId=" + orderId + ", catId=" + catId + ", subCatId=" + subCatId + ", catName="
 				+ catName + ", frId=" + frId + ", frName=" + frName + ", itemId=" + itemId + ", itemName=" + itemName
-				+ ", orderQty=" + orderQty + ", editQty=" + editQty + "]";
+				+ ", orderQty=" + orderQty + ", editQty=" + editQty + ", isBillGenerated=" + isBillGenerated
+				+ ", advQty=" + advQty + "]";
 	}
 	
 	
