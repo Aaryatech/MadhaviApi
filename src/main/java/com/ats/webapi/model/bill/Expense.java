@@ -122,6 +122,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 	public Date getExpDate() {
 		return expDate;
 	}
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public void setExpDate(Date expDate) {
 		this.expDate = expDate;
