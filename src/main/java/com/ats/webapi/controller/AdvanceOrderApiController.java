@@ -20,6 +20,7 @@ import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
+import com.ats.webapi.model.ItemOrderHis;
 import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.SellBillHeader;
@@ -262,8 +263,25 @@ public class AdvanceOrderApiController {
 			throws ParseException {
 
 		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
+		
+		System.err.println("RESULT ------------------ "+orderList);
 
 		return orderList;
+
+	}
+	
+	@RequestMapping("/advanceOrderHistoryDetailForAdmin1")
+	public @ResponseBody List<ItemOrderHis> advanceOrderHistoryDetailForAdmin1(@RequestParam int headId)
+			throws ParseException {
+		
+		List<ItemOrderHis> res=new ArrayList<>();
+
+		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
+		res=orderList.getItemOrderList();
+		
+		System.err.println("RESULT ------------------ "+orderList);
+
+		return res;
 
 	}
 

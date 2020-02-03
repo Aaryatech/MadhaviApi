@@ -22,8 +22,8 @@ public class GetOrderItemQty implements Serializable{
 	@Column(name="order_id")
 	int orderId;
 	
-	private int qty;
-	private int advQty;
+	private float qty;
+	private float advQty;
 	
 	@Column(name="item_id")
 	private String itemId;
@@ -65,12 +65,17 @@ public class GetOrderItemQty implements Serializable{
 		this.itemGrp1 = itemGrp1;
 	}
 
-	public int getQty() {
+
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
+	}
+
+	public void setAdvQty(float advQty) {
+		this.advQty = advQty;
 	}
 
 	public String getItemId() {
@@ -99,13 +104,7 @@ public class GetOrderItemQty implements Serializable{
 
 	
 	
-	public int getAdvQty() {
-		return advQty;
-	}
-
-	public void setAdvQty(int advQty) {
-		this.advQty = advQty;
-	}
+	
 	
 	
 

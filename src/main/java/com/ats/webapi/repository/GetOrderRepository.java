@@ -44,7 +44,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        m_franchisee.fr_name,\n" + 
+			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -105,7 +105,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        f.fr_name,\n" + 
+			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
 			"        d.delivery_date\n" + 
@@ -115,7 +115,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"        d.prod_date =:date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN(:menuId))\n" + 
 			"    GROUP BY\n" + 
 			"        d.item_id\n" + 
 			") t1\n" + 
@@ -165,7 +165,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        m_franchisee.fr_name,\n" + 
+			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -226,7 +226,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        f.fr_name,\n" + 
+			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
 			"        d.delivery_date\n" + 
@@ -236,7 +236,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN(:menuId))\n" + 
 			"    GROUP BY\n" + 
 			"        d.item_id\n" + 
 			") t1\n" + 
@@ -285,7 +285,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        m_franchisee.fr_name,\n" + 
+			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -346,7 +346,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        f.fr_name,\n" + 
+			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
 			"        d.delivery_date\n" + 
@@ -405,7 +405,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        m_franchisee.fr_name,\n" + 
+			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -467,7 +467,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        f.fr_name,\n" + 
+			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
 			"        d.delivery_date\n" + 

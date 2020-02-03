@@ -45,6 +45,7 @@ import com.ats.webapi.model.remarks.GetAllRemarksList;
 import com.ats.webapi.repo.BillTransationRepo;
 import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FranchiseForDispatchRepository;
@@ -2936,6 +2937,24 @@ public class RestApiController {
 
 		return categoryList;
 	}
+	
+	
+	/*@Autowired CategoryRepository categoryRepository;
+	
+	@RequestMapping(value = { "/showAllCategoryByMenuIdList" }, method = RequestMethod.POST)
+	public @ResponseBody CategoryList showAllCategoryByMenuIdList(@RequestParam List<Integer> menuId) {
+
+		List<MCategory> jsonCategoryResponse = categoryRepository.findCatIdByMenuIdList(menuId);
+		CategoryList categoryList = new CategoryList();
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		errorMessage.setError(false);
+		errorMessage.setMessage("Success");
+		categoryList.setErrorMessage(errorMessage);
+		categoryList.setmCategoryList(jsonCategoryResponse);
+
+		return categoryList;
+	}*/
 
 	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET)
 	public @ResponseBody CategoryList findAllOnlyCategory() {

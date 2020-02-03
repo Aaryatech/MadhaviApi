@@ -40,7 +40,7 @@ public class GetFrItems {
 	
 	private int grnTwo;
 	
-	private int itemQty;
+	private float itemQty;
 		
 	private int delStatus;
 	
@@ -50,7 +50,7 @@ public class GetFrItems {
 	
 	private double itemRate3;
 	
-	private int minQty;
+	private float minQty;
 	
 	private float discPer;//new
 		
@@ -58,44 +58,12 @@ public class GetFrItems {
 	
 	private float dmDiscPer;//new
 
-	public float getDmDiscPer() {
-		return dmDiscPer;
+	public int getId() {
+		return id;
 	}
 
-	public void setDmDiscPer(float dmDiscPer) {
-		this.dmDiscPer = dmDiscPer;
-	}
-
-	public float getDiscPer() {
-		return discPer;
-	}
-
-	public void setDiscPer(float discPer) {
-		this.discPer = discPer;
-	}
-
-	public double getItemRate3() {
-		return itemRate3;
-	}
-
-	public void setItemRate3(double itemRate3) {
-		this.itemRate3 = itemRate3;
-	}
-
-	public int getMinQty() {
-		return minQty;
-	}
-
-	public void setMinQty(int minQty) {
-		this.minQty = minQty;
-	}
-
-	public String getSubCatName() {
-		return subCatName;
-	}
-
-	public void setSubCatName(String subCatName) {
-		this.subCatName = subCatName;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getItemId() {
@@ -169,7 +137,6 @@ public class GetFrItems {
 	public void setItemMrp2(double itemMrp2) {
 		this.itemMrp2 = itemMrp2;
 	}
-	
 
 	public double getItemMrp3() {
 		return itemMrp3;
@@ -235,6 +202,14 @@ public class GetFrItems {
 		this.grnTwo = grnTwo;
 	}
 
+	public float getItemQty() {
+		return itemQty;
+	}
+
+	public void setItemQty(float itemQty) {
+		this.itemQty = itemQty;
+	}
+
 	public int getDelStatus() {
 		return delStatus;
 	}
@@ -243,20 +218,12 @@ public class GetFrItems {
 		this.delStatus = delStatus;
 	}
 
-	public int getId() {
-		return id;
+	public String getSubCatName() {
+		return subCatName;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getItemQty() {
-		return itemQty;
-	}
-
-	public void setItemQty(int itemQty) {
-		this.itemQty = itemQty;
+	public void setSubCatName(String subCatName) {
+		this.subCatName = subCatName;
 	}
 
 	public int getMenuId() {
@@ -266,13 +233,45 @@ public class GetFrItems {
 	public void setMenuId(int menuId) {
 		this.menuId = menuId;
 	}
-	
+
+	public double getItemRate3() {
+		return itemRate3;
+	}
+
+	public void setItemRate3(double itemRate3) {
+		this.itemRate3 = itemRate3;
+	}
+
+	public float getMinQty() {
+		return minQty;
+	}
+
+	public void setMinQty(float minQty) {
+		this.minQty = minQty;
+	}
+
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
 	public String getCatName() {
 		return catName;
 	}
 
 	public void setCatName(String catName) {
 		this.catName = catName;
+	}
+
+	public float getDmDiscPer() {
+		return dmDiscPer;
+	}
+
+	public void setDmDiscPer(float dmDiscPer) {
+		this.dmDiscPer = dmDiscPer;
 	}
 
 	@Override
@@ -286,6 +285,8 @@ public class GetFrItems {
 				+ menuId + ", itemRate3=" + itemRate3 + ", minQty=" + minQty + ", discPer=" + discPer + ", catName="
 				+ catName + ", dmDiscPer=" + dmDiscPer + "]";
 	}
+
+	
 
 	
 }

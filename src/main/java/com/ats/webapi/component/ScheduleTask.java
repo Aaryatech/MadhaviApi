@@ -132,7 +132,8 @@ public class ScheduleTask {
 	OtherBillDetailAdvRepo otherBillRepo;
 
 	// Petty Cash Day End Process every morning 6.00 am
-	@Scheduled(cron = "2 * * * * *")
+	//@Scheduled(cron = "2 * * * * *")
+	@Scheduled(cron = "0 0 7 * * *")
 	public void crownForPettyCashDayEnd() {
 
 		List<Franchisee> franchisee = new ArrayList<Franchisee>();

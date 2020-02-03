@@ -34,7 +34,7 @@ public class GetOrder {
 	
 	
 	@Column(name="order_qty")
-	private int orderQty;
+	private float orderQty;
 	
 
 	@Column(name="id")
@@ -59,130 +59,105 @@ public class GetOrder {
 	@Column(name="edit_qty")
 	private float editQty;
 	
-	private int advQty;
-
+	private float advQty;
 
 	public int getOrderId() {
 		return orderId;
 	}
 
-
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
 	}
-
 
 	public String getFrName() {
 		return frName;
 	}
 
-
 	public void setFrName(String frName) {
 		this.frName = frName;
 	}
-
 
 	public String getCatName() {
 		return catName;
 	}
 
-
 	public void setCatName(String catName) {
 		this.catName = catName;
 	}
-
 
 	public String getItemName() {
 		return itemName;
 	}
 
-
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
 
-
-	public int getOrderQty() {
+	public float getOrderQty() {
 		return orderQty;
 	}
 
-
-	public void setOrderQty(int orderQty) {
+	public void setOrderQty(float orderQty) {
 		this.orderQty = orderQty;
 	}
-
-
-	
-
 
 	public int getId() {
 		return Id;
 	}
 
-
 	public void setId(int id) {
 		Id = id;
 	}
 
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
-
 
 	public void setDeliveryDate(Date deliveryDate) {
 		this.deliveryDate = deliveryDate;
 	}
 
-
 	public int getIsEdit() {
 		return isEdit;
 	}
-
 
 	public void setIsEdit(int isEdit) {
 		this.isEdit = isEdit;
 	}
 
-
 	public int getIsPositive() {
 		return isPositive;
 	}
-
 
 	public void setIsPositive(int isPositive) {
 		this.isPositive = isPositive;
 	}
 
-
 	public float getEditQty() {
 		return editQty;
 	}
 
-
 	public void setEditQty(float editQty) {
 		this.editQty = editQty;
 	}
-	
-	
 
-
-	public int getAdvQty() {
+	public float getAdvQty() {
 		return advQty;
 	}
 
-
-	public void setAdvQty(int advQty) {
+	public void setAdvQty(float advQty) {
 		this.advQty = advQty;
 	}
-
 
 	@Override
 	public String toString() {
 		return "GetOrder [orderId=" + orderId + ", frName=" + frName + ", catName=" + catName + ", itemName=" + itemName
 				+ ", orderQty=" + orderQty + ", Id=" + Id + ", deliveryDate=" + deliveryDate + ", isEdit=" + isEdit
-				+ ", isPositive=" + isPositive + ", editQty=" + editQty + "]";
+				+ ", isPositive=" + isPositive + ", editQty=" + editQty + ", advQty=" + advQty + "]";
 	}
+
+
+	
 
 
 

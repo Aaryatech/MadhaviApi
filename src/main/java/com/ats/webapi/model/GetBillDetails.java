@@ -40,10 +40,10 @@ public class GetBillDetails implements Serializable {
 		private int itemId;
 		
 		@Column(name="order_qty")
-		private int orderQty;
+		private float orderQty;
 		
 		@Column(name="bill_qty")
-		private int billQty;
+		private float billQty;
 		
 		@Column(name="order_id")
 		private int orderId;
@@ -214,19 +214,21 @@ public class GetBillDetails implements Serializable {
 			this.itemId = itemId;
 		}
 
-		public int getOrderQty() {
+		
+
+		public float getOrderQty() {
 			return orderQty;
 		}
 
-		public void setOrderQty(int orderQty) {
+		public void setOrderQty(float orderQty) {
 			this.orderQty = orderQty;
 		}
 
-		public int getBillQty() {
+		public float getBillQty() {
 			return billQty;
 		}
 
-		public void setBillQty(int billQty) {
+		public void setBillQty(float billQty) {
 			this.billQty = billQty;
 		}
 

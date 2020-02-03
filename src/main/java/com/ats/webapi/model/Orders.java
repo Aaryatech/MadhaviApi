@@ -39,7 +39,7 @@ public class Orders {
 	private String itemId;
 
 	@Column(name="order_qty")
-	private int orderQty;
+	private float orderQty;
 
 	@Column(name="order_rate")
 	private double orderRate;
@@ -155,13 +155,9 @@ public class Orders {
 		this.itemId = itemId;
 	}
 
-	public int getOrderQty() {
-		return orderQty;
-	}
+	
 
-	public void setOrderQty(int orderQty) {
-		this.orderQty = orderQty;
-	}
+	
 
 	public double getOrderRate() {
 		return orderRate;
@@ -249,6 +245,16 @@ public class Orders {
 
 	public void setMenuId(int menuId) {
 		this.menuId = menuId;
+	}
+	
+	
+
+	public float getOrderQty() {
+		return orderQty;
+	}
+
+	public void setOrderQty(float orderQty) {
+		this.orderQty = orderQty;
 	}
 
 	@Override
