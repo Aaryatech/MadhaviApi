@@ -28,7 +28,7 @@ public class PostProductionDetail {
 	private int productionHeaderId;
 
 	@Column(name="production_qty")
-	private int productionQty;
+	private float productionQty;
 	 
 	@Column(name="item_id")
 	private int itemId;
@@ -40,16 +40,16 @@ public class PostProductionDetail {
 	private String productionBatch;
 	
 	@Column(name="plan_qty")
-	private int planQty;
+	private float planQty;
 	
 	@Column(name="order_qty")
-	private int orderQty;
+	private float orderQty;
 	
 	@Column(name="opening_qty")
-	private int openingQty;
+	private float openingQty;
 	
 	@Column(name="rejected_qty")
-	private int rejectedQty;
+	private float rejectedQty;
 	
  
 	
@@ -70,13 +70,7 @@ public class PostProductionDetail {
 		this.productionHeaderId = productionHeaderId;
 	}
 
-	public int getProductionQty() {
-		return productionQty;
-	}
-
-	public void setProductionQty(int productionQty) {
-		this.productionQty = productionQty;
-	}
+	
 
 	public int getItemId() {
 		return itemId;
@@ -102,35 +96,47 @@ public class PostProductionDetail {
 		this.productionBatch = productionBatch;
 	}
 
-	public int getPlanQty() {
+	
+
+	
+
+	public float getProductionQty() {
+		return productionQty;
+	}
+
+	public void setProductionQty(float productionQty) {
+		this.productionQty = productionQty;
+	}
+
+	public float getPlanQty() {
 		return planQty;
 	}
 
-	public void setPlanQty(int planQty) {
+	public void setPlanQty(float planQty) {
 		this.planQty = planQty;
 	}
 
-	public int getOrderQty() {
+	public float getOrderQty() {
 		return orderQty;
 	}
 
-	public void setOrderQty(int orderQty) {
+	public void setOrderQty(float orderQty) {
 		this.orderQty = orderQty;
 	}
 
-	public int getOpeningQty() {
+	public float getOpeningQty() {
 		return openingQty;
 	}
 
-	public void setOpeningQty(int openingQty) {
+	public void setOpeningQty(float openingQty) {
 		this.openingQty = openingQty;
 	}
 
-	public int getRejectedQty() {
+	public float getRejectedQty() {
 		return rejectedQty;
 	}
 
-	public void setRejectedQty(int rejectedQty) {
+	public void setRejectedQty(float rejectedQty) {
 		this.rejectedQty = rejectedQty;
 	}
 

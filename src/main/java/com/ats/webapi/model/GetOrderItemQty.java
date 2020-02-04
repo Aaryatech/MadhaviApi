@@ -12,59 +12,38 @@ import javax.persistence.Table;
 
 
 @Entity
-public class GetOrderItemQty implements Serializable{
-
-	
-
+public class GetOrderItemQty implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="order_id")
+	@Column(name = "order_id")
 	int orderId;
-	
+
 	private float qty;
 	private float advQty;
-	
-	@Column(name="item_id")
+
+	@Column(name = "item_id")
 	private String itemId;
-	
-	@Column(name="menu_id")
+
+	@Column(name = "menu_id")
 	private int menuId;
-	
-	@Column(name="production_date")
+
+	@Column(name = "production_date")
 	private Date productionDate;
-	
-	@Column(name="item_grp1")
+
+	@Column(name = "item_grp1")
 	private int itemGrp1;
 
-	@Column(name="item_name")
+	@Column(name = "item_name")
 	private String itemName;
 
-	
-	public String getItemName() {
-		return itemName;
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
-
-	public int getMenuId() {
-		return menuId;
-	}
-
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
-	}
-
-	public int getItemGrp1() {
-		return itemGrp1;
-	}
-
-	public void setItemGrp1(int itemGrp1) {
-		this.itemGrp1 = itemGrp1;
-	}
-
 
 	public float getQty() {
 		return qty;
@@ -72,6 +51,10 @@ public class GetOrderItemQty implements Serializable{
 
 	public void setQty(float qty) {
 		this.qty = qty;
+	}
+
+	public float getAdvQty() {
+		return advQty;
 	}
 
 	public void setAdvQty(float advQty) {
@@ -86,12 +69,12 @@ public class GetOrderItemQty implements Serializable{
 		this.itemId = itemId;
 	}
 
-	public int getOrderId() {
-		return orderId;
+	public int getMenuId() {
+		return menuId;
 	}
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setMenuId(int menuId) {
+		this.menuId = menuId;
 	}
 
 	public Date getProductionDate() {
@@ -102,11 +85,21 @@ public class GetOrderItemQty implements Serializable{
 		this.productionDate = productionDate;
 	}
 
-	
-	
-	
-	
-	
+	public int getItemGrp1() {
+		return itemGrp1;
+	}
+
+	public void setItemGrp1(int itemGrp1) {
+		this.itemGrp1 = itemGrp1;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
 
 	@Override
 	public String toString() {
@@ -115,6 +108,8 @@ public class GetOrderItemQty implements Serializable{
 				+ itemName + "]";
 	}
 
+}
+
 	 
 	 
 	
@@ -124,4 +119,4 @@ public class GetOrderItemQty implements Serializable{
 	
 	
 	
-}
+
