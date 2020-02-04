@@ -109,6 +109,7 @@ public class GetOrder {
 		Id = id;
 	}
 
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getDeliveryDate() {
 		return deliveryDate;
 	}
