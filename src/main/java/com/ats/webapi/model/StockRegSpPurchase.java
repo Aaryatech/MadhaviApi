@@ -15,10 +15,10 @@ public class StockRegSpPurchase {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int no;
 	
-	private int reg;
+	private float reg;
 	
 	
-	private int sp;
+	private float sp;
 	
 	
 
@@ -32,19 +32,19 @@ public class StockRegSpPurchase {
 		this.no = no;
 	}
 
-	public int getReg() {
+	public float getReg() {
 		return reg;
 	}
 
-	public void setReg(int reg) {
+	public void setReg(float reg) {
 		this.reg = reg;
 	}
 
-	public int getSp() {
+	public float getSp() {
 		return sp;
 	}
 
-	public void setSp(int sp) {
+	public void setSp(float sp) {
 		this.sp = sp;
 	}
 

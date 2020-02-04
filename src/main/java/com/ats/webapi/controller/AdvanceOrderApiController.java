@@ -715,6 +715,8 @@ public class AdvanceOrderApiController {
 		try {
 
 			int del = sellBillHeaderRepository.deleteBill(status, sellBillNo);
+	       	 transactionDetailRepository.deleteTransactionDetails(sellBillNo);
+
 			if (del > 0) {
 				inf.setError(false);
 				inf.setMessage("success");

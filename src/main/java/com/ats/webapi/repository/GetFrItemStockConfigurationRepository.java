@@ -19,6 +19,6 @@ public interface GetFrItemStockConfigurationRepository extends JpaRepository<Get
 	@Query(value=" SELECT coalesce(m_fr_item_stock.reorder_qty,0)  from m_fr_item_stock WHERE"
 			+ " m_fr_item_stock.item_id=:itemId "
 			+ "AND m_fr_item_stock.type=:type",nativeQuery=true)
-	public Integer findByItemIdAndType(@Param("itemId")int itemId, @Param("type") int type);
+	public float findByItemIdAndType(@Param("itemId")int itemId, @Param("type") int type);
 	
 }

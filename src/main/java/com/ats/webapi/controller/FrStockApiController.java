@@ -234,7 +234,7 @@ public class FrStockApiController {
 			int itemId = itemsList.get(i).getId();
 
 			// current stock
-			int grnGvn = getItemStockService.getTotalGrnGvnUptoDateTime(frId, calFromDateTime, fromDateTime, itemId);
+			float grnGvn = getItemStockService.getTotalGrnGvnUptoDateTime(frId, calFromDateTime, fromDateTime, itemId);
 
 			totalSellUptoDateTime = getItemStockService.getTotalSellUpToDateTime(frId, calFromDateTime, fromDateTime,
 					itemId);
@@ -262,7 +262,7 @@ public class FrStockApiController {
 					fromDateTime, toDateTime, itemId);
 
 			// grn/gvn
-			int grnGvnBetweenDate = getItemStockService.getTotalGrnGvnUptoDateTime(frId, fromDateTime, toDateTime,
+			float grnGvnBetweenDate = getItemStockService.getTotalGrnGvnUptoDateTime(frId, fromDateTime, toDateTime,
 					itemId);
 
 			StockForAutoGrnGvn autoGrnGvnStock = new StockForAutoGrnGvn();
@@ -355,7 +355,7 @@ public class FrStockApiController {
 
 				totalRegPurchase = getItemStockService.getRegTotalPurchase(frId, strFirstDay, strBefore1Day, itemId);
 
-				int totalRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFirstDay, strBefore1Day, itemId);
+				float totalRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFirstDay, strBefore1Day, itemId);
 
 				totalRegSell = getItemStockService.getRegTotalSell(frId, strFirstDay, strBefore1Day, itemId);
 
@@ -394,7 +394,7 @@ public class FrStockApiController {
 						RegularSpecialStockCal totalLastRegPurchase = getItemStockService.getRegTotalPurchase(frId,
 								strFromDate, strToDate, itemId);
 
-						int totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
+						float totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
 								itemId);
 
 						RegularSpecialStockCal totalLastRegSell = getItemStockService.getRegTotalSell(frId, strFromDate,
@@ -429,7 +429,7 @@ public class FrStockApiController {
 						RegularSpecialStockCal totalLastRegPurchase = getItemStockService.getRegTotalPurchase(frId,
 								strFromDate, strToDate, itemId);
 
-						int totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
+						float totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
 								itemId);
 
 						RegularSpecialStockCal totalLastRegSell = getItemStockService.getRegTotalSell(frId, strFromDate,
@@ -540,7 +540,7 @@ public class FrStockApiController {
 		RegularSpecialStockCal totalLastRegPurchase = getItemStockService.getRegTotalPurchase(frId, strFromDate,
 				strToDate, item.getId());
 
-		int totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate, item.getId());
+		float totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate, item.getId());
 
 		RegularSpecialStockCal totalLastRegSell = getItemStockService.getRegTotalSell(frId, strFromDate, strToDate,
 				item.getId());
@@ -614,7 +614,7 @@ public class FrStockApiController {
 
 			regSpPurchase = stockPurchaseRepository.getTotalPurchase(frId, fromDate, toDate, itemId);
 
-			int totalRegGrnGvn = calculationRepository.getRegTotalGrnGvn(frId, fromDate, toDate, itemId);
+			float totalRegGrnGvn = calculationRepository.getRegTotalGrnGvn(frId, fromDate, toDate, itemId);
 			try {
 			totalRegSell = stockSellRepository.getRegTotalSell(frId, fromDate, toDate, itemId);
 			} catch (Exception e) {
@@ -623,7 +623,7 @@ public class FrStockApiController {
 			}
 			System.out.println("Purchase " + regSpPurchase.toString());
 			//System.out.println("Sell " + totalRegSell.toString());
-			int reorderQty = 0;
+			float reorderQty = 0;
 
 			try {
 				reorderQty = getFrItemStockConfigurationRepository.findByItemIdAndType(itemId, frStockType);
