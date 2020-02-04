@@ -34,7 +34,7 @@ public interface PDispatchReportRepository extends JpaRepository<PDispatchReport
 			"    t1.edit_qty AS edit_qty,\n" + 
 			"    t1.is_bill_generated,\n" + 
 			"    COALESCE((t2.adv_qty),\n" + 
-			"    0) AS adv_qty\n" + 
+			"    0) AS adv_qty\n" + 	
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 

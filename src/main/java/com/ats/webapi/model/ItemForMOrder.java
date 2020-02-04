@@ -74,24 +74,18 @@ public class ItemForMOrder implements Serializable {
 	private double itemRate3;
 	
 	@Column(name="min_qty")
-	private int minQty;
+	private float minQty;
 	
 	@Column(name="item_shelf_life")
 	private int shelfLife;
 	
     private float discPer;
 
-    private int orderQty;
+    private float orderQty;
     
     
     
-	public int getOrderQty() {
-		return orderQty;
-	}
-
-	public void setOrderQty(int orderQty) {
-		this.orderQty = orderQty;
-	}
+	
 
 	public int getId() {
 		return id;
@@ -253,12 +247,22 @@ public class ItemForMOrder implements Serializable {
 		this.itemRate3 = itemRate3;
 	}
 
-	public int getMinQty() {
+	
+
+	public float getMinQty() {
 		return minQty;
 	}
 
-	public void setMinQty(int minQty) {
+	public void setMinQty(float minQty) {
 		this.minQty = minQty;
+	}
+
+	public float getOrderQty() {
+		return orderQty;
+	}
+
+	public void setOrderQty(float orderQty) {
+		this.orderQty = orderQty;
 	}
 
 	public int getShelfLife() {
