@@ -134,7 +134,7 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 			if(postBillHeaders!=null && postBillHeaders.getBillNo()>0 ) {
 			BillTransaction bt =new BillTransaction();
 			bt.setBillAmt(String.valueOf(postBillHeaders.getGrandTotal()));
-			bt.setBillHeadId(0);
+			bt.setBillHeadId(postBillHeaders.getBillNo());
 			bt.setBillNo(String.valueOf(postBillHeaders.getInvoiceNo()));
 			bt.setExInt1(0);
 			bt.setExInt2(0);

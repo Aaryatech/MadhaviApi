@@ -48,17 +48,11 @@ public class PostProductionPlanDetail {
 	private Date productionDate;
 
 	@Column(name = "remaining_qty")
-	private int int4;
+	private float int4;
 
-	private int int5; // neha
+	private float int5; // neha
 
-	public int getInt4() {
-		return int4;
-	}
-
-	public void setInt4(int int4) {
-		this.int4 = int4;
-	}
+	
 
 	public String getProductionBatch() {
 		return productionBatch;
@@ -144,13 +138,23 @@ public class PostProductionPlanDetail {
 		this.itemId = itemId;
 	}
 
-	public int getInt5() {
+	
+	public float getInt4() {
+		return int4;
+	}
+
+	public void setInt4(float int4) {
+		this.int4 = int4;
+	}
+
+	public float getInt5() {
 		return int5;
 	}
 
-	public void setInt5(int int5) {
+	public void setInt5(float int5) {
 		this.int5 = int5;
 	}
+
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getProductionDate() {
 		return productionDate;
