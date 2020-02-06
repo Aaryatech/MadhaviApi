@@ -16,10 +16,10 @@ public interface ExpenseRepo extends JpaRepository<Expense, Integer> {
 	@Query(value = "SELECT * from m_expense where   m_expense.del_status=0  AND m_expense.fr_id=:frId AND m_expense.exp_type=:type AND m_expense.exp_date BETWEEN :fromDate AND :toDate  ", nativeQuery = true)
  	List<Expense> getExpenseList(@Param("frId") int frId,@Param("type") int type,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
  	
-	@Query(value = "SELECT * from m_expense where  m_expense.del_status=0   AND m_expense.exp_date BETWEEN :fromDate AND :toDate AND exp_type=:type AND m_expense.fr_id IN(:frIdList) ", nativeQuery = true)
+	@Query(value = "SELECT * from m_expense where  m_expense.del_status=0   AND m_expense.exp_date BETWEEN :fromDate AND :toDate AND exp_type=:type AND m_expense.fr_id IN(:frIdList) AND m_expense.ex_int1=0 ", nativeQuery = true)
 	List<Expense> getAllExpenseList(@Param("type") int type,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("frIdList") List<String> frIdList);
 	
-	@Query(value = "SELECT * from m_expense where  m_expense.del_status=0   AND m_expense.exp_date BETWEEN :fromDate AND :toDate AND exp_type=:type ", nativeQuery = true)
+	@Query(value = "SELECT * from m_expense where  m_expense.del_status=0   AND m_expense.exp_date BETWEEN :fromDate AND :toDate AND exp_type=:type AND m_expense.ex_int1=0", nativeQuery = true)
 	List<Expense> getAllExpenseList(@Param("type") int type,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 	
 	 
@@ -45,6 +45,11 @@ public interface ExpenseRepo extends JpaRepository<Expense, Integer> {
 		@Modifying
 		@Query(" UPDATE Expense SET status=2 WHERE exp_id=:expId")
 		int updateExpStatus(@Param("expId")int expId);
+		
+		@Transactional
+		@Modifying
+		@Query(" UPDATE Expense SET ex_int1=:flag, ex_var1=:billIds  WHERE exp_id =:expId")
+	 	int updateExpenseBillSettle(@Param("expId") int expId,@Param("billIds") String billIds,@Param("flag") int flag);
 
  
 }
