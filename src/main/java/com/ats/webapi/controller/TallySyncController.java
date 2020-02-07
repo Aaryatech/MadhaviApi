@@ -30,8 +30,10 @@ import com.ats.webapi.model.tally.SalesVoucher;
 import com.ats.webapi.model.tally.SalesVoucherList;
 import com.ats.webapi.model.tally.SpCakeList;
 import com.ats.webapi.model.tally.SuppliersList;
+import com.ats.webapi.model.tally.TallySyncModel;
 import com.ats.webapi.repository.tally.TallyCreditNoteRepository;
 import com.ats.webapi.repository.tally.TallySalesVoucherRepository;
+import com.ats.webapi.repository.tally.TallySyncModelRepo;
 import com.ats.webapi.service.SuppilerMasterService;
 import com.ats.webapi.service.MaterialRcNote.MaterialRecNoteService;
 import com.ats.webapi.service.rawmaterial.RawMaterialService;
@@ -75,6 +77,9 @@ public class TallySyncController {
 
 	@Autowired
 	TallyCreditNoteRepository tallyCreditNoteRepository;
+
+	@Autowired
+	TallySyncModelRepo tallySyncModelRepo;
 
 	@RequestMapping(value = { "/getAllExcelFranchise" }, method = RequestMethod.GET)
 	public @ResponseBody FranchiseeList getAllExcelFranchise() {
@@ -326,18 +331,17 @@ public class TallySyncController {
 		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 	}
 
-	//Sachin 30-11-2019
+	// Sachin 30-11-2019
 	@RequestMapping(value = { "/updateEwayBillNo" }, method = RequestMethod.POST)
-	public @ResponseBody ErrorMessage updateEwayBillNo(@RequestParam  int billNo,
-			@RequestParam long ewayBillNo) {
-System.err.println("Hiiii");
+	public @ResponseBody ErrorMessage updateEwayBillNo(@RequestParam int billNo, @RequestParam long ewayBillNo) {
+		System.err.println("Hiiii");
 		ErrorMessage errorMessage = null;
 		try {
 			errorMessage = salesVoucherService.updateSalesVouchers(billNo, ewayBillNo);
-			//errorMessage.set
-		}catch (Exception e) {
+			// errorMessage.set
+		} catch (Exception e) {
 			e.printStackTrace();
-			errorMessage=new ErrorMessage();
+			errorMessage = new ErrorMessage();
 		}
 		return errorMessage;
 	}
@@ -538,4 +542,14 @@ System.err.println("Hiiii");
 
 		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = { "/getBillsForTallySync" }, method = RequestMethod.GET)
+	public @ResponseBody List<TallySyncModel> getBillsForTallySync() {
+
+		List<TallySyncModel> tallyList = new ArrayList<>();
+		tallyList = tallySyncModelRepo.getTallySyncData();
+
+		return tallyList;
+	}
+
 }

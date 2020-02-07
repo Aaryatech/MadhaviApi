@@ -1,7 +1,12 @@
 package com.ats.webapi.model.tally;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class TallySyncModel {
 
+	@Id
 	private String billNo;
 	private String date;
 	private String eWayBillNo;
