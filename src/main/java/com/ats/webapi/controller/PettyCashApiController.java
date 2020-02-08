@@ -455,5 +455,27 @@ public class PettyCashApiController {
 	}
 	
 	
+	@RequestMapping(value = { "/updateFrEmpPassword" }, method = RequestMethod.POST)
+	public Info updateFrEmpPassword(int empId, String pass) {
+		Info info = new Info();
+		try {
+			int res = frEmpRepo.updateEmpPass(empId, pass);
+
+			if (res!=0) {
+				info.setError(false);
+				info.setMessage("Success");
+			} else {
+				info.setError(true);
+				info.setMessage("Failed");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			info.setError(true);
+			info.setMessage("Failed");
+		}
+		return info;
+	}
+	
+	
 
 }

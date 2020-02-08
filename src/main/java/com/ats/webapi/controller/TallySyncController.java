@@ -31,6 +31,7 @@ import com.ats.webapi.model.tally.SalesVoucherList;
 import com.ats.webapi.model.tally.SpCakeList;
 import com.ats.webapi.model.tally.SuppliersList;
 import com.ats.webapi.model.tally.TallySyncModel;
+import com.ats.webapi.repository.PostBillHeaderRepository;
 import com.ats.webapi.repository.tally.TallyCreditNoteRepository;
 import com.ats.webapi.repository.tally.TallySalesVoucherRepository;
 import com.ats.webapi.repository.tally.TallySyncModelRepo;
@@ -550,6 +551,27 @@ public class TallySyncController {
 		tallyList = tallySyncModelRepo.getTallySyncData();
 
 		return tallyList;
+	}
+	
+	
+	@Autowired
+	PostBillHeaderRepository postBillHeaderRepository;
+	
+	@RequestMapping(value = { "/updateTallySyncFlag" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage updateTallySync(@RequestParam("billNo") String billNo, @RequestParam("status") int status) {
+
+		int res = postBillHeaderRepository.updateTallySyncFlag(billNo, status);
+
+		ErrorMessage errorMessage=new ErrorMessage();
+		if(res!=0) {
+			errorMessage.setError(false);
+			errorMessage.setMessage("Success");
+		}else {
+			errorMessage.setError(true);
+			errorMessage.setMessage("Falied");
+		}
+
+		return errorMessage;
 	}
 
 }

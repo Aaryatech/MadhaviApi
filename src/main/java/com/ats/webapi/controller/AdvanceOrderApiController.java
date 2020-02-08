@@ -551,6 +551,62 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	
+	//DATE
+	@RequestMapping("/getAllSellCustBillTodaysBillWithDate")
+	public @ResponseBody List<SellBillHeader> getAllSellCustBillTodaysBillWithDate(@RequestParam int custId, @RequestParam int frId,
+			@RequestParam int flag, @RequestParam int tabType,@RequestParam String date) throws ParseException {
+	
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		System.err.println("tabType*" + tabType);
+		Customer cust = new Customer();
+		try {
+			if (tabType == 1) {
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getSellBillHeader(custId, frId);
+
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
+
+				}
+				cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
+
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
+			} else {
+
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getCustBillsTodays(date, frId);
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsTodaysPending(date, frId);
+				}
+
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+					cust = customerRepo.findByCustIdAndDelStatus(orderList.get(i).getCustId(), 0);
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
 
 
 	@RequestMapping(value = { "/getAllSellCustBillForCreditNote" }, method = RequestMethod.POST)

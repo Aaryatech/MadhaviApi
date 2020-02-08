@@ -41,5 +41,10 @@ public interface FrEmpMasterRepo extends JpaRepository<FrEmpMaster, Integer> {
 
 	public FrEmpMaster findByFrIdAndFrEmpIdAndDelStatus(int frId, int empId, int i);
 	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE m_fr_emp SET password=:pass WHERE fr_emp_id=:empId",nativeQuery=true)
+	public int updateEmpPass(@Param("empId") int empId, @Param("pass") String pass);
+	
 
 }
