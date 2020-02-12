@@ -72,6 +72,7 @@ import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.RouteMasterRepository;
 import com.ats.webapi.repository.RouteRepository;
 import com.ats.webapi.repository.SellBillDetailRepository;
+import com.ats.webapi.repository.SellBillHeaderNewRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.SettingRepository;
 import com.ats.webapi.repository.SpCakeOrderHisRepository;
@@ -5115,6 +5116,38 @@ public class RestApiController {
 		return getSellBillHeaderList;
 
 	}
+	
+	@Autowired
+	SellBillHeaderNewRepo sellBillHeaderNewRepo;
+	
+	//Anmol - 12-2-2020
+	@RequestMapping(value = "/getSellBillHeaderNew", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNew(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,@RequestParam("custId") List<String> custId) {
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		
+		List<SellBillHeaderNew> getSellBillHeaderList;
+		
+		System.err.println("CUST -------------------- "+custId);
+		
+		if(custId.contains("0")) {
+			System.err.println("CUST -------------------- 0");
+
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate,frId);
+		}else {
+			System.err.println("CUST -----------*********** "+custId);
+
+			
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeader(fromDate, toDate,frId,custId);
+		}
+
+		System.out.println("List Sell Bill Header  " + getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
+	
 
 	@RequestMapping(value = "/getSellBillDetail", method = RequestMethod.POST)
 	public @ResponseBody List<GetSellBillDetail> getSellBillDetail(@RequestParam("sellBillNo") int sellBillNo) {
