@@ -53,17 +53,7 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 			"    disc_amt,\n" + 
 			"    advance_amt,\n" + 
 			"    remaining_amt,\n" + 
-			"    COALESCE(\n" + 
-			"        (\n" + 
-			"        SELECT\n" + 
-			"            SUM(mrp * qty)\n" + 
-			"        FROM\n" + 
-			"            t_adv_order_detail\n" + 
-			"        WHERE\n" + 
-			"            t_adv_order_detail.adv_header_id = t_adv_order_header.adv_header_id\n" + 
-			"    ),\n" + 
-			"    0\n" + 
-			"    ) AS total,\n" + 
+			"    total AS total,\n" + 
 			"    is_bill_generated,\n" + 
 			"    is_sell_bill_generated,\n" + 
 			"    del_status,\n" + 
@@ -95,17 +85,7 @@ public interface AdvanceOrderHeaderRepo extends JpaRepository<AdvanceOrderHeader
 			"    disc_amt,\n" + 
 			"    advance_amt,\n" + 
 			"    remaining_amt,\n" + 
-			"    COALESCE(\n" + 
-			"        (\n" + 
-			"        SELECT\n" + 
-			"            SUM(mrp * qty)\n" + 
-			"        FROM\n" + 
-			"            t_adv_order_detail\n" + 
-			"        WHERE\n" + 
-			"            t_adv_order_detail.adv_header_id = t_adv_order_header.adv_header_id\n" + 
-			"    ),\n" + 
-			"    0\n" + 
-			"    ) AS total,\n" + 
+			"    total AS total,\n" + 
 			"    is_bill_generated,\n" + 
 			"    is_sell_bill_generated,\n" + 
 			"    del_status,\n" + 

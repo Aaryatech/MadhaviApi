@@ -782,7 +782,7 @@ public class RestApiController {
 	public @ResponseBody GetBillsForFrList getBillsForFrService(@RequestParam("frId") int frId,
 			@RequestParam("curDate") String curDate) {
 
-		String back15Days = incrementDate(curDate, -5);
+		String back15Days = incrementDate(curDate, -25);
 		java.sql.Date cDate = Common.convertToSqlDate(curDate);
 		java.sql.Date back15Date = Common.convertToSqlDate(back15Days);
 
@@ -814,7 +814,7 @@ public class RestApiController {
 
 		java.sql.Date bilDate = Common.convertToSqlDate(billDate);
 
-		System.out.println("Fr Id ::: " + frId);
+		System.out.println("Fr Id ::: " + frId+"         DATE : "+bilDate);
 
 		GetBillsForFrList billsForFrLisr = getBillsForFrService.getBillForFrByDate(frId, bilDate);
 
