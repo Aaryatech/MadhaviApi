@@ -31,6 +31,7 @@ public class ItemWiseDetail implements Serializable{
 	private int qty;
 	
 	private float total;
+	private float discAmt;
 	
 	@Column(name="bill_date")
 	private Date billDate;
@@ -124,6 +125,21 @@ public class ItemWiseDetail implements Serializable{
 
 	public void setExpiryDate(Date expiryDate) {
 		this.expiryDate = expiryDate;
+	}
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemWiseDetail [billNo=" + billNo + ", itemId=" + itemId + ", billDetailNo=" + billDetailNo + ", rate="
+				+ rate + ", qty=" + qty + ", total=" + total + ", discAmt=" + discAmt + ", billDate=" + billDate
+				+ ", itemName=" + itemName + ", grnType=" + grnType + ", expiryDate=" + expiryDate + "]";
 	}
 
 	
