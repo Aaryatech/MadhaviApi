@@ -71,5 +71,11 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 	Sell
 	SELECT COALESCE(SUM(CASE WHEN bill_stock_type = 1 THEN qty ELSE 0 END),0) as reg , COALESCE(SUM(CASE WHEN bill_stock_type = 2 THEN qty ELSE 0 END),0) as sp FROM t_sell_bill_detail WHERE t_sell_bill_detail.item_id =2 AND t_sell_bill_detail.sell_bill_no IN (SELECT t_sell_bill_header.sell_bill_no FROM t_sell_bill_header WHERE t_sell_bill_header.fr_id=15 AND t_sell_bill_header.timestamp BETWEEN '2017-11-01 00:00:00' AND '2017-11-23 23:00:00' )
 */
+	
+	
+	//SELL_CREDIT_NOTE
+	@Query(value = "SELECT COALESCE((SUM(p.crn_qty)),0) FROM t_credit_note_pos p WHERE p.ex_int1=:frId AND p.crn_date BETWEEN :fromDate AND :toDate AND p.item_id=:itemId", nativeQuery = true)
+	float getTotalSellCreditNote(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
+			@Param("itemId") int itemId);
 		
 }

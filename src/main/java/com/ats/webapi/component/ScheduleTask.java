@@ -218,7 +218,7 @@ public class ScheduleTask {
 
 							//String date1 = DateConvertor.convertToYMD(date);
 
-							pettycash.setPettycashId(pettyCashId);
+							pettycash.setPettycashId(0);
 							pettycash.setCardAmt(0);
 							pettycash.setCashAmt(cashAmt);
 							pettycash.setClosingAmt(closAmt);

@@ -102,6 +102,8 @@ public class PostBillHeader implements Serializable {
 	private String exVarchar4;
 	
     private String exVarchar5;
+    
+    private int isDairyMart;
 	
 	
 	@Transient
@@ -109,6 +111,14 @@ public class PostBillHeader implements Serializable {
 	
 	
 	
+	public int getIsDairyMart() {
+		return isDairyMart;
+	}
+
+	public void setIsDairyMart(int isDairyMart) {
+		this.isDairyMart = isDairyMart;
+	}
+
 	public String getExVarchar3() {
 		return exVarchar3;
 	}
@@ -344,6 +354,8 @@ public class PostBillHeader implements Serializable {
 	public void setDiscAmt(float discAmt) {
 		this.discAmt = discAmt;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -355,7 +367,7 @@ public class PostBillHeader implements Serializable {
 				+ partyName + ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + ", vehNo=" + vehNo
 				+ ", billTime=" + billTime + ", exVarchar1=" + exVarchar1 + ", exVarchar2=" + exVarchar2
 				+ ", exVarchar3=" + exVarchar3 + ", exVarchar4=" + exVarchar4 + ", exVarchar5=" + exVarchar5
-				+ ", postBillDetailsList=" + postBillDetailsList + "]";
+				+ ", isDairyMart=" + isDairyMart + ", postBillDetailsList=" + postBillDetailsList + "]";
 	}
 
 	

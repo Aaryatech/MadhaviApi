@@ -79,7 +79,47 @@ public class FrBillHeaderForPrint implements Serializable {
 	
 	private String ewayBillNo;
 	
+	private int isDairyMart;
 	
+	private String exVarchar3;
+	private String exVarchar4;
+	private String exVarchar5;
+	
+	
+	
+	
+	public String getExVarchar3() {
+		return exVarchar3;
+	}
+
+	public void setExVarchar3(String exVarchar3) {
+		this.exVarchar3 = exVarchar3;
+	}
+
+	public String getExVarchar4() {
+		return exVarchar4;
+	}
+
+	public void setExVarchar4(String exVarchar4) {
+		this.exVarchar4 = exVarchar4;
+	}
+
+	public String getExVarchar5() {
+		return exVarchar5;
+	}
+
+	public void setExVarchar5(String exVarchar5) {
+		this.exVarchar5 = exVarchar5;
+	}
+
+	public int getIsDairyMart() {
+		return isDairyMart;
+	}
+
+	public void setIsDairyMart(int isDairyMart) {
+		this.isDairyMart = isDairyMart;
+	}
+
 	public String getEwayBillNo() {
 		return ewayBillNo;
 	}
@@ -276,6 +316,8 @@ public class FrBillHeaderForPrint implements Serializable {
 	public void setIsSameState(String isSameState) {
 		this.isSameState = isSameState;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -285,7 +327,8 @@ public class FrBillHeaderForPrint implements Serializable {
 				+ status + ", DelStatus=" + DelStatus + ", remark=" + remark + ", frAddress=" + frAddress
 				+ ", isSameState=" + isSameState + ", partyName=" + partyName + ", partyGstin=" + partyGstin
 				+ ", partyAddress=" + partyAddress + ", vehNo=" + vehNo + ", billTime=" + billTime + ", exVarchar1="
-				+ exVarchar1 + ", exVarchar2=" + exVarchar2 + ", company=" + company + "]";
+				+ exVarchar1 + ", exVarchar2=" + exVarchar2 + ", ewayBillNo=" + ewayBillNo + ", isDairyMart="
+				+ isDairyMart + ", company=" + company + "]";
 	}
 
 	

@@ -87,6 +87,9 @@ public class FrStockApiController {
 
 	@Autowired
 	PostFrOpStockHeaderRepository frOpStockHeaderRepository;
+	
+	@Autowired
+	StockCalculationRepository stockCalculationRepository;
 
 	/*
 	 * @RequestMapping(value = "/getCurrentOpStock", method = RequestMethod.POST)
@@ -329,6 +332,8 @@ public class FrStockApiController {
 			String strFirstDayToDate = ymdFormat.format(firstDayToDate);
 
 			System.out.println("first Day " + strFirstDay + " Before One day " + strBefore1Day);
+			
+			
 
 			Calendar calendar = new GregorianCalendar();
 			calendar.setTime(firstDayFromDate);
@@ -356,7 +361,11 @@ public class FrStockApiController {
 				totalRegPurchase = getItemStockService.getRegTotalPurchase(frId, strFirstDay, strBefore1Day, itemId);
 
 				float totalRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFirstDay, strBefore1Day, itemId);
-
+				
+//				String fromDate=strFirstDay;
+//				String toDate=strBefore1Day;
+				
+				
 				totalRegSell = getItemStockService.getRegTotalSell(frId, strFirstDay, strBefore1Day, itemId);
 
 				System.out.println("Reg Purchase " + totalRegPurchase.toString());
@@ -396,6 +405,9 @@ public class FrStockApiController {
 
 						float totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
 								itemId);
+						
+						float totalSellCreditNote = stockCalculationRepository.getTotalSellCreditNote(frId, strFromDate, strToDate, itemId);
+
 
 						RegularSpecialStockCal totalLastRegSell = getItemStockService.getRegTotalSell(frId, strFromDate,
 								strToDate, itemId);
@@ -417,6 +429,8 @@ public class FrStockApiController {
 						getCurrentStockDetails.setItemId(itemsList.get(i).getItemId());
 						getCurrentStockDetails.setItemName(itemsList.get(i).getItemName());
 						getCurrentStockDetails.setReOrderQty(0);
+						getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
+						
 						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg())
 								- (totalLastRegGrnGvn + totalLastRegSell.getReg()));
 						getCurrentStockDetails.setCurrentSpStock(
@@ -431,6 +445,9 @@ public class FrStockApiController {
 
 						float totalLastRegGrnGvn = getItemStockService.getRegTotalGrnGvn(frId, strFromDate, strToDate,
 								itemId);
+						
+						float totalSellCreditNote = stockCalculationRepository.getTotalSellCreditNote(frId, strFromDate, strToDate, itemId);
+
 
 						RegularSpecialStockCal totalLastRegSell = getItemStockService.getRegTotalSell(frId, strFromDate,
 								strToDate, itemId);
@@ -452,6 +469,8 @@ public class FrStockApiController {
 						getCurrentStockDetails.setItemId(itemsList.get(i).getItemId());
 						getCurrentStockDetails.setItemName(itemsList.get(i).getItemName());
 						getCurrentStockDetails.setReOrderQty(0);
+						getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
+						
 						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg())
 								- (totalLastRegGrnGvn + totalLastRegSell.getReg()));
 						getCurrentStockDetails.setCurrentSpStock(
@@ -615,6 +634,12 @@ public class FrStockApiController {
 			regSpPurchase = stockPurchaseRepository.getTotalPurchase(frId, fromDate, toDate, itemId);
 
 			float totalRegGrnGvn = calculationRepository.getRegTotalGrnGvn(frId, fromDate, toDate, itemId);
+			
+			System.err.println("FR -"+frId+"       FROM DT -"+fromDate+"        TO DT -"+toDate+"            ITEM -"+itemId);
+			
+			float totalSellCreditNote = calculationRepository.getTotalSellCreditNote(frId, fromDate, toDate, itemId);
+			System.err.println("RES = "+totalSellCreditNote);
+
 			try {
 			totalRegSell = stockSellRepository.getRegTotalSell(frId, fromDate, toDate, itemId);
 			} catch (Exception e) {
@@ -654,8 +679,9 @@ public class FrStockApiController {
 					getCurrentStockDetails.setItemId(itemsList.get(i).getItemId());
 					getCurrentStockDetails.setItemName(itemsList.get(i).getItemName());
 					getCurrentStockDetails.setReOrderQty(reorderQty);
+					getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
 					getCurrentStockDetails
-							.setCurrentRegStock((postFrItemStockDetail.getRegOpeningStock() + regSpPurchase.getReg())
+							.setCurrentRegStock((postFrItemStockDetail.getRegOpeningStock() + regSpPurchase.getReg()+totalSellCreditNote)
 									- (totalRegGrnGvn + totalRegSell.getReg()));
 					getCurrentStockDetails
 							.setCurrentSpStock((postFrItemStockDetail.getSpOpeningStock() + regSpPurchase.getSp())
@@ -688,8 +714,9 @@ public class FrStockApiController {
 					getCurrentStockDetails.setId(itemsList.get(i).getId());
 					getCurrentStockDetails.setItemId(itemsList.get(i).getItemId());
 					getCurrentStockDetails.setItemName(itemsList.get(i).getItemName());
+					getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
 					getCurrentStockDetails
-							.setCurrentRegStock((regSpPurchase.getReg()) - (totalRegGrnGvn + totalRegSell.getReg()));
+							.setCurrentRegStock((regSpPurchase.getReg()+totalSellCreditNote) - (totalRegGrnGvn + totalRegSell.getReg()));
 					getCurrentStockDetails.setCurrentSpStock(regSpPurchase.getSp() - totalRegSell.getSp());
 
 					if (itemsList.get(i).getDelStatus() == 0) {

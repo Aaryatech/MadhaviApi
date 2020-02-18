@@ -1532,6 +1532,31 @@ public class RestApiController {
 		return billHeaderList;
 
 	}
+	
+	@RequestMapping(value = "/getBillHeaderPOSOnlyRegBills", method = RequestMethod.POST)
+	public @ResponseBody GetBillHeaderList getBillHeaderPOSOnlyRegBills(@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+		GetBillHeaderList billHeaderList = new GetBillHeaderList();
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		System.err.println("data*****" + fromDate + toDate + frId.toString());
+		try {
+
+			List<GetBillHeader> billHeaders=getBillHeaderRepository.getBillHeaderForFrAllOPSOnlyRegBill(frId, fromDate, toDate);
+			
+			billHeaderList.setGetBillHeaders(billHeaders);
+			
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return billHeaderList;
+
+	}
+	
 
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,

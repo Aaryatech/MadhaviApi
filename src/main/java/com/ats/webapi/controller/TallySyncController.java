@@ -31,9 +31,11 @@ import com.ats.webapi.model.tally.SalesVoucherList;
 import com.ats.webapi.model.tally.SpCakeList;
 import com.ats.webapi.model.tally.SuppliersList;
 import com.ats.webapi.model.tally.TallySyncModel;
+import com.ats.webapi.model.tally.TallySyncModelItemAsHsn;
 import com.ats.webapi.repository.PostBillHeaderRepository;
 import com.ats.webapi.repository.tally.TallyCreditNoteRepository;
 import com.ats.webapi.repository.tally.TallySalesVoucherRepository;
+import com.ats.webapi.repository.tally.TallySyncModelItemAsHsnRepo;
 import com.ats.webapi.repository.tally.TallySyncModelRepo;
 import com.ats.webapi.service.SuppilerMasterService;
 import com.ats.webapi.service.MaterialRcNote.MaterialRecNoteService;
@@ -573,5 +575,17 @@ public class TallySyncController {
 
 		return errorMessage;
 	}
+	
+	
+	@Autowired
+	TallySyncModelItemAsHsnRepo tallySyncModelItemAsHsnRepo;
 
+	@RequestMapping(value = { "/getBillsForTallySyncItemAsHsnApi" }, method = RequestMethod.POST)
+	public @ResponseBody List<TallySyncModelItemAsHsn> getBillsForTallySyncItemAsHsn() {
+System.err.println("Hiii");
+		List<TallySyncModelItemAsHsn> tallyList = new ArrayList<>();
+		tallyList = tallySyncModelItemAsHsnRepo.getTallySyncDataItemAsHsn();
+
+		return tallyList;
+	}
 }

@@ -138,10 +138,45 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 			"    t_bill_header,\n " + 
 			"    m_franchisee \n " + 
 			"WHERE\n" + 
-			"    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.del_status = 0 AND t_bill_header.fr_id IN (:frId) ORDER BY t_bill_header.bill_no DESC \n" + 
+			"    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.del_status = 0 AND t_bill_header.fr_id IN (:frId) ORDER BY t_bill_header.invoice_no DESC \n" + 
 			"",nativeQuery=true)
 	
 	List<GetBillHeader> getBillHeaderForFrAllOPS(@Param("frId") List<String> frId,@Param("fromDate")String fromDate, @Param("toDate")String toDate);
+	
+	
+	
+	
+	@Query(value=" SELECT\n" + 
+			"    t_bill_header.bill_no,\n" + 
+			"    t_bill_header.invoice_no,\n" + 
+			"    t_bill_header.bill_date,\n" + 
+			"    t_bill_header.fr_id,\n" + 
+			"    t_bill_header.fr_code,\n" + 
+			"    t_bill_header.veh_no,\n" + 
+			"    t_bill_header.bill_time,\n" + 
+			"    t_bill_header.ex_varchar1,\n" + 
+			"    t_bill_header.ex_varchar2,\n" + 
+			"    t_bill_header.tax_applicable,\n" + 
+			"    t_bill_header.grand_total,\n" + 
+			"    t_bill_header.taxable_amt,\n" + 
+			"    t_bill_header.total_tax,\n" + 
+			"    t_bill_header.status,\n" + 
+			"    t_bill_header.remark,\n" + 
+			"    t_bill_header.time,\n" + 
+			"    t_bill_header.del_status,\n" + 
+			"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
+			"    t_bill_header.party_name,\n" + 
+			"    t_bill_header.party_gstin,\n" + 
+			"    t_bill_header.party_address\n"
+			+ ",t_bill_header.is_tally_sync AS eway_bill_no " + 
+			"FROM \n" + 
+			"    t_bill_header,\n " + 
+			"    m_franchisee \n " + 
+			"WHERE\n" + 
+			"    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.del_status = 0 AND t_bill_header.fr_id IN (:frId) AND t_bill_header.is_dairy_mart=1 ORDER BY t_bill_header.invoice_no DESC \n" + 
+			"",nativeQuery=true)
+	
+	List<GetBillHeader> getBillHeaderForFrAllOPSOnlyRegBill(@Param("frId") List<String> frId,@Param("fromDate")String fromDate, @Param("toDate")String toDate);
 	
 	
 	
