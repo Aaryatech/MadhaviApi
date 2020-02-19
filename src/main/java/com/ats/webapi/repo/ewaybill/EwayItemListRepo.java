@@ -17,7 +17,7 @@ public interface EwayItemListRepo extends JpaRepository<EwayItemList, Integer> {
 			+ "m_item.item_name as product_name, " + "m_item.item_name as product_desc, "
 			+ "m_item_sup.item_hsncd as hsn_code, " + "m_item_sup.item_uom as qty_unit "
 			+ "	FROM m_item_sup,m_item,t_bill_detail "
-			+ "WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_bill_detail.item_id "
+			+ "WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_bill_detail.item_id and t_bill_detail.bill_qty>0 "
 			+ "AND t_bill_detail.bill_no=:billNo", nativeQuery = true)
 	public List<EwayItemList> getBillDetailForEwayBill(@Param("billNo") int billNo);
 
@@ -28,7 +28,7 @@ public interface EwayItemListRepo extends JpaRepository<EwayItemList, Integer> {
 			+ "taxable_amount, m_item.item_name as product_name, m_item.item_name as product_desc, "
 			+ "m_item_sup.item_hsncd as hsn_code, m_item_sup.item_uom as qty_unit "
 			+ "FROM m_item_sup,m_item, t_credit_note_details "
-			+ "WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_credit_note_details.item_id AND "
+			+ "WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_credit_note_details.item_id AND t_credit_note_details.grn_gvn_qty>0 and "
 			+ "t_credit_note_details.crn_id=:crnId", nativeQuery = true)
 	public List<EwayItemList> getCreditNoteDetailForEwayBill(@Param("crnId") int crnId);
 
