@@ -1,6 +1,11 @@
 package com.ats.webapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ats.webapi.model.PostBillHeader;
 
 public interface PostBillHeaderRepository extends JpaRepository<PostBillHeader, Integer> {
@@ -27,5 +32,13 @@ public interface PostBillHeaderRepository extends JpaRepository<PostBillHeader, 
 	 * m_fr_opening_stock_header WHERE m_fr_opening_stock_header.fr_id=17 AND
 	 * m_fr_opening_stock_header.month=10)
 	 */
+	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE PostBillHeader SET  tally_sync=:status WHERE invoice_no=:billNo")
+	int updateTallySyncFlag(@Param("billNo") String billNo, @Param("status") int status);
+
 
 }

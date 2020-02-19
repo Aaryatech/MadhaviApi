@@ -20,7 +20,7 @@ public class GetProdDetailBySubCat {
 	@Column(name="item_grp2")
 	private int itemGrp2;
 	
-	int totalQty;
+	float totalQty;
 
 	public int getSubCatId() {
 		return subCatId;
@@ -46,11 +46,12 @@ public class GetProdDetailBySubCat {
 		this.itemGrp2 = itemGrp2;
 	}
 
-	public int getTotalQty() {
+	
+	public float getTotalQty() {
 		return totalQty;
 	}
 
-	public void setTotalQty(int totalQty) {
+	public void setTotalQty(float totalQty) {
 		this.totalQty = totalQty;
 	}
 

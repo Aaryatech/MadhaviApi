@@ -12,6 +12,7 @@ public interface GetBillListByFrIdToSettleRepo extends JpaRepository<GetBillList
 
 	
 	@Query(value = "SELECT\n" + 
+			"    t_bill_transcation.bill_trans_id,\n" + 
 			"    t_bill_transcation.bill_no,\n" + 
 			"    t_bill_transcation.bill_head_id,\n" + 
 			"    t_bill_transcation.bill_date,\n" + 

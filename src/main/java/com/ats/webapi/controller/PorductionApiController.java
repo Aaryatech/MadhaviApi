@@ -209,8 +209,13 @@ public class PorductionApiController {
 
 			String strDate = Common.convertToYMD(productionDate);
 			System.out.println("Converted date " + strDate);
+			
+			System.err.println("MENU ID ------------------" + menuId);
+			System.err.println("DATE ------------------" + strDate);
 
 			getOrderItemQtyList = getOrderItemQtyService.getOrderQty(strDate, menuId);
+			
+			System.err.println("ORDER -------------- "+getOrderItemQtyList);
 
 		} catch (Exception e) {
 

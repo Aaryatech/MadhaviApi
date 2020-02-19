@@ -16,7 +16,7 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 			@Param("toDate") String toDate, @Param("itemId") int itemId);
 
 	@Query(value = "SELECT  COALESCE(SUM(t_grn_gvn.grn_gvn_qty),0) FROM t_grn_gvn WHERE t_grn_gvn.fr_id=:frId AND t_grn_gvn.item_id=:itemId AND t_grn_gvn.grn_gvn_date BETWEEN :fromDate AND :toDate", nativeQuery = true)
-	int getRegTotalGrnGvn(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
+	float getRegTotalGrnGvn(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("itemId") int itemId);
 
 	@Query(value = "SELECT COALESCE(SUM(CASE WHEN bill_stock_type = 1 THEN qty ELSE 0 END),0) as reg , COALESCE(SUM(CASE WHEN bill_stock_type = 2 THEN qty ELSE 0 END),0) as sp FROM t_sell_bill_detail WHERE t_sell_bill_detail.item_id =:itemId AND "
@@ -27,7 +27,7 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 	// grn/gvn
 		@Query(value = "SELECT COALESCE(SUM(t_grn_gvn.grn_gvn_qty),0) FROM t_grn_gvn WHERE t_grn_gvn.fr_id=:frId AND t_grn_gvn.item_id=:itemId AND"
 				+ " t_grn_gvn.grn_gvn_entry_datetime BETWEEN :fromDateTime AND :toDateTime ", nativeQuery = true)
-		int getTotalGrnGvnUptoDateTime(@Param("frId") int frId, @Param("fromDateTime") String fromDateTime, @Param("toDateTime") String toDateTime,
+		float getTotalGrnGvnUptoDateTime(@Param("frId") int frId, @Param("fromDateTime") String fromDateTime, @Param("toDateTime") String toDateTime,
 				@Param("itemId") int itemId);
 	// purchase
 	@Query(value = "SELECT  COALESCE(SUM(CASE WHEN grn_type != 3  THEN bill_qty ELSE 0 END),0) as reg ,"
@@ -71,5 +71,11 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 	Sell
 	SELECT COALESCE(SUM(CASE WHEN bill_stock_type = 1 THEN qty ELSE 0 END),0) as reg , COALESCE(SUM(CASE WHEN bill_stock_type = 2 THEN qty ELSE 0 END),0) as sp FROM t_sell_bill_detail WHERE t_sell_bill_detail.item_id =2 AND t_sell_bill_detail.sell_bill_no IN (SELECT t_sell_bill_header.sell_bill_no FROM t_sell_bill_header WHERE t_sell_bill_header.fr_id=15 AND t_sell_bill_header.timestamp BETWEEN '2017-11-01 00:00:00' AND '2017-11-23 23:00:00' )
 */
+	
+	
+	//SELL_CREDIT_NOTE
+	@Query(value = "SELECT COALESCE((SUM(p.crn_qty)),0) FROM t_credit_note_pos p WHERE p.ex_int1=:frId AND p.crn_date BETWEEN :fromDate AND :toDate AND p.item_id=:itemId", nativeQuery = true)
+	float getTotalSellCreditNote(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
+			@Param("itemId") int itemId);
 		
 }

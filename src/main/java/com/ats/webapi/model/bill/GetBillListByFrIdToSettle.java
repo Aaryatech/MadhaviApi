@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class GetBillListByFrIdToSettle {
 
 	@Id
+	private int billTransId;
+	
 	private int billHeadId;
 
 	private String billNo;
@@ -26,6 +28,16 @@ public class GetBillListByFrIdToSettle {
 	private String pendingAmt;
 
 	private String frName;
+	
+	
+
+	public int getBillTransId() {
+		return billTransId;
+	}
+
+	public void setBillTransId(int billTransId) {
+		this.billTransId = billTransId;
+	}
 
 	public int getBillHeadId() {
 		return billHeadId;
@@ -91,12 +103,14 @@ public class GetBillListByFrIdToSettle {
 	public void setFrName(String frName) {
 		this.frName = frName;
 	}
+	
+	
 
 	@Override
 	public String toString() {
-		return "GetBillListByFrIdToSettle [billHeadId=" + billHeadId + ", billNo=" + billNo + ", billDate=" + billDate
-				+ ", frId=" + frId + ", billAmt=" + billAmt + ", paidAmt=" + paidAmt + ", pendingAmt=" + pendingAmt
-				+ ", frName=" + frName + "]";
+		return "GetBillListByFrIdToSettle [billTransId=" + billTransId + ", billHeadId=" + billHeadId + ", billNo="
+				+ billNo + ", billDate=" + billDate + ", frId=" + frId + ", billAmt=" + billAmt + ", paidAmt=" + paidAmt
+				+ ", pendingAmt=" + pendingAmt + ", frName=" + frName + "]";
 	}
 
 }

@@ -12,64 +12,53 @@ import javax.persistence.Table;
 
 
 @Entity
-public class GetOrderItemQty implements Serializable{
-
-	
-
+public class GetOrderItemQty implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="order_id")
+	@Column(name = "order_id")
 	int orderId;
-	
-	private int qty;
-	
-	@Column(name="item_id")
+
+	private float qty;
+	private float advQty;
+
+	@Column(name = "item_id")
 	private String itemId;
-	
-	@Column(name="menu_id")
+
+	@Column(name = "menu_id")
 	private int menuId;
-	
-	@Column(name="production_date")
+
+	@Column(name = "production_date")
 	private Date productionDate;
-	
-	@Column(name="item_grp1")
+
+	@Column(name = "item_grp1")
 	private int itemGrp1;
 
-	@Column(name="item_name")
+	@Column(name = "item_name")
 	private String itemName;
 
-	
-	public String getItemName() {
-		return itemName;
+	public int getOrderId() {
+		return orderId;
 	}
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 
-	public int getMenuId() {
-		return menuId;
-	}
-
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
-	}
-
-	public int getItemGrp1() {
-		return itemGrp1;
-	}
-
-	public void setItemGrp1(int itemGrp1) {
-		this.itemGrp1 = itemGrp1;
-	}
-
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
+	}
+
+	public float getAdvQty() {
+		return advQty;
+	}
+
+	public void setAdvQty(float advQty) {
+		this.advQty = advQty;
 	}
 
 	public String getItemId() {
@@ -80,12 +69,12 @@ public class GetOrderItemQty implements Serializable{
 		this.itemId = itemId;
 	}
 
-	public int getOrderId() {
-		return orderId;
+	public int getMenuId() {
+		return menuId;
 	}
 
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
+	public void setMenuId(int menuId) {
+		this.menuId = menuId;
 	}
 
 	public Date getProductionDate() {
@@ -96,12 +85,31 @@ public class GetOrderItemQty implements Serializable{
 		this.productionDate = productionDate;
 	}
 
-	@Override
-	public String toString() {
-		return "GetOrderItemQty [orderId=" + orderId + ", qty=" + qty + ", itemId=" + itemId + ", menuId=" + menuId
-				+ ", productionDate=" + productionDate + ", itemGrp1=" + itemGrp1 + ", itemName=" + itemName + "]";
+	public int getItemGrp1() {
+		return itemGrp1;
 	}
 
+	public void setItemGrp1(int itemGrp1) {
+		this.itemGrp1 = itemGrp1;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	@Override
+	public String toString() {
+		return "GetOrderItemQty [orderId=" + orderId + ", qty=" + qty + ", advQty=" + advQty + ", itemId=" + itemId
+				+ ", menuId=" + menuId + ", productionDate=" + productionDate + ", itemGrp1=" + itemGrp1 + ", itemName="
+				+ itemName + "]";
+	}
+
+}
+
 	 
 	 
 	
@@ -111,4 +119,4 @@ public class GetOrderItemQty implements Serializable{
 	
 	
 	
-}
+

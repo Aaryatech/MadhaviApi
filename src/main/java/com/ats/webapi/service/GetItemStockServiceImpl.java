@@ -30,9 +30,9 @@ public class GetItemStockServiceImpl implements GetItemStockService{
 	}
 
 	@Override
-	public int getRegTotalGrnGvn(int frId, String fromDate, String toDate, int itemId) {
+	public float getRegTotalGrnGvn(int frId, String fromDate, String toDate, int itemId) {
 		
-		int grnGvn=calculationRepository.getRegTotalGrnGvn(frId,fromDate,toDate,itemId);
+		float grnGvn=calculationRepository.getRegTotalGrnGvn(frId,fromDate,toDate,itemId);
 		return grnGvn;
 	}
 
@@ -59,9 +59,9 @@ public class GetItemStockServiceImpl implements GetItemStockService{
 
 	// auto grn /gvn
 	@Override
-	public int getTotalGrnGvnUptoDateTime(int frId, String fromDateTime, String toDateTime, int itemId) {
+	public float getTotalGrnGvnUptoDateTime(int frId, String fromDateTime, String toDateTime, int itemId) {
 
-		int grnGvn =calculationRepository.getTotalGrnGvnUptoDateTime(frId, fromDateTime, toDateTime, itemId);
+		float grnGvn =calculationRepository.getTotalGrnGvnUptoDateTime(frId, fromDateTime, toDateTime, itemId);
 		
 		return grnGvn;
 	}

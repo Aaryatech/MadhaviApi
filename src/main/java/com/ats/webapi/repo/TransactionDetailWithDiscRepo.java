@@ -78,7 +78,7 @@ public interface TransactionDetailWithDiscRepo extends JpaRepository<Transaction
 					"    ,\r\n" + 
 					"    t_transaction_detail.tr_id\r\n" + 
 					"DESC\r\n" + 
-					"LIMIT 50", nativeQuery = true)
+					"", nativeQuery = true)
 			List<TransactionDetailWithDisc> getCustBillsTransactionToday(@Param("frId") int frId, @Param("tdayDate") String tdayDate);
 			
 			

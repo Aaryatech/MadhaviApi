@@ -42,9 +42,12 @@ import com.ats.webapi.model.phpwebservice.GetLogin;
 import com.ats.webapi.model.phpwebservice.SpecialCakeBean;
 import com.ats.webapi.model.phpwebservice.SpecialCakeBeanList;
 import com.ats.webapi.model.remarks.GetAllRemarksList;
+import com.ats.webapi.repo.BillTransactionRepo;
 import com.ats.webapi.repo.BillTransationRepo;
 import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repositories.ExpenseTransactionRepo;
+import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FranchiseForDispatchRepository;
@@ -52,6 +55,7 @@ import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GenerateBillRepository;
 import com.ats.webapi.repository.GetBillDetailsRepository;
+import com.ats.webapi.repository.GetBillHeaderRepository;
 import com.ats.webapi.repository.GetGrnItemConfigRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
 import com.ats.webapi.repository.GetReorderByStockTypeRepository;
@@ -68,6 +72,7 @@ import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.RouteMasterRepository;
 import com.ats.webapi.repository.RouteRepository;
 import com.ats.webapi.repository.SellBillDetailRepository;
+import com.ats.webapi.repository.SellBillHeaderNewRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.SettingRepository;
 import com.ats.webapi.repository.SpCakeOrderHisRepository;
@@ -424,7 +429,7 @@ public class RestApiController {
 	RouteMasterRepository routeMasterRepository;
 	@Autowired
 	SellBillDetailRepository sellBillDetailRepository;
-	
+
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
 
@@ -777,7 +782,7 @@ public class RestApiController {
 	public @ResponseBody GetBillsForFrList getBillsForFrService(@RequestParam("frId") int frId,
 			@RequestParam("curDate") String curDate) {
 
-		String back15Days = incrementDate(curDate, -5);
+		String back15Days = incrementDate(curDate, -25);
 		java.sql.Date cDate = Common.convertToSqlDate(curDate);
 		java.sql.Date back15Date = Common.convertToSqlDate(back15Days);
 
@@ -809,7 +814,7 @@ public class RestApiController {
 
 		java.sql.Date bilDate = Common.convertToSqlDate(billDate);
 
-		System.out.println("Fr Id ::: " + frId);
+		System.out.println("Fr Id ::: " + frId+"         DATE : "+bilDate);
 
 		GetBillsForFrList billsForFrLisr = getBillsForFrService.getBillForFrByDate(frId, bilDate);
 
@@ -1097,8 +1102,6 @@ public class RestApiController {
 		return Updatevalue;
 
 	}
-	
-	
 
 	@Autowired
 	SettingRepository settingRepository;
@@ -1111,7 +1114,7 @@ public class RestApiController {
 		return Updatevalue;
 
 	}
-	
+
 	@RequestMapping(value = "/getSettingDataById", method = RequestMethod.GET)
 	public @ResponseBody Setting getSettingDataById(@RequestParam("settingId") int settingId) {
 
@@ -1120,19 +1123,18 @@ public class RestApiController {
 		return Updatevalue;
 
 	}
-	
+
 	@RequestMapping(value = "/updateValueForFrEmpCode", method = RequestMethod.GET)
 	public @ResponseBody int updateValueForFrEmpCode() {
 
 		Setting setting = settingRepository.findBySettingId(57);
-		int val=setting.getSettingValue()+1;
-		
+		int val = setting.getSettingValue() + 1;
+
 		int value = settingRepository.udatekeyvalueForFrEmpCode(val);
-		
+
 		return value;
 
 	}
-	
 
 	@RequestMapping(value = "/getProductionTimeSlot", method = RequestMethod.GET)
 	public @ResponseBody int getProductionTimeSlot() {
@@ -1271,6 +1273,59 @@ public class RestApiController {
 			e.printStackTrace();
 		}
 		return jsonBillHeader;
+
+	}
+
+	@Autowired
+	BillTransactionRepo billTransactionRepo;
+	@Autowired
+	ExpenseRepo expenseRepo;
+
+	// Anmol
+	@RequestMapping(value = { "/updateBillTranscForBillSettlement" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateBillTranscForBillSettlement(@RequestBody List<BillTransaction> billTransactionList)
+			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		Info info = new Info();
+
+		try {
+
+			if (billTransactionList != null) {
+
+				int expId = billTransactionList.get(0).getExInt1();
+
+				String billIds = "";
+
+				for (int i = 0; i < billTransactionList.size(); i++) {
+
+					BillTransaction bill = billTransactionList.get(i);
+
+					int res = billTransactionRepo.upDateBillAmt(bill.getPendingAmt(), bill.getPaidAmt(),
+							bill.getBillHeadId(), bill.getIsClosed());
+
+					billIds = billIds + "," + bill.getBillTransId() + "-" + bill.getExVar1();
+
+				}
+
+				int res = expenseRepo.updateExpenseBillSettle(expId, billIds.substring(1), 1);
+
+				info.setError(false);
+				info.setMessage("Success");
+
+			} else {
+				info.setError(true);
+				info.setMessage("Error");
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in updateBillTranscForBillSettlement rest Api " + e.getMessage());
+			e.printStackTrace();
+			info.setError(true);
+			info.setMessage("Error");
+
+		}
+		return info;
 
 	}
 
@@ -1449,6 +1504,60 @@ public class RestApiController {
 
 	}
 
+	
+	@Autowired
+	GetBillHeaderRepository getBillHeaderRepository;
+	
+	// POS PURCHASE BILLS------------------------
+	@RequestMapping(value = "/getBillHeaderPOS", method = RequestMethod.POST)
+	public @ResponseBody GetBillHeaderList getBillHeaderPOS(@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+		GetBillHeaderList billHeaderList = new GetBillHeaderList();
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		System.err.println("data*****" + fromDate + toDate + frId.toString());
+		try {
+
+			List<GetBillHeader> billHeaders=getBillHeaderRepository.getBillHeaderForFrAllOPS(frId, fromDate, toDate);
+			
+			billHeaderList.setGetBillHeaders(billHeaders);
+			
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return billHeaderList;
+
+	}
+	
+	@RequestMapping(value = "/getBillHeaderPOSOnlyRegBills", method = RequestMethod.POST)
+	public @ResponseBody GetBillHeaderList getBillHeaderPOSOnlyRegBills(@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+		GetBillHeaderList billHeaderList = new GetBillHeaderList();
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		System.err.println("data*****" + fromDate + toDate + frId.toString());
+		try {
+
+			List<GetBillHeader> billHeaders=getBillHeaderRepository.getBillHeaderForFrAllOPSOnlyRegBill(frId, fromDate, toDate);
+			
+			billHeaderList.setGetBillHeaders(billHeaders);
+			
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return billHeaderList;
+
+	}
+	
+
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
@@ -1574,10 +1683,10 @@ public class RestApiController {
 
 		return billList;
 
-	} 
-	
+	}
+
 	@RequestMapping(value = "/generateBillForAdvOrder", method = RequestMethod.POST)
-	public @ResponseBody GenerateBillList generateBillAdvOrder(@RequestParam("advOrdHeaderId")int advOrdHeaderId) {
+	public @ResponseBody GenerateBillList generateBillAdvOrder(@RequestParam("advOrdHeaderId") int advOrdHeaderId) {
 
 		GenerateBillList billList = generateBillService.generateBillForAdvOrderByOrderId(advOrdHeaderId);
 
@@ -1727,10 +1836,10 @@ public class RestApiController {
 		return jsonFr;
 
 	}
+
 	@RequestMapping(value = { "/frEmpById" }, method = RequestMethod.POST)
 	@ResponseBody
-	public String frEmpById(@RequestParam("empId") int empId,
-			@RequestParam("frId") int frId) {
+	public String frEmpById(@RequestParam("empId") int empId, @RequestParam("frId") int frId) {
 
 		String jsonFr = franchiseeService.findFrEmployeeByEmpId(empId, frId);
 		System.out.println("JsonString" + jsonFr);
@@ -1945,7 +2054,7 @@ public class RestApiController {
 		billList = generateBillRepository.getBillOfAdvOrder(list);
 		System.err.println("inside billList " + billList.toString());
 
-	return billList;
+		return billList;
 
 	}
 
@@ -2553,11 +2662,10 @@ public class RestApiController {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		/*try {
-			SQLfbaLicenseDate = Common.convertToSqlDate(fbaLicenseDate);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}*/
+		/*
+		 * try { SQLfbaLicenseDate = Common.convertToSqlDate(fbaLicenseDate); } catch
+		 * (Exception e) { // TODO: handle exception }
+		 */
 		Franchisee franchisee = new Franchisee();
 		// franchisee.setFrId(frId);
 		franchisee.setFrName(frName);
@@ -2936,6 +3044,24 @@ public class RestApiController {
 
 		return categoryList;
 	}
+
+	/*
+	 * @Autowired CategoryRepository categoryRepository;
+	 * 
+	 * @RequestMapping(value = { "/showAllCategoryByMenuIdList" }, method =
+	 * RequestMethod.POST) public @ResponseBody CategoryList
+	 * showAllCategoryByMenuIdList(@RequestParam List<Integer> menuId) {
+	 * 
+	 * List<MCategory> jsonCategoryResponse =
+	 * categoryRepository.findCatIdByMenuIdList(menuId); CategoryList categoryList =
+	 * new CategoryList(); ErrorMessage errorMessage = new ErrorMessage();
+	 * 
+	 * errorMessage.setError(false); errorMessage.setMessage("Success");
+	 * categoryList.setErrorMessage(errorMessage);
+	 * categoryList.setmCategoryList(jsonCategoryResponse);
+	 * 
+	 * return categoryList; }
+	 */
 
 	@RequestMapping(value = { "/findAllOnlyCategory" }, method = RequestMethod.GET)
 	public @ResponseBody CategoryList findAllOnlyCategory() {
@@ -3913,11 +4039,11 @@ public class RestApiController {
 		Item item = itemService.findItem(id);
 		return item;
 	}
-	
+
 	@RequestMapping(value = { "/getFranchiseeNew" }, method = RequestMethod.POST)
 	public @ResponseBody Franchisee getFranchiseeNew(@RequestParam("frId") int frId) {
 
-		System.err.println("frId"+frId);
+		System.err.println("frId" + frId);
 		Franchisee franchisee = franchiseeService.findFranchisee(frId);
 		return franchisee;
 	}
@@ -3925,8 +4051,8 @@ public class RestApiController {
 	// Get Franchisee
 	@RequestMapping(value = { "/getFranchisee" }, method = RequestMethod.GET)
 	public @ResponseBody Franchisee findFranchisee(@RequestParam("frId") int frId) {
-		
-		System.err.println("frId"+frId);
+
+		System.err.println("frId" + frId);
 		Franchisee franchisee = franchiseeService.findFranchisee(frId);
 
 		return franchisee;
@@ -4364,11 +4490,10 @@ public class RestApiController {
 			}
 			Date utilFbaLicenseDate = null;
 
-			/*try {
-				utilFbaLicenseDate = sdf.parse(fbaLicenseDate);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
+			/*
+			 * try { utilFbaLicenseDate = sdf.parse(fbaLicenseDate); } catch (Exception e) {
+			 * e.printStackTrace(); }
+			 */
 
 			Franchisee franchisee = franchiseeService.findFranchisee(frId);
 
@@ -5016,6 +5141,38 @@ public class RestApiController {
 		return getSellBillHeaderList;
 
 	}
+	
+	@Autowired
+	SellBillHeaderNewRepo sellBillHeaderNewRepo;
+	
+	//Anmol - 12-2-2020
+	@RequestMapping(value = "/getSellBillHeaderNew", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNew(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,@RequestParam("custId") List<String> custId) {
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		
+		List<SellBillHeaderNew> getSellBillHeaderList;
+		
+		System.err.println("CUST -------------------- "+custId);
+		
+		if(custId.contains("0")) {
+			System.err.println("CUST -------------------- 0");
+
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate,frId);
+		}else {
+			System.err.println("CUST -----------*********** "+custId);
+
+			
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeader(fromDate, toDate,frId,custId);
+		}
+
+		System.out.println("List Sell Bill Header  " + getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
+	
 
 	@RequestMapping(value = "/getSellBillDetail", method = RequestMethod.POST)
 	public @ResponseBody List<GetSellBillDetail> getSellBillDetail(@RequestParam("sellBillNo") int sellBillNo) {
@@ -5166,6 +5323,32 @@ public class RestApiController {
 
 		Info info = new Info();
 		info = userService.insertUser(user);
+		return info;
+	}
+
+	@Autowired
+	private UserRepository userRepository;
+
+	// Anmol 27-1-20---------------------
+	// @RequestMapping(value = { "/checkDuplicateUsername" }, method =
+	// RequestMethod.POST)
+	@RequestMapping("/checkDuplicateUsername")
+	public @ResponseBody Info checkDuplicateUsername(@RequestParam("userName") String userName) {
+		Info info = new Info();
+		List<User> userList = userRepository.findByUsernameIgnoreCaseAndDelStatus(userName, 0);
+		if (userList != null) {
+			if (userList.isEmpty()) {
+				info.setError(false);
+				info.setMessage("not present");
+			} else {
+				info.setError(true);
+				info.setMessage("present");
+			}
+
+		} else {
+			info.setError(false);
+			info.setMessage("not present");
+		}
 		return info;
 	}
 
@@ -5388,8 +5571,7 @@ public class RestApiController {
 		return itemResponse;
 
 	}
-	
-	
+
 	@Autowired
 	ItemListForCustomerBillRepo itemListForCustomerBillRepo;
 
@@ -5422,17 +5604,13 @@ public class RestApiController {
 		return itm;
 
 	}
-	
-	
-	
+
 	@RequestMapping("/getSellBillItemsBySellBillNoForEdit")
-	public @ResponseBody SellBillHeader getBillHeaderById(@RequestParam int sellBillNo)
-			throws ParseException {
+	public @ResponseBody SellBillHeader getBillHeaderById(@RequestParam int sellBillNo) throws ParseException {
 		SellBillHeader res = null;
 		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
 		try {
 			res = sellBillHeaderRepository.getBillHeaderById(sellBillNo);
-
 
 			System.err.println("data is" + res.toString());
 
@@ -5444,8 +5622,7 @@ public class RestApiController {
 		return res;
 
 	}
-	
-	
+
 	@RequestMapping("/getSellBillDetailListByHeaderId")
 	public @ResponseBody List<SellBillDetail> getSellBillDetailListByHeaderId(@RequestParam int sellBillNo)
 			throws ParseException {
@@ -5464,16 +5641,13 @@ public class RestApiController {
 		return itm;
 
 	}
-	
-	
+
 	@RequestMapping(value = { "/getBillHeaderBySellBillNo" }, method = RequestMethod.POST)
-	public @ResponseBody SellBillHeader getBillHeaderBySellBillNo(@RequestParam int sellBillNo)
-			throws ParseException {
+	public @ResponseBody SellBillHeader getBillHeaderBySellBillNo(@RequestParam int sellBillNo) throws ParseException {
 		SellBillHeader res = null;
 		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
 		try {
 			res = sellBillHeaderRepository.getBillHeaderById(sellBillNo);
-
 
 			System.err.println("data is" + res.toString());
 
@@ -5485,6 +5659,5 @@ public class RestApiController {
 		return res;
 
 	}
-	
 
 }

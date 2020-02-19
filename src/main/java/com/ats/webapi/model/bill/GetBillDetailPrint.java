@@ -32,10 +32,10 @@ public class GetBillDetailPrint {
 	private int itemId;
 	
 	@Column(name="order_qty")
-	private int orderQty;
+	private float orderQty;
 	
 	@Column(name="bill_qty")
-	private int billQty;
+	private float billQty;
 	
 	@Column(name="order_id")
 	private int orderId;
@@ -120,25 +120,6 @@ public class GetBillDetailPrint {
 	
 	@Column(name="disc_amt")
 	private float discAmt;//new
-	
-	
-	
-	
-	public float getDiscPer() {
-		return discPer;
-	}
-
-	public void setDiscPer(float discPer) {
-		this.discPer = discPer;
-	}
-
-	public float getDiscAmt() {
-		return discAmt;
-	}
-
-	public void setDiscAmt(float discAmt) {
-		this.discAmt = discAmt;
-	}
 
 	public int getBillDetailNo() {
 		return billDetailNo;
@@ -188,19 +169,19 @@ public class GetBillDetailPrint {
 		this.itemId = itemId;
 	}
 
-	public int getOrderQty() {
+	public float getOrderQty() {
 		return orderQty;
 	}
 
-	public void setOrderQty(int orderQty) {
+	public void setOrderQty(float orderQty) {
 		this.orderQty = orderQty;
 	}
 
-	public int getBillQty() {
+	public float getBillQty() {
 		return billQty;
 	}
 
-	public void setBillQty(int billQty) {
+	public void setBillQty(float billQty) {
 		this.billQty = billQty;
 	}
 
@@ -396,6 +377,22 @@ public class GetBillDetailPrint {
 		this.subCatId = subCatId;
 	}
 
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "GetBillDetailPrint [billDetailNo=" + billDetailNo + ", billNo=" + billNo + ", menuId=" + menuId
@@ -409,6 +406,10 @@ public class GetBillDetailPrint {
 				+ itemHsncd + ", itemUom=" + itemUom + ", subCatId=" + subCatId + ", discPer=" + discPer + ", discAmt="
 				+ discAmt + "]";
 	}
-    
+	
+	
+	
+	
+	
 	
 }

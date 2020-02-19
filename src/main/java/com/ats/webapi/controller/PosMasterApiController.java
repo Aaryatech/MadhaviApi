@@ -105,5 +105,31 @@ public class PosMasterApiController {
 		return info;
 
 	}
+	
+	
+	@RequestMapping(value = { "/updateCustAddressAndKm" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateCustAddressAndKm(@RequestParam String address,@RequestParam String km ,@RequestParam int custId) {
+
+		Info info = new Info();
+		try {
+			int res = customerRepo.updateAddressAndKm(address, km, custId);
+
+			if (res > 0) {
+				info.setError(false);
+
+			} else {
+				info.setError(true);
+
+			}
+		} catch (Exception e) {
+
+			System.err.println("Exce in updateCustAddressAndKm  " + e.getMessage());
+			e.printStackTrace();
+			info.setError(true);
+		}
+
+		return info;
+
+	}
 
 }

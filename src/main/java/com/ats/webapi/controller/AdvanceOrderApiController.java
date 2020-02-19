@@ -20,11 +20,13 @@ import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.CustomerAmounts;
 import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
+import com.ats.webapi.model.ItemOrderHis;
 import com.ats.webapi.model.ItemOrderList;
 import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.TransactionDetail;
 import com.ats.webapi.model.TransactionDetailWithDisc;
+import com.ats.webapi.model.advorder.AdvOrderForAdminDash;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.advorder.GetAdvanceOrderList;
@@ -40,6 +42,7 @@ import com.ats.webapi.repo.TransactionDetailWithDiscRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.TransactionDetailRepository;
+import com.ats.webapi.repository.advorder.AdvOrderForAdminDashRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 import com.ats.webapi.repository.advorder.AdvanceOrderHeaderRepo;
 import com.ats.webapi.repository.advorder.GetAdvanceOrderListRepo;
@@ -231,14 +234,54 @@ public class AdvanceOrderApiController {
 
 		return advList;
 	}
+	
+	
+	@Autowired
+	AdvOrderForAdminDashRepo advOrderForAdminDashRepo;
+
+	@RequestMapping(value = { "/advanceOrderHistoryHeaderAdminForAdminDash" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdvOrderForAdminDash> advanceOrderHistoryHeaderAdminForAdminDash(@RequestParam String prodDate,
+			@RequestParam int isBilled) {
+		List<AdvOrderForAdminDash> advList = new ArrayList<AdvOrderForAdminDash>();
+
+		try {
+			if (isBilled < 0) {
+				advList = advOrderForAdminDashRepo.getAdvanceOrderListAdminDash(prodDate);
+			} else {
+				advList = advOrderForAdminDashRepo.getAdvanceOrderBillNotGenAdminDash(isBilled);
+			}
+		} catch (Exception e) {
+			System.out.println("Exce in advanceOrderHistoryHeaderAdminForAdminDash  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
 
 	@RequestMapping("/advanceOrderHistoryDetailForAdmin")
 	public @ResponseBody ItemOrderList advanceOrderHistoryDetailForAdmin(@RequestParam int headId)
 			throws ParseException {
 
 		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
+		
+		System.err.println("RESULT ------------------ "+orderList);
 
 		return orderList;
+
+	}
+	
+	@RequestMapping("/advanceOrderHistoryDetailForAdmin1")
+	public @ResponseBody List<ItemOrderHis> advanceOrderHistoryDetailForAdmin1(@RequestParam int headId)
+			throws ParseException {
+		
+		List<ItemOrderHis> res=new ArrayList<>();
+
+		ItemOrderList orderList = orderService.searchAdvOrderHistoryForAdmin(headId);
+		res=orderList.getItemOrderList();
+		
+		System.err.println("RESULT ------------------ "+orderList);
+
+		return res;
 
 	}
 
@@ -508,6 +551,62 @@ public class AdvanceOrderApiController {
 		return orderList;
 
 	}
+	
+	
+	//DATE
+	@RequestMapping("/getAllSellCustBillTodaysBillWithDate")
+	public @ResponseBody List<SellBillHeader> getAllSellCustBillTodaysBillWithDate(@RequestParam int custId, @RequestParam int frId,
+			@RequestParam int flag, @RequestParam int tabType,@RequestParam String date) throws ParseException {
+	
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+		List<SellBillHeader> orderList = new ArrayList<SellBillHeader>();
+		System.err.println("tabType*" + tabType);
+		Customer cust = new Customer();
+		try {
+			if (tabType == 1) {
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getSellBillHeader(custId, frId);
+
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsPending50(custId, frId);
+
+				}
+				cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
+
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
+			} else {
+
+				if (flag == 1) {
+					orderList = sellBillHeaderRepository.getCustBillsTodays(date, frId);
+				} else if (flag == 2) {
+					orderList = sellBillHeaderRepository.getCustBillsTodaysPending(date, frId);
+				}
+
+				System.err.println("cust is " + cust.toString());
+				for (int i = 0; i < orderList.size(); i++) {
+					cust = customerRepo.findByCustIdAndDelStatus(orderList.get(i).getCustId(), 0);
+
+					orderList.get(i).setUserName(cust.getCustName());
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return orderList;
+
+	}
 
 
 	@RequestMapping(value = { "/getAllSellCustBillForCreditNote" }, method = RequestMethod.POST)
@@ -570,17 +669,15 @@ public class AdvanceOrderApiController {
 
 	@RequestMapping("/getAllSellCustBillTransactionWithDisc")
 	public @ResponseBody List<TransactionDetailWithDisc> getAllSellCustBillTransactionWithDisc(@RequestParam int custId,
-			@RequestParam int frId, @RequestParam int tabType) throws ParseException {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
+			@RequestParam int frId, @RequestParam int tabType, @RequestParam String date) throws ParseException {
+		
 		List<TransactionDetailWithDisc> orderList = new ArrayList<TransactionDetailWithDisc>();
-		System.err.println("tabType*" + sf.format(date));
 		try {
 			if (tabType == 1) {
 
 				orderList = transactionDetailWithDiscRepo.getCustBillsTransaction(custId, frId);
 			} else {
-				orderList = transactionDetailWithDiscRepo.getCustBillsTransactionToday(frId, sf.format(date));
+				orderList = transactionDetailWithDiscRepo.getCustBillsTransactionToday(frId, date);
 			}
 
 		} catch (Exception e) {
@@ -674,6 +771,8 @@ public class AdvanceOrderApiController {
 		try {
 
 			int del = sellBillHeaderRepository.deleteBill(status, sellBillNo);
+	       	 transactionDetailRepository.deleteTransactionDetails(sellBillNo);
+
 			if (del > 0) {
 				inf.setError(false);
 				inf.setMessage("success");
@@ -753,6 +852,30 @@ public class AdvanceOrderApiController {
 			}
 		} catch (Exception e) {
 			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrId  " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return advList;
+	}
+	
+	
+	
+	@RequestMapping(value = { "/advOrderHistoryHeaderAdminFdTdFrIdForAdminDash" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdvOrderForAdminDash> advOrderHistoryHeaderAdminFdTdFrIdForAdminDash(@RequestParam String fromDate,
+			@RequestParam String toDate, @RequestParam int frId) {
+		System.err.println("Hi in advOrderHistoryHeaderAdminFdTdFrIdForAdminDash");
+		List<AdvOrderForAdminDash> advList = new ArrayList<AdvOrderForAdminDash>();
+
+		try {
+			if (frId < 0) {
+				advList = advOrderForAdminDashRepo.getAdvOrderListfdTdAllFrAdminDash(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate));
+			} else {
+				advList = advOrderForAdminDashRepo.getAdvOrderListfdTdSpecFrAdminDash(Common.convertToYMD(fromDate),
+						Common.convertToYMD(toDate), frId);
+			}
+		} catch (Exception e) {
+			System.out.println("Exce in advOrderHistoryHeaderAdminFdTdFrIdForAdminDash  " + e.getMessage());
 			e.printStackTrace();
 		}
 

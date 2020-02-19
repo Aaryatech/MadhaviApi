@@ -452,7 +452,7 @@ public class MasterController {
         //------------------------------------------------------------------------
 		// ------------------------------------------------------------
 		@RequestMapping(value = { "/updateItemHsnAndPer" }, method = RequestMethod.POST)
-		public @ResponseBody Info updateItemHsnAndPer(@RequestParam("items") List<Integer> items,@RequestParam("itemHsncd")String itemHsncd,@RequestParam("itemTax1")double itemTax1,@RequestParam("itemTax2")double itemTax2,@RequestParam("itemTax3")double itemTax3) {
+		public @ResponseBody Info updateItemHsnAndPer(@RequestParam("items") List<Integer> items,@RequestParam("itemHsncd")String itemHsncd,@RequestParam("itemTax1")float itemTax1,@RequestParam("itemTax2")float itemTax2,@RequestParam("itemTax3")float itemTax3) {
 			Info info=null;
 			try {
 				System.err.println(items+"hsn"+itemHsncd+"t1"+itemTax1+"t2"+itemTax2+"t3"+itemTax3);
@@ -461,6 +461,10 @@ public class MasterController {
 			for(Integer id:items) {
 					System.err.println(id+"hsn"+itemHsncd+"t1"+itemTax1+"t2"+itemTax2+"t3"+itemTax3);
 
+					System.err.println("itemTax1 ------- "+itemTax1);
+					System.err.println("itemTax2 ------- "+itemTax2);
+					System.err.println("itemTax3 ------- "+itemTax3);
+					
 			     int isUpdate=itemRepository.updateItemHsnAndPerInItem(id,itemTax1,itemTax2,itemTax3);
 			     try { 
 					 int isUpdated = itemSuppRepository.updateItemHsnAndPerInSup(id,itemHsncd);

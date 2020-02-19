@@ -86,11 +86,18 @@ public class CreditNotePosController {
 
 	@RequestMapping(value = { "/getPosCreditNoteHeaderDisp" }, method = RequestMethod.POST)
 	public @ResponseBody List<CreditNotePosHeaderDisp> getPosCreditNoteHeaderDisp(@RequestParam String fromDate,
-			@RequestParam String toDate, @RequestParam int custId) {
+			@RequestParam String toDate, @RequestParam int custId,@RequestParam int frId) {
 		List<CreditNotePosHeaderDisp> advList = new ArrayList<CreditNotePosHeaderDisp>();
 
 		try {
-			advList = creditNotePosHeaderDispRepo.getCrnPosHeader(fromDate, toDate, custId);
+			
+			if(custId==0) {
+				advList = creditNotePosHeaderDispRepo.getCrnPosHeaderAllCust(fromDate, toDate,frId);				
+			}else {
+				advList = creditNotePosHeaderDispRepo.getCrnPosHeader(fromDate, toDate, custId,frId);
+			}
+			
+
 
 		} catch (Exception e) {
 			System.out.println("Exce in getPosCreditNoteHeaderDisp  " + e.getMessage());

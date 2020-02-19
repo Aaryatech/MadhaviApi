@@ -59,6 +59,9 @@ public class GetCurrentStockDetails {
 
 	@Transient
 	private int id;
+	
+	@Transient
+	private float sellCreditNote;
 
 	@PostLoad
 	private void onLoad() {
@@ -185,7 +188,19 @@ public class GetCurrentStockDetails {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	
 
+	public float getSellCreditNote() {
+		return sellCreditNote;
+	}
+
+	public void setSellCreditNote(float sellCreditNote) {
+		this.sellCreditNote = sellCreditNote;
+	}
+
+	
+	
 	@Override
 	public String toString() {
 		return "GetCurrentStockDetails [stockDetailId=" + stockDetailId + ", itemId=" + itemId + ", itemName="
@@ -193,7 +208,8 @@ public class GetCurrentStockDetails {
 				+ ", regTotalPurchase=" + regTotalPurchase + ", spTotalPurchase=" + spTotalPurchase
 				+ ", regTotalGrnGvn=" + regTotalGrnGvn + ", regTotalSell=" + regTotalSell + ", spTotalSell="
 				+ spTotalSell + ", stockHeaderId=" + stockHeaderId + ", currentRegStock=" + currentRegStock
-				+ ", currentSpStock=" + currentSpStock + ", reOrderQty=" + reOrderQty + ", id=" + id + "]";
+				+ ", currentSpStock=" + currentSpStock + ", reOrderQty=" + reOrderQty + ", id=" + id
+				+ ", sellCreditNote=" + sellCreditNote + "]";
 	}
 
 	

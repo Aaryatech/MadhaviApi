@@ -36,6 +36,12 @@ public interface AdvanceOrderDetailRepo extends JpaRepository<AdvanceOrderDetail
 
 	@Query(value="select adv_header_id from  t_adv_order_detail WHERE adv_detail_id=:advDetailId",nativeQuery=true)
 	int getAdvOrderHeaderNo(@Param("advDetailId") int advDetailId);
+	
+	@Query(value="SELECT COALESCE((h.is_daily_mart),1) FROM t_adv_order_header h,t_adv_order_detail d WHERE h.adv_header_id=d.adv_header_id AND d.adv_detail_id=:advDetailId ",nativeQuery=true)
+	int getIsDairyMartStatus(@Param("advDetailId") int advDetailId);
+	
+	
+	
 
 	
 }

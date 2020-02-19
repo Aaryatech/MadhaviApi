@@ -1,6 +1,5 @@
 package com.ats.webapi.model;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,52 +11,45 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-public class GetSellBillHeader {
+public class SellBillHeaderNew {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private String id;
-	
-	@Column(name="sell_bill_no")
+
 	private int sellBillNo;
-	
-	@Column(name="invoice_no")
+
 	private String invoiceNo;
-	
-	@Column(name="bill_date")
+
 	private Date billDate;
 
-	@Column(name="taxable_amt")
 	private float taxableAmt;
-	
-	@Column(name="total_tax")
+
 	private float totalTax;
-	
-	@Column(name="grand_total")
+
 	private float grandTotal;
-	
-	@Column(name="paid_amt")
+
 	private float paidAmt;
-	
-	@Column(name="remaining_amt")
+
 	private float remainingAmt;
-	
-	@Column(name="payment_mode")
+
 	private String paymentMode;
-	
-	@Column(name="discount_per")
+
 	private int discountPer;
-	
-	@Column(name="payable_amt")
+
 	private float payableAmt;
 
-	@Column(name="fr_name")
 	private String frName;
-	
-	@Column(name="bill_type")
-	private char billType;
-	
-    
+
+	private int custId;
+	private String custName;
+	private String phoneNumber;
+	private String gstNo;
+	private String address;
+	private float cash;
+	private float card;
+	private float ePay;
+
 	public String getId() {
 		return id;
 	}
@@ -81,6 +73,7 @@ public class GetSellBillHeader {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
+
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getBillDate() {
 		return billDate;
@@ -162,22 +155,78 @@ public class GetSellBillHeader {
 		this.frName = frName;
 	}
 
-	public char getBillType() {
-		return billType;
+	public int getCustId() {
+		return custId;
 	}
 
-	public void setBillType(char billType) {
-		this.billType = billType;
+	public void setCustId(int custId) {
+		this.custId = custId;
+	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getGstNo() {
+		return gstNo;
+	}
+
+	public void setGstNo(String gstNo) {
+		this.gstNo = gstNo;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public float getCash() {
+		return cash;
+	}
+
+	public void setCash(float cash) {
+		this.cash = cash;
+	}
+
+	public float getCard() {
+		return card;
+	}
+
+	public void setCard(float card) {
+		this.card = card;
+	}
+
+	public float getePay() {
+		return ePay;
+	}
+
+	public void setePay(float ePay) {
+		this.ePay = ePay;
 	}
 
 	@Override
 	public String toString() {
-		return "GetSellBillHeader [id=" + id + ", sellBillNo=" + sellBillNo + ", invoiceNo=" + invoiceNo + ", billDate="
+		return "SellBillHeaderNew [id=" + id + ", sellBillNo=" + sellBillNo + ", invoiceNo=" + invoiceNo + ", billDate="
 				+ billDate + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal
 				+ ", paidAmt=" + paidAmt + ", remainingAmt=" + remainingAmt + ", paymentMode=" + paymentMode
-				+ ", discountPer=" + discountPer + ", payableAmt=" + payableAmt + ", frName=" + frName + ", billType="
-				+ billType + "]";
+				+ ", discountPer=" + discountPer + ", payableAmt=" + payableAmt + ", frName=" + frName + ", custId="
+				+ custId + ", custName=" + custName + ", phoneNumber=" + phoneNumber + ", gstNo=" + gstNo + ", address="
+				+ address + ", cash=" + cash + ", card=" + card + ", ePay=" + ePay + "]";
 	}
 
-	
 }

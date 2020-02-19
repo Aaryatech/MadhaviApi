@@ -21,7 +21,7 @@ public class GetProductionDetail {
 
 
 	//@Column(name="production_qty")
-	private int qty;
+	private float qty;
 	 
 	@Column(name="item_id")
 	private int itemId;
@@ -55,11 +55,13 @@ public class GetProductionDetail {
 		this.itemName = itemName;
 	}
 
-	public int getQty() {
+	
+
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 

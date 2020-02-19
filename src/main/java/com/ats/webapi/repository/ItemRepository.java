@@ -89,8 +89,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	@Transactional
 	@Modifying
 	@Query("UPDATE Item i SET itemTax1=:itemTax1,itemTax2=:itemTax2,itemTax3=:itemTax3  WHERE i.id=:id")
-	public int updateItemHsnAndPerInItem(@Param("id") Integer id, @Param("itemTax1") double itemTax1,
-			@Param("itemTax2") double itemTax2, @Param("itemTax3") double itemTax3);
+	public int updateItemHsnAndPerInItem(@Param("id") Integer id, @Param("itemTax1") float itemTax1,
+			@Param("itemTax2") float itemTax2, @Param("itemTax3") float itemTax3);
 
 	public List<Item> findByDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(int i);
 

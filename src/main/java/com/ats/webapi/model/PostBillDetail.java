@@ -33,10 +33,10 @@ public class PostBillDetail {
 	private int itemId;
 	
 	@Column(name="order_qty")
-	private int orderQty;
+	private float orderQty;
 	
 	@Column(name="bill_qty")
-	private int billQty;
+	private float billQty;
 	
 	@Column(name="order_id")
 	private int orderId;
@@ -174,21 +174,8 @@ public class PostBillDetail {
 		this.itemId = itemId;
 	}
 
-	public int getOrderQty() {
-		return orderQty;
-	}
-
-	public void setOrderQty(int orderQty) {
-		this.orderQty = orderQty;
-	}
-
-	public int getBillQty() {
-		return billQty;
-	}
-
-	public void setBillQty(int billQty) {
-		this.billQty = billQty;
-	}
+	
+	
 
 	public int getRateType() {
 		return rateType;
@@ -328,6 +315,24 @@ public class PostBillDetail {
 
 	public void setIsGrngvnApplied(int isGrngvnApplied) {
 		this.isGrngvnApplied = isGrngvnApplied;
+	}
+	
+	
+
+	public float getOrderQty() {
+		return orderQty;
+	}
+
+	public void setOrderQty(float orderQty) {
+		this.orderQty = orderQty;
+	}
+
+	public float getBillQty() {
+		return billQty;
+	}
+
+	public void setBillQty(float billQty) {
+		this.billQty = billQty;
 	}
 
 	@Override

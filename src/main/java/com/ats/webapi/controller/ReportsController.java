@@ -40,6 +40,7 @@ import com.ats.webapi.repository.DispatchOrderRepository;
 import com.ats.webapi.repository.ItemReportDetailRepo;
 import com.ats.webapi.repository.ItemReportRepo;
 import com.ats.webapi.repository.PDispatchReportRepository;
+import com.ats.webapi.repository.RepFrItemwiseSellRepository;
 import com.ats.webapi.repository.SpKgSummaryRepository;
 import com.ats.webapi.service.RepFrSellServise;
 import com.ats.webapi.service.ReportsService;
@@ -70,6 +71,9 @@ public class ReportsController {
 	@Autowired
 	SpKgSummaryRepository spKgSummaryRepository;
 
+	@Autowired
+	RepFrItemwiseSellRepository repFrItemwiseSellRepository;
+	
 	@RequestMapping(value = { "/getItemDetailReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<ItemReportDetail> getItemDetailReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("itemId") int itemId, @RequestParam("frId") int frId) {
@@ -444,8 +448,8 @@ public class ReportsController {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		if (catId.contains("5")) {
-			getRepItemwiseSellList = repFrSellServise.getItemwiseSellReportForCat5(fromDate, toDate, frId);
+		if (catId.contains("-1")) {
+			getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCat(fromDate, toDate, frId);
 
 		} else {
 			getRepItemwiseSellList = repFrSellServise.getDateItemwiseSellReport(fromDate, toDate, frId, catId);

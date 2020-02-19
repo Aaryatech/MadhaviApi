@@ -65,7 +65,7 @@ public class RegularSpCake {
     private int rateCat;
     
     @Column(name="qty")
-    private int qty;
+    private float qty;
     
     @Column(name="is_bill_generated")
     private int isBillGenerated;
@@ -223,10 +223,11 @@ public class RegularSpCake {
 	public void setRateCat(int rateCat) {
 		this.rateCat = rateCat;
 	}
-	public int getQty() {
+	
+	public float getQty() {
 		return qty;
 	}
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 	public int getIsBillGenerated() {

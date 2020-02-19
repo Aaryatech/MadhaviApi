@@ -118,9 +118,26 @@ public class ReportsServiceImpl implements ReportsService {
 	public ItemWiseDetailList getItemWiseDetailReportsubCat(int frId, int catId,int subCat, String fromDate, String toDate) {
 
 		System.out.println("Date: " + fromDate + "To" + toDate);
-		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();
-		
-		if (catId == 5) {
+		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();		
+		if (catId == -1) {
+			
+			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findAllSpecialCakeWiseDetailReport(frId,
+					fromDate, toDate);
+			
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
+		}
+		else if (catId == 5) {
 			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findSpecialCakeWiseDetailReport(frId, catId,
 					fromDate, toDate);
 

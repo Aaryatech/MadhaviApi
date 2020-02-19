@@ -31,7 +31,7 @@ public class GenerateBill {
 	int  itemId;
 	
 	@Column(name="order_qty")
-	int  orderQty;
+	float  orderQty;
 	
 	@Column(name="order_rate")
 	double  orderRate;
@@ -253,13 +253,9 @@ public class GenerateBill {
 		this.itemId = itemId;
 	}
 
-	public int getOrderQty() {
-		return orderQty;
-	}
+	
 
-	public void setOrderQty(int orderQty) {
-		this.orderQty = orderQty;
-	}
+	
 
 
 	public double getOrderRate() {
@@ -316,6 +312,16 @@ public class GenerateBill {
 
 	public void setIsSameState(int isSameState) {
 		this.isSameState = isSameState;
+	}
+	
+	
+
+	public float getOrderQty() {
+		return orderQty;
+	}
+
+	public void setOrderQty(float orderQty) {
+		this.orderQty = orderQty;
 	}
 
 	@Override

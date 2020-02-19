@@ -42,7 +42,7 @@ public class GetRepItemwiseSell {
 	@Column(name="cat_name")
 	private String catName;
 	
-	private int qty;
+	private float qty;
 	
 	private float amount;
 
@@ -102,11 +102,11 @@ public class GetRepItemwiseSell {
 		this.catName = catName;
 	}
 
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 

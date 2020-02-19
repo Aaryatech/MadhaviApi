@@ -26,6 +26,13 @@ public interface OrderCountsRepository extends JpaRepository<OrderCounts, Intege
             " ",nativeQuery=true)
 
 	List<OrderCounts> getOrderTotal(@Param("cDate") String cDate);
+    
+    
+	//Anmol -> instead of menu return category------------------
+   /* @Query (value=" SELECT SUM(t_order.order_qty) AS total, t_order.order_type as menu_id, m_category.cat_name as menu_title FROM t_order, m_category WHERE production_date =:cDate AND m_category.cat_id = t_order.order_type GROUP BY t_order.order_type " ,nativeQuery=true)
+	List<OrderCounts> getOrderTotal(@Param("cDate") String cDate);*/
+    
+     
 	 
 	
 	

@@ -222,6 +222,8 @@ public class OrderServiceImpl implements OrderService {
 			
 			 
 				orderList = itemOrderHisRepository.findByMenuIdInAndDeliveryDateAllForAdv(advHeadId);
+				
+				System.err.println("orderList------------------------------------- "+orderList);
 
 			 
 			if (orderList == null) {

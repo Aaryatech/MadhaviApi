@@ -38,7 +38,7 @@ public class ItemOrderHis implements Serializable  {
 	private String itemId;//itemId
 	
 
-	private int orderQty;//qty
+	private float orderQty;//qty
 	
 	
 	private double orderRate; //rate
@@ -70,7 +70,7 @@ public class ItemOrderHis implements Serializable  {
 	private int userId;//0
 	
 
-	private int isPositive;//discPer
+	private float isPositive;//discPer
 
 	private int menuId; //menuId
 	
@@ -111,10 +111,7 @@ public class ItemOrderHis implements Serializable  {
 		return itemId;
 	}
 
-	public int getOrderQty() {
-		return orderQty;
-	}
-
+	
 	public double getOrderRate() {
 		return orderRate;
 	}
@@ -151,9 +148,7 @@ public class ItemOrderHis implements Serializable  {
 		return userId;
 	}
 
-	public int getIsPositive() {
-		return isPositive;
-	}
+	
 
 	public int getMenuId() {
 		return menuId;
@@ -195,9 +190,7 @@ public class ItemOrderHis implements Serializable  {
 		this.itemId = itemId;
 	}
 
-	public void setOrderQty(int orderQty) {
-		this.orderQty = orderQty;
-	}
+	
 
 	public void setOrderRate(double orderRate) {
 		this.orderRate = orderRate;
@@ -235,10 +228,7 @@ public class ItemOrderHis implements Serializable  {
 		this.userId = userId;
 	}
 
-	public void setIsPositive(int isPositive) {
-		this.isPositive = isPositive;
-	}
-
+	
 	public void setMenuId(int menuId) {
 		this.menuId = menuId;
 	}
@@ -250,6 +240,35 @@ public class ItemOrderHis implements Serializable  {
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
+
+	public float getIsPositive() {
+		return isPositive;
+	}
+
+	public void setIsPositive(float isPositive) {
+		this.isPositive = isPositive;
+	}
+
+	public float getOrderQty() {
+		return orderQty;
+	}
+
+	public void setOrderQty(float orderQty) {
+		this.orderQty = orderQty;
+	}
+
+	@Override
+	public String toString() {
+		return "ItemOrderHis [orderId=" + orderId + ", orderDate=" + orderDate + ", frId=" + frId + ", orderType="
+				+ orderType + ", orderSubType=" + orderSubType + ", refId=" + refId + ", itemId=" + itemId
+				+ ", orderQty=" + orderQty + ", orderRate=" + orderRate + ", orderMrp=" + orderMrp + ", orderStatus="
+				+ orderStatus + ", orderDatetime=" + orderDatetime + ", productionDate=" + productionDate
+				+ ", deliveryDate=" + deliveryDate + ", isEdit=" + isEdit + ", editQty=" + editQty + ", userId="
+				+ userId + ", isPositive=" + isPositive + ", menuId=" + menuId + ", menuTitle=" + menuTitle
+				+ ", itemName=" + itemName + "]";
+	}
+	
+	
 	
 	
 	
