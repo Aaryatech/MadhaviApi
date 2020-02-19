@@ -11,7 +11,7 @@ import com.ats.webapi.model.SellBillHeaderNew;
 public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,Integer>{
 
 	@Query(value =  "  SELECT\r\n" + 
-			"    UUID() AS id, t_sell_bill_header.sell_bill_no, t_sell_bill_header.bill_type, t_sell_bill_header.invoice_no, t_sell_bill_header.bill_date, t_sell_bill_header.taxable_amt, t_sell_bill_header.total_tax, t_sell_bill_header.grand_total,(\r\n" + 
+			"    UUID() AS id, t_sell_bill_header.sell_bill_no, t_sell_bill_header.bill_type,t_sell_bill_header.discount_amt, t_sell_bill_header.invoice_no, t_sell_bill_header.bill_date, t_sell_bill_header.taxable_amt, t_sell_bill_header.total_tax, t_sell_bill_header.grand_total,(\r\n" + 
 			"        t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
 			"    ) paid_amt,\r\n" + 
 			"    t_sell_bill_header.remaining_amt,\r\n" + 
@@ -47,7 +47,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 	
 	
 	@Query(value =  "  SELECT\r\n" + 
-			"    UUID() AS id, t_sell_bill_header.sell_bill_no, t_sell_bill_header.bill_type, t_sell_bill_header.invoice_no, t_sell_bill_header.bill_date, t_sell_bill_header.taxable_amt, t_sell_bill_header.total_tax, t_sell_bill_header.grand_total,(\r\n" + 
+			"    UUID() AS id, t_sell_bill_header.sell_bill_no, t_sell_bill_header.bill_type, t_sell_bill_header.discount_amt, t_sell_bill_header.invoice_no, t_sell_bill_header.bill_date, t_sell_bill_header.taxable_amt, t_sell_bill_header.total_tax, t_sell_bill_header.grand_total,(\r\n" + 
 			"        t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
 			"    ) paid_amt,\r\n" + 
 			"    t_sell_bill_header.remaining_amt,\r\n" + 
