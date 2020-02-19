@@ -7,6 +7,8 @@ import javax.persistence.Id;
 public class EwayItemList {
 
 	@Id
+	private int billDetailNo;
+	
 	private String productName;
 	private String productDesc;
 	private int hsnCode;
@@ -19,6 +21,14 @@ public class EwayItemList {
 	private double cessNonAdvol;
 	private double taxableAmount;
 
+
+	public int getBillDetailNo() {
+		return billDetailNo;
+	}
+
+	public void setBillDetailNo(int billDetailNo) {
+		this.billDetailNo = billDetailNo;
+	}
 
 	public String getProductName() {
 		return productName;
