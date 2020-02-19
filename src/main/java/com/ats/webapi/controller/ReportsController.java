@@ -159,7 +159,9 @@ public class ReportsController {
 		ItemWiseDetailList ItemWiseDetailList = new ItemWiseDetailList();
 		
 		try {
-			
+			System.err.println("catId : "+catId);
+			System.err.println("subCat : "+subCat);
+			System.err.println("itemIds : "+itemIds);
 			/*if(itemIds.contains(0)) {
 				ItemWiseDetailList = reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate);
 			}else {
