@@ -9,7 +9,7 @@ public class EwayItemList {
 	@Id
 	private int billDetailNo;
 	
-	private String productName;
+	private String productName; 
 	private String productDesc;
 	private int hsnCode;
 	private double quantity;
