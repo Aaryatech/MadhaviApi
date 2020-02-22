@@ -366,6 +366,8 @@ public class FrStockApiController {
 //				String toDate=strBefore1Day;
 				
 				
+				
+				
 				totalRegSell = getItemStockService.getRegTotalSell(frId, strFirstDay, strBefore1Day, itemId);
 
 				System.out.println("Reg Purchase " + totalRegPurchase.toString());
@@ -431,10 +433,10 @@ public class FrStockApiController {
 						getCurrentStockDetails.setReOrderQty(0);
 						getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
 						
-						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg())
+						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg()+totalSellCreditNote)
 								- (totalLastRegGrnGvn + totalLastRegSell.getReg()));
 						getCurrentStockDetails.setCurrentSpStock(
-								(spOpFromDate + totalLastRegPurchase.getSp()) - (totalLastRegSell.getSp()));
+								(spOpFromDate + totalLastRegPurchase.getSp()+totalSellCreditNote) - (totalLastRegSell.getSp()));
 
 						stockDetailsList.add(getCurrentStockDetails);
 
@@ -471,10 +473,10 @@ public class FrStockApiController {
 						getCurrentStockDetails.setReOrderQty(0);
 						getCurrentStockDetails.setSellCreditNote(totalSellCreditNote);
 						
-						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg())
+						getCurrentStockDetails.setCurrentRegStock((regOpFromDate + totalLastRegPurchase.getReg()+totalSellCreditNote)
 								- (totalLastRegGrnGvn + totalLastRegSell.getReg()));
 						getCurrentStockDetails.setCurrentSpStock(
-								(spOpFromDate + totalLastRegPurchase.getSp()) - (totalLastRegSell.getSp()));
+								(spOpFromDate + totalLastRegPurchase.getSp()+totalSellCreditNote) - (totalLastRegSell.getSp()));
 
 						stockDetailsList.add(getCurrentStockDetails);
 

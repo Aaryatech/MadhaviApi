@@ -69,6 +69,29 @@ public class SalesReportBillwise implements Serializable {
 	private int isSameState;
 	 
 	 String month;
+	 
+	 private String custName;
+	 private int custId;
+	 
+	 
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+
+
+	public int getCustId() {
+		return custId;
+	}
+
+	public void setCustId(int custId) {
+		this.custId = custId;
+	}
 
 	public int getBillNo() {
 		return billNo;
@@ -214,6 +237,8 @@ public class SalesReportBillwise implements Serializable {
 	public void setMonth(String month) {
 		this.month = month;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -221,7 +246,8 @@ public class SalesReportBillwise implements Serializable {
 				+ ", frName=" + frName + ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode
 				+ ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", sgstSum="
 				+ sgstSum + ", cgstSum=" + cgstSum + ", igstSum=" + igstSum + ", roundOff=" + roundOff + ", frCity="
-				+ frCity + ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", month=" + month + "]";
+				+ frCity + ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", month=" + month + ", custName="
+				+ custName + ", custId=" + custId + "]";
 	}
 
 	

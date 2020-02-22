@@ -74,7 +74,7 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 	
 	
 	//SELL_CREDIT_NOTE
-	@Query(value = "SELECT COALESCE((SUM(p.crn_qty)),0) FROM t_credit_note_pos p WHERE p.ex_int1=:frId AND p.crn_date BETWEEN :fromDate AND :toDate AND p.item_id=:itemId", nativeQuery = true)
+	@Query(value = "SELECT COALESCE((SUM(p.crn_qty)),0) FROM t_credit_note_pos p WHERE p.is_stockable=1 AND p.ex_int1=:frId AND p.crn_date BETWEEN :fromDate AND :toDate AND p.item_id=:itemId", nativeQuery = true)
 	float getTotalSellCreditNote(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("itemId") int itemId);
 		

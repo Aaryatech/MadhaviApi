@@ -206,7 +206,7 @@ public class ScheduleTask {
 							try {
 
 								cashAmt = petty.getTotalAmt();
-								withdrawAmt = petty.getWithdrawalAmt();
+								//withdrawAmt = petty.getWithdrawalAmt();
 								opnAmt = petty.getClosingAmt();
 								cashEdtAmt = petty.getCashAmt();
 								closAmt = opnAmt+cashAmt-withdrawAmt;
