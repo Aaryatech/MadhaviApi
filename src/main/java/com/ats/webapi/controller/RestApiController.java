@@ -5661,5 +5661,30 @@ public class RestApiController {
 		return res;
 
 	}
+	
+	//Mahendra 24-2-2020
+	@RequestMapping(value = "/getRemainingAmtByCust", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getRemainingAmtByCust(@RequestParam("frId") List<String> frId) {
+
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();	
+
+		getSellBillHeaderList = sellBillHeaderNewRepo.getRemainingAmtAllCust(frId);
+		
+		System.out.println("Remaining Amt Of All Customers " + getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
+	
+	@RequestMapping(value = "/getCustRemainingAmt", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getCustRemainingAmt(@RequestParam("custId") int custId, @RequestParam("frId") List<String> frId) {
+
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();	
+
+		getSellBillHeaderList = sellBillHeaderNewRepo.getRemainingAmtByCustId(custId, frId);
+		
+		System.out.println("Remaining Amt Of Customers " + getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
 
 }
