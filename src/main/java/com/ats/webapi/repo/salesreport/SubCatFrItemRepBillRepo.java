@@ -82,5 +82,56 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 			"        m_sp_cake.sp_id   order by fr_name,sub_cat_id,item_name ", nativeQuery = true)
 	List<SubCatFrItemRepBill> getData(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
+	
+	
+	
+	//Anmol---24-02-2020--
+	@Query(value = "  SELECT\n" + 
+			"    UUID() AS id, td.bill_detail_no, SUM(td.grand_total) AS sold_amt,\n" + 
+			"    SUM(td.bill_qty) AS sold_qty,\n" + 
+			"    f.fr_name,\n" + 
+			"    sc.sub_cat_id,\n" + 
+			"    sc.sub_cat_name,\n" + 
+			"    f.fr_id,\n" + 
+			"    m_item.id AS item_id,\n" + 
+			"    m_item.item_name\n" + 
+			"FROM\n" + 
+			"    t_bill_header tb,\n" + 
+			"    t_bill_detail td,\n" + 
+			"    m_franchisee f,\n" + 
+			"    m_cat_sub sc,\n" + 
+			"    m_item\n" + 
+			"WHERE\n" + 
+			"    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.bill_no = td.bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_stockable = 1 AND tb.ex_varchar2 IN(:type)\n" + 
+			"GROUP BY\n" + 
+			"    tb.fr_id,\n" + 
+			"    m_item.id ", nativeQuery = true)
+	List<SubCatFrItemRepBill> getAdminData(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList,@Param("type") List<Integer> type);
+
+	
+	//Anmol--24-02-2020--
+	@Query(value = "  SELECT  \n" + 
+			"			    UUID() AS id, td.sell_bill_detail_no as bill_detail_no, SUM(td.ext_float1) AS sold_amt,  \n" + 
+			"			    SUM(td.qty) AS sold_qty,  \n" + 
+			"			    f.fr_name,  \n" + 
+			"			    sc.sub_cat_id,  \n" + 
+			"			    sc.sub_cat_name,  \n" + 
+			"			    f.fr_id,  \n" + 
+			"			    m_item.id AS item_id,  \n" + 
+			"			    m_item.item_name  \n" + 
+			"			FROM  \n" + 
+			"			    t_sell_bill_header tb,  \n" + 
+			"			    t_sell_bill_detail td,  \n" + 
+			"			    m_franchisee f,  \n" + 
+			"			    m_cat_sub sc,  \n" + 
+			"			    m_item  \n" + 
+			"			WHERE  \n" + 
+			"			    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1 AND tb.del_status=0\n" + 
+			"			GROUP BY  \n" + 
+			"			    tb.fr_id,  \n" + 
+			"			    m_item.id ", nativeQuery = true)
+	List<SubCatFrItemRepBill> getAdminDataCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 
 }

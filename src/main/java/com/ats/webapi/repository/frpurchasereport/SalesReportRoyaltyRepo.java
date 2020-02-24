@@ -3338,103 +3338,83 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 		
 		//Anmol
 		@Query(value="	SELECT\n" + 
-				"    UUID() AS uid, m_item.id, m_item.item_name, m_item.item_grp2 AS sub_cat_id, m_category.cat_name, m_category.cat_id, COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(t_bill_detail.bill_qty)\n" + 
-				"        FROM\n" + 
-				"            t_bill_detail,\n" + 
-				"            t_bill_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"             t_bill_header.fr_id IN(:frIdList) AND  t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0 AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_bill_qty,\n" + 
-				"    COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(t_bill_detail.grand_total)\n" + 
-				"        FROM\n" + 
-				"            t_bill_detail,\n" + 
-				"            t_bill_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"             t_bill_header.fr_id IN(:frIdList) AND  t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_detail.cat_id IN(:catIdList) AND t_bill_header.del_status = 0  AND t_bill_header.ex_varchar2 IN(:temp)\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_bill_taxable_amt,\n" + 
-				"    COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(\n" + 
-				"                t_credit_note_details.grn_gvn_qty\n" + 
-				"            )\n" + 
-				"        FROM\n" + 
-				"            t_credit_note_details,\n" + 
-				"            t_credit_note_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"            t_credit_note_header.fr_id IN(:frIdList) AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_grn_qty,\n" + 
-				"    COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(\n" + 
-				"                t_credit_note_details.grn_gvn_amt\n" + 
-				"            )\n" + 
-				"        FROM\n" + 
-				"            t_credit_note_details,\n" + 
-				"            t_credit_note_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"           t_credit_note_header.fr_id IN(:frIdList) AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn = 1 AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_grn_taxable_amt,\n" + 
-				"    COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(\n" + 
-				"                t_credit_note_details.grn_gvn_qty\n" + 
-				"            )\n" + 
-				"        FROM\n" + 
-				"            t_credit_note_details,\n" + 
-				"            t_credit_note_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"           t_credit_note_header.fr_id IN(:frIdList) AND  t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_gvn_qty,\n" + 
-				"    COALESCE(\n" + 
-				"        (\n" + 
-				"        SELECT\n" + 
-				"            SUM(\n" + 
-				"                t_credit_note_details.grn_gvn_amt\n" + 
-				"            )\n" + 
-				"        FROM\n" + 
-				"            t_credit_note_details,\n" + 
-				"            t_credit_note_header,\n" + 
-				"            m_franchisee\n" + 
-				"        WHERE\n" + 
-				"           t_credit_note_header.fr_id IN(:frIdList) AND  t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.crn_id = t_credit_note_details.crn_id AND m_item.id = t_credit_note_details.item_id AND t_credit_note_header.is_grn IN(0, 2) AND t_credit_note_details.cat_id IN(:catIdList) AND t_credit_note_details.del_status = 0 AND t_credit_note_header.fr_id = m_franchisee.fr_id\n" + 
-				"    ),\n" + 
-				"    0\n" + 
-				"    ) AS t_gvn_taxable_amt\n" + 
+				"    UUID() AS uid, t1.id, t1.item_name, t1.sub_cat_id, t1.cat_name, t1.cat_id, COALESCE((t2.bill_qty),\n" + 
+				"    0) AS t_bill_qty,\n" + 
+				"    COALESCE((t2.t_bill_taxable_amt),\n" + 
+				"    0) AS t_bill_taxable_amt,\n" + 
+				"    COALESCE((t3.t_grn_qty),\n" + 
+				"    0) AS t_grn_qty,\n" + 
+				"    COALESCE((t3.t_grn_taxable_amt),\n" + 
+				"    0) AS t_grn_taxable_amt,\n" + 
+				"    COALESCE((t4.t_gvn_qty),\n" + 
+				"    0) AS t_gvn_qty,\n" + 
+				"    COALESCE((t4.t_gvn_taxable_amt),\n" + 
+				"    0) AS t_gvn_taxable_amt\n" + 
 				"FROM\n" + 
-				"    m_item,\n" + 
-				"    m_category\n" + 
-				"WHERE\n" + 
-				"    m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0 AND m_item.is_stockable=:stock \n" + 
-				"GROUP BY\n" + 
-				"    m_item.id\n" + 
-				"ORDER BY\n" + 
-				"    m_item.item_grp1,\n" + 
-				"    m_item.item_grp2,\n" + 
-				"    m_item.item_name",nativeQuery=true)	
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        m_item.id,\n" + 
+				"        m_item.item_name,\n" + 
+				"        m_item.item_grp2 AS sub_cat_id,\n" + 
+				"        m_category.cat_name,\n" + 
+				"        m_category.cat_id\n" + 
+				"    FROM\n" + 
+				"        m_item,\n" + 
+				"        m_category\n" + 
+				"    WHERE\n" + 
+				"        m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0 AND m_item.is_stockable =:stock\n" + 
+				"    GROUP BY\n" + 
+				"        m_item.id\n" + 
+				"    ORDER BY\n" + 
+				"        m_item.item_grp1,\n" + 
+				"        m_item.item_grp2,\n" + 
+				"        m_item.item_name\n" + 
+				") t1\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        d.item_id,\n" + 
+				"        SUM(d.bill_qty) AS bill_qty,\n" + 
+				"        SUM(d.grand_total) AS t_bill_taxable_amt\n" + 
+				"    FROM\n" + 
+				"        t_bill_detail d,\n" + 
+				"        t_bill_header h\n" + 
+				"    WHERE\n" + 
+				"        h.fr_id IN(:frIdList) AND h.bill_date BETWEEN :fromDate AND :toDate AND h.bill_no = d.bill_no AND h.del_status = 0 AND h.ex_varchar2 IN(:temp)\n" + 
+				"    GROUP BY\n" + 
+				"        d.item_id\n" + 
+				") t2\n" + 
+				"ON\n" + 
+				"    t1.id = t2.item_id\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        d.item_id,\n" + 
+				"        SUM(d.grn_gvn_qty) AS t_grn_qty,\n" + 
+				"        SUM(d.grn_gvn_amt) AS t_grn_taxable_amt\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_details d,\n" + 
+				"        t_credit_note_header h\n" + 
+				"    WHERE\n" + 
+				"        h.fr_id IN(:frIdList) AND h.crn_date BETWEEN :fromDate AND :toDate AND h.crn_id = d.crn_id AND h.is_grn = 1 AND d.del_status = 0\n" + 
+				"    GROUP BY\n" + 
+				"        d.item_id\n" + 
+				") t3\n" + 
+				"ON\n" + 
+				"    t1.id = t3.item_id\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        d.item_id,\n" + 
+				"        SUM(d.grn_gvn_qty) AS t_gvn_qty,\n" + 
+				"        SUM(d.grn_gvn_amt) AS t_gvn_taxable_amt\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_details d,\n" + 
+				"        t_credit_note_header h\n" + 
+				"    WHERE\n" + 
+				"        h.fr_id IN(:frIdList) AND h.crn_date BETWEEN :fromDate AND :toDate AND h.crn_id = d.crn_id AND h.is_grn IN(0, 2) AND d.del_status = 0\n" + 
+				"    GROUP BY\n" + 
+				"        d.item_id\n" + 
+				") t4\n" + 
+				"ON\n" + 
+				"    t1.id = t4.item_id",nativeQuery=true)	
 		List<SalesReportRoyalty> getAdminSaleReportRoyConsoByCat(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
 				@Param("toDate")String toDate,@Param("temp")List<Integer> temp,@Param("stock") int stock);
 		
@@ -3464,7 +3444,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"        m_item,\n" + 
 				"        m_category\n" + 
 				"    WHERE\n" + 
-				"        m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0 AND m_item.is_stockable = 0 \n" + 
+				"        m_item.item_grp1 = m_category.cat_id AND m_category.cat_id IN(:catIdList) AND m_item.del_status = 0 AND m_item.is_saleable = 1 \n" + 
 				"    GROUP BY\n" + 
 				"        m_item.id\n" + 
 				"    ORDER BY\n" + 
@@ -3476,7 +3456,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"    SELECT\n" + 
 				"        d.item_id AS id,\n" + 
 				"        SUM(d.qty) AS qty,\n" + 
-				"        SUM(h.grand_total) AS bill_total\n" + 
+				"        SUM(h.ext_float1) AS bill_total\n" + 
 				"    FROM\n" + 
 				"        t_sell_bill_header h,\n" + 
 				"        t_sell_bill_detail d\n" + 

@@ -42,7 +42,7 @@ public class SalesReportApiController2 {
 
 	@RequestMapping(value = { "/getSubCatReportApi" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatReport> getSubCatReportApi(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, 	@RequestParam("typeIdList") List<String> typeIdList) {
+			@RequestParam("toDate") String toDate, @RequestParam("typeIdList") List<String> typeIdList) {
 
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
@@ -53,69 +53,61 @@ public class SalesReportApiController2 {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 
-			
-			int listSize=typeIdList.size();
-			List<Integer> itmList=new ArrayList<Integer>();
-			System.err.println("type list"+typeIdList.toString());
-			
-	if (typeIdList.contains("-1")
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
+
+			if (typeIdList.contains("-1")
 					|| (typeIdList.contains("1") && typeIdList.contains("2") && typeIdList.contains("3"))) {
 
 				System.err.println("all");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
-						itmList);
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
 				System.err.println("1 2");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
-						itmList);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("2") && typeIdList.contains("3") &&  listSize==2) {
+			} else if (typeIdList.contains("2") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 2 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
-						itmList);
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate, itmList);
 
-			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize==2) {
+			} else if (typeIdList.contains("1") && typeIdList.contains("3") && listSize == 2) {
 				System.err.println(" 1 3");
-				itmList=new ArrayList<Integer>();
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate,
-						itmList);
-			} else if (typeIdList.contains("1") &&  listSize==1 ) {
-				
-				itmList=new ArrayList<Integer>();
+				catReportBill = subCatBillRepRepo.getDataAll(fromDate, toDate, itmList);
+			} else if (typeIdList.contains("1") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(0);
-				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
-						itmList);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate, itmList);
 				System.err.println(" 1");
 
-			} else if (typeIdList.contains("2") &&  listSize==1) {
-				
-				itmList=new ArrayList<Integer>();
+			} else if (typeIdList.contains("2") && listSize == 1) {
+
+				itmList = new ArrayList<Integer>();
 				itmList.add(1);
-				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate,
-						itmList);
+				catReportBill = subCatBillRepRepo.getData12(fromDate, toDate, itmList);
 				System.err.println(" 2");
 
-			} else   {
+			} else {
 				System.err.println(" 3");
 
 				catReportBill = subCatBillRepRepo.getData3(fromDate, toDate);
 
-			}  
-			
-			
+			}
+
 			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
-			
+
 			System.err.println("Matched -------------------- " + subCatCreditGrnRep);
 
 			subCatCreditGvnRep = subCatCreditGrnRepRepo.getDataGVN(fromDate, toDate);
@@ -145,7 +137,7 @@ public class SalesReportApiController2 {
 
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
-						
+
 						System.err.println("GRN " + subCatCreditGrnRep.get(j).getVarQty());
 						System.err.println("GRN AMT  " + subCatCreditGrnRep.get(j).getVarAmt());
 
@@ -169,7 +161,7 @@ public class SalesReportApiController2 {
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
 						System.err.println("GVN " + subCatCreditGvnRep.get(j).getVarQty());
 						System.err.println("GVN AMT  " + subCatCreditGvnRep.get(j).getVarAmt());
-						
+
 						break;
 
 					} else {
@@ -187,11 +179,10 @@ public class SalesReportApiController2 {
 		}
 		return catReportList;
 	}
-	
-	
+
 	@RequestMapping(value = { "/getSubCatReportApiByFrId" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatReport> getSubCatReportApiByFrId(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate,@RequestParam("frId") int frId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
 
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
@@ -204,7 +195,7 @@ public class SalesReportApiController2 {
 
 			// catReportList = subCatReportRepo.getData(fromDate, toDate);
 
-			catReportBill = subCatBillRepRepo.getDataByFrId(fromDate, toDate,frId);
+			catReportBill = subCatBillRepRepo.getDataByFrId(fromDate, toDate, frId);
 
 			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
 
@@ -322,17 +313,18 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
 
-					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId() && catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						break;
 
-					} /*else {
-
-						catReportList.get(i).setRetAmt(0);
-						catReportList.get(i).setRetQty(0);
-					}*/
+					} /*
+						 * else {
+						 * 
+						 * catReportList.get(i).setRetAmt(0); catReportList.get(i).setRetQty(0); }
+						 */
 
 				}
 			}
@@ -340,17 +332,18 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId() && catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
 						break;
 
-					} /*else {
-
-						catReportList.get(i).setVarAmt(0);
-						catReportList.get(i).setVarQty(0);
-					}*/
+					} /*
+						 * else {
+						 * 
+						 * catReportList.get(i).setVarAmt(0); catReportList.get(i).setVarQty(0); }
+						 */
 
 				}
 			}
@@ -414,17 +407,19 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
 
-					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId() && catReportList.get(i).getSubCatId() ==subCatCreditGrnRep.get(j).getSubCatId()&& catReportList.get(i).getFrId() ==subCatCreditGrnRep.get(j).getFrId()) {
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()
+							&& catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()) {
 
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						break;
 
-					} /*else {
-
-						catReportList.get(i).setRetAmt(0);
-						catReportList.get(i).setRetQty(0);
-					}*/
+					} /*
+						 * else {
+						 * 
+						 * catReportList.get(i).setRetAmt(0); catReportList.get(i).setRetQty(0); }
+						 */
 
 				}
 			}
@@ -432,18 +427,135 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId() && catReportList.get(i).getSubCatId() ==subCatCreditGrnRep.get(j).getSubCatId()&& catReportList.get(i).getFrId() ==subCatCreditGrnRep.get(j).getFrId()) {
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()
+							&& catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
 						break;
 
-					} /*else {
+					} /*
+						 * else {
+						 * 
+						 * catReportList.get(i).setVarAmt(0); catReportList.get(i).setVarQty(0); }
+						 */
 
-						catReportList.get(i).setVarAmt(0);
-						catReportList.get(i).setVarQty(0);
-					}*/
+				}
+			}
 
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return catReportList;
+	}
+
+	// Anmol---24-02-2020
+	@RequestMapping(value = { "/getAdminSubCatFrItemReportApi" }, method = RequestMethod.POST)
+	public @ResponseBody List<SubCatItemReport> getAdminSubCatFrItemReportApi(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<Integer> frIdList,
+			@RequestParam("subCatIdList") List<Integer> subCatIdList,
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType) {
+
+		List<SubCatItemReport> catReportList = new ArrayList<>();
+		List<SubCatFrItemRepBill> catReportBill = null;
+
+		List<SubCatCreditGrnFrItemRep> subCatCreditGrnRep = null;
+		List<SubCatCreditGrnFrItemRep> subCatCreditGvnRep = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+			
+			List<Integer> type=new ArrayList<>();
+			if(typeIdList.contains("1") && typeIdList.contains("2")) {
+				type.clear();
+				type.add(0);
+				type.add(1);
+			}else if(typeIdList.contains("1")) {
+				type.clear();
+				type.add(0);
+			}else if(typeIdList.contains("2")) {
+				type.clear();
+				type.add(1);
+			}
+
+			
+			if(billType==1) {
+				catReportBill = subCatFrItemRepBillRepo.getAdminData(fromDate, toDate, frIdList, subCatIdList,type);
+
+				subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataGRN(fromDate, toDate, frIdList, subCatIdList);
+
+				subCatCreditGvnRep = subCatCreditGrnFrItemRepRepo.getAdminDataGVN(fromDate, toDate, frIdList, subCatIdList);
+			}else {
+				catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutlet(fromDate, toDate, frIdList, subCatIdList);
+
+				subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutlet(fromDate, toDate, frIdList, subCatIdList);
+
+			}
+			
+			if(catReportBill==null) {
+				catReportBill=new ArrayList<>();
+			}
+			
+			if(subCatCreditGrnRep==null) {
+				subCatCreditGrnRep=new ArrayList<>();
+			}
+
+			if(subCatCreditGvnRep==null) {
+				subCatCreditGvnRep=new ArrayList<>();
+			}
+
+
+			System.out.println(catReportBill.toString());
+			System.out.println(subCatCreditGrnRep.toString());
+			System.out.println(subCatCreditGvnRep.toString());
+
+			for (int i = 0; i < catReportBill.size(); i++) {
+
+				SubCatItemReport subCatReport = new SubCatItemReport();
+
+				subCatReport.setSubCatId(catReportBill.get(i).getSubCatId());
+				subCatReport.setSubCatName(catReportBill.get(i).getSubCatName());
+				subCatReport.setFrId(catReportBill.get(i).getFrId());
+				subCatReport.setFrName(catReportBill.get(i).getFrName());
+				subCatReport.setSoldAmt(catReportBill.get(i).getSoldAmt());
+				subCatReport.setSoldQty(catReportBill.get(i).getSoldQty());
+				subCatReport.setItemId(catReportBill.get(i).getItemId());
+				subCatReport.setItemName(catReportBill.get(i).getItemName());
+
+				catReportList.add(subCatReport);
+
+			}
+
+			for (int i = 0; i < catReportList.size(); i++) {
+				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
+
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()
+							&& catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()) {
+
+						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
+						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
+						break;
+
+					} 
+
+				}
+			}
+
+			for (int i = 0; i < catReportList.size(); i++) {
+				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
+
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()
+							&& catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()
+							&& catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId()) {
+
+						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
+						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
+						break;
+
+					} 
 				}
 			}
 

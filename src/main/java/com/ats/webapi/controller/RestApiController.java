@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.ats.webapi.repository.GetItemByCatIdRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -814,7 +816,7 @@ public class RestApiController {
 
 		java.sql.Date bilDate = Common.convertToSqlDate(billDate);
 
-		System.out.println("Fr Id ::: " + frId+"         DATE : "+bilDate);
+		System.out.println("Fr Id ::: " + frId + "         DATE : " + bilDate);
 
 		GetBillsForFrList billsForFrLisr = getBillsForFrService.getBillForFrByDate(frId, bilDate);
 
@@ -839,6 +841,36 @@ public class RestApiController {
 		GetItemByCatIdList getItemByCatIdList = getItemByCatIdService.getItemBySubCatId(subCatId);
 
 		return getItemByCatIdList;
+
+	}
+
+	@Autowired
+	GetItemByCatIdRepository getItemByCatIdRepository;
+
+	@RequestMapping(value = "/getItemBySubCatIds", method = RequestMethod.POST)
+	public @ResponseBody GetItemByCatIdList getItemByCategoryIdAndSubCatIds(
+			@RequestParam("subCatId") List<String> subCatId, @RequestParam("type") int type) {
+
+		List<Integer> subCat = new ArrayList<>();
+		for (int i = 0; i < subCatId.size(); i++) {
+			subCat.add(Integer.parseInt(subCatId.get(i)));
+		}
+
+		GetItemByCatIdList itemList = new GetItemByCatIdList();
+
+		List<GetItemByCatId> itemByCatId = new ArrayList<>();
+
+		if (type == 1) {
+			itemByCatId = getItemByCatIdRepository.getItemByCategoryBySubCatIdsAndStockable(subCat);
+
+		} else {
+			itemByCatId = getItemByCatIdRepository.getItemByCategoryBySubCatIdsAndSaleable(subCat);
+
+		}
+
+		itemList.setGetItemByCatId(itemByCatId);
+
+		return itemList;
 
 	}
 
@@ -1504,14 +1536,13 @@ public class RestApiController {
 
 	}
 
-	
 	@Autowired
 	GetBillHeaderRepository getBillHeaderRepository;
-	
+
 	// POS PURCHASE BILLS------------------------
 	@RequestMapping(value = "/getBillHeaderPOS", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeaderPOS(@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+	public @ResponseBody GetBillHeaderList getBillHeaderPOS(@RequestParam("frId") List<String> frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		GetBillHeaderList billHeaderList = new GetBillHeaderList();
 
 		fromDate = Common.convertToYMD(fromDate);
@@ -1519,10 +1550,9 @@ public class RestApiController {
 		System.err.println("data*****" + fromDate + toDate + frId.toString());
 		try {
 
-			List<GetBillHeader> billHeaders=getBillHeaderRepository.getBillHeaderForFrAllOPS(frId, fromDate, toDate);
-			
+			List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForFrAllOPS(frId, fromDate, toDate);
+
 			billHeaderList.setGetBillHeaders(billHeaders);
-			
 
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
@@ -1532,10 +1562,10 @@ public class RestApiController {
 		return billHeaderList;
 
 	}
-	
+
 	@RequestMapping(value = "/getBillHeaderPOSOnlyRegBills", method = RequestMethod.POST)
-	public @ResponseBody GetBillHeaderList getBillHeaderPOSOnlyRegBills(@RequestParam("frId") List<String> frId, @RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+	public @ResponseBody GetBillHeaderList getBillHeaderPOSOnlyRegBills(@RequestParam("frId") List<String> frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		GetBillHeaderList billHeaderList = new GetBillHeaderList();
 
 		fromDate = Common.convertToYMD(fromDate);
@@ -1543,10 +1573,10 @@ public class RestApiController {
 		System.err.println("data*****" + fromDate + toDate + frId.toString());
 		try {
 
-			List<GetBillHeader> billHeaders=getBillHeaderRepository.getBillHeaderForFrAllOPSOnlyRegBill(frId, fromDate, toDate);
-			
+			List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForFrAllOPSOnlyRegBill(frId,
+					fromDate, toDate);
+
 			billHeaderList.setGetBillHeaders(billHeaders);
-			
 
 		} catch (Exception e) {
 			System.out.println("Exc in getBillHeader Rest Api " + e.getMessage());
@@ -1556,7 +1586,6 @@ public class RestApiController {
 		return billHeaderList;
 
 	}
-	
 
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,
@@ -3672,10 +3701,10 @@ public class RestApiController {
 
 		List<ItemRes> items = new ArrayList<ItemRes>();
 		try {
-			if(subCatId==-1) {
+			if (subCatId == -1) {
 				items = itemResRepository.findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
-			}else {
-			items = itemResRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
+			} else {
+				items = itemResRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
 			}
 		} catch (Exception e) {
 			items = new ArrayList<>();
@@ -5143,38 +5172,37 @@ public class RestApiController {
 		return getSellBillHeaderList;
 
 	}
-	
+
 	@Autowired
 	SellBillHeaderNewRepo sellBillHeaderNewRepo;
-	
-	//Anmol - 12-2-2020
+
+	// Anmol - 12-2-2020
 	@RequestMapping(value = "/getSellBillHeaderNew", method = RequestMethod.POST)
 	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNew(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,@RequestParam("custId") List<String> custId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("custId") List<String> custId) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		
+
 		List<SellBillHeaderNew> getSellBillHeaderList;
-		
-		System.err.println("CUST -------------------- "+custId);
-		
-		if(custId.contains("0")) {
+
+		System.err.println("CUST -------------------- " + custId);
+
+		if (custId.contains("0")) {
 			System.err.println("CUST -------------------- 0");
 
-			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate,frId);
-		}else {
-			System.err.println("CUST -----------*********** "+custId);
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate, frId);
+		} else {
+			System.err.println("CUST -----------*********** " + custId);
 
-			
-			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeader(fromDate, toDate,frId,custId);
+			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeader(fromDate, toDate, frId, custId);
 		}
 
 		System.out.println("List Sell Bill Header  " + getSellBillHeaderList.toString());
 		return getSellBillHeaderList;
 
 	}
-	
 
 	@RequestMapping(value = "/getSellBillDetail", method = RequestMethod.POST)
 	public @ResponseBody List<GetSellBillDetail> getSellBillDetail(@RequestParam("sellBillNo") int sellBillNo) {
@@ -5661,27 +5689,28 @@ public class RestApiController {
 		return res;
 
 	}
-	
-	//Mahendra 24-2-2020
+
+	// Mahendra 24-2-2020
 	@RequestMapping(value = "/getRemainingAmtByCust", method = RequestMethod.POST)
 	public @ResponseBody List<SellBillHeaderNew> getRemainingAmtByCust(@RequestParam("frId") List<String> frId) {
 
-		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();	
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();
 
 		getSellBillHeaderList = sellBillHeaderNewRepo.getRemainingAmtAllCust(frId);
-		
+
 		System.out.println("Remaining Amt Of All Customers " + getSellBillHeaderList.toString());
 		return getSellBillHeaderList;
 
 	}
-	
-	@RequestMapping(value = "/getCustRemainingAmt", method = RequestMethod.POST)
-	public @ResponseBody List<SellBillHeaderNew> getCustRemainingAmt(@RequestParam("custId") int custId, @RequestParam("frId") List<String> frId) {
 
-		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();	
+	@RequestMapping(value = "/getCustRemainingAmt", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getCustRemainingAmt(@RequestParam("custId") int custId,
+			@RequestParam("frId") List<String> frId) {
+
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<SellBillHeaderNew>();
 
 		getSellBillHeaderList = sellBillHeaderNewRepo.getRemainingAmtByCustId(custId, frId);
-		
+
 		System.out.println("Remaining Amt Of Customers " + getSellBillHeaderList.toString());
 		return getSellBillHeaderList;
 

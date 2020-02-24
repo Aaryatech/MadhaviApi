@@ -1667,7 +1667,7 @@ public class SalesReportController {
 
 			if (billType == 1) {
 				stock = 1;
-				
+
 				if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
 					System.err.println("1 2");
@@ -1692,11 +1692,12 @@ public class SalesReportController {
 							fromDate, toDate, itmList, stock);
 					System.err.println(" 2");
 
-				} 
-				
+				}
+
 			} else {
 				stock = 0;
-				salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList, catIdList,fromDate, toDate);
+				salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList, catIdList,
+						fromDate, toDate);
 			}
 
 			System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
@@ -1825,6 +1826,82 @@ public class SalesReportController {
 		return repList;
 
 	}
+	
+	
+	//Anmol---24-02-2020--
+	@RequestMapping(value = { "/getAdminSalesReturnQtyReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<SalesReturnQtyReportList> getAdminSalesReturnQtyReport(@RequestParam("fromYear") int fromYear,
+			@RequestParam("toYear") int toYear, @RequestParam("typeIdList") List<String> typeIdList,@RequestParam("billType") int billType)
+			throws ParseException {
+
+		List<SalesReturnQtyReportList> repList = new ArrayList<>();
+		List<String> months = new ArrayList<String>();
+		months.add(fromYear + "-04");
+		months.add(fromYear + "-05");
+		months.add(fromYear + "-06");
+		months.add(fromYear + "-07");
+		months.add(fromYear + "-08");
+		months.add(fromYear + "-09");
+		months.add(fromYear + "-10");
+		months.add(fromYear + "-11");
+		months.add(fromYear + "-12");
+		months.add(toYear + "-01");
+		months.add(toYear + "-02");
+		months.add(toYear + "-03");
+
+		for (int i = 0; i < months.size(); i++) {
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM");
+			// output format: yyyy-MM-dd
+			SimpleDateFormat formatter = new SimpleDateFormat("MMM-yyyy");
+			String month = formatter.format(parser.parse(months.get(i)));
+
+			System.err.println("months" + months.get(i));
+			SalesReturnQtyReportList salesReturnQtyReportList = new SalesReturnQtyReportList();
+			salesReturnQtyReportList.setMonth(month);
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
+
+			List<SalesReturnQtyDao> salesReturnQtyDao = new ArrayList<SalesReturnQtyDao>();
+			
+			if(billType==1) {
+				if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+
+					System.err.println("1 2");
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					salesReturnQtyDao = salesReturnQtyDaoRepository.getAdminSalesReturnQtyReport12(months.get(i), itmList);
+				} else if (typeIdList.contains("1") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					salesReturnQtyDao = salesReturnQtyDaoRepository.getAdminSalesReturnQtyReport12(months.get(i), itmList);
+					System.err.println(" 1");
+
+				} else if (typeIdList.contains("2") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(1);
+					salesReturnQtyDao = salesReturnQtyDaoRepository.getAdminSalesReturnQtyReport12(months.get(i), itmList);
+					System.err.println(" 2");
+
+				} 
+			}else {
+				salesReturnQtyDao = salesReturnQtyDaoRepository.getAdminSalesReturnQtyReportCompOutlet(months.get(i));
+			}
+			
+
+		
+
+			salesReturnQtyReportList.setSalesReturnQtyDaoList(salesReturnQtyDao);
+			repList.add(salesReturnQtyReportList);
+		}
+		return repList;
+	}
+	
+	
+	
 
 	@RequestMapping(value = { "/getSalesReturnValueReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReturnValueDaoList> getSalesReturnValueReport(@RequestParam("fromYear") int fromYear,
@@ -1962,6 +2039,76 @@ public class SalesReportController {
 		return repList;
 
 	}
+
+	// ---Anmol-----22-2-2020---
+	@RequestMapping(value = { "/getAdminSalesValueItemReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<SalesReturnItemDaoList> getAdminSalesValueItemReport(
+			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
+			@RequestParam("subCatId") List<String> subCatId, @RequestParam("typeIdList") List<String> typeIdList,
+			@RequestParam("billType") int billType) throws ParseException {
+
+		List<SalesReturnItemDaoList> repList = new ArrayList<>();
+		List<String> months = new ArrayList<String>();
+		months.add(fromYear + "-04");
+		months.add(fromYear + "-05");
+		months.add(fromYear + "-06");
+		months.add(fromYear + "-07");
+		months.add(fromYear + "-08");
+		months.add(fromYear + "-09");
+		months.add(fromYear + "-10");
+		months.add(fromYear + "-11");
+		months.add(fromYear + "-12");
+		months.add(toYear + "-01");
+		months.add(toYear + "-02");
+		months.add(toYear + "-03");
+
+		List<Integer> subCat = new ArrayList<>();
+		for (int i = 0; i < subCatId.size(); i++) {
+			subCat.add(Integer.parseInt(subCatId.get(i)));
+		}
+
+		List<Integer> type = new ArrayList<>();
+		if (typeIdList.contains("1") && typeIdList.contains("2")) {
+			type.clear();
+			type.add(0);
+			type.add(1);
+		} else if (typeIdList.contains("1")) {
+			type.clear();
+			type.add(0);
+		} else if (typeIdList.contains("2")) {
+			type.clear();
+			type.add(1);
+		}
+
+		for (int i = 0; i < months.size(); i++) {
+			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM");
+			// output format: yyyy-MM-dd
+			SimpleDateFormat formatter = new SimpleDateFormat("MMM-yyyy");
+			String month = formatter.format(parser.parse(months.get(i)));
+			SalesReturnItemDaoList salesReturnItemDaoList = new SalesReturnItemDaoList();
+			salesReturnItemDaoList.setMonth(month);
+			List<SalesReturnValueItemDao> salesReturnValueDao = null;
+
+			if (billType == 1) {
+				salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReport(months.get(i), subCat,type);
+			} else {
+				System.err.println("MONTH - "+months.get(i));
+				
+				salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReportComp(months.get(i), subCat);
+				
+				System.err.println("DATA - "+salesReturnValueDao);
+			}
+
+			salesReturnItemDaoList.setSalesReturnValueItemDao(salesReturnValueDao);
+			repList.add(salesReturnItemDaoList);
+			System.out.println(months.toString());
+		}
+
+		System.out.println("repListrepListrepListrepListrepListrepList" + repList.toString());
+		return repList;
+
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------------
 
 }
