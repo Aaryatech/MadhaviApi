@@ -6,12 +6,106 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.ats.webapi.model.report.GetMonthWiseReport;
 import com.ats.webapi.model.report.GetRepMonthwiseSell;
 
-public interface RepFrMonthwiseSellRepository extends JpaRepository<GetRepMonthwiseSell, Integer>{
+//GetRepMonthwiseSell 
+public interface RepFrMonthwiseSellRepository extends JpaRepository<GetMonthWiseReport, Integer>{
 
 	
-	@Query(value="SELECT t_sell_bill_header.bill_date ,t_sell_bill_header.sell_bill_no ,t_sell_bill_header.fr_id,"
+	@Query(value="SELECT bill_date,\r\n" + 
+			"	sell_bill_no,\r\n" + 
+			"    fr_id,\r\n" + 
+			"    cash,\r\n" + 
+			"    card,\r\n" + 
+			"    other,\r\n" + 
+			"    fr_name,\r\n" + 
+			"    month,\r\n" + 
+			"    discount_amt,\r\n" + 
+			"    pending_amt,\r\n" + 
+			"    adv_amt,\r\n" + 
+			"    COALESCE(b.ch_amt,\r\n" + 
+			"        0) AS regular,\r\n" + 
+			"    COALESCE(c.ch_amt,\r\n" + 
+			"        0) AS chalan\r\n" + 
+			"FROM(\r\n" + 
+			"        SELECT\r\n" + 
+			"                t_sell_bill_header.bill_date ,\r\n" + 
+			"                t_sell_bill_header.sell_bill_no ,\r\n" + 
+			"                t_sell_bill_header.fr_id,\r\n" + 
+			"                sum(CASE \r\n" + 
+			"                    WHEN t_sell_bill_header.payment_mode = 1 THEN t_sell_bill_header.payable_amt \r\n" + 
+			"                    ELSE 0 \r\n" + 
+			"                END) as cash,\r\n" + 
+			"                sum(CASE \r\n" + 
+			"                    WHEN t_sell_bill_header.payment_mode = 2 THEN t_sell_bill_header.payable_amt \r\n" + 
+			"                    ELSE 0 \r\n" + 
+			"                END) as card ,\r\n" + 
+			"                sum(CASE \r\n" + 
+			"                    WHEN t_sell_bill_header.payment_mode = 3 THEN t_sell_bill_header.payable_amt \r\n" + 
+			"                    ELSE 0 \r\n" + 
+			"                END) as other,\r\n" + 
+			"                m_franchisee.fr_name,\r\n" + 
+			"                CONCAT(MONTHNAME(t_sell_bill_header.bill_date),\r\n" + 
+			"                '-',\r\n" + 
+			"                YEAR(t_sell_bill_header.bill_date)) as  month,\r\n" + 
+			"                 t_sell_bill_header.discount_amt,\r\n" + 
+			"                t_sell_bill_header.remaining_amt AS pending_amt,\r\n" + 
+			"                t_sell_bill_header.paid_amt AS adv_amt\r\n" + 
+			"            FROM\r\n" + 
+			"                t_sell_bill_header,\r\n" + 
+			"                m_franchisee \r\n" + 
+			"            WHERE\r\n" + 
+			"                t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate \r\n" + 
+			"                AND t_sell_bill_header.fr_id IN(\r\n" + 
+			"                    79\r\n" + 
+			"                ) \r\n" + 
+			"                AND m_franchisee.fr_id=t_sell_bill_header.fr_id \r\n" + 
+			"            GROUP BY\r\n" + 
+			"                MONTH(t_sell_bill_header.bill_date),\r\n" + 
+			"                t_sell_bill_header.fr_id) a\r\n" + 
+			"                \r\n" + 
+			"                 LEFT JOIN\r\n" + 
+			"        (\r\n" + 
+			"            SELECT\r\n" + 
+			"                exp_date,\r\n" + 
+			"                exp_type,\r\n" + 
+			"                SUM(ch_amt) ch_amt      \r\n" + 
+			"            FROM\r\n" + 
+			"                m_expense      \r\n" + 
+			"            WHERE\r\n" + 
+			"                fr_id IN(:frId) \r\n" + 
+			"                AND exp_type = 1      \r\n" + 
+			"            GROUP BY\r\n" + 
+			"                exp_date      \r\n" + 
+			"            ORDER BY\r\n" + 
+			"                exp_date  \r\n" + 
+			"        ) b  \r\n" + 
+			"            ON      a.bill_date = b.exp_date  \r\n" + 
+			"    LEFT JOIN\r\n" + 
+			"        (\r\n" + 
+			"            SELECT\r\n" + 
+			"                exp_date,\r\n" + 
+			"                exp_type,\r\n" + 
+			"                SUM(ch_amt) ch_amt      \r\n" + 
+			"            FROM\r\n" + 
+			"                m_expense      \r\n" + 
+			"            WHERE\r\n" + 
+			"                fr_id IN(:frId) \r\n" + 
+			"                AND exp_type = 2      \r\n" + 
+			"            GROUP BY\r\n" + 
+			"                exp_date      \r\n" + 
+			"            ORDER BY\r\n" + 
+			"                exp_date  \r\n" + 
+			"        ) c  \r\n" + 
+			"            ON      a.bill_date = c.exp_date",nativeQuery=true)
+			List<GetMonthWiseReport> getRepFrMonthwiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
+}
+
+
+//24-02-2020 Mahendra
+/* 
+		SELECT t_sell_bill_header.bill_date ,t_sell_bill_header.sell_bill_no ,t_sell_bill_header.fr_id,"
 			+" sum(CASE WHEN t_sell_bill_header.payment_mode = 1 THEN t_sell_bill_header.payable_amt ELSE 0 END) as cash,"
 					+" sum(CASE WHEN t_sell_bill_header.payment_mode = 2 THEN t_sell_bill_header.payable_amt ELSE 0 END) as card ,"
 			+ " sum(CASE WHEN t_sell_bill_header.payment_mode = 3 THEN t_sell_bill_header.payable_amt ELSE 0 END) as other,"
@@ -40,6 +134,6 @@ public interface RepFrMonthwiseSellRepository extends JpaRepository<GetRepMonthw
 					"       MONTH(t_sp_cake.sp_delivery_date)," + 
 					"        t_sp_cake.fr_id"
 					+ ""
-					+ "",nativeQuery=true)
-			List<GetRepMonthwiseSell> getRepFrMonthwiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
-}
+					+ ""
+*/
+//List<GetRepMonthwiseSell> getRepFrMonthwiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);

@@ -29,6 +29,7 @@ import com.ats.webapi.model.POrder;
 import com.ats.webapi.model.report.DispatchReport;
 import com.ats.webapi.model.report.GetCustBillTax;
 import com.ats.webapi.model.report.GetCustomerBill;
+import com.ats.webapi.model.report.GetMonthWiseReport;
 import com.ats.webapi.model.report.GetRepFrDatewiseSell;
 import com.ats.webapi.model.report.GetRepFrDatewiseSellReport;
 import com.ats.webapi.model.report.GetRepItemwiseSell;
@@ -347,9 +348,9 @@ public class ReportsController {
 
 	// ------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getRepMonthwiseSell", method = RequestMethod.POST)
-	public @ResponseBody List<GetRepMonthwiseSell> getRepMonthwiseSell(@RequestParam("fromDate") String fromDate,
+	public @ResponseBody List<GetMonthWiseReport> getRepMonthwiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
-		List<GetRepMonthwiseSell> tempList = null;
+		List<GetMonthWiseReport> tempList = null;
 		System.out.println("from" + fromDate);
 		System.out.println("to" + toDate);
 
@@ -360,10 +361,10 @@ public class ReportsController {
 
 		System.out.println("to" + toDate);
 		System.out.println("from" + fromDate);
-		List<GetRepMonthwiseSell> GetRepMonthwiseSellList = repFrSellServise.getMonthwiseSellReport(fromDate, toDate,
+		List<GetMonthWiseReport> GetRepMonthwiseSellList = repFrSellServise.getMonthwiseSellReport(fromDate, toDate,
 				frId);
 
-		LinkedHashMap<String, GetRepMonthwiseSell> hashList = new LinkedHashMap<String, GetRepMonthwiseSell>();
+		LinkedHashMap<String, GetMonthWiseReport> hashList = new LinkedHashMap<String, GetMonthWiseReport>();
 
 		for (int i = 0; i < GetRepMonthwiseSellList.size(); i++) {
 			float cash = 0, card = 0, other = 0;
@@ -390,7 +391,7 @@ public class ReportsController {
 			}
 		}
 
-		tempList = new ArrayList<GetRepMonthwiseSell>(hashList.values());
+		tempList = new ArrayList<GetMonthWiseReport>(hashList.values());
 		return tempList;
 
 	}
