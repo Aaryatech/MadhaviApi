@@ -30,6 +30,7 @@ import com.ats.webapi.model.report.DispatchReport;
 import com.ats.webapi.model.report.GetCustBillTax;
 import com.ats.webapi.model.report.GetCustomerBill;
 import com.ats.webapi.model.report.GetRepFrDatewiseSell;
+import com.ats.webapi.model.report.GetRepFrDatewiseSellReport;
 import com.ats.webapi.model.report.GetRepItemwiseSell;
 import com.ats.webapi.model.report.GetRepMenuwiseSell;
 import com.ats.webapi.model.report.GetRepMonthwiseSell;
@@ -248,9 +249,10 @@ public class ReportsController {
 	// Sell Reports start
 
 	@RequestMapping(value = "/getRepDatewiseSell", method = RequestMethod.POST)
-	public @ResponseBody List<GetRepFrDatewiseSell> getRepDatewiseSell(@RequestParam("fromDate") String fromDate,
+	public @ResponseBody List<GetRepFrDatewiseSellReport> getRepDatewiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
-		List<GetRepFrDatewiseSell> tempList = new ArrayList<>();
+		
+		List<GetRepFrDatewiseSellReport> tempList = new ArrayList<GetRepFrDatewiseSellReport>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);

@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ats.webapi.model.report.GetRepFrDatewiseSell;
+import com.ats.webapi.model.report.GetRepFrDatewiseSellReport;
  
 
-public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatewiseSell, Integer>{
+//GetRepFrDatewiseSell
+public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatewiseSellReport, Integer>{
 	
 /*@Query(value="SELECT day,bill_date,sell_bill_no,fr_id,cash,card,other,fr_name\r\n" + 
 		"       from\r\n" + 
@@ -68,28 +70,103 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 		"        t_sp_cake.fr_id) a order by bill_date",nativeQuery=true)*/
 	
 	@Query(value="SELECT\r\n" + 
-			"            DAYNAME(t_sell_bill_header.bill_date) as day,\r\n" + 
-			"            t_sell_bill_header.bill_date ,\r\n" + 
-			"            t_sell_bill_header.sell_bill_no ,\r\n" + 
-			"            t_sell_bill_header.fr_id,\r\n" + 
-			"            SUM(t_transaction_detail.cash_amt) as cash,\r\n" + 
-			"              SUM(t_transaction_detail.card_amt)   as card ,\r\n" + 
-			"              SUM(t_transaction_detail.e_pay_amt) as other,\r\n" + 
-			"              m_franchisee.fr_name                 \r\n" + 
-			"        FROM\r\n" + 
-			"            t_sell_bill_header,t_transaction_detail,\r\n" + 
-			"            m_franchisee                 \r\n" + 
-			"        WHERE\r\n" + 
-			"            t_sell_bill_header.bill_date BETWEEN :fromDate AND  :toDate    and t_transaction_detail.sell_bill_no=t_sell_bill_header.sell_bill_no       and t_sell_bill_header.del_status=0                    \r\n" + 
-			"            AND t_sell_bill_header.fr_id IN(\r\n" + 
-			"              :frId                            \r\n" + 
-			"            )                         \r\n" + 
-			"            AND m_franchisee.fr_id=t_sell_bill_header.fr_id     group by\r\n" + 
-			"    bill_date  \r\n" + 
-			"order by\r\n" + 
-			"    bill_date              \r\n" + 
-			"   ",nativeQuery=true)
-List<GetRepFrDatewiseSell> getRepFrDatewiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
+			"    day,\r\n" + 
+			"    bill_date,\r\n" + 
+			"    sell_bill_no,\r\n" + 
+			"    fr_id,\r\n" + 
+			"    discount_amt,\r\n" + 
+			"    pending_amt,\r\n" + 
+			"    adv_amt,\r\n" + 
+			"    cash,\r\n" + 
+			"    card,\r\n" + 
+			"    other,\r\n" + 
+			"    COALESCE(b.ch_amt, 0) AS regular,\r\n" + 
+			"    COALESCE(c.ch_amt, 0) AS chalan, fr_name\r\n" + 
+			"\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
+			"        DAYNAME(t_sell_bill_header.bill_date) AS day,\r\n" + 
+			"        t_sell_bill_header.bill_date,\r\n" + 
+			"        t_sell_bill_header.sell_bill_no,\r\n" + 
+			"        t_sell_bill_header.fr_id,\r\n" + 
+			"        t_sell_bill_header.discount_amt,\r\n" + 
+			"        t_sell_bill_header.remaining_amt AS pending_amt,\r\n" + 
+			"        t_sell_bill_header.paid_amt AS adv_amt,\r\n" + 
+			"        SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
+			"        SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
+			"        SUM(t_transaction_detail.e_pay_amt) AS other,\r\n" + 
+			"        m_franchisee.fr_name\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header,\r\n" + 
+			"        t_transaction_detail,\r\n" + 
+			"        m_franchisee\r\n" + 
+			"    WHERE\r\n" + 
+			"        t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.fr_id IN(:frId) AND m_franchisee.fr_id = t_sell_bill_header.fr_id\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        bill_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        bill_date\r\n" + 
+			") a\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        exp_date,\r\n" + 
+			"        exp_type,\r\n" + 
+			"        SUM(ch_amt) ch_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        m_expense\r\n" + 
+			"    WHERE\r\n" + 
+			"        fr_id IN(:frId) AND exp_type = 1\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        exp_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        exp_date\r\n" + 
+			") b\r\n" + 
+			"ON\r\n" + 
+			"    a.bill_date = b.exp_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        exp_date,\r\n" + 
+			"        exp_type,\r\n" + 
+			"        SUM(ch_amt) ch_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        m_expense\r\n" + 
+			"    WHERE\r\n" + 
+			"        fr_id IN(:frId) AND exp_type = 2\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        exp_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        exp_date\r\n" + 
+			") c\r\n" + 
+			"ON\r\n" + 
+			"    a.bill_date = c.exp_date",nativeQuery=true)
+List<GetRepFrDatewiseSellReport> getRepFrDatewiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
 
 
 }
+
+
+//22-02-2020 mahendra
+
+/*SELECT\r\n" + 
+"            DAYNAME(t_sell_bill_header.bill_date) as day,\r\n" + 
+"            t_sell_bill_header.bill_date ,\r\n" + 
+"            t_sell_bill_header.sell_bill_no ,\r\n" + 
+"            t_sell_bill_header.fr_id,\r\n" + 
+"            SUM(t_transaction_detail.cash_amt) as cash,\r\n" + 
+"              SUM(t_transaction_detail.card_amt)   as card ,\r\n" + 
+"              SUM(t_transaction_detail.e_pay_amt) as other,\r\n" + 
+"              m_franchisee.fr_name                 \r\n" + 
+"        FROM\r\n" + 
+"            t_sell_bill_header,t_transaction_detail,\r\n" + 
+"            m_franchisee                 \r\n" + 
+"        WHERE\r\n" + 
+"            t_sell_bill_header.bill_date BETWEEN :fromDate AND  :toDate    and t_transaction_detail.sell_bill_no=t_sell_bill_header.sell_bill_no       and t_sell_bill_header.del_status=0                    \r\n" + 
+"            AND t_sell_bill_header.fr_id IN(\r\n" + 
+"              :frId                            \r\n" + 
+"            )                         \r\n" + 
+"            AND m_franchisee.fr_id=t_sell_bill_header.fr_id     group by\r\n" + 
+"    bill_date  \r\n" + 
+"order by\r\n" + 
+"    bill_date              \r\n" + 
+"   "*/

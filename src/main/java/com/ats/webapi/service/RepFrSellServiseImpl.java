@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ats.webapi.model.report.GetCustBillTax;
 import com.ats.webapi.model.report.GetCustomerBill;
 import com.ats.webapi.model.report.GetRepFrDatewiseSell;
+import com.ats.webapi.model.report.GetRepFrDatewiseSellReport;
 import com.ats.webapi.model.report.GetRepItemwiseSell;
 import com.ats.webapi.model.report.GetRepMenuwiseSell;
 import com.ats.webapi.model.report.GetRepMonthwiseSell;
@@ -42,9 +43,9 @@ public class RepFrSellServiseImpl implements RepFrSellServise{
 	@Autowired
 	GetCustBillTaxRepository getCustBillTaxRepository;
 	@Override
-	public List<GetRepFrDatewiseSell> getDatewiseSellReport(String fromDate, String toDate,  List<String> frId) {
+	public List<GetRepFrDatewiseSellReport> getDatewiseSellReport(String fromDate, String toDate,  List<String> frId) {
 		
-		List<GetRepFrDatewiseSell> repFrDatewiseSellServiseList=repFrDateSellRepository.getRepFrDatewiseSell(fromDate, toDate, frId);
+		List<GetRepFrDatewiseSellReport> repFrDatewiseSellServiseList=repFrDateSellRepository.getRepFrDatewiseSell(fromDate, toDate, frId);
 		
 		return repFrDatewiseSellServiseList;
 	}
