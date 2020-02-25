@@ -155,7 +155,7 @@ public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnVa
 				"LEFT JOIN(\n" + 
 				"    SELECT\n" + 
 				"        d.item_id,\n" + 
-				"        SUM(d.grand_total) AS grand_total\n" + 
+				"        SUM(d.ext_float1) AS grand_total\n" + 
 				"    FROM\n" + 
 				"        t_sell_bill_detail d,\n" + 
 				"        t_sell_bill_header h\n" + 

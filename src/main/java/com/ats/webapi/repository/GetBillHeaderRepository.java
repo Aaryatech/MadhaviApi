@@ -138,7 +138,7 @@ public interface GetBillHeaderRepository extends JpaRepository<GetBillHeader, In
 			"    t_bill_header,\n " + 
 			"    m_franchisee \n " + 
 			"WHERE\n" + 
-			"    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.del_status = 0 AND t_bill_header.fr_id IN (:frId) ORDER BY t_bill_header.invoice_no DESC \n" + 
+			"    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.del_status = 0 AND t_bill_header.fr_id IN (:frId) AND t_bill_header.is_dairy_mart=1 ORDER BY t_bill_header.invoice_no DESC \n" + 
 			"",nativeQuery=true)
 	
 	List<GetBillHeader> getBillHeaderForFrAllOPS(@Param("frId") List<String> frId,@Param("fromDate")String fromDate, @Param("toDate")String toDate);

@@ -28,7 +28,47 @@ public interface SubCatBillRepRepo extends JpaRepository<SubCatBillRep, Integer>
 			"    i.item_grp2", nativeQuery = true)
 	List<SubCatBillRep> getData12(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("temp") List<Integer> temp);
 	
+	//Anmol--25-02-2020-------
+	@Query(value = "SELECT\n" + 
+			"    SUM(td.grand_total) AS sold_amt,\n" + 
+			"    SUM(td.bill_qty) AS sold_qty,\n" + 
+			"    sc.sub_cat_id,\n" + 
+			"    sc.sub_cat_name,\n" + 
+			"    c.cat_id\n" + 
+			"FROM\n" + 
+			"    t_bill_header tb,\n" + 
+			"    t_bill_detail td,\n" + 
+			"    m_cat_sub sc,\n" + 
+			"    m_category c,\n" + 
+			"    m_item i\n" + 
+			"WHERE\n" + 
+			"    tb.del_status = 0 AND tb.bill_no = td.bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND td.cat_id = c.cat_id AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND tb.ex_varchar2 IN(:temp) AND i.is_stockable = 1\n" + 
+			"GROUP BY\n" + 
+			"    i.item_grp2\n" + 
+			"ORDER BY\n" + 
+			"    i.item_grp1", nativeQuery = true)
+	List<SubCatBillRep> getAdminData12(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("temp") List<Integer> temp);
 	
+	//Anmol--25-02-2020-------
+		@Query(value = "SELECT\n" + 
+				"    SUM(td.ext_float1) AS sold_amt,\n" + 
+				"    SUM(td.qty) AS sold_qty,\n" + 
+				"    sc.sub_cat_id,\n" + 
+				"    sc.sub_cat_name,\n" + 
+				"    sc.cat_id\n" + 
+				"FROM\n" + 
+				"    t_sell_bill_header tb,\n" + 
+				"    t_sell_bill_detail td,\n" + 
+				"    m_cat_sub sc,\n" + 
+				"    m_item i\n" + 
+				"WHERE\n" + 
+				"    tb.del_status = 0 AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND i.is_saleable = 1\n" + 
+				"GROUP BY\n" + 
+				"    i.item_grp2\n" + 
+				"ORDER BY\n" + 
+				"    i.item_grp1", nativeQuery = true)
+		List<SubCatBillRep> getAdminDataCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+		
 	
 	
 	@Query(value = "SELECT\n" + 

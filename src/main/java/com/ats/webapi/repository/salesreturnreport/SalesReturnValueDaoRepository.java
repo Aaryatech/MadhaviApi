@@ -103,6 +103,126 @@ public interface SalesReturnValueDaoRepository extends JpaRepository<SalesReturn
 	List<SalesReturnValueDao> getSalesReturnValueReport12(@Param("month")String month,@Param("temp") List<Integer> temp);
 
 	
+	//Anmol--25-02-2020---
+	@Query(value="SELECT\n" + 
+			"    t1.id,\n" + 
+			"    t1.sub_cat_id,\n" + 
+			"    COALESCE((t2.grand_total),\n" + 
+			"    0) AS grand_total,\n" + 
+			"    COALESCE((t3.grn_qty),\n" + 
+			"    0) AS grn_qty,\n" + 
+			"    COALESCE((t4.gvn_qty),\n" + 
+			"    0) AS gvn_qty\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        CONCAT(:month, sub_cat_id) AS id,\n" + 
+			"        sub_cat_id\n" + 
+			"    FROM\n" + 
+			"        m_cat_sub\n" + 
+			"    WHERE\n" + 
+			"        m_cat_sub.del_status = 0\n" + 
+			") t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        SUM(d.grand_total) AS grand_total,\n" + 
+			"        i.item_grp2\n" + 
+			"    FROM\n" + 
+			"        t_bill_detail d,\n" + 
+			"        t_bill_header h,\n" + 
+			"        m_item i\n" + 
+			"    WHERE\n" + 
+			"        DATE_FORMAT(h.bill_date, '%Y-%m') = :month AND h.del_status = 0 AND h.ex_varchar2 IN(:temp) AND h.bill_no = d.bill_no AND i.id = d.item_id AND i.is_stockable = 1\n" + 
+			"    GROUP BY\n" + 
+			"        i.item_grp2\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.sub_cat_id = t2.item_grp2\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        SUM(d.grn_gvn_amt) AS grn_qty,\n" + 
+			"        i.item_grp2\n" + 
+			"    FROM\n" + 
+			"        t_credit_note_header h,\n" + 
+			"        t_credit_note_details d,\n" + 
+			"        m_item i\n" + 
+			"    WHERE\n" + 
+			"        h.crn_id = d.crn_id AND h.is_grn = 1 AND DATE_FORMAT(h.crn_date, '%Y-%m') = :month AND i.id = d.item_id AND i.is_stockable = 1\n" + 
+			"    GROUP BY\n" + 
+			"        i.item_grp2\n" + 
+			") t3\n" + 
+			"ON\n" + 
+			"    t1.sub_cat_id = t3.item_grp2\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        SUM(d.grn_gvn_amt) AS gvn_qty,\n" + 
+			"        i.item_grp2\n" + 
+			"    FROM\n" + 
+			"        t_credit_note_header h,\n" + 
+			"        t_credit_note_details d,\n" + 
+			"        m_item i\n" + 
+			"    WHERE\n" + 
+			"        h.crn_id = d.crn_id AND h.is_grn = 0 AND DATE_FORMAT(h.crn_date, '%Y-%m') = :month AND i.id = d.item_id AND i.is_stockable = 1\n" + 
+			"    GROUP BY\n" + 
+			"        i.item_grp2\n" + 
+			") t4\n" + 
+			"ON\n" + 
+			"    t1.sub_cat_id = t4.item_grp2",nativeQuery=true)
+	List<SalesReturnValueDao> getAdminSalesReturnValueReport12(@Param("month")String month,@Param("temp") List<Integer> temp);
+
+	
+	//Anmol--25-02-2020----
+	//Anmol--25-02-2020---
+		@Query(value="SELECT\n" + 
+				"    t1.id,\n" + 
+				"    t1.sub_cat_id,\n" + 
+				"    COALESCE((t2.grand_total),\n" + 
+				"    0) AS grand_total,\n" + 
+				"    COALESCE((t3.grn_qty),\n" + 
+				"    0) AS grn_qty,\n" + 
+				"    0 AS gvn_qty\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        CONCAT(:month, sub_cat_id) AS id,\n" + 
+				"        sub_cat_id\n" + 
+				"    FROM\n" + 
+				"        m_cat_sub\n" + 
+				"    WHERE\n" + 
+				"        m_cat_sub.del_status = 0\n" + 
+				") t1\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        SUM(d.ext_float1) AS grand_total,\n" + 
+				"        i.item_grp2\n" + 
+				"    FROM\n" + 
+				"        t_sell_bill_header h,\n" + 
+				"        t_sell_bill_detail d,\n" + 
+				"        m_item i\n" + 
+				"    WHERE\n" + 
+				"        DATE_FORMAT(h.bill_date, '%Y-%m') =:month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND i.id = d.item_id AND i.is_saleable = 1 AND i.del_status = 0\n" + 
+				"    GROUP BY\n" + 
+				"        i.item_grp2\n" + 
+				") t2\n" + 
+				"ON\n" + 
+				"    t1.sub_cat_id = t2.item_grp2\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        i.item_grp2,\n" + 
+				"        SUM(c.grand_total) AS grn_qty\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_pos c,\n" + 
+				"        m_item i\n" + 
+				"    WHERE\n" + 
+				"        c.item_id = i.id AND i.is_saleable = 1 AND DATE_FORMAT(c.crn_date, '%Y-%m') =:month AND c.del_status = 0 AND i.del_status = 0\n" + 
+				"    GROUP BY\n" + 
+				"        i.item_grp2\n" + 
+				") t3\n" + 
+				"ON\n" + 
+				"    t1.sub_cat_id = t3.item_grp2",nativeQuery=true)
+		List<SalesReturnValueDao> getAdminSalesReturnValueReportCompOutlet(@Param("month")String month);
+	
+	
 	@Query(value="SELECT\n" + 
 			"    CONCAT(:month, sub_cat_id) AS id,\n" + 
 			"    sub_cat_id,\n" + 
