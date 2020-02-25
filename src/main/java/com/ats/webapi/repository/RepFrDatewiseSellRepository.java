@@ -81,12 +81,14 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    card,\r\n" + 
 			"    other,\r\n" + 
 			"    COALESCE(b.ch_amt, 0) AS regular,\r\n" + 
-			"    COALESCE(c.ch_amt, 0) AS chalan, fr_name\r\n" + 
-			"\r\n" + 
+			"    COALESCE(c.ch_amt, 0) AS chalan,\r\n" + 
+			"    fr_name,\r\n" + 
+			"    COALESCE(withdrawal_amt, 0) AS withdrawal_amt ,\r\n" + 
+			"    COALESCE(e.credit_note_total_amt, 0) AS credit_note_total_amt\r\n" + 
 			"FROM\r\n" + 
 			"    (\r\n" + 
 			"    SELECT\r\n" + 
-			"        DAYNAME(t_sell_bill_header.bill_date) AS day,\r\n" + 
+			"        DAYNAME(t_sell_bill_header.bill_date) AS DAY,\r\n" + 
 			"        t_sell_bill_header.bill_date,\r\n" + 
 			"        t_sell_bill_header.sell_bill_no,\r\n" + 
 			"        t_sell_bill_header.fr_id,\r\n" + 
@@ -139,7 +141,41 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"        exp_date\r\n" + 
 			") c\r\n" + 
 			"ON\r\n" + 
-			"    a.bill_date = c.exp_date",nativeQuery=true)
+			"    a.bill_date = c.exp_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        SUM(withdrawal_amt) withdrawal_amt,\r\n" + 
+			"        DATE\r\n" + 
+			"    FROM\r\n" + 
+			"        t_pettycash_mgmnt petty\r\n" + 
+			"    WHERE\r\n" + 
+			"        DATE BETWEEN :fromDate AND :toDate AND fr_id =:frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        DATE\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        DATE\r\n" + 
+			") d\r\n" + 
+			"ON\r\n" + 
+			"    d.date = a.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t_credit_note_pos.crn_date,\r\n" + 
+			"        COALESCE(\r\n" + 
+			"            (\r\n" + 
+			"                SUM(t_credit_note_pos.grand_total)\r\n" + 
+			"            ),\r\n" + 
+			"            0\r\n" + 
+			"        ) AS credit_note_total_amt\r\n" + 
+			"    FROM\r\n" + 
+			"        t_credit_note_pos,\r\n" + 
+			"        t_sell_bill_header\r\n" + 
+			"    WHERE\r\n" + 
+			"        t_credit_note_pos.bill_no = t_sell_bill_header.sell_bill_no AND t_credit_note_pos.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_pos.del_status = 0 AND t_sell_bill_header.fr_id=:frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        t_credit_note_pos.crn_date\r\n" + 
+			") e\r\n" + 
+			"ON\r\n" + 
+			"    a.bill_date = e.crn_date",nativeQuery=true)
 List<GetRepFrDatewiseSellReport> getRepFrDatewiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
 
 
