@@ -26,6 +26,9 @@ public class GetMonthWiseReport {
 	private float advAmt;
 	private float regular;
 	private float chalan;
+	
+	private float creditNoteTotalAmt;
+	private float withdrawalAmt;
 
 	public int getSellBillNo() {
 		return sellBillNo;
@@ -133,12 +136,31 @@ public class GetMonthWiseReport {
 		this.chalan = chalan;
 	}
 
+	public float getCreditNoteTotalAmt() {
+		return creditNoteTotalAmt;
+	}
+
+	public void setCreditNoteTotalAmt(float creditNoteTotalAmt) {
+		this.creditNoteTotalAmt = creditNoteTotalAmt;
+	}
+
+	public float getWithdrawalAmt() {
+		return withdrawalAmt;
+	}
+
+	public void setWithdrawalAmt(float withdrawalAmt) {
+		this.withdrawalAmt = withdrawalAmt;
+	}
+
 	@Override
 	public String toString() {
-		return "GetMonthWiseReport [sellBillNo=" + sellBillNo + ", billDate=" + billDate + ", frId="
-				+ frId + ", month=" + month + ", cash=" + cash + ", card=" + card + ", other=" + other + ", frName="
-				+ frName + ", discountAmt=" + discountAmt + ", pendingAmt=" + pendingAmt + ", advAmt=" + advAmt
-				+ ", regular=" + regular + ", chalan=" + chalan + "]";
+		return "GetMonthWiseReport [sellBillNo=" + sellBillNo + ", billDate=" + billDate + ", frId=" + frId + ", month="
+				+ month + ", cash=" + cash + ", card=" + card + ", other=" + other + ", frName=" + frName
+				+ ", discountAmt=" + discountAmt + ", pendingAmt=" + pendingAmt + ", advAmt=" + advAmt + ", regular="
+				+ regular + ", chalan=" + chalan + ", creditNoteTotalAmt=" + creditNoteTotalAmt + ", withdrawalAmt="
+				+ withdrawalAmt + "]";
 	}
+
+	
 
 }
