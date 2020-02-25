@@ -5180,19 +5180,23 @@ public class RestApiController {
 	@RequestMapping(value = "/getSellBillHeaderNew", method = RequestMethod.POST)
 	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNew(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
-			@RequestParam("custId") List<String> custId) {
+			@RequestParam("custId") List<String> custId, @RequestParam("age") String age) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
 		List<SellBillHeaderNew> getSellBillHeaderList;
 
-		System.err.println("CUST -------------------- " + custId);
+		System.err.println("CUST -------------------- " + custId+"-----AGE=="+age );
 
 		if (custId.contains("0")) {
 			System.err.println("CUST -------------------- 0");
-
-			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate, frId);
+			if(age.equals("0")) {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate, frId);
+				
+			}else {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCustByAge(fromDate, toDate, frId, age);
+			}
 		} else {
 			System.err.println("CUST -----------*********** " + custId);
 
