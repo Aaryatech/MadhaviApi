@@ -76,7 +76,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    fr_id,\r\n" + 
 			"    discount_amt,\r\n" + 
 			"    pending_amt,\r\n" + 
-			"    adv_amt,\r\n" + 
+			"    COALESCE(adv_amt,0) as adv_amt,\r\n" + 
 			"    cash,\r\n" + 
 			"    card,\r\n" + 
 			"    other,\r\n" + 
@@ -94,7 +94,6 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"        t_sell_bill_header.fr_id,\r\n" + 
 			"        t_sell_bill_header.discount_amt,\r\n" + 
 			"        t_sell_bill_header.remaining_amt AS pending_amt,\r\n" + 
-			"        t_sell_bill_header.paid_amt AS adv_amt,\r\n" + 
 			"        SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"        SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
 			"        SUM(t_transaction_detail.e_pay_amt) AS other,\r\n" + 
@@ -108,7 +107,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    GROUP BY\r\n" + 
 			"        bill_date\r\n" + 
 			"    ORDER BY\r\n" + 
-			"        bill_date\r\n" + 
+			"        bill_date DESC\r\n" + 
 			") a\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -122,7 +121,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    GROUP BY\r\n" + 
 			"        exp_date\r\n" + 
 			"    ORDER BY\r\n" + 
-			"        exp_date\r\n" + 
+			"        exp_date DESC\r\n" + 
 			") b\r\n" + 
 			"ON\r\n" + 
 			"    a.bill_date = b.exp_date\r\n" + 
@@ -138,7 +137,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    GROUP BY\r\n" + 
 			"        exp_date\r\n" + 
 			"    ORDER BY\r\n" + 
-			"        exp_date\r\n" + 
+			"        exp_date DESC\r\n" + 
 			") c\r\n" + 
 			"ON\r\n" + 
 			"    a.bill_date = c.exp_date\r\n" + 
@@ -153,7 +152,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    GROUP BY\r\n" + 
 			"        DATE\r\n" + 
 			"    ORDER BY\r\n" + 
-			"        DATE\r\n" + 
+			"        DATE DESC\r\n" + 
 			") d\r\n" + 
 			"ON\r\n" + 
 			"    d.date = a.bill_date\r\n" + 
@@ -172,10 +171,25 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    WHERE\r\n" + 
 			"        t_credit_note_pos.bill_no = t_sell_bill_header.sell_bill_no AND t_credit_note_pos.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_pos.del_status = 0 AND t_sell_bill_header.fr_id=:frId\r\n" + 
 			"    GROUP BY\r\n" + 
-			"        t_credit_note_pos.crn_date\r\n" + 
+			"        t_credit_note_pos.crn_date ORDER BY t_credit_note_pos.crn_date DESC\r\n" + 
 			") e\r\n" + 
 			"ON\r\n" + 
-			"    a.bill_date = e.crn_date",nativeQuery=true)
+			"    a.bill_date = e.crn_date" +
+			" LEFT JOIN\r\n" + 
+			"     (SELECT\r\n" + 
+			"          		order_date,\r\n" + 
+			"                SUM(advance_amt) AS adv_amt\r\n" + 
+			"  FROM\r\n" + 
+			"                t_adv_order_header\r\n" + 
+			"  WHERE\r\n" + 
+			"                order_date BETWEEN :fromDate AND :toDate AND \r\n" + 
+			"                fr_id = :frId AND \r\n" + 
+			"                del_status = 0\r\n" + 
+			"  GROUP BY\r\n" + 
+			"            order_date\r\n" + 
+			"  ORDER BY\r\n" + 
+			"            order_date DESC) f \r\n" + 
+			"  ON f.order_date=a.bill_date",nativeQuery=true)
 List<GetRepFrDatewiseSellReport> getRepFrDatewiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
 
 
