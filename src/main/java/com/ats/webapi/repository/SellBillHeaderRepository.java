@@ -31,7 +31,7 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	List<SellBillHeader> getCustBills(@Param("custId") int custId,@Param("frId") int frId);
 
 	
-	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date=:todaysDate AND del_status=0 ORDER BY  t_sell_bill_header.invoice_no ASC",nativeQuery=true)
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date=:todaysDate AND del_status=0 ORDER BY  t_sell_bill_header.invoice_no DESC",nativeQuery=true)
 	List<SellBillHeader> getCustBillsTodays(@Param("todaysDate") String todaysDate,@Param("frId") int frId);
 	
 	
