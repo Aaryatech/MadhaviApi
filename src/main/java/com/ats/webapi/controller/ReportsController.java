@@ -26,6 +26,7 @@ import com.ats.webapi.model.ItemWiseReportList;
 import com.ats.webapi.model.MonthWiseReportList;
 import com.ats.webapi.model.Orders;
 import com.ats.webapi.model.POrder;
+import com.ats.webapi.model.report.CatWiseItemWiseSale;
 import com.ats.webapi.model.report.DispatchReport;
 import com.ats.webapi.model.report.GetCustBillTax;
 import com.ats.webapi.model.report.GetCustomerBill;
@@ -38,6 +39,7 @@ import com.ats.webapi.model.report.GetRepMonthwiseSell;
 import com.ats.webapi.model.report.GetRepTaxSell;
 import com.ats.webapi.model.report.PDispatchReport;
 import com.ats.webapi.model.report.SpKgSummaryDao;
+import com.ats.webapi.repository.CatWiseItemWiseSaleRepo;
 import com.ats.webapi.repository.DispatchOrderRepository;
 import com.ats.webapi.repository.ItemReportDetailRepo;
 import com.ats.webapi.repository.ItemReportRepo;
@@ -411,6 +413,36 @@ public class ReportsController {
 			getRepItemwiseSellList = repFrSellServise.getItemwiseSellReport(fromDate, toDate, frId, catId);
 		}
 		return getRepItemwiseSellList;
+
+	}
+	
+	@RequestMapping(value = "/getRepAllItemwiseSell", method = RequestMethod.POST)
+	public @ResponseBody List<CatWiseItemWiseSale> getRepAllItemwiseSell(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+		List<CatWiseItemWiseSale> getRepItemwiseSellList = new ArrayList<>();
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		
+			getRepItemwiseSellList = repo.getAllItemWiseSellDetails(fromDate, toDate, frId);
+			
+		return getRepItemwiseSellList;
+
+	}
+	
+	@Autowired CatWiseItemWiseSaleRepo repo;
+	@RequestMapping(value = "/getItemWiseSellRep", method = RequestMethod.POST)
+	public @ResponseBody List<CatWiseItemWiseSale> getItemWiseSellRep(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("catId") List<String> catId) {
+		List<CatWiseItemWiseSale> getItemSaleList = new ArrayList<>();
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		
+		getItemSaleList = repo.getItemWiseSellReportDetails(fromDate, toDate, frId, catId);
+		
+		return getItemSaleList;
 
 	}
 

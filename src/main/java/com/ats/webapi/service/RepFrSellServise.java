@@ -31,5 +31,6 @@ public interface RepFrSellServise {
 			List<String> catId);
 	List<GetCustomerBill> getCustBill(int billNo);
 	List<GetCustBillTax> getCustBillTax(int billNo);
+	List<GetRepItemwiseSell> getAllItemwiseSellReport(String fromDate, String toDate, List<String> frId);
 
 }

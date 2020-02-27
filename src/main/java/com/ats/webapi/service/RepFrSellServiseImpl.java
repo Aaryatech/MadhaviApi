@@ -126,6 +126,14 @@ List<GetRepItemwiseSell> getRepItemwiseSellList=repFrItemwiseSellRepository.getR
 		
 		return getRepItemwiseSellList;
 	}
+	@Override
+	public List<GetRepItemwiseSell> getAllItemwiseSellReport(String fromDate, String toDate, List<String> frId) {
+		// TODO Auto-generated method stub
+
+		List<GetRepItemwiseSell> getRepItemwiseSellList=repFrItemwiseSellRepository.getRepFrAllItemwiseSell(fromDate, toDate, frId);
+		
+		return getRepItemwiseSellList;
+	}
  
 
 }
