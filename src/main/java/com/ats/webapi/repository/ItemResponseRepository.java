@@ -29,4 +29,23 @@ public interface ItemResponseRepository extends JpaRepository<ItemRes, Integer>{
 			"        m_item.item_name Asc",nativeQuery=true)
 	List<ItemRes> findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
 
+	@Query(value="Select m_item.*,m_item_sup.item_uom,m_item_sup.uom_id from m_item,m_item_sup where m_item.del_status=:delStatus and "
+			+ "m_item.item_grp2=:subCatId and m_item.id=m_item_sup.item_id and  m_item.item_grp1=:catId order by m_item.item_grp2,m_item.item_name Asc",nativeQuery=true)
+	List<ItemRes> findByItemsByItemGrp1AndItemGrp2(@Param("catId")int catId, @Param("subCatId")int subCatId,@Param("delStatus") int i);
+
+	@Query(value="Select\n" + 
+			"        m_item.*,\n" + 
+			"        m_item_sup.item_uom,\n" + 
+			"        m_item_sup.uom_id \n" + 
+			"    from\n" + 
+			"        m_item,\n" + 
+			"        m_item_sup \n" + 
+			"    where\n" + 
+			"        m_item.del_status=:delStatus\n" + 
+			"        and m_item.id=m_item_sup.item_id \n" + 
+			"        and  m_item.item_grp1=:catId \n" + 
+			"    order by\n" + 
+			"        m_item.item_grp1,\n" + 
+			"        m_item.item_name Asc", nativeQuery=true)
+	List<ItemRes> findByItemsByItemGrp1(@Param("catId")int catId, @Param("delStatus") int i);
 }

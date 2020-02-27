@@ -3701,10 +3701,33 @@ public class RestApiController {
 
 		List<ItemRes> items = new ArrayList<ItemRes>();
 		try {
-			if (subCatId == -1) {
-				items = itemResRepository.findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
-			} else {
+			if (subCatId != -1) {
 				items = itemResRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
+			} else {
+				items = itemResRepository.findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
+			}
+		} catch (Exception e) {
+			items = new ArrayList<>();
+			e.printStackTrace();
+
+		}
+		return items;
+
+	}
+	
+	@RequestMapping(value = "/getItemsResByCatAndSubCatId", method = RequestMethod.POST)
+	public @ResponseBody List<ItemRes> getItemsResByCatAndSubCatId(@RequestParam("subCatId") int subCatId, @RequestParam("catId") int catId) {
+
+		List<ItemRes> items = new ArrayList<ItemRes>();
+		try {
+			System.out.println("Cat - SuvCat ----------"+catId+ " - "+subCatId);
+			if (subCatId == -1 && catId ==-1) {
+				items = itemResRepository.findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
+			} else if(subCatId == -1 && catId!=-1) {
+				items = itemResRepository.findByItemsByItemGrp1(catId, 0);
+			}
+			else {				
+				items = itemResRepository.findByItemsByItemGrp1AndItemGrp2(catId, subCatId, 0);
 			}
 		} catch (Exception e) {
 			items = new ArrayList<>();
