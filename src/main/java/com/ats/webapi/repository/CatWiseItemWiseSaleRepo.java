@@ -42,7 +42,7 @@ public interface CatWiseItemWiseSaleRepo extends JpaRepository<CatWiseItemWiseSa
 			"        AND h.fr_id=f.fr_id \n" + 
 			"    GROUP BY\n" + 
 			"        d.item_id,\n" + 
-			"        h.fr_id", nativeQuery=true)
+			"        h.fr_id ORDER BY d.cat_id", nativeQuery=true)
 	List<CatWiseItemWiseSale> getItemWiseSellReportDetails(@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
 
@@ -75,7 +75,7 @@ public interface CatWiseItemWiseSaleRepo extends JpaRepository<CatWiseItemWiseSa
 			"        AND h.fr_id=f.fr_id \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.item_id,\r\n" + 
-			"        h.fr_id",nativeQuery=true)
+			"        h.fr_id ORDER BY d.cat_id",nativeQuery=true)
 	List<CatWiseItemWiseSale> getAllItemWiseSellDetails(@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate, @Param("frId") List<String> frId);
 }

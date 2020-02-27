@@ -415,7 +415,7 @@ public class ReportsController {
 		return getRepItemwiseSellList;
 
 	}
-	
+	/************************************************************************************/
 	@RequestMapping(value = "/getRepAllItemwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<CatWiseItemWiseSale> getRepAllItemwiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
@@ -445,7 +445,7 @@ public class ReportsController {
 		return getItemSaleList;
 
 	}
-
+/********************************************************************************************
 	/*
 	 * @RequestMapping(value = "/getRepItemwiseSellForCat5", method =
 	 * RequestMethod.POST) public @ResponseBody List<GetRepItemwiseSell>
