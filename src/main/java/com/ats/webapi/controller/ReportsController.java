@@ -37,10 +37,12 @@ import com.ats.webapi.model.report.GetRepItemwiseSell;
 import com.ats.webapi.model.report.GetRepMenuwiseSell;
 import com.ats.webapi.model.report.GetRepMonthwiseSell;
 import com.ats.webapi.model.report.GetRepTaxSell;
+import com.ats.webapi.model.report.GetSellTaxRepSummary;
 import com.ats.webapi.model.report.PDispatchReport;
 import com.ats.webapi.model.report.SpKgSummaryDao;
 import com.ats.webapi.repository.CatWiseItemWiseSaleRepo;
 import com.ats.webapi.repository.DispatchOrderRepository;
+import com.ats.webapi.repository.GetSellTAxRepSummaryRepo;
 import com.ats.webapi.repository.ItemReportDetailRepo;
 import com.ats.webapi.repository.ItemReportRepo;
 import com.ats.webapi.repository.PDispatchReportRepository;
@@ -509,18 +511,20 @@ public class ReportsController {
 	}
 
 	// Sac May 10 change Tax Report for SP
+	
+	@Autowired GetSellTAxRepSummaryRepo sellTaxRepo;
 	@RequestMapping(value = "/getRepTaxSell", method = RequestMethod.POST)
-	public @ResponseBody List<GetRepTaxSell> getRepTaxSell(@RequestParam("fromDate") String fromDate,
+	public @ResponseBody List<GetSellTaxRepSummary> getRepTaxSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
 
-		List<GetRepTaxSell> tempList = null;
+		List<GetSellTaxRepSummary> tempList = null;
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		List<GetRepTaxSell> getRepTaxSellList = repFrSellServise.getTaxSellReport(fromDate, toDate, frId);
+		List<GetSellTaxRepSummary> getRepTaxSellList = sellTaxRepo.getTaxSellSummaryReport(fromDate, toDate, frId);
 		System.out.println("  List  :" + getRepTaxSellList);
 
-		LinkedHashMap<Float, GetRepTaxSell> hashList = new LinkedHashMap<Float, GetRepTaxSell>();
+		LinkedHashMap<Float, GetSellTaxRepSummary> hashList = new LinkedHashMap<Float, GetSellTaxRepSummary>();
 
 		for (int i = 0; i < getRepTaxSellList.size(); i++) {
 			float taxable = 0, igst = 0, sgst = 0, cgst = 0;
@@ -549,7 +553,7 @@ public class ReportsController {
 			}
 		}
 
-		tempList = new ArrayList<GetRepTaxSell>(hashList.values());
+		tempList = new ArrayList<GetSellTaxRepSummary>(hashList.values());
 		System.out.println("  List  :" + getRepTaxSellList);
 		return tempList;
 
@@ -566,36 +570,36 @@ public class ReportsController {
 
 		LinkedHashMap<Date, GetRepTaxSell> hashList = new LinkedHashMap<Date, GetRepTaxSell>();
 
-		for (int i = 0; i < getRepTaxSellList.size(); i++) {
-			float taxable = 0, igst = 0, sgst = 0, cgst = 0;
+		/*
+		 * for (int i = 0; i < getRepTaxSellList.size(); i++) { float taxable = 0, igst
+		 * = 0, sgst = 0, cgst = 0;
+		 * 
+		 * if (hashList.containsKey(getRepTaxSellList.get(i).getBillDate()) == false) {
+		 * 
+		 * for (int j = 0; j < getRepTaxSellList.size(); j++) {
+		 * 
+		 * if (getRepTaxSellList.get(j).getBillDate().equals(getRepTaxSellList.get(i).
+		 * getBillDate())) { taxable = taxable +
+		 * getRepTaxSellList.get(j).getTax_amount(); igst = igst +
+		 * getRepTaxSellList.get(j).getIgst(); sgst = sgst +
+		 * getRepTaxSellList.get(j).getSgst(); cgst = cgst +
+		 * getRepTaxSellList.get(j).getCgst(); } }
+		 * 
+		 * // System.err.println(getRepFrDatewiseSellResponse.get(i).getBillDate() + "
+		 * cash // " + cash + "card " // + card + "other " + other);
+		 * getRepTaxSellList.get(i).setTax_amount(taxable);
+		 * getRepTaxSellList.get(i).setIgst(igst);
+		 * getRepTaxSellList.get(i).setSgst(sgst);
+		 * getRepTaxSellList.get(i).setCgst(cgst);
+		 * hashList.put(getRepTaxSellList.get(i).getBillDate(),
+		 * getRepTaxSellList.get(i));
+		 * 
+		 * } }
+		 */
 
-			if (hashList.containsKey(getRepTaxSellList.get(i).getBillDate()) == false) {
-
-				for (int j = 0; j < getRepTaxSellList.size(); j++) {
-
-					if (getRepTaxSellList.get(j).getBillDate().equals(getRepTaxSellList.get(i).getBillDate())) {
-						taxable = taxable + getRepTaxSellList.get(j).getTax_amount();
-						igst = igst + getRepTaxSellList.get(j).getIgst();
-						sgst = sgst + getRepTaxSellList.get(j).getSgst();
-						cgst = cgst + getRepTaxSellList.get(j).getCgst();
-					}
-				}
-
-				// System.err.println(getRepFrDatewiseSellResponse.get(i).getBillDate() + " cash
-				// " + cash + "card "
-				// + card + "other " + other);
-				getRepTaxSellList.get(i).setTax_amount(taxable);
-				getRepTaxSellList.get(i).setIgst(igst);
-				getRepTaxSellList.get(i).setSgst(sgst);
-				getRepTaxSellList.get(i).setCgst(cgst);
-				hashList.put(getRepTaxSellList.get(i).getBillDate(), getRepTaxSellList.get(i));
-
-			}
-		}
-
-		tempList = new ArrayList<GetRepTaxSell>(hashList.values());
+		//tempList = new ArrayList<GetRepTaxSell>(hashList.values());
 		System.out.println("  List  :" + getRepTaxSellList);
-		return tempList;
+		return getRepTaxSellList;
 
 	}
 
