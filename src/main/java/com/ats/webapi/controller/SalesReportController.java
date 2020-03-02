@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.commons.Common;
+import com.ats.webapi.model.AdminInvoiceIssued;
 import com.ats.webapi.model.GrandTotalBillWise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwiseAllFr;
@@ -27,9 +28,11 @@ import com.ats.webapi.model.salesvaluereport.SalesReturnQtyReportList;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueDao;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueDaoList;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueItemDao;
+import com.ats.webapi.model.taxreport.AdminTax1Report;
 import com.ats.webapi.model.taxreport.NonRegFrTaxDao;
 import com.ats.webapi.model.taxreport.Tax1Report;
 import com.ats.webapi.model.taxreport.Tax2Report;
+import com.ats.webapi.repo.AdminInvoiceIssuedRepo;
 import com.ats.webapi.repo.GrandTotalBillWiseRepository;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseRepo;
@@ -40,6 +43,7 @@ import com.ats.webapi.repository.frpurchasereport.SalesReportRoyaltyRepo;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnQtyDaoRepository;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnValueDaoRepository;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnValueItemDaoRepo;
+import com.ats.webapi.repository.taxreport.AdminTax1ReportRepo;
 import com.ats.webapi.repository.taxreport.NonRegFrTaxDaoRepository;
 import com.ats.webapi.repository.taxreport.Tax1ReportRepository;
 import com.ats.webapi.repository.taxreport.Tax2ReportRepository;
@@ -171,6 +175,53 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
+	
+	@Autowired
+	AdminTax1ReportRepo adminTax1ReportRepo;
+	
+	//Anmol--26-02-2020----
+	@RequestMapping(value = { "/getAdminTax1Report" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdminTax1Report> getTax1Report(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("typeId") int typeId, @RequestParam("bType") int bType) {
+
+		List<AdminTax1Report> tax1ReportList = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+			List<Integer> itmList = new ArrayList<Integer>();
+			
+			System.err.println("fromDate - "+fromDate+"   toDate - "+toDate+"      TypeId - "+typeId+ "        bType - "+bType);
+
+			
+			if(typeId==1) {
+				
+				if(bType==1) {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabFrBillB2B(fromDate, toDate);
+				}else {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabFrBillB2C(fromDate, toDate);
+				}
+				
+				
+			}else if(typeId==3) {
+				
+				if(bType==1) {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabCompBillB2B(fromDate, toDate);
+				}else {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabCompBillB2C(fromDate, toDate);
+				}
+			}
+			
+			System.out.println(" Tax1 Report " + tax1ReportList);
+
+			
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
+	}
+	
+	
 
 	@RequestMapping(value = { "/getGrandTotalBillWise" }, method = RequestMethod.POST)
 	public @ResponseBody List<GrandTotalBillWise> getGrandTotalBillWise(@RequestParam("fromDate") String fromDate,
@@ -2188,4 +2239,26 @@ public class SalesReportController {
 
 	// ------------------------------------------------------------------------------------------------------------------------
 
+	
+	@Autowired
+	AdminInvoiceIssuedRepo adminInvoiceIssuedRepo;
+	
+	@RequestMapping(value = { "/getInvoiceIssued" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdminInvoiceIssued> getInvoiceIssued(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<AdminInvoiceIssued> tax1ReportList = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			tax1ReportList = adminInvoiceIssuedRepo.getInvoicesIssued(fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
+	}
+	
+	
 }

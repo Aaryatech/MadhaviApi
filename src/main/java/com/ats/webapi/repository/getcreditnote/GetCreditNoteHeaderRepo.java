@@ -34,6 +34,9 @@ public interface GetCreditNoteHeaderRepo extends JpaRepository<GetCreditNoteHead
 			+ "AND fr.fr_id=ch.fr_id order by ch.fr_id ", nativeQuery = true)
 
 	List<GetCreditNoteHeaders> getCreditHeadersByHeaderIds(@Param("crnIdList") List<String> crnIdList);
+	
+	
+	
 
 	@Query(value = "SELECT ch.crn_id,ch.ex_int1,ch.grn_gvn_sr_no_list,ch.ex_varchar1,ch.ex_varchar2,ch.crn_date,ch.fr_id,ch.crn_taxable_amt,ch.crn_total_tax,ch.crn_grand_total,ch.round_off,ch.is_tally_sync,  \n"
 			+ "		ch.crn_no,ch.grn_gvn_sr_no_list,ch.is_deposited,fr.fr_name,ch.created_date_time,fr.fr_address,fr.fr_gst_no,fr.is_same_state,ch.is_grn \n"

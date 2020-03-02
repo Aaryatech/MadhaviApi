@@ -32,6 +32,7 @@ import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Expense;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
+import com.ats.webapi.model.bill.OpsItemListForCustomerBill;
 import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.model.grngvn.GetGrnGvnForCreditNoteList;
 import com.ats.webapi.model.grngvn.GrnGvnHeader;
@@ -48,6 +49,7 @@ import com.ats.webapi.repo.BillTransactionRepo;
 import com.ats.webapi.repo.BillTransationRepo;
 import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repo.OpsItemListForCustomerBillRepo;
 import com.ats.webapi.repositories.ExpenseTransactionRepo;
 import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
@@ -5661,6 +5663,42 @@ public class RestApiController {
 		return itm;
 
 	}
+	
+	
+	
+	@Autowired
+	OpsItemListForCustomerBillRepo opsItemListForCustomerBillRepo;
+
+	@RequestMapping("/getOPsBillItemsBySellBillNo")
+	public @ResponseBody List<OpsItemListForCustomerBill> getOpsBillItemsBySellBillNo(@RequestParam int sellBillNo)
+			throws ParseException {
+		List<OpsItemListForCustomerBill> itm = null;
+		System.err.println("sellBillNo-------- is ---------" + sellBillNo);
+		try {
+			itm = opsItemListForCustomerBillRepo.getOpsItemByBill(sellBillNo);
+
+			for (int i = 0; i < itm.size(); i++) {
+				OpsItemListForCustomerBill temp = itm.get(i);
+
+				float total = temp.getOrignalMrp() * temp.getQty();
+				Float taxableAmt = (total * 100) / (100 + temp.getTaxPer());
+				temp.setTaxAmt(total - taxableAmt);
+				temp.setTaxableAmt(taxableAmt);
+				temp.setTotal(total);
+
+			}
+
+			System.err.println("data is" + itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in getBillItemsBySellBillNo" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
+	}
+
 
 	@RequestMapping("/getSellBillItemsBySellBillNoForEdit")
 	public @ResponseBody SellBillHeader getBillHeaderById(@RequestParam int sellBillNo) throws ParseException {

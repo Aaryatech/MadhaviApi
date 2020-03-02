@@ -28,7 +28,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp1AndDelStatusAndIsStockableOrderByItemGrp2Asc(String itemGrp1, int i, int stock);
 
 	@Query(value = "\n"
-			+ "select i.id,i.item_id,s.short_name as item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,i.is_saleable, i.is_stockable,i.is_fact_or_fr,i.ext_int1,i.ext_int2,i.ext_float1,i.ext_float2,i.ext_var1,i.ext_var2,i.ext_var3 from m_item i,m_item_sup s where s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0", nativeQuery = true)
+			+ "select i.id,i.item_id,s.short_name as item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life,i.is_saleable, i.is_stockable,i.is_fact_or_fr,i.ext_int1,i.ext_int2,i.ext_float1,i.ext_float2,i.ext_var1,s.item_hsncd as ext_var2,i.ext_var3 from m_item i,m_item_sup s where s.item_id=i.id and i.id IN (:itemList) AND i.del_status=0", nativeQuery = true)
 	public List<Item> findByDelStatusAndItemIdIn(@Param("itemList") List<Integer> itemList);
 
 	public List<Item> findByDelStatusOrderByItemGrp2(int i);// changed to order by subcatId 21/Apr
@@ -181,7 +181,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float1,\n" + 
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
-			"            i.ext_var2,\n" + 
+			"            s.item_hsncd as ext_var2,\n" + 
 			"            s.item_uom as  ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i, " + 
@@ -221,7 +221,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            i.ext_float1,\n" + 
 			"            i.ext_float2,\n" + 
 			"            i.ext_var1,\n" + 
-			"            i.ext_var2,\n" + 
+			"            s.item_hsncd as ext_var2,\n" + 
 			"             s.item_uom as ext_var3 \n" + 
 			"        from\n" + 
 			"            m_item i,\n" + 

@@ -85,7 +85,20 @@ public class SellBillDetail implements Serializable{
 	@Column(name="ext_float1")
 	private float extFloat1;
 	
+	@Column(name="ext_var1")
+	private String extVar1;
 	
+	
+	
+	
+	public String getExtVar1() {
+		return extVar1;
+	}
+
+	public void setExtVar1(String extVar1) {
+		this.extVar1 = extVar1;
+	}
+
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -262,6 +275,8 @@ public class SellBillDetail implements Serializable{
 	public void setExtFloat1(float extFloat1) {
 		this.extFloat1 = extFloat1;
 	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -271,7 +286,7 @@ public class SellBillDetail implements Serializable{
 				+ ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", discPer=" + discPer
 				+ ", discAmt=" + discAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + ", remark="
 				+ remark + ", delStatus=" + delStatus + ", billStockType=" + billStockType + ", extFloat1=" + extFloat1
-				+ "]";
+				+ ", extVar1=" + extVar1 + "]";
 	}
 	
 	

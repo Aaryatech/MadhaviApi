@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.GrandTotalBillWise;
 import com.ats.webapi.model.GrandTotalCreditnoteWise;
+import com.ats.webapi.model.reportv2.AdminCrNoteRegItem;
+import com.ats.webapi.model.reportv2.AdminCrNoteRegisterList;
 import com.ats.webapi.model.reportv2.CrNoteRegItem;
 import com.ats.webapi.model.reportv2.CrNoteRegSp;
 import com.ats.webapi.model.reportv2.CrNoteRegisterList;
@@ -22,6 +24,7 @@ import com.ats.webapi.model.reportv2.GstRegisterSp;
 import com.ats.webapi.model.reportv2.HSNWiseReport;
 import com.ats.webapi.model.reportv2.SalesReport;
 import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
+import com.ats.webapi.repository.reportv2.AdminCrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
@@ -119,6 +122,29 @@ public class ReportControllerV2 {
 		}
 		return saleList;
 	}
+	
+	
+	//Anmol--27-02-2020----
+	@RequestMapping(value = { "/getAdminHsnBillReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNWiseReport> getAdminHsnBillReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
+		List<HSNWiseReport> saleList = new ArrayList<>();
+		try {
+
+			if (bTypeId == 1) {
+
+				saleList = hSNWiseReportRepo.getAdminReportBillWiseFrWise(fromDate, toDate);
+
+			} else if (bTypeId == 3) {
+
+				saleList = hSNWiseReportRepo.getAdminReportBillWiseCompOutletWise(fromDate, toDate);
+
+			} 
+		} catch (Exception e) {
+		}
+		return saleList;
+	}
+	
 
 	@RequestMapping(value = { "/getHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
@@ -128,6 +154,29 @@ public class ReportControllerV2 {
 		try {
 
 			saleList = hSNWiseReportRepo.getReportHsn(fromDate, toDate);
+			System.out.println(saleList.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return saleList;
+	}
+	
+	//Anmol--27-02-2020--
+	@RequestMapping(value = { "/getAdminHsnReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate,@RequestParam("bTypeId") int bTypeId) {
+
+		List<HSNWiseReport> saleList = new ArrayList<>();
+		try {
+			
+			if(bTypeId==1) {
+				saleList = hSNWiseReportRepo.getAdminReportHsnCrFrWise(fromDate, toDate);
+			}else if(bTypeId==3) {
+				saleList = hSNWiseReportRepo.getAdminReportHsnCrCompOutletWise(fromDate, toDate);
+			}
+			
 			System.out.println(saleList.toString());
 
 		} catch (Exception e) {
@@ -533,6 +582,41 @@ public class ReportControllerV2 {
 		List<CrNoteRegSp> crNoteRegSpList = new ArrayList<>();
 
 		crNoteRegItemList = getCrNoteRegItemRepo.getCrNoteRegItemDone(fromDate, toDate);
+		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
+
+		// crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSpDone(fromDate, toDate);
+		crNoteList.setCrNoteRegSpList(crNoteRegSpList);
+
+		System.err.println("size Item  crNoteList " + crNoteList.getCrNoteRegItemList().size());
+		System.err.println("size Sp  crNoteList " + crNoteList.getCrNoteRegSpList());
+
+		return crNoteList;
+	}
+
+	@Autowired
+	AdminCrNoteRegItemRepo adminCrNoteRegItemRepo;
+	
+	// Anmol--26-02-2020-----------
+	@RequestMapping(value = { "/getAdminCrNoteRegisterDone" }, method = RequestMethod.POST)
+	public @ResponseBody AdminCrNoteRegisterList getAdminCrNoteRegisterDone(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("typeId") int typeId,
+			@RequestParam("bType") int bType) {
+
+		AdminCrNoteRegisterList crNoteList = new AdminCrNoteRegisterList();
+
+		List<AdminCrNoteRegItem> crNoteRegItemList = null;
+		List<CrNoteRegSp> crNoteRegSpList = new ArrayList<>();
+		
+		if(typeId==1 && bType==1) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getCrNoteRegItemDoneB2B(fromDate, toDate);
+		}else if(typeId==1 && bType==2) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getCrNoteRegItemDoneB2C(fromDate, toDate);
+		}else if(typeId==3 && bType==1) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getCompCrNoteB2B(fromDate, toDate);
+		}else if(typeId==3 && bType==2) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getCompCrNoteB2C(fromDate, toDate);
+		}
+		
 		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
 
 		// crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSpDone(fromDate, toDate);

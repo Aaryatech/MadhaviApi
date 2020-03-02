@@ -32,12 +32,14 @@ import com.ats.webapi.model.advorder.AdvanceOrderHeader;
 import com.ats.webapi.model.advorder.GetAdvanceOrderList;
 import com.ats.webapi.model.bill.ExpenseTransaction;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
+import com.ats.webapi.model.bill.OpsItemListForCustomerBill;
 import com.ats.webapi.model.rawmaterial.ItemSfHeader;
 import com.ats.webapi.model.stock.UpdateBmsStock;
 import com.ats.webapi.model.stock.UpdateBmsStockList;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
+import com.ats.webapi.repo.OpsItemListForCustomerBillRepo;
 import com.ats.webapi.repo.TransactionDetailWithDiscRepo;
 import com.ats.webapi.repository.CustomerAmountsRepo;
 import com.ats.webapi.repository.SellBillHeaderRepository;
@@ -317,6 +319,41 @@ public class AdvanceOrderApiController {
 		return itm;
 
 	}
+	
+	
+	@Autowired
+	OpsItemListForCustomerBillRepo opsItemListForCustomerBillRepo;
+
+	@RequestMapping("/getOpsAdvanceOrderItemsByHeadId")
+	public @ResponseBody List<OpsItemListForCustomerBill> getOpsAdvanceOrderItemsByHeadId(@RequestParam int headId)
+			throws ParseException {
+		List<OpsItemListForCustomerBill> itm = null;
+		System.err.println("data is" + headId);
+		try {
+			itm = opsItemListForCustomerBillRepo.getOpsItem(headId);
+
+			for (int i = 0; i < itm.size(); i++) {
+				OpsItemListForCustomerBill temp = itm.get(i);
+
+				float total = temp.getOrignalMrp() * temp.getQty();
+				Float taxableAmt = (total * 100) / (100 + temp.getTaxPer());
+				temp.setTaxAmt(total - taxableAmt);
+				temp.setTaxableAmt(taxableAmt);
+				temp.setTotal(total);
+
+			}
+
+			System.err.println("data is" + itm.toString());
+
+		} catch (Exception e) {
+			System.out.println("Exc in advanceOrderHistoryHeader" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return itm;
+
+	}
+	
 
 	@RequestMapping(value = { "/updateAdvOrderHeadAndDetail" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateFrSettingBillNo(@RequestParam("advHeadId") int advHeadId) {

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -44,6 +45,51 @@ public class Tax1Report implements Serializable{
 	private float totalTax;
 	
 	private float grandTotal;
+	
+	@Transient
+	private String billToName;
+	@Transient
+	private String billToGst;
+	@Transient
+	private String shipToName;
+	@Transient
+	private String shipToGst;
+	
+	
+	
+
+	public String getBillToName() {
+		return billToName;
+	}
+
+	public void setBillToName(String billToName) {
+		this.billToName = billToName;
+	}
+
+	
+	public String getBillToGst() {
+		return billToGst;
+	}
+
+	public void setBillToGst(String billToGst) {
+		this.billToGst = billToGst;
+	}
+
+	public String getShipToName() {
+		return shipToName;
+	}
+
+	public void setShipToName(String shipToName) {
+		this.shipToName = shipToName;
+	}
+
+	public String getShipToGst() {
+		return shipToGst;
+	}
+
+	public void setShipToGst(String shipToGst) {
+		this.shipToGst = shipToGst;
+	}
 
 	public int getBillDetailNo() {
 		return billDetailNo;
@@ -156,13 +202,17 @@ public class Tax1Report implements Serializable{
 	public void setGrandTotal(float grandTotal) {
 		this.grandTotal = grandTotal;
 	}
+	
+	
 
 	@Override
 	public String toString() {
 		return "Tax1Report [billDetailNo=" + billDetailNo + ", invoiceNo=" + invoiceNo + ", billDate=" + billDate
 				+ ", frName=" + frName + ", frGstNo=" + frGstNo + ", billNo=" + billNo + ", cgstPer=" + cgstPer
 				+ ", sgstPer=" + sgstPer + ", taxPer=" + taxPer + ", taxableAmt=" + taxableAmt + ", cgstAmt=" + cgstAmt
-				+ ", sgstAmt=" + sgstAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + "]";
+				+ ", sgstAmt=" + sgstAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + ", billToName="
+				+ billToName + ", billToGst=" + billToGst + ", shipToName=" + shipToName + ", shipToGst=" + shipToGst
+				+ "]";
 	}
 	
 	
