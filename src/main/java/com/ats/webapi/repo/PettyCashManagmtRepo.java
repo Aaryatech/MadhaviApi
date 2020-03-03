@@ -2,7 +2,10 @@ package com.ats.webapi.repo;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -24,6 +27,11 @@ public interface PettyCashManagmtRepo extends JpaRepository<PettyCashManagmt, In
 
 	@Query(value="SELECT * FROM t_pettycash_mgmnt WHERE fr_id=:frId AND status=:status AND date BETWEEN :fromDate AND :toDate ORDER BY pettycash_id DESC",nativeQuery=true)
 	public List<PettyCashManagmt> findByFrIdAndStatusDateWise(@Param("frId") int frId,@Param("status")  int status,@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE t_pettycash_mgmnt SET withdrawal_amt=:withdrawl, closing_amt=:closeAmt WHERE pettycash_id = :id", nativeQuery=true)
+	public int changeWithdrawalAmt(@Param("id") int id, @Param("closeAmt") float closeAmt, @Param("withdrawl") float withdrawl);
 	
 
 }

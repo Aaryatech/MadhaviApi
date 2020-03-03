@@ -124,6 +124,26 @@ public class PettyCashApiController {
 		}
 		return petty;
 	}
+	
+	@RequestMapping(value = { "/editPettyCashWithdrawAmt" }, method = RequestMethod.POST)
+	public Info editPettyCashWithdrawAmt(@RequestParam("id") int id, @RequestParam("closeAmt") float closeAmt, 
+			@RequestParam("withdrawl") float withdrawl) {
+		Info info = new Info();
+		try {
+			int res = pettyRepo.changeWithdrawalAmt(id, closeAmt, withdrawl);
+			if(res>0) {
+				info.setError(false);
+				info.setMessage("sucess");
+			}else {
+				info.setError(true);
+				info.setMessage("fail");
+			}
+		} catch (Exception e) {
+			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return info;
+	}
 
 	@RequestMapping(value = { "/getPettyCashListDateWise" }, method = RequestMethod.POST)
 	public List<PettyCashManagmt> getPettyCashList(@RequestParam("frId") int frId,
