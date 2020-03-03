@@ -3334,6 +3334,27 @@ public class RestApiController {
 		}
 		return errorMessage;
 	}
+	
+	
+	@RequestMapping(value = "/activateItems", method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage activateItems(@RequestParam List<Integer> id) {
+
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		int isUpdated = itemRepository.activateItems(id);
+		if (isUpdated >= 1) {
+
+			errorMessage.setError(false);
+			errorMessage.setMessage("Items Isused changed Successfully");
+		} else {
+			errorMessage.setError(false);
+			errorMessage.setMessage("Items Isused Changes Failed");
+
+		}
+		return errorMessage;
+	}
+	
+	
 
 	// Delete Flavor
 	@RequestMapping(value = "/updateFlavourStatus", method = RequestMethod.POST)

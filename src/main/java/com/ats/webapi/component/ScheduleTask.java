@@ -202,15 +202,13 @@ public class ScheduleTask {
 							float withdrawAmt = 0;
 							float opnAmt = 0;
 							float cashEdtAmt = 0;
-							int pettyCashId = 0;
 							try {
 
 								cashAmt = petty.getTotalAmt();
-								//withdrawAmt = petty.getWithdrawalAmt();
+								withdrawAmt = cashAmt;
 								opnAmt = petty.getClosingAmt();
 								cashEdtAmt = petty.getCashAmt();
 								closAmt = opnAmt+cashAmt-withdrawAmt;
-								pettyCashId = petty.getPettycashId();
 							} catch (Exception e) {
 								// TODO: handle exception
 								e.printStackTrace();

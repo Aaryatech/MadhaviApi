@@ -14,6 +14,9 @@ public interface GetItemDetailRepository extends JpaRepository<GetItemDetail, In
 
 	@Query(value="select d.item_detail_id,d.item_id, d.rm_id, d.rm_name, i.item_name, d.no_pieces_per_item, d.rm_type, d.rm_uom_id, d.rm_qty,d.rm_weight,d.del_status,d.int_1,d.int_2 from m_item_detail d,m_item i where i.id=d.item_id  AND d.item_id=:itemId AND d.del_status=0;",nativeQuery=true)
 	List<GetItemDetail> findAllItemDetailByDelStatus(@Param("itemId")int itemId);
+	
+	@Query(value="SELECT d.item_detail_id, d.item_id, d.rm_id, d.rm_name, i.item_name, d.no_pieces_per_item, d.rm_type, d.rm_uom_id, d.rm_qty, d.rm_weight, d.del_status, d.int_1, d.int_2 FROM m_item_detail d, m_item i WHERE i.id = d.item_id AND d.int_1 =:type AND d.del_status = 0 ORDER BY i.item_grp1,i.item_grp2,i.item_name ",nativeQuery=true)
+	List<GetItemDetail> getItemRecipeListByItemAndType(@Param("type")int type);
 
 	
 }

@@ -49,10 +49,28 @@ public class AdvOrderForAdminDash {
 	private String address;
 	private String km;
 	
+	private String pincode;
+	private String remark;
 	
 	
 	
 	
+
+	public String getPincode() {
+		return pincode;
+	}
+
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public String getAddress() {
 		return address;
@@ -226,7 +244,8 @@ public class AdvOrderForAdminDash {
 				+ isDailyMart + ", delStatus=" + delStatus + ", exVar1=" + exVar1 + ", orderDate=" + orderDate
 				+ ", prodDate=" + prodDate + ", deliveryDate=" + deliveryDate + ", discAmt=" + discAmt + ", frName="
 				+ frName + ", custName=" + custName + ", phoneNumber=" + phoneNumber + ", exVar2=" + exVar2
-				+ ", isBillGenerated=" + isBillGenerated + ", address=" + address + ", km=" + km + "]";
+				+ ", isBillGenerated=" + isBillGenerated + ", address=" + address + ", km=" + km + ", pincode="
+				+ pincode + ", remark=" + remark + "]";
 	}
 
 

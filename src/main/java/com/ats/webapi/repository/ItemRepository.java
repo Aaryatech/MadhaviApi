@@ -85,6 +85,11 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	@Modifying
 	@Query("UPDATE Item i SET i.itemIsUsed=4  WHERE i.id IN (:idList)")
 	public int inactivateItems(@Param("idList") List<Integer> id);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Item i SET i.itemIsUsed=1  WHERE i.id IN (:idList)")
+	public int activateItems(@Param("idList") List<Integer> id);
 
 	@Transactional
 	@Modifying

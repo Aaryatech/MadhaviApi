@@ -25,7 +25,26 @@ public interface PettyCashManagmtRepo extends JpaRepository<PettyCashManagmt, In
 
 	public PettyCashManagmt findByPettycashId(int id);
 
-	@Query(value="SELECT * FROM t_pettycash_mgmnt WHERE fr_id=:frId AND status=:status AND date BETWEEN :fromDate AND :toDate ORDER BY pettycash_id DESC",nativeQuery=true)
+	@Query(value="SELECT  pettycash_id,\n" + 
+			"    fr_id,\n" + 
+			"    date,\n" + 
+			"    opening_amt,\n" + 
+			"    cash_amt,\n" + 
+			"    card_amt,\n" + 
+			"    other_amt,\n" + 
+			"    total_amt,\n" + 
+			"    withdrawal_amt,\n" + 
+			"    closing_amt,\n" + 
+			"    status,\n" + 
+			"    opn_edit_amt,\n" + 
+			"    cash_edit_amt,\n" + 
+			"    card_edit_Amt,\n" + 
+			"    ttl_edit_amt,\n" + 
+			"    ex_float1,\n" + 
+			"    ex_var1,\n" + 
+			"    ex_var2,\n" + 
+			"    CASE WHEN t_pettycash_mgmnt.date = SUBDATE(CURRENT_DATE, 1) THEN 1 ELSE 0\n" + 
+			"END AS ex_int1 FROM t_pettycash_mgmnt WHERE fr_id=:frId AND status=:status AND date BETWEEN :fromDate AND :toDate ORDER BY pettycash_id DESC",nativeQuery=true)
 	public List<PettyCashManagmt> findByFrIdAndStatusDateWise(@Param("frId") int frId,@Param("status")  int status,@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 	@Transactional
