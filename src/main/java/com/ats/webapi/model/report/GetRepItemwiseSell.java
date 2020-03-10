@@ -44,6 +44,9 @@ public class GetRepItemwiseSell {
 	
 	private float qty;
 	
+	private float discAmt;
+	private float payableAmt;
+	
 	private float amount;
 
 	public int getSellBillNo() {
@@ -126,13 +129,21 @@ public class GetRepItemwiseSell {
 		this.billDate = billDate;
 	}
 
-	@Override
-	public String toString() {
-		return "GetRepItemwiseSell [sellBillNo=" + sellBillNo + ", frId=" + frId + ", billDate=" + billDate
-				+ ", frName=" + frName + ", itemId=" + itemId + ", itemName=" + itemName + ", catId=" + catId
-				+ ", catName=" + catName + ", qty=" + qty + ", amount=" + amount + "]";
+	public float getDiscAmt() {
+		return discAmt;
 	}
 
-	 
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
+	public float getPayableAmt() {
+		return payableAmt;
+	}
+
+	public void setPayableAmt(float payableAmt) {
+		this.payableAmt = payableAmt;
+	}
+
 	
 }
