@@ -26,6 +26,7 @@ import com.ats.webapi.model.ItemWiseReportList;
 import com.ats.webapi.model.MonthWiseReportList;
 import com.ats.webapi.model.Orders;
 import com.ats.webapi.model.POrder;
+import com.ats.webapi.model.report.CRNSaleTaxBillReport;
 import com.ats.webapi.model.report.CatWiseItemWiseSale;
 import com.ats.webapi.model.report.DispatchReport;
 import com.ats.webapi.model.report.GetCustBillTax;
@@ -40,6 +41,7 @@ import com.ats.webapi.model.report.GetRepTaxSell;
 import com.ats.webapi.model.report.GetSellTaxRepSummary;
 import com.ats.webapi.model.report.PDispatchReport;
 import com.ats.webapi.model.report.SpKgSummaryDao;
+import com.ats.webapi.repository.CRNSaleTaxBillReportRepo;
 import com.ats.webapi.repository.CatWiseItemWiseSaleRepo;
 import com.ats.webapi.repository.DispatchOrderRepository;
 import com.ats.webapi.repository.GetSellTAxRepSummaryRepo;
@@ -558,6 +560,21 @@ public class ReportsController {
 		return tempList;
 
 	}
+	
+	
+	@RequestMapping(value = "/getCRNTaxSell", method = RequestMethod.POST)
+	public @ResponseBody List<GetSellTaxRepSummary> getCRNTaxSell(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+
+		List<GetSellTaxRepSummary> tempList = null;
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		List<GetSellTaxRepSummary> getRepTaxSellList = sellTaxRepo.getCRNTaxSellSummaryReport(fromDate, toDate, frId);
+		System.out.println("  List  :" + getRepTaxSellList);
+		return getRepTaxSellList;
+
+	}
 
 	// Sac May 10 change Tax Report for SP
 	@RequestMapping(value = "/getRepDatewiseTaxSell", method = RequestMethod.POST)
@@ -611,9 +628,28 @@ public class ReportsController {
 		toDate = Common.convertToYMD(toDate);
 		List<GetRepTaxSell> getRepTaxSellList = repFrSellServise.getBillwiseTaxSellReport(fromDate, toDate, frId);
 		System.out.println("  List  :" + getRepTaxSellList);
+		return getRepTaxSellList; 
+
+	}
+	
+	
+	
+	@Autowired
+	CRNSaleTaxBillReportRepo cRNSaleTaxBillReportRepo;
+	
+	//Anmol--10-03-2020
+	@RequestMapping(value = "/getRepCRNBillwiseTaxSell", method = RequestMethod.POST)
+	public @ResponseBody List<CRNSaleTaxBillReport> getRepCRNBillwiseTaxSell(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+		List<CRNSaleTaxBillReport> getRepTaxSellList = cRNSaleTaxBillReportRepo.getRepFrCrnwiseTaxSell(fromDate, toDate, frId);
+		System.out.println("  List  :" + getRepTaxSellList);
 		return getRepTaxSellList;
 
 	}
+	
 
 	// Sell Report
 	// End-------------------------------------------------------------------

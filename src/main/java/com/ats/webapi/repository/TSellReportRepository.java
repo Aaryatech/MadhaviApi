@@ -10,51 +10,100 @@ import com.ats.webapi.model.TSellReport;
 
 public interface TSellReportRepository extends JpaRepository<TSellReport, Integer>{
 	
-	@Query(value="select\r\n" + 
+	@Query(value="SELECT\r\n" + 
+			"    t1.item_id,\r\n" + 
+			"    t1.item_name,\r\n" + 
+			"    t1.hsn_no,\r\n" + 
+			"    COALESCE(t1.cgst - t2.cgst, t1.cgst) AS cgst,\r\n" + 
+			"    COALESCE(t1.sgst - t2.sgst, t1.sgst) AS sgst,\r\n" + 
+			"    COALESCE(t1.igst - t2.igst, t1.igst) AS igst,\r\n" + 
+			"    COALESCE(\r\n" + 
+			"        t1.total_tax - t2.total_tax,\r\n" + 
+			"        t1.total_tax\r\n" + 
+			"    ) AS total_tax,\r\n" + 
+			"    COALESCE(\r\n" + 
+			"        t1.taxable_amt - t2.taxable_amt,\r\n" + 
+			"        t1.taxable_amt\r\n" + 
+			"    ) AS taxable_amt,\r\n" + 
+			"    COALESCE(\r\n" + 
+			"        t1.grand_total - t2.grand_total,\r\n" + 
+			"        t1.grand_total\r\n" + 
+			"    ) AS grand_total\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
 			"        d.item_id,\r\n" + 
 			"        i.item_name,\r\n" + 
-			"        s.item_hsncd as hsn_no,\r\n" + 
-			"        sum(d.cgst_rs-(d.igst_rs/2)) as cgst,\r\n" + 
-			"        sum(d.sgst_rs-(d.igst_rs/2)) as sgst,\r\n" + 
-			"        sum(d.igst_rs) as igst,\r\n" + 
-			"        sum(d.total_tax) as total_tax,\r\n" + 
-			"        sum(d.taxable_amt) as taxable_amt,\r\n" + 
-			"        sum(d.grand_total) as grand_total \r\n" + 
-			"    from\r\n" + 
-			"        t_sell_bill_detail d ,\r\n" + 
+			"        s.item_hsncd AS hsn_no,\r\n" + 
+			"        SUM(d.cgst_rs) AS cgst,\r\n" + 
+			"        SUM(d.sgst_rs) AS sgst,\r\n" + 
+			"        SUM(d.igst_rs) AS igst,\r\n" + 
+			"        SUM(d.total_tax) AS total_tax,\r\n" + 
+			"        SUM(d.taxable_amt) AS taxable_amt,\r\n" + 
+			"        SUM(d.grand_total) AS grand_total\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
 			"        m_item i,\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
-			"        m_item_sup s \r\n" + 
-			"    where\r\n" + 
-			"        h.bill_date between :fromDate AND :toDate \r\n" + 
-			"        and d.sell_bill_no=h.sell_bill_no \r\n" + 
-			"        and d.item_id=i.id \r\n" + 
-			"        and d.item_id=s.item_id \r\n" + 
-			"        and h.fr_id=:frId \r\n" + 
-			"    group by\r\n" + 
-			"        hsn_no  \r\n" + 
-			"    UNION\r\n" + 
-			"    ALL  SELECT\r\n" + 
-			"        t_sp_cake.sp_id,\r\n" + 
-			"        m_sp_cake.sp_name AS item_name,\r\n" + 
-			"        m_spcake_sup.sp_hsncd as hsn_no,\r\n" + 
-			"        SUM(t_sp_cake.tax_1_amt) as cgst,\r\n" + 
-			"        SUM(t_sp_cake.tax_2_amt) as sgst,\r\n" + 
-			"        0 as igst,\r\n" + 
-			"        SUM(t_sp_cake.tax_1_amt+t_sp_cake.tax_2_amt) as total_tax,\r\n" + 
-			"        SUM(t_sp_cake.sp_grand_total-(t_sp_cake.tax_1_amt+t_sp_cake.tax_2_amt)) as taxable_amt,\r\n" + 
-			"        sum(t_sp_cake.sp_grand_total) as grand_total                                                \r\n" + 
-			"    FROM\r\n" + 
-			"        t_sp_cake,\r\n" + 
-			"        m_sp_cake,\r\n" + 
-			"        m_spcake_sup                                                 \r\n" + 
+			"        m_item_sup s\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_sp_cake.fr_id IN(:frId)         \r\n" + 
-			"        AND t_sp_cake.sp_id=m_sp_cake.sp_id \r\n" + 
-			"        and m_sp_cake.sp_id=m_spcake_sup.sp_id \r\n" + 
-			"        and  t_sp_cake.sp_delivery_date BETWEEN :fromDate AND :toDate     \r\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId\r\n" + 
 			"    GROUP BY\r\n" + 
-			"        hsn_no",nativeQuery=true)
+			"        hsn_no\r\n" + 
+			") t1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        c.item_id,\r\n" + 
+			"        i.item_name,\r\n" + 
+			"        s.item_hsncd AS hsn_no,\r\n" + 
+			"        SUM(c.cgst_amt) AS cgst,\r\n" + 
+			"        SUM(c.sgst_amt) AS sgst,\r\n" + 
+			"        SUM(c.igst_amt) AS igst,\r\n" + 
+			"        SUM(c.sgst_amt + c.sgst_amt) AS total_tax,\r\n" + 
+			"        SUM(c.taxable_amt) AS taxable_amt,\r\n" + 
+			"        SUM(c.grand_total) AS grand_total\r\n" + 
+			"    FROM\r\n" + 
+			"        t_credit_note_pos c,\r\n" + 
+			"        m_item i,\r\n" + 
+			"        m_item_sup s\r\n" + 
+			"    WHERE\r\n" + 
+			"        c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        hsn_no\r\n" + 
+			") t2\r\n" + 
+			"ON\r\n" + 
+			"    t1.hsn_no = t2.hsn_no\r\n" + 
+			"UNION ALL\r\n" + 
+			"SELECT\r\n" + 
+			"    c.item_id,\r\n" + 
+			"    i.item_name,\r\n" + 
+			"    s.item_hsncd AS hsn_no,\r\n" + 
+			"    SUM(c.cgst_amt) AS cgst,\r\n" + 
+			"    SUM(c.sgst_amt) AS sgst,\r\n" + 
+			"    SUM(c.igst_amt) AS igst,\r\n" + 
+			"    SUM(c.sgst_amt + c.sgst_amt) AS total_tax,\r\n" + 
+			"    SUM(c.taxable_amt) AS taxable_amt,\r\n" + 
+			"    SUM(c.grand_total) AS grand_total\r\n" + 
+			"FROM\r\n" + 
+			"    t_credit_note_pos c,\r\n" + 
+			"    m_item i,\r\n" + 
+			"    m_item_sup s\r\n" + 
+			"WHERE\r\n" + 
+			"    c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId AND s.item_hsncd NOT IN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        s.item_hsncd AS hsn_no\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_item i,\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        m_item_sup s\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        hsn_no\r\n" + 
+			")\r\n" + 
+			"GROUP BY\r\n" + 
+			"    hsn_no",nativeQuery=true)
 	List<TSellReport> hsnCodeWiseReport( @Param("frId")int frId,@Param("fromDate")String fromDate,@Param("toDate")String toDate);
 
 }

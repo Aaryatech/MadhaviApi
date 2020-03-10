@@ -122,16 +122,19 @@ public class ReportControllerV2 {
 		}
 		return saleList;
 	}
-	
-	
-	//Anmol--27-02-2020----
+
+	// Anmol--27-02-2020----
 	@RequestMapping(value = { "/getAdminHsnBillReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getAdminHsnBillReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
 		List<HSNWiseReport> saleList = new ArrayList<>();
 		try {
 
-			if (bTypeId == 1) {
+			if (bTypeId == 0) {
+
+				saleList = hSNWiseReportRepo.getAdminReportAll(fromDate, toDate);
+
+			} else if (bTypeId == 1) {
 
 				saleList = hSNWiseReportRepo.getAdminReportBillWiseFrWise(fromDate, toDate);
 
@@ -139,12 +142,11 @@ public class ReportControllerV2 {
 
 				saleList = hSNWiseReportRepo.getAdminReportBillWiseCompOutletWise(fromDate, toDate);
 
-			} 
+			}
 		} catch (Exception e) {
 		}
 		return saleList;
 	}
-	
 
 	@RequestMapping(value = { "/getHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
@@ -162,21 +164,23 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
-	
-	//Anmol--27-02-2020--
+
+	// Anmol--27-02-2020--
 	@RequestMapping(value = { "/getAdminHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate,@RequestParam("bTypeId") int bTypeId) {
+			@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
 
 		List<HSNWiseReport> saleList = new ArrayList<>();
 		try {
-			
-			if(bTypeId==1) {
+
+			if (bTypeId == 0) {
+				saleList = hSNWiseReportRepo.getAdminReportCRNAll(fromDate, toDate);
+			} else if (bTypeId == 1) {
 				saleList = hSNWiseReportRepo.getAdminReportHsnCrFrWise(fromDate, toDate);
-			}else if(bTypeId==3) {
+			} else if (bTypeId == 3) {
 				saleList = hSNWiseReportRepo.getAdminReportHsnCrCompOutletWise(fromDate, toDate);
 			}
-			
+
 			System.out.println(saleList.toString());
 
 		} catch (Exception e) {
@@ -595,7 +599,7 @@ public class ReportControllerV2 {
 
 	@Autowired
 	AdminCrNoteRegItemRepo adminCrNoteRegItemRepo;
-	
+
 	// Anmol--26-02-2020-----------
 	@RequestMapping(value = { "/getAdminCrNoteRegisterDone" }, method = RequestMethod.POST)
 	public @ResponseBody AdminCrNoteRegisterList getAdminCrNoteRegisterDone(@RequestParam("fromDate") String fromDate,
@@ -606,17 +610,21 @@ public class ReportControllerV2 {
 
 		List<AdminCrNoteRegItem> crNoteRegItemList = null;
 		List<CrNoteRegSp> crNoteRegSpList = new ArrayList<>();
-		
-		if(typeId==1 && bType==1) {
+
+		if (typeId == 0 && bType == 1) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getAllB2B(fromDate, toDate);
+		} else if (typeId == 0 && bType == 2) {
+			crNoteRegItemList = adminCrNoteRegItemRepo.getAllB2C(fromDate, toDate);
+		} else if (typeId == 1 && bType == 1) {
 			crNoteRegItemList = adminCrNoteRegItemRepo.getCrNoteRegItemDoneB2B(fromDate, toDate);
-		}else if(typeId==1 && bType==2) {
+		} else if (typeId == 1 && bType == 2) {
 			crNoteRegItemList = adminCrNoteRegItemRepo.getCrNoteRegItemDoneB2C(fromDate, toDate);
-		}else if(typeId==3 && bType==1) {
+		} else if (typeId == 3 && bType == 1) {
 			crNoteRegItemList = adminCrNoteRegItemRepo.getCompCrNoteB2B(fromDate, toDate);
-		}else if(typeId==3 && bType==2) {
+		} else if (typeId == 3 && bType == 2) {
 			crNoteRegItemList = adminCrNoteRegItemRepo.getCompCrNoteB2C(fromDate, toDate);
 		}
-		
+
 		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
 
 		// crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSpDone(fromDate, toDate);

@@ -126,13 +126,19 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 			} catch (Exception e) {
 			}
 			
-			if (postBillHeader.get(i).getExVarchar2().equals("1")) {
-
-				settingValue = frItemStockConfRepo.findBySettingKey("DC");
-
-			} else {
+			if (isDairyMart == 2) {
 				settingValue = frItemStockConfRepo.findBySettingKey("PB");
+				
+			}else {
+				if (postBillHeader.get(i).getExVarchar2().equals("1")) {
+
+					settingValue = frItemStockConfRepo.findBySettingKey("DC");
+
+				} else {
+					settingValue = frItemStockConfRepo.findBySettingKey("PB");
+				}
 			}
+			
 			System.out.println("Setting Value Received " + settingValue);
 
 			invoiceNo = invoiceNo + "" + String.format("%06d", settingValue);

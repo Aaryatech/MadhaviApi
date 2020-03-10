@@ -175,53 +175,56 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
-	
+
 	@Autowired
 	AdminTax1ReportRepo adminTax1ReportRepo;
-	
-	//Anmol--26-02-2020----
+
+	// Anmol--26-02-2020----
 	@RequestMapping(value = { "/getAdminTax1Report" }, method = RequestMethod.POST)
 	public @ResponseBody List<AdminTax1Report> getTax1Report(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("typeId") int typeId, @RequestParam("bType") int bType) {
+			@RequestParam("toDate") String toDate, @RequestParam("typeId") int typeId,
+			@RequestParam("bType") int bType) {
 
 		List<AdminTax1Report> tax1ReportList = null;
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 			List<Integer> itmList = new ArrayList<Integer>();
-			
-			System.err.println("fromDate - "+fromDate+"   toDate - "+toDate+"      TypeId - "+typeId+ "        bType - "+bType);
 
-			
-			if(typeId==1) {
-				
-				if(bType==1) {
+			System.err.println("fromDate - " + fromDate + "   toDate - " + toDate + "      TypeId - " + typeId
+					+ "        bType - " + bType);
+
+			if (typeId == 0) {
+				if (bType == 1) {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabAllB2B(fromDate, toDate);
+				} else {
+					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabAllB2C(fromDate, toDate);
+				}
+			} else if (typeId == 1) {
+
+				if (bType == 1) {
 					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabFrBillB2B(fromDate, toDate);
-				}else {
+				} else {
 					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabFrBillB2C(fromDate, toDate);
 				}
-				
-				
-			}else if(typeId==3) {
-				
-				if(bType==1) {
+
+			} else if (typeId == 3) {
+
+				if (bType == 1) {
 					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabCompBillB2B(fromDate, toDate);
-				}else {
+				} else {
 					tax1ReportList = adminTax1ReportRepo.getAdminTaxSlabCompBillB2C(fromDate, toDate);
 				}
 			}
-			
+
 			System.out.println(" Tax1 Report " + tax1ReportList);
 
-			
 		} catch (Exception e) {
 			System.out.println(" Exce in Tax1 Report " + e.getMessage());
 			e.printStackTrace();
 		}
 		return tax1ReportList;
 	}
-	
-	
 
 	@RequestMapping(value = { "/getGrandTotalBillWise" }, method = RequestMethod.POST)
 	public @ResponseBody List<GrandTotalBillWise> getGrandTotalBillWise(@RequestParam("fromDate") String fromDate,
@@ -2114,7 +2117,8 @@ public class SalesReportController {
 				}
 
 			} else {
-				salesReturnValueDao = salesReturnValueDaoRepository.getAdminSalesReturnValueReportCompOutlet(months.get(i));
+				salesReturnValueDao = salesReturnValueDaoRepository
+						.getAdminSalesReturnValueReportCompOutlet(months.get(i));
 			}
 
 			salesReturnValueReportList.setSalesReturnQtyValueList(salesReturnValueDao);
@@ -2239,10 +2243,9 @@ public class SalesReportController {
 
 	// ------------------------------------------------------------------------------------------------------------------------
 
-	
 	@Autowired
 	AdminInvoiceIssuedRepo adminInvoiceIssuedRepo;
-	
+
 	@RequestMapping(value = { "/getInvoiceIssued" }, method = RequestMethod.POST)
 	public @ResponseBody List<AdminInvoiceIssued> getInvoiceIssued(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate) {
@@ -2259,6 +2262,5 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
-	
-	
+
 }
