@@ -190,7 +190,7 @@ public interface AdminTax1ReportRepo extends JpaRepository<AdminTax1Report, Inte
 				"    t_bill_header,\n" + 
 				"    m_franchisee\n" + 
 				"WHERE\n" + 
-				"    t_bill_header.ex_varchar2 IN(0) AND t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar4 ='' AND m_franchisee.kg_1=1 \n" + 
+				"    t_bill_header.ex_varchar2 IN(0) AND t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.ex_varchar4 =''  \n" + 
 				"GROUP BY\n" + 
 				"    t_bill_detail.cgst_per + t_bill_detail.sgst_per\n" + 
 				"ORDER BY\n" + 
@@ -289,11 +289,7 @@ public interface AdminTax1ReportRepo extends JpaRepository<AdminTax1Report, Inte
 					"        t_bill_detail.bill_detail_no,\r\n" + 
 					"        t_bill_header.invoice_no,\r\n" + 
 					"        t_bill_header.bill_date,\r\n" + 
-					"        CONCAT(\r\n" + 
-					"            m_franchisee.fr_name,\r\n" + 
-					"            '-',\r\n" + 
-					"            m_franchisee.fr_code\r\n" + 
-					"        ) AS fr_name,\r\n" + 
+					"        'Madhvi Dairy Private Limited - Factory End' AS fr_name,\r\n" + 
 					"        m_franchisee.fr_gst_no,\r\n" + 
 					"        t_bill_detail.bill_no,\r\n" + 
 					"        t_bill_detail.cgst_per,\r\n" + 

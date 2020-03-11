@@ -44,7 +44,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 			"    t_bill_header,\r\n" + 
 			"    t_bill_detail\r\n" + 
 			"WHERE\r\n" + 
-			"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate \r\n" + 
+			"    t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.ex_varchar2=0 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    item_hsncd\r\n" + 
 			"ORDER BY\r\n" + 
@@ -60,14 +60,15 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 				"    d.sgst_per AS item_tax1,\r\n" + 
 				"    d.cgst_per AS item_tax2,\r\n" + 
 				"    SUM(d.qty) AS bill_qty,\r\n" + 
-				"    SUM(d.grand_total) AS taxable_amt,\r\n" + 
+				"    SUM(d.taxable_amt) AS taxable_amt,\r\n" + 
 				"    SUM(d.cgst_rs) AS cgst_rs,\r\n" + 
 				"    SUM(d.sgst_rs) AS sgst_rs\r\n" + 
 				"FROM\r\n" + 
 				"    t_sell_bill_header h,\r\n" + 
-				"    t_sell_bill_detail d\r\n" + 
+				"    t_sell_bill_detail d,\r\n" + 
+				"    m_franchisee f\r\n" + 
 				"WHERE\r\n" + 
-				"    h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+				"    h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.kg_1 = 1 AND h.del_status=0\r\n" + 
 				"GROUP BY\r\n" + 
 				"    item_hsncd\r\n" + 
 				"ORDER BY\r\n" + 
@@ -91,7 +92,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 			"    t_sell_bill_header,\r\n" + 
 			"    t_sell_bill_detail\r\n" + 
 			"WHERE\r\n" + 
-			"    t_sell_bill_detail.cat_id != 5 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+			"    t_sell_bill_detail.cat_id != 5 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate  AND t_sell_bill_header.del_status=0\r\n" + 
 			"GROUP BY\r\n" + 
 			"    item_hsncd", nativeQuery = true)
 
@@ -130,7 +131,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 			"        t_sell_bill_header,\r\n" + 
 			"        t_sell_bill_detail\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_sell_bill_detail.cat_id != 5 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+			"        t_sell_bill_detail.cat_id != 5 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status=0\r\n" + 
 			"    GROUP BY\r\n" + 
 			"        item_hsncd\r\n" + 
 			")", nativeQuery = true)
@@ -267,7 +268,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 					"        t_bill_header,\r\n" + 
 					"        t_bill_detail\r\n" + 
 					"    WHERE\r\n" + 
-					"        t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+					"        t_bill_header.bill_no = t_bill_detail.bill_no AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.ex_varchar2=0 \r\n" + 
 					"    GROUP BY\r\n" + 
 					"        item_hsncd\r\n" + 
 					"    UNION ALL\r\n" + 
@@ -277,14 +278,15 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 					"    d.sgst_per AS item_tax1,\r\n" + 
 					"    d.cgst_per AS item_tax2,\r\n" + 
 					"    SUM(d.qty) AS bill_qty,\r\n" + 
-					"    SUM(d.grand_total) AS taxable_amt,\r\n" + 
+					"    SUM(d.taxable_amt) AS taxable_amt,\r\n" + 
 					"    SUM(d.cgst_rs) AS cgst_rs,\r\n" + 
 					"    SUM(d.sgst_rs) AS sgst_rs\r\n" + 
 					"FROM\r\n" + 
 					"    t_sell_bill_header h,\r\n" + 
-					"    t_sell_bill_detail d\r\n" + 
+					"    t_sell_bill_detail d,\r\n" + 
+					"    m_franchisee f\r\n" + 
 					"WHERE\r\n" + 
-					"    h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+					"    h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.kg_1 = 1 AND h.del_status=0\r\n" + 
 					"GROUP BY\r\n" + 
 					"    item_hsncd\r\n" + 
 					") t1\r\n" + 
@@ -301,7 +303,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 			@Query(value = "SELECT\r\n" + 
 					"\r\n" + 
 					"id,item_hsncd,item_tax1,item_tax2,SUM(taxable_amt) as taxable_amt, SUM(cgst_rs) as cgst_rs,\r\n" + 
-					"SUM(sgst_rs) as sgst_rs\r\n" + 
+					"SUM(sgst_rs) as sgst_rs, bill_qty \r\n" + 
 					"\r\n" + 
 					"\r\n" + 
 					"\r\n" + 
@@ -344,7 +346,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 					"    t_sell_bill_header h,\r\n" + 
 					"    t_sell_bill_detail d\r\n" + 
 					"WHERE\r\n" + 
-					"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate\r\n" + 
+					"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate AND h.del_status=0\r\n" + 
 					"GROUP BY\r\n" + 
 					"    item_hsncd\r\n" + 
 					"\r\n" + 
