@@ -14,7 +14,7 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"    sd.sell_bill_detail_no,\r\n" + 
 			"    sc.sub_cat_id,\r\n" + 
 			"    sh.fr_id,\r\n" + 
-			"    ROUND(SUM(sd.grand_total),\r\n" + 
+			"    ROUND(SUM(sd.ext_float1),\r\n" + 
 			"    2) AS sold_amt,\r\n" + 
 			"    SUM(sd.qty) AS sold_qty,\r\n" + 
 			"    sc.sub_cat_name,\r\n" + 
@@ -42,7 +42,7 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"        sd.sell_bill_detail_no,\r\n" + 
 			"        sc.sub_cat_id,\r\n" + 
 			"        sh.fr_id,\r\n" + 
-			"        ROUND(SUM(sd.grand_total),\r\n" + 
+			"        ROUND(SUM(sd.ext_float1),\r\n" + 
 			"        2) AS sold_amt,\r\n" + 
 			"        SUM(sd.qty) AS sold_qty,\r\n" + 
 			"        sc.sub_cat_name,\r\n" + 
