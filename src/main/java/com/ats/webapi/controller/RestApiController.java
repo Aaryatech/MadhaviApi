@@ -5801,5 +5801,24 @@ public class RestApiController {
 		return getSellBillHeaderList;
 
 	}
+	
+	@RequestMapping(value = "/getCustSellDetails", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getCustSellDetails(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("custId") List<String> custId) {
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+
+		List<SellBillHeaderNew> getSellBillHeaderList;
+			System.err.println("CUST -----------*********** " + custId);
+
+			getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReport(fromDate, toDate, frId, custId);
+		
+
+		System.out.println("List Cust Sell Bill " + getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
 
 }
