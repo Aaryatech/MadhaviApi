@@ -25,6 +25,9 @@ public class ItemWiseReport {
 		
 		private String itemName;
 		private String grnType;
+		
+		private float discAmt;
+		
 		public int getItemId() {
 			return itemId;
 		}
@@ -81,13 +84,20 @@ public class ItemWiseReport {
 			this.grnType = grnType;
 		}
 
+		public float getDiscAmt() {
+			return discAmt;
+		}
+
+		public void setDiscAmt(float discAmt) {
+			this.discAmt = discAmt;
+		}
+
 		@Override
 		public String toString() {
 			return "ItemWiseReport [itemId=" + itemId + ", billDetailNo=" + billDetailNo + ", rate=" + rate + ", qty="
-					+ qty + ", total=" + total + ", itemName=" + itemName + ", grnType=" + grnType + "]";
+					+ qty + ", total=" + total + ", itemName=" + itemName + ", grnType=" + grnType + ", discAmt="
+					+ discAmt + "]";
 		}
-
-		
 		
 		
 }
