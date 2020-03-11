@@ -97,7 +97,7 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 			String invoiceNo = null;
 			int settingValue = 0;
 			Company company = new Company();
-			int isDairyMart=1;
+			int isDairyMart = 1;
 			try {
 				String pattern = "yyyy-MM-dd";
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
@@ -105,13 +105,13 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 
 				company = companyRepository.findByBillDate(date);
 
-//				isDairyMart = advanceOrderDetailRepo
-//						.getIsDairyMartStatus(postBillHeader.get(i).getPostBillDetailsList().get(0).getBillDetailNo());
+				// isDairyMart = advanceOrderDetailRepo
+				// .getIsDairyMartStatus(postBillHeader.get(i).getPostBillDetailsList().get(0).getBillDetailNo());
 
-				isDairyMart=postBillHeader.get(i).getIsDairyMart();
-				
-				System.err.println("isDairyMart ------------------------- "+isDairyMart);
-				
+				isDairyMart = postBillHeader.get(i).getIsDairyMart();
+
+				System.err.println("isDairyMart ------------------------- " + isDairyMart);
+
 				if (isDairyMart == 2) {
 					invoiceNo = company.getExVar4();
 				} else {
@@ -125,11 +125,11 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 
 			} catch (Exception e) {
 			}
-			
+
 			if (isDairyMart == 2) {
 				settingValue = frItemStockConfRepo.findBySettingKey("PB");
-				
-			}else {
+
+			} else {
 				if (postBillHeader.get(i).getExVarchar2().equals("1")) {
 
 					settingValue = frItemStockConfRepo.findBySettingKey("DC");
@@ -138,13 +138,13 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 					settingValue = frItemStockConfRepo.findBySettingKey("PB");
 				}
 			}
-			
+
 			System.out.println("Setting Value Received " + settingValue);
 
 			invoiceNo = invoiceNo + "" + String.format("%06d", settingValue);
 			postBillHeader.get(i).setInvoiceNo(invoiceNo);
 			postBillHeader.get(i).setIsDairyMart(isDairyMart);
-			
+
 			postBillHeaders = postBillHeaderRepository.save(postBillHeader.get(i));
 
 			// save Bill transaction starts
@@ -173,13 +173,26 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 			if (postBillHeaders != null && postBillHeaders.getBillNo() > 0) {
 
 				settingValue = settingValue + 1;
-				if (postBillHeader.get(i).getExVarchar2().equals("1")) {
+
+				if (isDairyMart == 2) {
+					int result = updateSeetingForPBRepo.updateSeetingForPurBill(settingValue, "PB");
+				} else {
+
+					if (postBillHeader.get(i).getExVarchar2().equals("1")) {
+						int result = updateSeetingForPBRepo.updateSeetingForPurBill(settingValue, "DC");
+					} else {
+						int result = updateSeetingForPBRepo.updateSeetingForPurBill(settingValue, "PB");
+					}
+
+				}
+
+				/*if (postBillHeader.get(i).getExVarchar2().equals("1")) {
 					int result = updateSeetingForPBRepo.updateSeetingForPurBill(settingValue, "DC");
 					System.err.println("DC setting value updated " + result);
 				} else {
 					int result = updateSeetingForPBRepo.updateSeetingForPurBill(settingValue, "PB");
 					System.err.println("PB setting value updated " + result);
-				}
+				}*/
 			}
 			int billNo = postBillHeader.get(i).getBillNo();
 			List<PostBillDetail> postBillDetailList = postBillHeader.get(i).getPostBillDetailsList();

@@ -21,6 +21,7 @@ import com.ats.webapi.model.reportv2.CrNoteRegisterList;
 import com.ats.webapi.model.reportv2.GstRegisterItem;
 import com.ats.webapi.model.reportv2.GstRegisterList;
 import com.ats.webapi.model.reportv2.GstRegisterSp;
+import com.ats.webapi.model.reportv2.HSNItemWiseReport;
 import com.ats.webapi.model.reportv2.HSNWiseReport;
 import com.ats.webapi.model.reportv2.SalesReport;
 import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
@@ -29,6 +30,7 @@ import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterSpRepo;
+import com.ats.webapi.repository.reportv2.HSNItemWiseReportRepo;
 import com.ats.webapi.repository.reportv2.HSNWiseReportRepo;
 import com.ats.webapi.repository.reportv2.SalesReportRepo;
 
@@ -147,6 +149,36 @@ public class ReportControllerV2 {
 		}
 		return saleList;
 	}
+	
+	@Autowired
+	HSNItemWiseReportRepo hSNItemWiseReportRepo;
+	
+	// Anmol--11-03-2020----
+		@RequestMapping(value = { "/getAdminHsnItemWiseBillReport" }, method = RequestMethod.POST)
+		public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemWiseBillReport(@RequestParam("fromDate") String fromDate,
+				@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
+			List<HSNItemWiseReport> saleList = new ArrayList<>();
+			try {
+
+				if (bTypeId == 0) {
+
+					saleList = hSNItemWiseReportRepo.getAdminReportAll(fromDate, toDate);
+
+				} else if (bTypeId == 1) {
+
+					saleList = hSNItemWiseReportRepo.getAdminReportBillWiseFrWise(fromDate, toDate);
+
+				} else if (bTypeId == 3) {
+
+					saleList = hSNItemWiseReportRepo.getAdminReportBillWiseCompOutletWise(fromDate, toDate);
+
+				}
+			} catch (Exception e) {
+			}
+			return saleList;
+		}
+		
+		
 
 	@RequestMapping(value = { "/getHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
@@ -189,6 +221,34 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
+	
+	
+	// Anmol--11-03-2020--
+		@RequestMapping(value = { "/getAdminHsnItemReport" }, method = RequestMethod.POST)
+		public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemReport(@RequestParam("fromDate") String fromDate,
+				@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
+
+			List<HSNItemWiseReport> saleList = new ArrayList<>();
+			try {
+
+				if (bTypeId == 0) {
+					saleList = hSNItemWiseReportRepo.getAdminReportCRNAll(fromDate, toDate);
+				} else if (bTypeId == 1) {
+					saleList = hSNItemWiseReportRepo.getAdminReportHsnCrFrWise(fromDate, toDate);
+				} else if (bTypeId == 3) {
+					saleList = hSNItemWiseReportRepo.getAdminReportHsnCrCompOutletWise(fromDate, toDate);
+				}
+
+				System.out.println(saleList.toString());
+
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+			return saleList;
+		}
+		
+		
 
 	@RequestMapping(value = { "/getHsnBillReportByFrId" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnBillReportByFrId(@RequestParam("frId") int frId,
