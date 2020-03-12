@@ -16,6 +16,7 @@ public class SubCatDateWiseData {
 	private int catId;
 	private float taxableAmt;
 	private float totalTax;
+	private float discAmt;
 
 	public int getSellBillDetailNo() {
 		return sellBillDetailNo;
@@ -89,11 +90,20 @@ public class SubCatDateWiseData {
 		this.totalTax = totalTax;
 	}
 
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "SubCatDateWiseData [sellBillDetailNo=" + sellBillDetailNo + ", subCatId=" + subCatId + ", frId=" + frId
 				+ ", soldAmt=" + soldAmt + ", soldQty=" + soldQty + ", subCatName=" + subCatName + ", catId=" + catId
-				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + "]";
+				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", discAmt=" + discAmt + "]";
 	}
+
 
 }

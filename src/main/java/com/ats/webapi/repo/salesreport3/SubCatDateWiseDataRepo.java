@@ -16,6 +16,8 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"    sh.fr_id,\r\n" + 
 			"    ROUND(SUM(sd.ext_float1),\r\n" + 
 			"    2) AS sold_amt,\r\n" + 
+			"    ROUND(SUM(sd.disc_amt),\r\n" + 
+			"    2) AS disc_amt,\r\n" + 
 			"    SUM(sd.qty) AS sold_qty,\r\n" + 
 			"    sc.sub_cat_name,\r\n" + 
 			"    sd.cat_id,\r\n" + 
@@ -44,6 +46,8 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"        sh.fr_id,\r\n" + 
 			"        ROUND(SUM(sd.ext_float1),\r\n" + 
 			"        2) AS sold_amt,\r\n" + 
+			"   	 ROUND(SUM(sd.disc_amt),\r\n" + 
+			"    	 2) AS disc_amt,\r\n" + 
 			"        SUM(sd.qty) AS sold_qty,\r\n" + 
 			"        sc.sub_cat_name,\r\n" + 
 			"        sd.cat_id,\r\n" + 
@@ -72,6 +76,7 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"        sd.cat_id,\r\n" + 
 			"        sc.sub_cat_id\r\n" + 
 			" ", nativeQuery = true)
+	
 	List<SubCatDateWiseData> getSellBillDataspcake(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId, @Param("catIdList") List<Integer> catIdList);
 
 }
