@@ -149,36 +149,49 @@ public class ReportControllerV2 {
 		}
 		return saleList;
 	}
-	
+
 	@Autowired
 	HSNItemWiseReportRepo hSNItemWiseReportRepo;
-	
+
 	// Anmol--11-03-2020----
-		@RequestMapping(value = { "/getAdminHsnItemWiseBillReport" }, method = RequestMethod.POST)
-		public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemWiseBillReport(@RequestParam("fromDate") String fromDate,
-				@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
-			List<HSNItemWiseReport> saleList = new ArrayList<>();
-			try {
+	@RequestMapping(value = { "/getAdminHsnItemWiseBillReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemWiseBillReport(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("bTypeId") int bTypeId) {
+		List<HSNItemWiseReport> saleList = new ArrayList<>();
+		try {
 
-				if (bTypeId == 0) {
+			if (bTypeId == 0) {
 
-					saleList = hSNItemWiseReportRepo.getAdminReportAll(fromDate, toDate);
+				saleList = hSNItemWiseReportRepo.getAdminReportAll(fromDate, toDate);
 
-				} else if (bTypeId == 1) {
+			} else if (bTypeId == 1) {
 
-					saleList = hSNItemWiseReportRepo.getAdminReportBillWiseFrWise(fromDate, toDate);
+				saleList = hSNItemWiseReportRepo.getAdminReportBillWiseFrWise(fromDate, toDate);
 
-				} else if (bTypeId == 3) {
+			} else if (bTypeId == 3) {
 
-					saleList = hSNItemWiseReportRepo.getAdminReportBillWiseCompOutletWise(fromDate, toDate);
+				saleList = hSNItemWiseReportRepo.getAdminReportBillWiseCompOutletWise(fromDate, toDate);
 
-				}
-			} catch (Exception e) {
 			}
-			return saleList;
+		} catch (Exception e) {
 		}
-		
-		
+		return saleList;
+	}
+
+	// Anmol--12-03-2020----
+	@RequestMapping(value = { "/getOPSHsnItemWiseBillReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNItemWiseReport> getOPSHsnItemWiseBillReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
+		List<HSNItemWiseReport> saleList = new ArrayList<>();
+		try {
+
+			saleList = hSNItemWiseReportRepo.getOPSReportBillWiseCompOutletWiseFr(fromDate, toDate,frId);
+
+		} catch (Exception e) {
+		}
+		return saleList;
+	}
 
 	@RequestMapping(value = { "/getHsnReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReport(@RequestParam("fromDate") String fromDate,
@@ -221,23 +234,42 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
-	
-	
+
 	// Anmol--11-03-2020--
-		@RequestMapping(value = { "/getAdminHsnItemReport" }, method = RequestMethod.POST)
-		public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemReport(@RequestParam("fromDate") String fromDate,
-				@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
+	@RequestMapping(value = { "/getAdminHsnItemReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNItemWiseReport> getAdminHsnItemReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("bTypeId") int bTypeId) {
+
+		List<HSNItemWiseReport> saleList = new ArrayList<>();
+		try {
+
+			if (bTypeId == 0) {
+				saleList = hSNItemWiseReportRepo.getAdminReportCRNAll(fromDate, toDate);
+			} else if (bTypeId == 1) {
+				saleList = hSNItemWiseReportRepo.getAdminReportHsnCrFrWise(fromDate, toDate);
+			} else if (bTypeId == 3) {
+				saleList = hSNItemWiseReportRepo.getAdminReportHsnCrCompOutletWise(fromDate, toDate);
+			}
+
+			System.out.println(saleList.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return saleList;
+	}
+	
+	
+	// Anmol--12-03-2020--
+		@RequestMapping(value = { "/getOPSHsnItemReport" }, method = RequestMethod.POST)
+		public @ResponseBody List<HSNItemWiseReport> getOPSHsnItemReport(@RequestParam("fromDate") String fromDate,
+				@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
 
 			List<HSNItemWiseReport> saleList = new ArrayList<>();
 			try {
 
-				if (bTypeId == 0) {
-					saleList = hSNItemWiseReportRepo.getAdminReportCRNAll(fromDate, toDate);
-				} else if (bTypeId == 1) {
-					saleList = hSNItemWiseReportRepo.getAdminReportHsnCrFrWise(fromDate, toDate);
-				} else if (bTypeId == 3) {
-					saleList = hSNItemWiseReportRepo.getAdminReportHsnCrCompOutletWise(fromDate, toDate);
-				}
+					saleList = hSNItemWiseReportRepo.getOPSReportHsnCrCompOutletWise(fromDate, toDate,frId);
 
 				System.out.println(saleList.toString());
 
@@ -247,8 +279,6 @@ public class ReportControllerV2 {
 
 			return saleList;
 		}
-		
-		
 
 	@RequestMapping(value = { "/getHsnBillReportByFrId" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnBillReportByFrId(@RequestParam("frId") int frId,

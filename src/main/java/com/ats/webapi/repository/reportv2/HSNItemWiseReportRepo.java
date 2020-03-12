@@ -150,6 +150,38 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 	List<HSNItemWiseReport> getAdminReportBillWiseCompOutletWise(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 	
+	@Query(value = "SELECT\r\n" + 
+			"    d.item_id,\r\n" + 
+			"    i.item_name,\r\n" + 
+			"    s.item_uom,\r\n" + 
+			"    d.ext_var1 AS item_hsncd,\r\n" + 
+			"    d.sgst_per AS item_tax1,\r\n" + 
+			"    d.cgst_per AS item_tax2,\r\n" + 
+			"    SUM(d.qty) AS bill_qty,\r\n" + 
+			"    SUM(d.taxable_amt) AS taxable_amt,\r\n" + 
+			"    SUM(d.cgst_rs) AS cgst_rs,\r\n" + 
+			"    SUM(d.sgst_rs) AS sgst_rs,\r\n" + 
+			"    i.item_grp1 AS cat_id,\r\n" + 
+			"    i.item_grp2 AS sub_cat_id\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_header h,\r\n" + 
+			"    t_sell_bill_detail d,\r\n" + 
+			"    m_franchisee f,\r\n" + 
+			"    m_item i,\r\n" + 
+			"    m_item_sup s\r\n" + 
+			"WHERE\r\n" + 
+			"    h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.del_status = 0 AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id AND h.fr_id = :frId\r\n" + 
+			"GROUP BY\r\n" + 
+			"    d.item_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    d.ext_var1,\r\n" + 
+			"    i.item_grp1,\r\n" + 
+			"    i.item_grp2,\r\n" + 
+			"    i.item_name", nativeQuery = true)
+
+	List<HSNItemWiseReport> getOPSReportBillWiseCompOutletWiseFr(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("frId") int frId);
+
+	
 	
 	//------------CRN-----------------------------
 	
@@ -293,6 +325,37 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"    i.item_grp2,\r\n" + 
 			"    i.item_name", nativeQuery = true)
 	List<HSNItemWiseReport> getAdminReportHsnCrCompOutletWise(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+	
+	@Query(value = "SELECT\r\n" + 
+			"    d.item_id,\r\n" + 
+			"    i.item_name,\r\n" + 
+			"    s.item_uom,\r\n" + 
+			"    d.ext_var1 AS item_hsncd,\r\n" + 
+			"    c.sgst_per AS item_tax1,\r\n" + 
+			"    c.cgst_per AS item_tax2,\r\n" + 
+			"    SUM(c.crn_qty) AS bill_qty,\r\n" + 
+			"    SUM(c.taxable_amt) AS taxable_amt,\r\n" + 
+			"    SUM(c.cgst_amt) AS cgst_rs,\r\n" + 
+			"    SUM(c.sgst_amt) AS sgst_rs,\r\n" + 
+			"    i.item_grp1 AS cat_id,\r\n" + 
+			"    i.item_grp2 AS sub_cat_id\r\n" + 
+			"FROM\r\n" + 
+			"    t_credit_note_pos c,\r\n" + 
+			"    t_sell_bill_header h,\r\n" + 
+			"    t_sell_bill_detail d,\r\n" + 
+			"    m_item i,\r\n" + 
+			"    m_item_sup s\r\n" + 
+			"WHERE\r\n" + 
+			"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id AND c.ex_int1 = :frId\r\n" + 
+			"GROUP BY\r\n" + 
+			"    d.item_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    d.ext_var1,\r\n" + 
+			"    i.item_grp1,\r\n" + 
+			"    i.item_grp2,\r\n" + 
+			"    i.item_name", nativeQuery = true)
+	List<HSNItemWiseReport> getOPSReportHsnCrCompOutletWise(@Param("fromDate") String fromDate, @Param("toDate") String toDate , @Param("frId") int frId);
 
 	
 }

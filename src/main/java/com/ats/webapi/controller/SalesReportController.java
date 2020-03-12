@@ -2262,5 +2262,23 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
+	
+	
+	@RequestMapping(value = { "/getInvoiceIssuedForFr" }, method = RequestMethod.POST)
+	public @ResponseBody List<AdminInvoiceIssued> getInvoiceIssued(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate,@RequestParam("frId") int frId) {
+
+		List<AdminInvoiceIssued> tax1ReportList = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			tax1ReportList = adminInvoiceIssuedRepo.getInvoicesIssuedForFr(fromDate, toDate,frId);
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
+	}
 
 }
