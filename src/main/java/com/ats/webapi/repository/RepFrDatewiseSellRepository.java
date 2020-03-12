@@ -92,8 +92,8 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"        t_sell_bill_header.bill_date,\r\n" + 
 			"        t_sell_bill_header.sell_bill_no,\r\n" + 
 			"        t_sell_bill_header.fr_id,\r\n" + 
-			"        t_sell_bill_header.discount_amt,\r\n" + 
-			"        t_sell_bill_header.remaining_amt AS pending_amt,\r\n" + 
+			"        SUM(t_sell_bill_header.discount_amt) AS discount_amt,\r\n" + 
+			"        SUM(t_sell_bill_header.remaining_amt) AS pending_amt,\r\n" + 
 			"        SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"        SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
 			"        SUM(t_transaction_detail.e_pay_amt) AS other,\r\n" + 
