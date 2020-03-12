@@ -5811,9 +5811,13 @@ public class RestApiController {
 		toDate = Common.convertToYMD(toDate);
 
 		List<SellBillHeaderNew> getSellBillHeaderList;
-			System.err.println("CUST -----------*********** " + custId);
-
-			getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReport(fromDate, toDate, frId, custId);
+			System.err.println("CUST -----------" + custId);
+			if (custId.contains("0")) {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getAllCustSellReport(fromDate, toDate, frId);
+			}else {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReport(fromDate, toDate, frId, custId);
+			}
+			
 		
 
 		System.out.println("List Cust Sell Bill " + getSellBillHeaderList.toString());

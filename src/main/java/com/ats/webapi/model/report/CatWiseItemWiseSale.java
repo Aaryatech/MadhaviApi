@@ -44,6 +44,9 @@ public class CatWiseItemWiseSale {
 	private float rate;
 	
 	private float mrp;
+	
+	private float discAmt;
+	private float payableAmt;
 
 	public int getSellBillNo() {
 		return sellBillNo;
@@ -141,12 +144,30 @@ public class CatWiseItemWiseSale {
 		this.mrp = mrp;
 	}
 
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+
+	public float getPayableAmt() {
+		return payableAmt;
+	}
+
+	public void setPayableAmt(float payableAmt) {
+		this.payableAmt = payableAmt;
+	}
+
 	@Override
 	public String toString() {
-		return "CatWiseItemWiseSaleRep [sellBillNo=" + sellBillNo + ", frId=" + frId + ", billDate=" + billDate
+		return "CatWiseItemWiseSale [sellBillNo=" + sellBillNo + ", frId=" + frId + ", billDate=" + billDate
 				+ ", frName=" + frName + ", itemId=" + itemId + ", itemName=" + itemName + ", catId=" + catId
 				+ ", catName=" + catName + ", qty=" + qty + ", amount=" + amount + ", rate=" + rate + ", mrp=" + mrp
-				+ "]";
+				+ ", discAmt=" + discAmt + ", payableAmt=" + payableAmt + "]";
 	}
+
+	
 	
 }
