@@ -396,7 +396,7 @@ public class ReportsController {
 
 			}
 		}
-
+		System.err.println("Month Wise -----------"+tempList);
 		tempList = new ArrayList<GetMonthWiseReport>(hashList.values());
 		return tempList;
 

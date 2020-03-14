@@ -18,7 +18,7 @@ public interface RepFrMenuwiseSellRepository extends JpaRepository<GetRepMenuwis
 			"        d.cat_id,\r\n" + 
 			"        sum(d.qty) as qty,\r\n" + 
 			"        sum(d.disc_amt) as disc_amt,\r\n" + 
-			"        sum(d.disc_amt+d.ext_float1) as payable_amt,\r\n" + 
+			"        sum(d.disc_amt-d.ext_float1) as payable_amt,\r\n" + 
 			"        sum(d.mrp*d.qty) as amount \r\n" + 
 			"    from\r\n" + 
 			"        t_sell_bill_detail d,\r\n" + 

@@ -26,6 +26,7 @@ public class GetMonthWiseReport {
 	private float advAmt;
 	private float regular;
 	private float chalan;
+	private float grandTotal;
 	
 	private float creditNoteTotalAmt;
 	private float withdrawalAmt;
@@ -152,15 +153,21 @@ public class GetMonthWiseReport {
 		this.withdrawalAmt = withdrawalAmt;
 	}
 
+	public float getGrandTotal() {
+		return grandTotal;
+	}
+
+	public void setGrandTotal(float grandTotal) {
+		this.grandTotal = grandTotal;
+	}
+
 	@Override
 	public String toString() {
 		return "GetMonthWiseReport [sellBillNo=" + sellBillNo + ", billDate=" + billDate + ", frId=" + frId + ", month="
 				+ month + ", cash=" + cash + ", card=" + card + ", other=" + other + ", frName=" + frName
 				+ ", discountAmt=" + discountAmt + ", pendingAmt=" + pendingAmt + ", advAmt=" + advAmt + ", regular="
-				+ regular + ", chalan=" + chalan + ", creditNoteTotalAmt=" + creditNoteTotalAmt + ", withdrawalAmt="
-				+ withdrawalAmt + "]";
+				+ regular + ", chalan=" + chalan + ", grandTotal=" + grandTotal + ", creditNoteTotalAmt="
+				+ creditNoteTotalAmt + ", withdrawalAmt=" + withdrawalAmt + "]";
 	}
-
-	
 
 }
