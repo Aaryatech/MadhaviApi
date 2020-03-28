@@ -29,7 +29,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    m_customer.address as address,\r\n" + 
 			"    m_customer.ex_var1 as km, "+
 			"	 COALESCE((SUBSTRING_INDEX(m_customer.ex_var2,'-',1)),'') as pincode, "+
-			"    '' as remark "+
+			"    COALESCE((SELECT DISTINCT ex_var1 FROM t_adv_order_detail  WHERE t_adv_order_detail.adv_header_id=t_adv_order_header.adv_header_id),'') as remark "+
 			"FROM\n" + 
 			"    t_adv_order_header,\n" + 
 			"    m_customer,\n" + 
@@ -59,7 +59,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    m_customer.address as address,\r\n" + 
 			"    m_customer.ex_var1 as km, "+
 			"	 COALESCE((SUBSTRING_INDEX(m_customer.ex_var2,'-',1)),'') as pincode, "+
-			"    '' as remark "+
+			"    COALESCE((SELECT DISTINCT ex_var1 FROM t_adv_order_detail  WHERE t_adv_order_detail.adv_header_id=t_adv_order_header.adv_header_id),'') as remark "+
 			"FROM\n" + 
 			"    t_adv_order_header,\n" + 
 			"    m_customer,\n" + 
@@ -89,7 +89,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    m_customer.address as address,\r\n" + 
 			"    m_customer.ex_var1 as km, "+
 			"	 COALESCE((SUBSTRING_INDEX(m_customer.ex_var2,'-',1)),'') as pincode, "+
-			"    '' as remark "+
+			"     COALESCE((SELECT DISTINCT ex_var1 FROM t_adv_order_detail  WHERE t_adv_order_detail.adv_header_id=t_adv_order_header.adv_header_id),'') as remark  "+
 			"FROM\n" + 
 			"    t_adv_order_header,\n" + 
 			"    m_customer,\n" + 
@@ -119,7 +119,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    m_customer.address as address,\r\n" + 
 			"    m_customer.ex_var1 as km, "+
 			"	 COALESCE((SUBSTRING_INDEX(m_customer.ex_var2,'-',1)),'') as pincode, "+
-			"    '' as remark "+
+			"     COALESCE((SELECT DISTINCT ex_var1 FROM t_adv_order_detail  WHERE t_adv_order_detail.adv_header_id=t_adv_order_header.adv_header_id),'') as remark  "+
 			"FROM\n" + 
 			"    t_adv_order_header,\n" + 
 			"    m_customer,\n" + 
@@ -150,7 +150,7 @@ public interface AdvOrderForAdminDashRepo  extends JpaRepository<AdvOrderForAdmi
 			"    m_customer.address as address,\r\n" + 
 			"    m_customer.ex_var1 as km, "+
 			"	 COALESCE((SUBSTRING_INDEX(m_customer.ex_var2,'-',1)),'') as pincode, "+
-			"    '' as remark "+
+			"     COALESCE((SELECT DISTINCT ex_var1 FROM t_adv_order_detail  WHERE t_adv_order_detail.adv_header_id=t_adv_order_header.adv_header_id),'') as remark  "+
 			"FROM\n" + 
 			"    t_adv_order_header,\n" + 
 			"    m_customer,\n" + 
