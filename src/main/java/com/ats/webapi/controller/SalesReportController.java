@@ -1704,7 +1704,8 @@ public class SalesReportController {
 			@RequestParam("frIdList") List<String> frIdList, @RequestParam("catIdList") List<String> catIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 			@RequestParam("getBy") int getBy, @RequestParam("type") int type,
-			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType) {
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
+			@RequestParam("sort") int sort) {
 		System.out.println("getBy" + getBy);
 		List<SalesReportRoyalty> salesReportRoyaltyList = new ArrayList<>();
 		try {
@@ -1719,39 +1720,118 @@ public class SalesReportController {
 
 			int stock = 0;
 
-			if (billType == 1) {
-				stock = 1;
+			if (sort == 0) {
 
-				if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+				if (billType == 1) {
+					stock = 1;
 
-					System.err.println("1 2");
-					itmList = new ArrayList<Integer>();
-					itmList.add(0);
-					itmList.add(1);
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList, catIdList,
-							fromDate, toDate, itmList, stock);
-				} else if (typeIdList.contains("1") && listSize == 1) {
+					if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
-					itmList = new ArrayList<Integer>();
-					itmList.add(0);
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList, catIdList,
-							fromDate, toDate, itmList, stock);
-					System.err.println(" 1");
+						System.err.println("1 2");
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+					} else if (typeIdList.contains("1") && listSize == 1) {
 
-				} else if (typeIdList.contains("2") && listSize == 1) {
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 1");
 
-					itmList = new ArrayList<Integer>();
-					itmList.add(1);
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList, catIdList,
-							fromDate, toDate, itmList, stock);
-					System.err.println(" 2");
+					} else if (typeIdList.contains("2") && listSize == 1) {
 
+						itmList = new ArrayList<Integer>();
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCat(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 2");
+
+					}
+
+				} else {
+					stock = 0;
+					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList, catIdList,
+							fromDate, toDate);
 				}
+			} else if (sort == 1) {
+				
+				
+				if (billType == 1) {
+					stock = 1;
 
-			} else {
-				stock = 0;
-				salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList, catIdList,
-						fromDate, toDate);
+					if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+
+						System.err.println("1 2");
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+					} else if (typeIdList.contains("1") && listSize == 1) {
+
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 1");
+
+					} else if (typeIdList.contains("2") && listSize == 1) {
+
+						itmList = new ArrayList<Integer>();
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 2");
+
+					}
+
+				} else {
+					stock = 0;
+					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByQty(frIdList, catIdList,
+							fromDate, toDate);
+				}
+				
+
+			} else if (sort == 2) {
+
+				if (billType == 1) {
+					stock = 1;
+
+					if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+
+						System.err.println("1 2");
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+					} else if (typeIdList.contains("1") && listSize == 1) {
+
+						itmList = new ArrayList<Integer>();
+						itmList.add(0);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 1");
+
+					} else if (typeIdList.contains("2") && listSize == 1) {
+
+						itmList = new ArrayList<Integer>();
+						itmList.add(1);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
+								catIdList, fromDate, toDate, itmList, stock);
+						System.err.println(" 2");
+
+					}
+
+				} else {
+					stock = 0;
+					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByValue(frIdList, catIdList,
+							fromDate, toDate);
+				}
+				
 			}
 
 			System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
@@ -2262,18 +2342,17 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
-	
-	
+
 	@RequestMapping(value = { "/getInvoiceIssuedForFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<AdminInvoiceIssued> getInvoiceIssued(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate,@RequestParam("frId") int frId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
 
 		List<AdminInvoiceIssued> tax1ReportList = new ArrayList<>();
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
 
-			tax1ReportList = adminInvoiceIssuedRepo.getInvoicesIssuedForFr(fromDate, toDate,frId);
+			tax1ReportList = adminInvoiceIssuedRepo.getInvoicesIssuedForFr(fromDate, toDate, frId);
 		} catch (Exception e) {
 			System.out.println(" Exce in Tax1 Report " + e.getMessage());
 			e.printStackTrace();

@@ -1,12 +1,14 @@
 package com.ats.webapi.controller;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ats.webapi.model.Info;
 
-import javassist.bytecode.stackmap.BasicBlock.Catch;
 
 
 @RestController
@@ -141,9 +142,16 @@ public class ImageUploadController {
    			 path =Paths.get(GVN_PHOTO_FOLDER + imageName);
 
             }
-			byte[] bytes = file.getBytes();
+            
+   
+//			byte[] bytes = file.getBytes();
+//			
+//			Files.write(path, bytes);
 			
-			Files.write(path, bytes);
+			
+			InputStream fileStream = file.getInputStream();
+	        File targetFile = new File(path.toString());
+	        FileUtils.copyInputStreamToFile(fileStream, targetFile);
 
 		}
 

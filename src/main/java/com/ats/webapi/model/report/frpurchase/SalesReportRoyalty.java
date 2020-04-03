@@ -39,6 +39,9 @@ public class SalesReportRoyalty implements Serializable {
 	float tGvnQty;
 	float tGvnTaxableAmt;
 	
+	@Transient
+	float discAmt;
+	
 	
 	public String getUid() {
 		return uid;
@@ -112,12 +115,23 @@ public class SalesReportRoyalty implements Serializable {
 	public void setCat_name(String cat_name) {
 		this.cat_name = cat_name;
 	}
+	
+	
+	
+	public float getDiscAmt() {
+		return discAmt;
+	}
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
+	
+	
 	@Override
 	public String toString() {
 		return "SalesReportRoyalty [uid=" + uid + ", id=" + id + ", catId=" + catId + ", subCatId=" + subCatId
 				+ ", item_name=" + item_name + ", cat_name=" + cat_name + ", tBillQty=" + tBillQty
 				+ ", tBillTaxableAmt=" + tBillTaxableAmt + ", tGrnQty=" + tGrnQty + ", tGrnTaxableAmt=" + tGrnTaxableAmt
-				+ ", tGvnQty=" + tGvnQty + ", tGvnTaxableAmt=" + tGvnTaxableAmt + "]";
+				+ ", tGvnQty=" + tGvnQty + ", tGvnTaxableAmt=" + tGvnTaxableAmt + ", discAmt=" + discAmt + "]";
 	}
 	
 	
