@@ -80,5 +80,28 @@ public interface TransactionDetailRepository extends JpaRepository<TransactionDe
 			+ "			        AND t_sell_bill_header.sell_bill_no =:sellBillNo AND t_transaction_detail.ex_int2=1       \n"
 			+ "			  \n" + "			", nativeQuery = true)
 	TransactionDetail getAdvAmtTransaction(@Param("sellBillNo") int sellBillNo);
+	
+	@Query(value = "    SELECT  \n" + "			        t_transaction_detail.tr_id,  \n"
+			+ "			        t_transaction_detail.sell_bill_no,  \n"
+			+ "			        t_sell_bill_header.bill_date as transaction_date,  \n"
+			+ "			        t_transaction_detail.pay_mode,  \n"
+			+ "			        t_transaction_detail.cash_amt,  \n"
+			+ "			        t_transaction_detail.card_amt,  \n"
+			+ "			        t_transaction_detail.e_pay_amt,  \n"
+			+ "			        t_transaction_detail.e_pay_type,  \n"
+			+ "			        t_transaction_detail.disc_type,  \n"
+			+ "			        t_transaction_detail.del_status,  \n"
+			+ "			        t_sell_bill_header.payment_mode as ex_int1,  \n"
+			+ "			        t_transaction_detail.ex_int2,  \n"
+			+ "			        concat(t_sell_bill_header.invoice_no,'--(',t_sell_bill_header.user_name,')') as ex_var2,  \n"
+			+ "			        t_transaction_detail.ex_var1,  \n"
+			+ "			          t_sell_bill_header.grand_total as ex_float1,  \n"
+			+ "			        t_sell_bill_header.remaining_amt  as ex_float2   \n" + "			    FROM  \n"
+			+ "			        t_transaction_detail,  \n" + "			        t_sell_bill_header   \n"
+			+ "			    WHERE  \n" + "			        t_transaction_detail.del_status = 0    \n"
+			+ "			        AND t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no    \n"
+			+ "			        AND t_sell_bill_header.sell_bill_no =:sellBillNo       \n"
+			+ "			  \n" + "			", nativeQuery = true)
+	TransactionDetail getTransactionByBillId(@Param("sellBillNo") int sellBillNo);
 
 }

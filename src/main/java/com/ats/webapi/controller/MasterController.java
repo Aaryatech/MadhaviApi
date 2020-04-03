@@ -67,6 +67,7 @@ import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tray.TrayType;
 import com.ats.webapi.repo.ItemDepartmentRepo;
+import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repository.ConfigureFrRepository;
 import com.ats.webapi.repository.FlavourConfRepository;
 import com.ats.webapi.repository.FlavourRepository;
@@ -200,6 +201,9 @@ public class MasterController {
 
 	@Autowired
 	ItemDepartmentRepo itemDepartmentRepo;
+	
+	@Autowired
+	PettyCashManagmtRepo pettyCashManagmtRepo;
 
 	@RequestMapping(value = "/getOtherItemsByCatIdAndFrId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getOtherItemsByCatIdAndFrId(@RequestParam double frId) {
@@ -1598,6 +1602,14 @@ public class MasterController {
 		Franchisee fr = franchiseeRepository.findOne(frId);
 
 		return fr;
+	}
+	
+	@RequestMapping(value = { "/deletePettyCashData" }, method = RequestMethod.POST)
+	public @ResponseBody int deletePettyCashData(@RequestParam("id") int id) {
+
+		int res = pettyCashManagmtRepo.deletePettyCashDataById(id);
+
+		return res;
 	}
 
 }

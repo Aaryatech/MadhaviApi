@@ -25,7 +25,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    ) AS payment_mode,\r\n" + 
 			"    t_sell_bill_header.discount_per,\r\n" + 
 			"    t_sell_bill_header.payable_amt,\r\n" + 
-			"    m_franchisee.fr_name,\r\n" + 
+			"    t_transaction_detail.ex_var1 as fr_name,\r\n" + 
 			"    m_customer.cust_id,\r\n" + 
 			"    m_customer.cust_name,\r\n" + 
 			"    m_customer.phone_number,\r\n" + 
@@ -61,7 +61,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    ) AS payment_mode,\r\n" + 
 			"    t_sell_bill_header.discount_per,\r\n" + 
 			"    t_sell_bill_header.payable_amt,\r\n" + 
-			"    m_franchisee.fr_name,\r\n" + 
+			"    t_transaction_detail.ex_var1 as fr_name,\r\n" + 
 			"    m_customer.cust_id,\r\n" + 
 			"    m_customer.cust_name,\r\n" + 
 			"    m_customer.phone_number,\r\n" + 
@@ -191,7 +191,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    ) AS payment_mode,\r\n" + 
 			"    t_sell_bill_header.discount_per,\r\n" + 
 			"    t_sell_bill_header.payable_amt,\r\n" + 
-			"    m_franchisee.fr_name,\r\n" + 
+			"    t_transaction_detail.ex_var1 as fr_name,\r\n" + 
 			"    m_customer.cust_id,\r\n" + 
 			"    m_customer.cust_name,\r\n" + 
 			"    m_customer.phone_number,\r\n" + 

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.Franchisee;
 import com.ats.webapi.model.GetTotalAmt;
+import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.ShopAnivData;
 import com.ats.webapi.model.pettycash.GetCashAdvAndExpAmt;
 import com.ats.webapi.model.pettycash.OtherBillDetailAdv;
@@ -35,6 +36,7 @@ import com.ats.webapi.repository.FrAniversaryRepository;
 import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GetCashAdvAndExpAmtRepo;
+import com.ats.webapi.repository.SellBillHeaderRepository;
 
 @Component
 public class ScheduleTask {
@@ -130,6 +132,9 @@ public class ScheduleTask {
 
 	@Autowired
 	OtherBillDetailAdvRepo otherBillRepo;
+	
+	@Autowired
+	SellBillHeaderRepository sellBillHeaderRepository;
 
 	// Petty Cash Day End Process every morning 6.00 am
 	//@Scheduled(cron = "2 * * * * *")
@@ -145,6 +150,17 @@ public class ScheduleTask {
 
 				Franchisee fr = franchisee.get(j);
 				System.err.println("FRA ------------------ "+fr);
+				
+				int empId=0;
+				try {
+					SellBillHeader res = sellBillHeaderRepository.getLastBillHeaderByFrId(fr.getFrId());
+					if(res!=null) {
+						empId=res.getExtInt1();
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+					empId=0;
+				}
 
 				PettyCashManagmt petty = new PettyCashManagmt();
 				try {
@@ -215,6 +231,9 @@ public class ScheduleTask {
 							}
 
 							//String date1 = DateConvertor.convertToYMD(date);
+							
+							SimpleDateFormat sdf1=new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+							Calendar cal1=Calendar.getInstance();
 
 							pettycash.setPettycashId(0);
 							pettycash.setCardAmt(0);
@@ -222,8 +241,8 @@ public class ScheduleTask {
 							pettycash.setClosingAmt(closAmt);
 							pettycash.setDate(sdf.parse(date));
 							pettycash.setExFloat1(0);
-							pettycash.setExInt1(0);
-							pettycash.setExVar1("NA");
+							pettycash.setExInt1(empId);
+							pettycash.setExVar1(""+sdf1.format(cal1.getTime()));
 							pettycash.setExVar2("NA");
 							pettycash.setFrId(fr.getFrId());
 							pettycash.setOpeningAmt(opnAmt);

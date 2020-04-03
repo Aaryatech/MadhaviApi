@@ -52,5 +52,10 @@ public interface PettyCashManagmtRepo extends JpaRepository<PettyCashManagmt, In
 	@Query(value="UPDATE t_pettycash_mgmnt SET withdrawal_amt=:withdrawl, closing_amt=:closeAmt WHERE pettycash_id = :id", nativeQuery=true)
 	public int changeWithdrawalAmt(@Param("id") int id, @Param("closeAmt") float closeAmt, @Param("withdrawl") float withdrawl);
 	
+	@Transactional
+	@Modifying
+	@Query(value="delete from t_pettycash_mgmnt WHERE pettycash_id = :id", nativeQuery=true)
+	public int deletePettyCashDataById(@Param("id") int id);
+	
 
 }

@@ -31,6 +31,7 @@ import com.ats.webapi.repository.HsnwiseBillExcelSummaryRepository;
 import com.ats.webapi.repository.SellBillDetailEditRepository;
 import com.ats.webapi.repository.SellBillDetailRepository;
 import com.ats.webapi.repository.SellBillDetailsRepository;
+import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.SlabwiseDetailsRepository;
 import com.ats.webapi.repository.TransactionDetailRepository;
 import com.ats.webapi.repository.UpdateSellBillTimeStampRepo;
@@ -60,7 +61,7 @@ public class BillingController {
 	SellBillDetailEditRepository sellBillDetailEditRepository;
 	@Autowired
 	TransactionDetailRepository transactionDetailRepository;
-
+	
 	@RequestMapping(value = { "/saveTransactionDetail" }, method = RequestMethod.POST)
 	public @ResponseBody List<TransactionDetail> saveTransactionDetail(
 			@RequestBody List<TransactionDetail> transactionDetail) {
@@ -274,6 +275,14 @@ public class BillingController {
 		int response = sellBillDetailRepository.deleteSellBillDetailByItemId(sellBillNo, itemId);
 
 		return response;
+	}
+	
+	@RequestMapping(value = { "/getTransactionByBillId" }, method = RequestMethod.POST)
+	public @ResponseBody TransactionDetail getTransactionByBillId(@RequestParam("sellBillNo") int sellBillNo) {
+
+		TransactionDetail transactionDetailRes = transactionDetailRepository.getTransactionByBillId(sellBillNo);
+
+		return transactionDetailRes;
 	}
 	
 
