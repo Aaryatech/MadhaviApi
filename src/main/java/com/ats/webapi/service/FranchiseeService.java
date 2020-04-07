@@ -52,4 +52,8 @@ public interface FranchiseeService {
 
 	public String findFrEmployeeByEmpId(int empId, int frId);
 	
+	/*********************************************************/
+	public Franchisee getFranchiseeByFrCode(String frCode);
+
+	public Franchisee findByFrId(int frId);
 }

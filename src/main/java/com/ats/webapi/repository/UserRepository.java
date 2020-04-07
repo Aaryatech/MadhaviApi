@@ -59,5 +59,17 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	User findByUsernameAndPasswordAndDelStatus(String userName, String password, int i);
 	
 	List<User> findByUsernameIgnoreCaseAndDelStatus(String userName, int i);
+	
+	User findByEmail(String email);
+
+	User findByContact(String contact);
+
+	User findByIdAndDelStatus(int userId, int i);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE User SET usr_pwd=:newPass WHERE usr_id=:userId")
+	int changePassword(@Param("userId") int userId, @Param("newPass") String newPass);
+
 
 }
