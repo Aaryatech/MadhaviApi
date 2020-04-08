@@ -90,7 +90,7 @@ public class UserUtilApi {
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is" + otp1);
 			
-			Info inf = EmailUtility.sendOtp(otp1, conNumber, "Madhavi OTP Verification ");
+			Info inf = EmailUtility.sendOtp(otp1, conNumber);
 			
 			 mailsubject = " OTP  Verification ";
 			 String text = "\n OTP for change your Password: ";
@@ -136,7 +136,7 @@ public class UserUtilApi {
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is : " + otp1);
 			
-			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
+			Info inf = EmailUtility.sendOtp(otp1, conNumber);
 			
 			 mailsubject = " OTP  Verification ";
 			 String text = "\n OTP for change your Password: ";
@@ -252,7 +252,7 @@ public class UserUtilApi {
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is" + otp1);
 			
-			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
+			Info inf = EmailUtility.sendOtp(otp1, conNumber);
 			
 			 mailsubject = " OTP  Verification ";
 			 String text = "\n OTP for change your Password: ";

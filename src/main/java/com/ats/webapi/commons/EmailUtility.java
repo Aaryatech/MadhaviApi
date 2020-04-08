@@ -207,7 +207,7 @@ public class EmailUtility {
 		}
 
 	
-	public static Info sendOtp(String OTP, String phoneNo,String msg) {
+	public static Info sendOtp(String OTP, String phoneNo) {
 		
 		Info info=new Info();
 		
@@ -216,22 +216,14 @@ public class EmailUtility {
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			
-			
-			/*
-			 * map.add("senderID", "RUSAMH"); map.add("user",
-			 * "spdrusamah@gmail.com:Cyber@mva"); map.add("receipientno", phoneNo.trim());
-			 * map.add("dcs", "0"); map.add("msgtxt",msg + " " +OTP); map.add("state", "4");
-			 * 
-			 * String response = restTemplate.postForObject(
-			 * "http://api.mVaayoo.com/mvaayooapi/MessageCompose", map, String.class);
-			 */
-			String message = msg+ " " +OTP;
+			String msg = "We welcome You to Madhvi!\n"+
+						 "Your OTP to change your password is ("+OTP+").";
+						 
+			String message = msg;
 			String mob = phoneNo.trim();
-		System.out.println("OTP-------------"+message+" -  "+mob);
-			//String sms = restTemplate.getForObject("http://control.bestsms.co.in/api/sendhttp.php?authkey=314773AiTXKWgYX9R5e2aa5c1P1&mobiles="+mob+"&message="+message+"&sender=MONGII&route=4&country=91", String.class);
-			String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+ URLEncoder.encode(message, "UTF-8")+"&ServiceName= TEMPLATE_BASED", String.class);
-			
-			
+		
+			String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
+		
 			info.setError(false);
 			info.setMessage(sms);
 		  

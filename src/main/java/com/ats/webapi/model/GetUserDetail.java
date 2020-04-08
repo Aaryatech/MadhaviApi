@@ -40,6 +40,12 @@ public class GetUserDetail {
 	
 	@Column(name="type_name")
     private String typeName;
+	
+	@Column(name="email")
+    private String email;
+	
+	@Column(name="contact")
+    private String contact;
 
 
 
@@ -143,11 +149,24 @@ public class GetUserDetail {
 	}
 
 
-	@Override
-	public String toString() {
-		return "GetUserDetail [id=" + id + ", username=" + username + ", password=" + password + ", usertype="
-				+ usertype + ", delStatus=" + delStatus + ", deptId=" + deptId + ", roleId=" + roleId + ", deptName="
-				+ deptName + ", roleName=" + roleName + ", typeName=" + typeName + "]";
+	public String getEmail() {
+		return email;
 	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
 
 }
