@@ -2337,7 +2337,7 @@ public class RestApiController {
 
 			if (user.getDelStatus() == 0) {
 				result = updateUserRepo.updateUser(user.getId(), user.getPassword(), user.getUsertype(),
-						user.getDeptId());
+						user.getDeptId(), user.getEmail(), user.getContact());
 			} else {
 				result = updateUserRepo.delteUser(user.getId(), user.getDelStatus());
 			}
