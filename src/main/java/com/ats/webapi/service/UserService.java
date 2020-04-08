@@ -31,4 +31,6 @@ public interface UserService {
 	public User checkUniqueUser(String uname);
 
 	public User findByUserId(int userId);
+
+	public User getUserDataByMobileNo(String mob);
 }

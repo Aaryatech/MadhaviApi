@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.commons.EmailUtility;
@@ -19,7 +20,7 @@ import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.UserRepository;
 import com.ats.webapi.service.FranchiseeService;
 import com.ats.webapi.service.UserService;
-
+@RestController
 public class UserUtilApi {
 	@Autowired
 	private UserService userService;
@@ -62,8 +63,8 @@ public class UserUtilApi {
 		return res;
 	}
 	
-	static String senderEmail ="atsinfosoft@gmail.com";
-	static String senderPassword ="atsinfosoft@123";
+	static String senderEmail ="madhvierp@gmail.com";
+	static String senderPassword ="madhvi@#2020";
 	static String mailsubject = "";
 	String otp1 = null;
 	@RequestMapping(value = { "/getUserInfoByUsername" }, method = RequestMethod.POST)
@@ -88,6 +89,52 @@ public class UserUtilApi {
 			char[] otp = Common.OTP(6);
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is" + otp1);
+			
+			Info inf = EmailUtility.sendOtp(otp1, conNumber, "Madhavi OTP Verification ");
+			
+			 mailsubject = " OTP  Verification ";
+			 String text = "\n OTP for change your Password: ";
+			Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword,emailId, mailsubject,
+					text, otp1);
+
+		
+			OTPVerification.setConNumber(conNumber);
+			OTPVerification.setEmailId(emailId);
+			OTPVerification.setOtp(otp1);
+			OTPVerification.setPass(res.getPassword());
+		}else {
+			System.err.println("In Else ");
+
+			info.setError(true);
+			info.setMessage("not Matched");
+			System.err.println(" not Matched ");
+		}
+		return res;
+	}
+	
+	
+	@RequestMapping(value = { "/getUserInfoByMobileNo" }, method = RequestMethod.POST)
+	public @ResponseBody User getUserInfoByMobileNo(@RequestParam String mob) {
+
+		OTPVerification.setConNumber(null);
+		OTPVerification.setEmailId(null);
+		OTPVerification.setOtp(null);
+		OTPVerification.setPass(null);
+		Info info = new Info();
+		
+		User res = new User();
+		res = userService.getUserDataByMobileNo(mob);
+		System.err.println("User Res----------"+res);
+		
+		if(res!= null) {
+			OTPVerification.setUserId(res.getId());
+			
+			String emailId = res.getEmail();
+			String conNumber = res.getContact();
+			System.err.println("User conNumber----------"+conNumber);
+			char[] otp = Common.OTP(6);
+			otp1 = String.valueOf(otp);
+			System.err.println("User otp is : " + otp1);
 			
 			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
 			

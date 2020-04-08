@@ -46,13 +46,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Transactional
 	@Modifying
 	@Query("UPDATE User SET password=:password,usertype=:usertype,deptId=:deptId WHERE id=:userId")
-	int updateUser(@Param("userId") Long id, @Param("password") String password, @Param("usertype") int usertype,
+	int updateUser(@Param("userId") int id, @Param("password") String password, @Param("usertype") int usertype,
 			@Param("deptId") int deptId);
 	
 	@Transactional
 	@Modifying
 	@Query("UPDATE User SET delStatus=:delStatus WHERE id=:userId")
-	int delteUser(@Param("userId") Long id, @Param("delStatus") int delStatus);
+	int delteUser(@Param("userId") int id, @Param("delStatus") int delStatus);
 
 //	User findByUsernameAndPassword(String username, String password);
 
@@ -70,6 +70,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Modifying
 	@Query("UPDATE User SET usr_pwd=:newPass WHERE usr_id=:userId")
 	int changePassword(@Param("userId") int userId, @Param("newPass") String newPass);
+
+	User findBycontact(String mob);
 
 
 }
