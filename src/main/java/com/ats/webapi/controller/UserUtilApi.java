@@ -15,6 +15,8 @@ import com.ats.webapi.model.Franchisee;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.OTPVerification;
 import com.ats.webapi.model.User;
+import com.ats.webapi.model.pettycash.FrEmpMaster;
+import com.ats.webapi.repo.FrEmpMasterRepo;
 import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.UserRepository;
@@ -37,6 +39,8 @@ public class UserUtilApi {
 	@Autowired
 	FranchiseSupRepository franchiseSupRepository;
 
+	@Autowired
+	FrEmpMasterRepo frEmpRepo;
 	
 	@RequestMapping(value = { "/getUserInfoByEmail" }, method = RequestMethod.POST)
 	public @ResponseBody User getUserInfoByEmail(@RequestParam String email) {
@@ -198,6 +202,7 @@ public class UserUtilApi {
 		return user;
 
 	}
+
 	
 	@RequestMapping(value = { "/updateToNewPassword" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateToNewPassword(@RequestParam int userId, @RequestParam String newPass) {
@@ -276,6 +281,55 @@ public class UserUtilApi {
 		return franchisee;
 
 	}
+
+@RequestMapping(value = { "/getFranchiseeByMob" }, method = RequestMethod.POST)
+@ResponseBody
+public FrEmpMaster getFranchiseeByMob(@RequestParam("mob") String mob) {
+
+	OTPVerification.setConNumber(null);
+	OTPVerification.setEmailId(null);
+	OTPVerification.setOtp(null);
+	OTPVerification.setPass(null);
+	Info info = new Info();
+	FrEmpMaster frEmp = new FrEmpMaster();
+	try {
+		frEmp = frEmpRepo.findByFrEmpContact(mob);
+		System.out.println("JsonString" + frEmp);
+		if(frEmp!= null) {
+			OTPVerification.setUserId(frEmp.getFrEmpId());
+			
+			String conNumber = frEmp.getFrEmpContact();
+			
+			char[] otp = Common.OTP(6);
+			otp1 = String.valueOf(otp);
+			System.err.println("User otp is" + otp1);
+			
+			Info inf = EmailUtility.sendOtp(otp1, conNumber);
+			
+			 mailsubject = " OTP  Verification ";
+			 String text = "We welcome You to Madhvi!\n"+
+					 	"Your OTP to change your password is ("+otp1+").";
+			String msgText = "";
+			//Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword,emailId, mailsubject,
+			//		text, msgText);
+	
+		
+			OTPVerification.setConNumber(conNumber);
+			OTPVerification.setOtp(otp1);
+			OTPVerification.setPass(frEmp.getPassword());
+		}else {
+			System.err.println("In Else ");
+	
+			info.setError(true);
+			info.setMessage("not Matched");
+			System.err.println(" not Matched ");
+		}
+	}catch (Exception e) {
+		System.err.println("Ex in getFranchiseeByMob : "+e.getMessage());
+	}
+	return frEmp;
+
+}
 	
 	@RequestMapping(value = { "/verifyOPSOTP" }, method = RequestMethod.POST)
 	public @ResponseBody Franchisee VerifyOPSOTP(@RequestParam String otp) {
@@ -315,6 +369,40 @@ public class UserUtilApi {
 		}
 		return franchisee;
 	}
+	@RequestMapping(value = { "/validateOTP" }, method = RequestMethod.POST)
+	public @ResponseBody FrEmpMaster validateOTP(@RequestParam String otp) {
+		Info info = new Info();
+		
+		Object object=new Object();
+		HashMap<Integer, FrEmpMaster>  hashMap=new HashMap<>();
+		
+		FrEmpMaster user=new FrEmpMaster();
+		
+		try {
+		//	System.err.println("OTP Found------------------"+OTPVerification.getOtp()+" "+OTPVerification.getUserId());
+			if (otp.equals(OTPVerification.getOtp()) == true) {
+				info.setError(false);
+				info.setMessage("success");
+				
+				user=frEmpRepo.findByFrEmpIdAndDelStatus(OTPVerification.getUserId(),0);
+				hashMap.put(1, user);
+
+			} else {
+				info.setError(true);
+				info.setMessage("failed");
+			}
+			
+		} catch (Exception e) {
+
+			System.err.println("Exce in getAllInstitutes Institute " + e.getMessage());
+			e.printStackTrace();
+			info.setError(true);
+			info.setMessage("excep");
+		}
+
+		return user;
+
+	}
 	
 	@RequestMapping(value = { "/updateToNewOPSPassword" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateToNewOPSPassword(@RequestParam int frId, @RequestParam String newPass) {
@@ -343,6 +431,31 @@ public class UserUtilApi {
 				res.setError(true);
 				res.setMessage("fail");
 			}
+		}else {
+			res.setError(true);
+			res.setMessage("fail");
+		}
+	
+		return res;
+	}	
+	
+	@RequestMapping(value = { "/updateEmpNewPassword" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateEmpNewPassword(@RequestParam int empId, @RequestParam String pass) {
+
+		Info res = new Info();
+		
+		int a = frEmpRepo.updateEmpPass(empId, pass);
+		if(a>0) {
+				
+//			FrEmpMaster empFr=frEmpRepo.findByFrEmpId(OTPVerification.getUserId());
+//				if(empFr!=null) {
+//						
+//					//Info emailRes = EmailUtility.sendOtp(OTP, phoneNo)
+//				}
+//			res.setError(false);
+//			res.setMessage("success");
+
+			
 		}else {
 			res.setError(true);
 			res.setMessage("fail");
