@@ -252,7 +252,8 @@ public class PettyCashApiController {
 	public List<FrEmpMaster> getAllFrEmpByFrid(@RequestParam int frId) {
 		List<FrEmpMaster> list = new ArrayList<FrEmpMaster>();
 		try {
-			list = frEmpRepo.findByFrIdAndDelStatus(frId, 0);
+			//list = frEmpRepo.findByFrIdAndDelStatus(frId, 0);
+			list = frEmpRepo.findByFrId(frId);
 			System.err.println("List-----------" + list);
 		} catch (Exception e) {
 			System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());

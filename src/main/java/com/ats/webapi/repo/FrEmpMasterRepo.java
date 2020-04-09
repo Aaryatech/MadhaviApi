@@ -16,7 +16,7 @@ public interface FrEmpMasterRepo extends JpaRepository<FrEmpMaster, Integer> {
 
 	public List<FrEmpMaster> findByFrIdAndDelStatus(int frId, int del);
 	
-	
+	public List<FrEmpMaster> findByFrId(int frId);
 	
 @Query(value="SELECT\n" + 
 		"    *\n" + 
@@ -46,7 +46,7 @@ public interface FrEmpMasterRepo extends JpaRepository<FrEmpMaster, Integer> {
 	@Query(value="UPDATE m_fr_emp SET password=:pass WHERE fr_emp_id=:empId",nativeQuery=true)
 	public int updateEmpPass(@Param("empId") int empId, @Param("pass") String pass);
 
-
+	
 
 	public FrEmpMaster findByFrEmpContact(String mob);
 
