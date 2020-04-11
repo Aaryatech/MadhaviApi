@@ -482,7 +482,19 @@ public class ReportControllerV2 {
 			}
 
 		} else {
-			saleList = getSalesReportRepo.getSalesReportFrCompOutlet(fromDate, toDate, frIdList);
+			
+			if (dairy.contains("1") && dairy.contains("2")) {
+				saleList = getSalesReportRepo.getSalesReportFrCompOutletDairyAndReg(fromDate, toDate, frIdList);
+				
+			} else if (dairy.contains("1")) {
+				saleList = getSalesReportRepo.getSalesReportFrCompOutlet(fromDate, toDate, frIdList);
+				
+			} else if (dairy.contains("2")) {
+				saleList = getSalesReportRepo.getSalesReportFrCompOutletDairy(fromDate, toDate, frIdList);
+				
+			}
+			
+			
 		}
 
 		return saleList;

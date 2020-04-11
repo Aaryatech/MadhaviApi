@@ -184,7 +184,7 @@ public class SalesReportApiController2 {
 	@RequestMapping(value = { "/getAdminSubCatReportApi" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatReport> getAdminSubCatReportApi(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("billType") int billType) {
+			@RequestParam("billType") int billType, @RequestParam("dairy") List<String> dairy) {
 
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
@@ -233,8 +233,30 @@ public class SalesReportApiController2 {
 				System.err.println("Matched -------------------- " + subCatCreditGvnRep);
 
 			} else {
-				catReportBill = subCatBillRepRepo.getAdminDataCompOutlet(fromDate, toDate);
-				subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRN(fromDate, toDate);
+
+				if (dairy != null) {
+
+					if (dairy.contains("1") && dairy.contains("2")) {
+						
+						catReportBill = subCatBillRepRepo.getAdminDataCompOutletDairyAndReg(fromDate, toDate);
+						subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRNCompDairyAndReg(fromDate, toDate);
+						
+					} else if (dairy.contains("1")) {
+						
+						catReportBill = subCatBillRepRepo.getAdminDataCompOutlet(fromDate, toDate);
+						subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRN(fromDate, toDate);
+						
+
+					} else if (dairy.contains("2")) {
+						
+						catReportBill = subCatBillRepRepo.getAdminDataCompOutletDairy(fromDate, toDate);
+						subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRNCompDairy(fromDate, toDate);
+						
+
+					}
+				}
+
+				
 			}
 
 			if (catReportBill == null) {
@@ -592,7 +614,8 @@ public class SalesReportApiController2 {
 	public @ResponseBody List<SubCatItemReport> getAdminSubCatFrItemReportApi(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<Integer> frIdList,
 			@RequestParam("subCatIdList") List<Integer> subCatIdList,
-			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType) {
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
+			@RequestParam("dairy") List<String> dairy) {
 
 		List<SubCatItemReport> catReportList = new ArrayList<>();
 		List<SubCatFrItemRepBill> catReportBill = null;
@@ -616,6 +639,19 @@ public class SalesReportApiController2 {
 				type.add(1);
 			}
 
+			List<Integer> dairyList = new ArrayList<>();
+			if (dairy.contains("1") && dairy.contains("2")) {
+				dairyList.clear();
+				dairyList.add(1);
+				dairyList.add(2);
+			} else if (dairy.contains("1")) {
+				dairyList.clear();
+				dairyList.add(1);
+			} else if (dairy.contains("2")) {
+				dairyList.clear();
+				dairyList.add(2);
+			}
+
 			if (billType == 1) {
 				catReportBill = subCatFrItemRepBillRepo.getAdminData(fromDate, toDate, frIdList, subCatIdList, type);
 
@@ -625,11 +661,31 @@ public class SalesReportApiController2 {
 				subCatCreditGvnRep = subCatCreditGrnFrItemRepRepo.getAdminDataGVN(fromDate, toDate, frIdList,
 						subCatIdList);
 			} else {
-				catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutlet(fromDate, toDate, frIdList,
-						subCatIdList);
 
-				subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutlet(fromDate, toDate, frIdList,
-						subCatIdList);
+				if (dairyList.contains(1) && dairyList.contains(2)) {
+
+					catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutletDairyAndRegular(fromDate, toDate,
+							frIdList, subCatIdList);
+
+					subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutletDairyAndRegular(fromDate,
+							toDate, frIdList, subCatIdList);
+
+				} else if (dairyList.contains(1)) {
+					catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutlet(fromDate, toDate, frIdList,
+							subCatIdList);
+
+					subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutlet(fromDate, toDate,
+							frIdList, subCatIdList);
+
+				} else if (dairyList.contains(2)) {
+
+					catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutletDairymart(fromDate, toDate, frIdList,
+							subCatIdList);
+
+					subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutletDairymart(fromDate,
+							toDate, frIdList, subCatIdList);
+
+				}
 
 			}
 

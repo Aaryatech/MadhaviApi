@@ -329,6 +329,221 @@ public interface SalesReturnQtyDaoRepository extends JpaRepository<SalesReturnQt
 			"    t1.sub_cat_id = t3.id",nativeQuery=true)
 	List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutlet(@Param("month")String month);
 	
+	//Anmol---10-04-2020--- COMP OUTLET DAIRY MART
+		@Query(value="SELECT\n" + 
+				"    t1.id,\n" + 
+				"    t1.sub_cat_id,\n" + 
+				"    COALESCE((t2.bill_qty),\n" + 
+				"    0) AS bill_qty,\n" + 
+				"    COALESCE((t3.grn_qty),\n" + 
+				"    0) + COALESCE((t4.gvn_qty),\n" + 
+				"    0) AS grn_qty,\n" + 
+				"    COALESCE((t4.gvn_qty),\n" + 
+				"    0) AS gvn_qty\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        CONCAT(:month, sub_cat_id) AS id,\n" + 
+				"        sub_cat_id\n" + 
+				"    FROM\n" + 
+				"        m_cat_sub\n" + 
+				"    WHERE\n" + 
+				"        m_cat_sub.del_status = 0\n" + 
+				") t1\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        m_item.item_grp2 AS id,\n" + 
+				"        SUM(t_bill_detail.bill_qty) AS bill_qty\n" + 
+				"    FROM\n" + 
+				"        t_bill_detail,\n" + 
+				"        t_bill_header,\n" + 
+				"        m_item\n" + 
+				"    WHERE\n" + 
+				"        DATE_FORMAT(t_bill_header.bill_date, '%Y-%m') = :month AND t_bill_header.del_status = 0 AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND m_item.is_stockable = 1 AND t_bill_header.is_dairy_mart = 2\n" + 
+				"    GROUP BY\n" + 
+				"        m_item.item_grp2\n" + 
+				") t2\n" + 
+				"ON\n" + 
+				"    t1.sub_cat_id = t2.id\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        m_item.item_grp2 AS id,\n" + 
+				"        SUM(grn_gvn_qty) AS grn_qty\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_header,\n" + 
+				"        t_credit_note_details,\n" + 
+				"        m_item\n" + 
+				"    WHERE\n" + 
+				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 1 AND DATE_FORMAT(\n" + 
+				"            t_credit_note_header.crn_date,\n" + 
+				"            '%Y-%m'\n" + 
+				"        ) = :month AND m_item.id = t_credit_note_details.item_id AND m_item.is_stockable = 1\n" + 
+				"    GROUP BY\n" + 
+				"        m_item.item_grp2\n" + 
+				") t3\n" + 
+				"ON\n" + 
+				"    t1.sub_cat_id = t3.id\n" + 
+				"LEFT JOIN(\n" + 
+				"    SELECT\n" + 
+				"        m_item.item_grp2 AS id,\n" + 
+				"        SUM(grn_gvn_qty) AS gvn_qty\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_header,\n" + 
+				"        t_credit_note_details,\n" + 
+				"        m_item\n" + 
+				"    WHERE\n" + 
+				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 0 AND DATE_FORMAT(\n" + 
+				"            t_credit_note_header.crn_date,\n" + 
+				"            '%Y-%m'\n" + 
+				"        ) = :month AND m_item.id = t_credit_note_details.item_id AND m_item.is_stockable = 1\n" + 
+				"    GROUP BY\n" + 
+				"        m_item.item_grp2\n" + 
+				") t4\n" + 
+				"ON\n" + 
+				"    t1.sub_cat_id = t4.id",nativeQuery=true)
+		List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutletDairymart(@Param("month")String month);
+	
+		
+		//Anmol---10-04-2020--- COMP OUTLET DAIRY MART AND Regular
+				@Query(value="SELECT \n" + 
+						"id,\n" + 
+						"sub_cat_id, \n" + 
+						"SUM(bill_qty) as bill_qty,\n" + 
+						"SUM(grn_qty) as grn_qty,\n" + 
+						"0 as gvn_qty\n" + 
+						"FROM (\n" + 
+						"SELECT\n" + 
+						"    t1.id,\n" + 
+						"    t1.sub_cat_id,\n" + 
+						"    COALESCE((t2.bill_qty),\n" + 
+						"    0) AS bill_qty,\n" + 
+						"    COALESCE((t3.grn_qty),\n" + 
+						"    0) + COALESCE((t4.gvn_qty),\n" + 
+						"    0) AS grn_qty,\n" + 
+						"    COALESCE((t4.gvn_qty),\n" + 
+						"    0) AS gvn_qty\n" + 
+						"FROM\n" + 
+						"    (\n" + 
+						"    SELECT\n" + 
+						"        CONCAT(:month, sub_cat_id) AS id,\n" + 
+						"        sub_cat_id\n" + 
+						"    FROM\n" + 
+						"        m_cat_sub\n" + 
+						"    WHERE\n" + 
+						"        m_cat_sub.del_status = 0\n" + 
+						") t1\n" + 
+						"LEFT JOIN(\n" + 
+						"    SELECT\n" + 
+						"        m_item.item_grp2 AS id,\n" + 
+						"        SUM(t_bill_detail.bill_qty) AS bill_qty\n" + 
+						"    FROM\n" + 
+						"        t_bill_detail,\n" + 
+						"        t_bill_header,\n" + 
+						"        m_item\n" + 
+						"    WHERE\n" + 
+						"        DATE_FORMAT(t_bill_header.bill_date, '%Y-%m') = :month AND t_bill_header.del_status = 0 AND t_bill_header.bill_no = t_bill_detail.bill_no AND m_item.id = t_bill_detail.item_id AND m_item.is_stockable = 1 AND t_bill_header.is_dairy_mart = 2\n" + 
+						"    GROUP BY\n" + 
+						"        m_item.item_grp2\n" + 
+						") t2\n" + 
+						"ON\n" + 
+						"    t1.sub_cat_id = t2.id\n" + 
+						"LEFT JOIN(\n" + 
+						"    SELECT\n" + 
+						"        m_item.item_grp2 AS id,\n" + 
+						"        SUM(grn_gvn_qty) AS grn_qty\n" + 
+						"    FROM\n" + 
+						"        t_credit_note_header,\n" + 
+						"        t_credit_note_details,\n" + 
+						"        m_item\n" + 
+						"    WHERE\n" + 
+						"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 1 AND DATE_FORMAT(\n" + 
+						"            t_credit_note_header.crn_date,\n" + 
+						"            '%Y-%m'\n" + 
+						"        ) = :month AND m_item.id = t_credit_note_details.item_id AND m_item.is_stockable = 1\n" + 
+						"    GROUP BY\n" + 
+						"        m_item.item_grp2\n" + 
+						") t3\n" + 
+						"ON\n" + 
+						"    t1.sub_cat_id = t3.id\n" + 
+						"LEFT JOIN(\n" + 
+						"    SELECT\n" + 
+						"        m_item.item_grp2 AS id,\n" + 
+						"        SUM(grn_gvn_qty) AS gvn_qty\n" + 
+						"    FROM\n" + 
+						"        t_credit_note_header,\n" + 
+						"        t_credit_note_details,\n" + 
+						"        m_item\n" + 
+						"    WHERE\n" + 
+						"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.is_grn = 0 AND DATE_FORMAT(\n" + 
+						"            t_credit_note_header.crn_date,\n" + 
+						"            '%Y-%m'\n" + 
+						"        ) = :month AND m_item.id = t_credit_note_details.item_id AND m_item.is_stockable = 1\n" + 
+						"    GROUP BY\n" + 
+						"        m_item.item_grp2\n" + 
+						") t4\n" + 
+						"ON\n" + 
+						"    t1.sub_cat_id = t4.id\n" + 
+						"    \n" + 
+						"    UNION\n" + 
+						"    \n" + 
+						"    (\n" + 
+						"    SELECT\n" + 
+						"    t1.id,\n" + 
+						"    t1.sub_cat_id,\n" + 
+						"    COALESCE((t2.bill_qty),\n" + 
+						"    0) AS bill_qty,\n" + 
+						"    COALESCE((t3.grn_qty),\n" + 
+						"    0) AS grn_qty,\n" + 
+						"    0 AS gvn_qty\n" + 
+						"FROM\n" + 
+						"    (\n" + 
+						"    SELECT\n" + 
+						"        CONCAT(:month, sub_cat_id) AS id,\n" + 
+						"        sub_cat_id\n" + 
+						"    FROM\n" + 
+						"        m_cat_sub\n" + 
+						"    WHERE\n" + 
+						"        m_cat_sub.del_status = 0\n" + 
+						") t1\n" + 
+						"LEFT JOIN(\n" + 
+						"    SELECT\n" + 
+						"        m_item.item_grp2 AS id,\n" + 
+						"        SUM(t_sell_bill_detail.qty) AS bill_qty\n" + 
+						"    FROM\n" + 
+						"        t_sell_bill_header,\n" + 
+						"        t_sell_bill_detail,\n" + 
+						"        m_item\n" + 
+						"    WHERE\n" + 
+						"        DATE_FORMAT(\n" + 
+						"            t_sell_bill_header.bill_date,\n" + 
+						"            '%Y-%m'\n" + 
+						"        ) =:month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND m_item.is_saleable = 1\n" + 
+						"    GROUP BY\n" + 
+						"        m_item.item_grp2\n" + 
+						") t2\n" + 
+						"ON\n" + 
+						"    t1.sub_cat_id = t2.id\n" + 
+						"LEFT JOIN(\n" + 
+						"    SELECT\n" + 
+						"        m_item.item_grp2 AS id,\n" + 
+						"        SUM(t_credit_note_pos.crn_qty) AS grn_qty\n" + 
+						"    FROM\n" + 
+						"        t_credit_note_pos,\n" + 
+						"        m_item\n" + 
+						"    WHERE\n" + 
+						"        DATE_FORMAT(\n" + 
+						"            t_credit_note_pos.crn_date,\n" + 
+						"            '%Y-%m'\n" + 
+						"        ) = :month AND m_item.id = t_credit_note_pos.item_id AND m_item.is_saleable = 1\n" + 
+						"    GROUP BY\n" + 
+						"        m_item.item_grp2\n" + 
+						") t3\n" + 
+						"ON\n" + 
+						"    t1.sub_cat_id = t3.id\n" + 
+						"    )\n" + 
+						"    ) t1 GROUP BY sub_cat_id\n" + 
+						"    ",nativeQuery=true)
+				List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(@Param("month")String month);
 
 	
 	@Query(value="SELECT\n" + 

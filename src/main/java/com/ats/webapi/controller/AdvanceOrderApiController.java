@@ -507,8 +507,8 @@ public class AdvanceOrderApiController {
 						flag = 3;
 					}
 
-					int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(finPending),
-							String.valueOf(finPaid), expTransList.get(i).getSellBillNo(), flag);
+					int del = sellBillHeaderRepository.upDateBillAmt(String.valueOf(Math.round(finPending)),
+							String.valueOf(Math.round(finPaid)), expTransList.get(i).getSellBillNo(), flag);
 
 					expTransList.get(i).setExVar2("");
 					expTransList.get(i).setExFloat1(0);

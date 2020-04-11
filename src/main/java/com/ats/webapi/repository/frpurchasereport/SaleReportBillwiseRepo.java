@@ -29,7 +29,7 @@ public interface SaleReportBillwiseRepo extends JpaRepository<SalesReportBillwis
 			"        m_franchisee.fr_city," + 
 			"        m_franchisee.fr_gst_no," + 
 			"        m_franchisee.is_same_state," + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id ,t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per" + 
 			"    FROM" + 
 			"        m_franchisee," + 
 			"        t_bill_header ," + 
@@ -92,7 +92,7 @@ public interface SaleReportBillwiseRepo extends JpaRepository<SalesReportBillwis
 			"			        m_franchisee.fr_city, " + 
 			"			        m_franchisee.fr_gst_no, " + 
 			"			        m_franchisee.is_same_state, " + 
-			"			        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id  " + 
+			"			        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per  " + 
 			"			    FROM " + 
 			"			        m_franchisee, " + 
 			"			        t_bill_header, " + 
@@ -114,7 +114,7 @@ public interface SaleReportBillwiseRepo extends JpaRepository<SalesReportBillwis
 	@Query(value=" SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,SUM(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,SUM(t_bill_header.round_off) as round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
 			+ " AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0  GROUP BY t_bill_header.bill_date",nativeQuery=true)
  		List<SalesReportBillwise> getSaleReportBillwiseByDate(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 	
@@ -127,7 +127,7 @@ public interface SaleReportBillwiseRepo extends JpaRepository<SalesReportBillwis
 		@Query(value=" SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 				"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,t_bill_header.total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 				"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-				"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id "
+				"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id "
 				+ "AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 GROUP BY t_bill_header.bill_date",nativeQuery=true)
 
 			List<SalesReportBillwise> getSaleReportBillwiseByDateAllFr(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
@@ -146,7 +146,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_bill_header.bill_date),'--',YEAR(t_bill_header.bill_date) )as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,sum(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
 			+ "AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 GROUP BY month ",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonth(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
@@ -162,7 +162,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_bill_header.bill_date),'--',YEAR(t_bill_header.bill_date) )as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,sum(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id"
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id"
 			+ " AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 GROUP BY month order by t_bill_header.bill_date",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonthAllFr(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
@@ -192,7 +192,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city," + 
 			"        m_franchisee.fr_gst_no," + 
 			"        m_franchisee.is_same_state," + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per " + 
 			"    FROM" + 
 			"        m_franchisee," + 
 			"        t_bill_header," + 
@@ -236,7 +236,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city," + 
 			"        m_franchisee.fr_gst_no," + 
 			"        m_franchisee.is_same_state," + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt " + 
 			"    FROM" + 
 			"        m_franchisee," + 
 			"        t_sell_bill_header ," + 
@@ -283,7 +283,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city," + 
 			"        m_franchisee.fr_gst_no," + 
 			"        m_franchisee.is_same_state," + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt " + 
 			"    FROM" + 
 			"        m_franchisee," + 
 			"        t_sell_bill_header ," + 
@@ -331,7 +331,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_bill_header ," + 
@@ -366,7 +367,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    m_franchisee.fr_city,\n" + 
 				"    m_franchisee.fr_gst_no,\n" + 
 				"    m_franchisee.is_same_state,\n" + 
-				"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id \n" + 
+				"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 				"FROM\n" + 
 				"    m_franchisee,\n" + 
 				"    t_sell_bill_header,\n" + 
@@ -400,7 +401,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_sell_bill_header ," + 
@@ -442,7 +443,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    m_franchisee.fr_gst_no,\n" + 
 				"    m_franchisee.is_same_state,\n" + 
 				"    m_customer.cust_name,\n" + 
-				"    m_customer.cust_id\n" + 
+				"    m_customer.cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt\n" + 
 				"FROM\n" + 
 				"    m_franchisee,\n" + 
 				"    t_sell_bill_header,\n" + 
@@ -458,6 +459,88 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			
 			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
+		
+		
+		
+		//Comp outlet bills and dairy mart
+		//Anmol
+		@Query(value="SELECT\n" + 
+				"    t1.*\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        MONTHNAME(t_bill_header.bill_date) AS MONTH,\n" + 
+				"        t_bill_header.bill_no,\n" + 
+				"        t_bill_header.bill_date,\n" + 
+				"        t_bill_header.invoice_no,\n" + 
+				"        t_bill_header.fr_id,\n" + 
+				"        t_bill_header.fr_code,\n" + 
+				"        t_bill_header.tax_applicable,\n" + 
+				"        SUM(t_bill_detail.taxable_amt) AS taxable_amt,\n" + 
+				"        SUM(t_bill_detail.total_tax) AS total_tax,\n" + 
+				"        SUM(t_bill_detail.grand_total) AS grand_total,\n" + 
+				"        t_bill_header.round_off,\n" + 
+				"        SUM(t_bill_detail.sgst_rs) AS sgst_sum,\n" + 
+				"        SUM(t_bill_detail.cgst_rs) AS cgst_sum,\n" + 
+				"        SUM(t_bill_detail.igst_rs) AS igst_sum,\n" + 
+				"        m_franchisee.fr_name,\n" + 
+				"        m_franchisee.fr_city,\n" + 
+				"        m_franchisee.fr_gst_no,\n" + 
+				"        m_franchisee.is_same_state,\n" + 
+				"        'cust' AS cust_name,\n" + 
+				"        0 AS cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per \n" + 
+				"\n" + 
+				"    FROM\n" + 
+				"        m_franchisee,\n" + 
+				"        t_bill_header,\n" + 
+				"        t_bill_detail\n" + 
+				"    WHERE\n" + 
+				"        t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.bill_no = t_bill_header.bill_no AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0  AND t_bill_header.is_dairy_mart IN(:dairy)\n" + 
+				"    GROUP BY\n" + 
+				"        t_bill_header.bill_no\n" + 
+				"    UNION\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            MONTHNAME(t_sell_bill_header.bill_date) AS MONTH,\n" + 
+				"            t_sell_bill_header.sell_bill_no AS bill_no,\n" + 
+				"            t_sell_bill_header.bill_date,\n" + 
+				"            t_sell_bill_header.invoice_no,\n" + 
+				"            t_sell_bill_header.fr_id,\n" + 
+				"            t_sell_bill_header.fr_code,\n" + 
+				"            '0' AS tax_applicable,\n" + 
+				"            SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
+				"            SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
+				"            SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
+				"            '0' AS round_off,\n" + 
+				"            SUM(t_sell_bill_detail.sgst_rs) AS sgst_sum,\n" + 
+				"            SUM(t_sell_bill_detail.cgst_rs) AS cgst_sum,\n" + 
+				"            SUM(t_sell_bill_detail.igst_rs) AS igst_sum,\n" + 
+				"            m_franchisee.fr_name,\n" + 
+				"            m_franchisee.fr_city,\n" + 
+				"            m_franchisee.fr_gst_no,\n" + 
+				"            m_franchisee.is_same_state,\n" + 
+				"            m_customer.cust_name,\n" + 
+				"            m_customer.cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt " + 
+				"        FROM\n" + 
+				"            m_franchisee,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            m_customer\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id\n" + 
+				"        GROUP BY\n" + 
+				"            t_sell_bill_header.sell_bill_no\n" + 
+				"        ORDER BY\n" + 
+				"            t_sell_bill_header.bill_date,\n" + 
+				"            t_sell_bill_header.invoice_no\n" + 
+				"    )) t1\n" + 
+				"        \n" + 
+				"       ORDER BY bill_date,invoice_no,fr_id ",nativeQuery=true)
+			
+			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3withDairymart(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("dairy") List<Integer> dairy);
+
+		
+		
 		
 		//3 all fr all type 1 or 2 selected
   
@@ -484,7 +567,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_bill_header ," + 
@@ -525,7 +609,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 		"        m_franchisee.fr_name," + 
 		"        m_franchisee.fr_city," + 
 		"        m_franchisee.fr_gst_no," + 
-		"        m_franchisee.is_same_state, 'cust' as cust_name, 0 as cust_id " + 
+		"        m_franchisee.is_same_state, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+		" " + 
 		"    FROM" + 
 		"        m_franchisee," + 
 		"        t_bill_header ," + 
@@ -573,7 +658,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_bill_header ," + 
@@ -609,7 +695,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    m_franchisee.fr_city,\n" + 
 				"    m_franchisee.fr_gst_no,\n" + 
 				"    m_franchisee.is_same_state,\n" + 
-				"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+				"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 				"FROM\n" + 
 				"    m_franchisee,\n" + 
 				"    t_sell_bill_header,\n" + 
@@ -643,7 +729,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt  " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_sell_bill_header ," + 
@@ -674,9 +760,9 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"				        t_sell_bill_header.fr_id,  \n" + 
 				"				        t_sell_bill_header.fr_code,  \n" + 
 				"				        '0' as tax_applicable,  \n" + 
-				"				        sum(t_sell_bill_header.taxable_amt) as taxable_amt,  \n" + 
-				"				        sum(t_sell_bill_header.total_tax) as total_tax,  \n" + 
-				"				        SUM(t_sell_bill_header.grand_total) AS grand_total,  \n" + 
+				"				        t_sell_bill_header.taxable_amt as taxable_amt,  \n" + 
+				"				        t_sell_bill_header.total_tax as total_tax,  \n" + 
+				"				        t_sell_bill_header.grand_total AS grand_total,  \n" + 
 				"				        '0' as round_off,  \n" + 
 				"				        SUM(t_sell_bill_detail.sgst_rs) as sgst_sum,  \n" + 
 				"				        SUM(t_sell_bill_detail.cgst_rs) as cgst_sum ,  \n" + 
@@ -686,7 +772,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"				        m_franchisee.fr_gst_no,  \n" + 
 				"				        m_franchisee.is_same_state,\n" + 
 				"                        m_customer.cust_name,\n" + 
-				"                        m_customer.cust_id\n" + 
+				"                        m_customer.cust_id, t_sell_bill_header.discount_per as disc_per,\n" + 
+				"    t_sell_bill_header.discount_amt as disc_amt" + 
 				"				    FROM  \n" + 
 				"				        m_franchisee,  \n" + 
 				"				        t_sell_bill_header ,  \n" + 
@@ -704,6 +791,85 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"                     ORDER BY t_sell_bill_header.bill_date, t_sell_bill_header.invoice_no ",nativeQuery=true)
 			
 			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+
+		
+		//Anmol
+		//company outlet bill dairy mart
+		@Query(value="SELECT\n" + 
+				"    *\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        MONTHNAME(t_bill_header.bill_date) AS MONTH,\n" + 
+				"        t_bill_header.bill_no,\n" + 
+				"        t_bill_header.bill_date,\n" + 
+				"        t_bill_header.invoice_no,\n" + 
+				"        t_bill_header.fr_id,\n" + 
+				"        t_bill_header.fr_code,\n" + 
+				"        t_bill_header.tax_applicable,\n" + 
+				"        SUM(t_bill_detail.taxable_amt) AS taxable_amt,\n" + 
+				"        SUM(t_bill_detail.total_tax) AS total_tax,\n" + 
+				"        SUM(t_bill_detail.grand_total) AS grand_total,\n" + 
+				"        t_bill_header.round_off,\n" + 
+				"        SUM(t_bill_detail.sgst_rs) AS sgst_sum,\n" + 
+				"        SUM(t_bill_detail.cgst_rs) AS cgst_sum,\n" + 
+				"        SUM(t_bill_detail.igst_rs) AS igst_sum,\n" + 
+				"        m_franchisee.fr_name,\n" + 
+				"        m_franchisee.fr_city,\n" + 
+				"        m_franchisee.fr_gst_no,\n" + 
+				"        m_franchisee.is_same_state,\n" + 
+				"        'cust' AS cust_name,\n" + 
+				"        0 AS cust_id, t_bill_header.disc_amt,\n" + 
+				"(t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per" + 
+				"    FROM\n" + 
+				"        m_franchisee,\n" + 
+				"        t_bill_header,\n" + 
+				"        t_bill_detail\n" + 
+				"    WHERE\n" + 
+				"        t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.bill_no = t_bill_header.bill_no AND t_bill_header.del_status = 0 AND t_bill_detail.del_status = 0 AND t_bill_header.is_dairy_mart=2\n" + 
+				"    GROUP BY\n" + 
+				"        t_bill_header.bill_no\n" + 
+				"    UNION\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            MONTHNAME(t_sell_bill_header.bill_date) AS MONTH,\n" + 
+				"            t_sell_bill_header.sell_bill_no AS bill_no,\n" + 
+				"            t_sell_bill_header.bill_date,\n" + 
+				"            t_sell_bill_header.invoice_no,\n" + 
+				"            t_sell_bill_header.fr_id,\n" + 
+				"            t_sell_bill_header.fr_code,\n" + 
+				"            '0' AS tax_applicable,\n" + 
+				"            t_sell_bill_header.taxable_amt AS taxable_amt,\n" + 
+				"            t_sell_bill_header.total_tax AS total_tax,\n" + 
+				"            t_sell_bill_header.grand_total AS grand_total,\n" + 
+				"            '0' AS round_off,\n" + 
+				"            SUM(t_sell_bill_detail.sgst_rs) AS sgst_sum,\n" + 
+				"            SUM(t_sell_bill_detail.cgst_rs) AS cgst_sum,\n" + 
+				"            SUM(t_sell_bill_detail.igst_rs) AS igst_sum,\n" + 
+				"            m_franchisee.fr_name,\n" + 
+				"            m_franchisee.fr_city,\n" + 
+				"            m_franchisee.fr_gst_no,\n" + 
+				"            m_franchisee.is_same_state,\n" + 
+				"            m_customer.cust_name,\n" + 
+				"            m_customer.cust_id, t_sell_bill_header.discount_per as disc_per,t_sell_bill_header.discount_amt as disc_amt" + 
+				"        FROM\n" + 
+				"            m_franchisee,\n" + 
+				"            t_sell_bill_header,\n" + 
+				"            t_sell_bill_detail,\n" + 
+				"            m_customer\n" + 
+				"        WHERE\n" + 
+				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id\n" + 
+				"        GROUP BY\n" + 
+				"            t_sell_bill_header.sell_bill_no\n" + 
+				"        ORDER BY\n" + 
+				"            t_sell_bill_header.bill_date,\n" + 
+				"            t_sell_bill_header.invoice_no\n" + 
+				"    )\n" + 
+				") t2\n" + 
+				"\n" + 
+				"ORDER BY bill_date,invoice_no,fr_id ",nativeQuery=true)
+			
+			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3WithDairymart(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
 		
 		
@@ -730,7 +896,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_bill_header ," + 
@@ -773,7 +940,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id " + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
 				"        t_bill_header ," + 
@@ -805,8 +973,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 		"        t_bill_header.fr_id," + 
 		"        t_bill_header.fr_code," + 
 		"        t_bill_header.tax_applicable," + 
-		"        sum(t_bill_detail.taxable_amt) as taxable_amt," + 
-		"        sum(t_bill_detail.total_tax) as total_tax," + 
+		"        SUM(t_bill_detail.taxable_amt) as taxable_amt," + 
+		"        SUM(t_bill_detail.total_tax) as total_tax," + 
 		"        SUM(t_bill_detail.grand_total) AS grand_total," + 
 		"        t_bill_header.round_off," + 
 		"        SUM(t_bill_detail.sgst_rs) as sgst_sum," + 
@@ -815,7 +983,10 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 		"        m_franchisee.fr_name," + 
 		"        m_franchisee.fr_city," + 
 		"        m_franchisee.fr_gst_no," + 
-		"        m_franchisee.is_same_state, 'cust' as cust_name, 0 as cust_id " + 
+		"        m_franchisee.is_same_state, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt,\n" + 
+		"    (t_bill_header.disc_amt * 100) /(\n" + 
+		"        t_bill_header.grand_total + t_bill_header.disc_amt\n" + 
+		"    ) AS disc_per " + 
 		"    FROM" + 
 		"        m_franchisee," + 
 		"        t_bill_header ," + 
@@ -859,7 +1030,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    t_bill_header.ex_varchar4 as fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
 			"    'cust' AS cust_name,\n" + 
-			"    0 AS cust_id\n" + 
+			"    0 AS cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"\n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_bill_header\n" + 
@@ -892,7 +1064,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    t_bill_header.ex_varchar4 as fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
 			"    'cust' AS cust_name,\n" + 
-			"    0 AS cust_id\n" + 
+			"    0 AS cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"\n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_bill_header\n" + 
@@ -931,7 +1104,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.is_same_state,\n" + 
 			"    m_franchisee.fr_name,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_customer.cust_id\n" + 
+			"    m_customer.cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_sell_bill_detail,\n" + 
@@ -974,7 +1147,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.is_same_state,\n" + 
 			"    m_franchisee.fr_name,\n" + 
 			"    m_customer.cust_name,\n" + 
-			"    m_customer.cust_id\n" + 
+			"    m_customer.cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_sell_bill_detail,\n" + 
@@ -1010,7 +1183,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_bill_header\n" + 
@@ -1039,7 +1213,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_sell_bill_header,t_sell_bill_detail\n" + 
@@ -1058,7 +1232,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_bill_header.bill_date),'--',YEAR(t_bill_header.bill_date) )as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,sum(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"  FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
 			+ "AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 AND t_bill_header.ex_varchar2 IN(:temp) GROUP BY month ",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonth12(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp);
@@ -1068,7 +1243,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_bill_header.bill_date),'--',YEAR(t_bill_header.bill_date) )as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,sum(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"  FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
 			+ "AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 AND t_bill_header.ex_varchar2 IN(:temp) AND t_bill_header.is_dairy_mart IN(:dairy) GROUP BY month ORDER BY month",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonth12WithDairyMart(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("temp") List<Integer> temp,@Param("dairy") List<Integer> dairy);
@@ -1078,7 +1254,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_bill_header.bill_date),'--',YEAR(t_bill_header.bill_date) )as month, t_bill_header.bill_no,t_bill_header.bill_date,t_bill_header.invoice_no,t_bill_header.fr_id,t_bill_header.fr_code," + 
 			"t_bill_header.tax_applicable,SUM(t_bill_header.taxable_amt) as taxable_amt ,sum(t_bill_header.total_tax) as total_tax,SUM(t_bill_header.grand_total) AS grand_total ,t_bill_header.round_off," + 
 			"SUM(t_bill_header.sgst_sum)as sgst_sum ,SUM(t_bill_header.cgst_sum) as cgst_sum ,SUM(t_bill_header.igst_sum) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			" FROM m_franchisee,t_bill_header WHERE t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) "
 			+ "AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0 AND t_bill_header.ex_varchar2=:flag  GROUP BY month ",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonth1O2(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("flag") int flag);
@@ -1088,7 +1265,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_sell_bill_header.bill_date),'--',YEAR(t_sell_bill_header.bill_date) )as month, t_sell_bill_header.sell_bill_no as bill_no,t_sell_bill_header.bill_date,t_sell_bill_header.invoice_no,t_sell_bill_header.fr_id,t_sell_bill_header.fr_code," + 
 			" '0' as tax_applicable,SUM(t_sell_bill_header.taxable_amt) as taxable_amt ,sum(t_sell_bill_header.total_tax) as total_tax,SUM(t_sell_bill_header.grand_total) AS grand_total ,'0' as round_off," + 
 			"SUM(t_sell_bill_detail.sgst_rs) as sgst_sum ,SUM(t_sell_bill_detail.cgst_rs) as cgst_sum ,SUM(t_sell_bill_detail.igst_rs) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
-			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id FROM m_franchisee,t_sell_bill_detail,t_sell_bill_header  WHERE t_sell_bill_header.fr_id=m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) "
+			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"  FROM m_franchisee,t_sell_bill_detail,t_sell_bill_header  WHERE t_sell_bill_header.fr_id=m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) "
 			+ "AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_header.del_status=0 AND t_sell_bill_header.sell_bill_no=t_sell_bill_detail.sell_bill_no  GROUP BY month ",nativeQuery=true)
 
 		List<SalesReportBillwise> getSaleReportBillwiseByMonthOutlet(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
@@ -1116,7 +1294,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_bill_header\n" + 
@@ -1149,7 +1328,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id , t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_sell_bill_detail,\n" + 
@@ -1187,7 +1366,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
 			"    t_bill_header\n" + 
@@ -1220,7 +1400,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        m_franchisee.fr_city,\n" + 
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        m_franchisee.is_same_state,\n" + 
-			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id\n" + 
+			"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_sell_bill_header.discount_per as disc_per, t_sell_bill_header.discount_amt as disc_amt \n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_sell_bill_detail,\n" + 

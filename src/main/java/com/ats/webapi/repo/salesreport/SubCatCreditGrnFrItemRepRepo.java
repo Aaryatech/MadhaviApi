@@ -252,6 +252,187 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 	
 	
+	//Anmol--10-04-2020--  COMP OUTLET  DAIRY MART
+		@Query(value = " SELECT\n" + 
+				"    id,\n" + 
+				"    crnd_id,\n" + 
+				"    SUM(var_amt) AS var_amt,\n" + 
+				"    SUM(var_qty) AS var_qty,\n" + 
+				"    fr_name,\n" + 
+				"    sub_cat_id,\n" + 
+				"    sub_cat_name,\n" + 
+				"    fr_id,\n" + 
+				"    item_id,\n" + 
+				"    item_name\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        UUID() AS id, t_credit_note_details.crnd_id, SUM(\n" + 
+				"            t_credit_note_details.grn_gvn_amt\n" + 
+				"        ) AS var_amt,\n" + 
+				"        SUM(\n" + 
+				"            t_credit_note_details.grn_gvn_qty\n" + 
+				"        ) AS var_qty,\n" + 
+				"        f.fr_name,\n" + 
+				"        sc.sub_cat_id,\n" + 
+				"        sc.sub_cat_name,\n" + 
+				"        f.fr_id,\n" + 
+				"        m_item.id AS item_id,\n" + 
+				"        m_item.item_name\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_header,\n" + 
+				"        t_credit_note_details,\n" + 
+				"        m_franchisee f,\n" + 
+				"        m_cat_sub sc,\n" + 
+				"        m_item,\n" + 
+				"        t_bill_header\n" + 
+				"    WHERE\n" + 
+				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = t_credit_note_header.fr_id AND m_item.id = t_credit_note_details.item_id AND m_item.item_grp2 = sc.sub_cat_id AND t_credit_note_header.fr_id IN(:frIdList) AND sc.sub_cat_id IN(:subCatIdList) AND t_credit_note_details.is_grn = 1 AND m_item.is_stockable = 1 AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.is_dairy_mart = 2\n" + 
+				"    GROUP BY\n" + 
+				"        t_credit_note_header.fr_id,\n" + 
+				"        m_item.id\n" + 
+				"    UNION\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            UUID() AS id, t_credit_note_details.crnd_id, SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            ) AS var_amt,\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            ) AS var_qty,\n" + 
+				"            f.fr_name,\n" + 
+				"            sc.sub_cat_id,\n" + 
+				"            sc.sub_cat_name,\n" + 
+				"            f.fr_id,\n" + 
+				"            m_item.id AS item_id,\n" + 
+				"            m_item.item_name\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_header,\n" + 
+				"            t_credit_note_details,\n" + 
+				"            m_franchisee f,\n" + 
+				"            m_cat_sub sc,\n" + 
+				"            m_item,\n" + 
+				"            t_bill_header\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = t_credit_note_header.fr_id AND m_item.id = t_credit_note_details.item_id AND m_item.item_grp2 = sc.sub_cat_id AND t_credit_note_header.fr_id IN(:frIdList) AND sc.sub_cat_id IN(:subCatIdList) AND t_credit_note_details.is_grn = 0 AND m_item.is_stockable = 1 AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.is_dairy_mart = 2\n" + 
+				"        GROUP BY\n" + 
+				"            t_credit_note_header.fr_id,\n" + 
+				"            m_item.id)\n" + 
+				"    ) t1\n" + 
+				"GROUP BY\n" + 
+				"    fr_id,\n" + 
+				"    item_id ", nativeQuery = true)
+		List<SubCatCreditGrnFrItemRep> getAdminDataCRNCompOutletDairymart(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+				@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 	
+	
+		//Anmol--10-04-2020-- COMP OUTLET DAIRY MART AND REGULAR
+		@Query(value = " SELECT\n" + 
+				"    id,\n" + 
+				"    crnd_id,\n" + 
+				"    SUM(var_amt) AS var_amt,\n" + 
+				"    SUM(var_qty) AS var_qty,\n" + 
+				"    fr_name,\n" + 
+				"    sub_cat_id,\n" + 
+				"    sub_cat_name,\n" + 
+				"    fr_id,\n" + 
+				"    item_id,\n" + 
+				"    item_name\n" + 
+				"FROM\n" + 
+				"(\n" + 
+				"SELECT\n" + 
+				"    id,\n" + 
+				"    crnd_id,\n" + 
+				"    SUM(var_amt) AS var_amt,\n" + 
+				"    SUM(var_qty) AS var_qty,\n" + 
+				"    fr_name,\n" + 
+				"    sub_cat_id,\n" + 
+				"    sub_cat_name,\n" + 
+				"    fr_id,\n" + 
+				"    item_id,\n" + 
+				"    item_name\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        UUID() AS id, t_credit_note_details.crnd_id, SUM(\n" + 
+				"            t_credit_note_details.grn_gvn_amt\n" + 
+				"        ) AS var_amt,\n" + 
+				"        SUM(\n" + 
+				"            t_credit_note_details.grn_gvn_qty\n" + 
+				"        ) AS var_qty,\n" + 
+				"        f.fr_name,\n" + 
+				"        sc.sub_cat_id,\n" + 
+				"        sc.sub_cat_name,\n" + 
+				"        f.fr_id,\n" + 
+				"        m_item.id AS item_id,\n" + 
+				"        m_item.item_name\n" + 
+				"    FROM\n" + 
+				"        t_credit_note_header,\n" + 
+				"        t_credit_note_details,\n" + 
+				"        m_franchisee f,\n" + 
+				"        m_cat_sub sc,\n" + 
+				"        m_item,\n" + 
+				"        t_bill_header\n" + 
+				"    WHERE\n" + 
+				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = t_credit_note_header.fr_id AND m_item.id = t_credit_note_details.item_id AND m_item.item_grp2 = sc.sub_cat_id AND t_credit_note_header.fr_id IN(:frIdList) AND sc.sub_cat_id IN(:subCatIdList) AND t_credit_note_details.is_grn = 1 AND m_item.is_stockable = 1 AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.is_dairy_mart = 2\n" + 
+				"    GROUP BY\n" + 
+				"        t_credit_note_header.fr_id,\n" + 
+				"        m_item.id\n" + 
+				"    UNION\n" + 
+				"        (\n" + 
+				"        SELECT\n" + 
+				"            UUID() AS id, t_credit_note_details.crnd_id, SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_amt\n" + 
+				"            ) AS var_amt,\n" + 
+				"            SUM(\n" + 
+				"                t_credit_note_details.grn_gvn_qty\n" + 
+				"            ) AS var_qty,\n" + 
+				"            f.fr_name,\n" + 
+				"            sc.sub_cat_id,\n" + 
+				"            sc.sub_cat_name,\n" + 
+				"            f.fr_id,\n" + 
+				"            m_item.id AS item_id,\n" + 
+				"            m_item.item_name\n" + 
+				"        FROM\n" + 
+				"            t_credit_note_header,\n" + 
+				"            t_credit_note_details,\n" + 
+				"            m_franchisee f,\n" + 
+				"            m_cat_sub sc,\n" + 
+				"            m_item,\n" + 
+				"            t_bill_header\n" + 
+				"        WHERE\n" + 
+				"            t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = t_credit_note_header.fr_id AND m_item.id = t_credit_note_details.item_id AND m_item.item_grp2 = sc.sub_cat_id AND t_credit_note_header.fr_id IN(:frIdList) AND sc.sub_cat_id IN(:subCatIdList) AND t_credit_note_details.is_grn = 0 AND m_item.is_stockable = 1 AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.is_dairy_mart =2\n" + 
+				"        GROUP BY\n" + 
+				"            t_credit_note_header.fr_id,\n" + 
+				"            m_item.id)\n" + 
+				"    ) t1\n" + 
+				"GROUP BY\n" + 
+				"    fr_id,\n" + 
+				"    item_id\n" + 
+				"    \n" + 
+				"    UNION(\n" + 
+				"    SELECT\n" + 
+				"    UUID() AS id, c.crn_detail_no AS crnd_id, SUM(c.grand_total) AS var_amt,\n" + 
+				"    SUM(c.crn_qty) AS var_qty,\n" + 
+				"    f.fr_name,\n" + 
+				"    sc.sub_cat_id,\n" + 
+				"    sc.sub_cat_name,\n" + 
+				"    f.fr_id,\n" + 
+				"    m_item.id AS item_id,\n" + 
+				"    m_item.item_name\n" + 
+				"FROM\n" + 
+				"    t_credit_note_pos c,\n" + 
+				"    m_franchisee f,\n" + 
+				"    m_cat_sub sc,\n" + 
+				"    m_item\n" + 
+				"WHERE\n" + 
+				"    c.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = c.ex_int1 AND m_item.id = c.item_id AND m_item.item_grp2 = sc.sub_cat_id AND c.ex_int1 IN(:frIdList) AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1\n" + 
+				"GROUP BY\n" + 
+				"    c.ex_int1,\n" + 
+				"    m_item.id\n" + 
+				"    )) t1 GROUP BY fr_id,item_id\n" + 
+				"     ", nativeQuery = true)
+		List<SubCatCreditGrnFrItemRep> getAdminDataCRNCompOutletDairyAndRegular(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+				@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 
 }

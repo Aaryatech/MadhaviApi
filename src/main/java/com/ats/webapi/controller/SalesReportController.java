@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.AdminInvoiceIssued;
 import com.ats.webapi.model.GrandTotalBillWise;
+import com.ats.webapi.model.report.frpurchase.DateWiseSaleForItem;
+import com.ats.webapi.model.report.frpurchase.FrWiseSaleForItem;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwiseAllFr;
 import com.ats.webapi.model.report.frpurchase.SalesReportFranchisee;
@@ -34,6 +36,8 @@ import com.ats.webapi.model.taxreport.Tax1Report;
 import com.ats.webapi.model.taxreport.Tax2Report;
 import com.ats.webapi.repo.AdminInvoiceIssuedRepo;
 import com.ats.webapi.repo.GrandTotalBillWiseRepository;
+import com.ats.webapi.repository.frpurchasereport.DateWiseSaleForItemRepo;
+import com.ats.webapi.repository.frpurchasereport.FrWiseSaleForItemRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportItemwiseRepo;
@@ -507,8 +511,19 @@ public class SalesReportController {
 
 			} else {
 
-				salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseFrOutletType3(frIdList,
-						fromDate, toDate);
+				if (dairyMartList.contains(1) && dairyMartList.contains(2)) {
+					salesReportBillwiseList = saleReportBillwiseRepo
+							.getAdminSaleReportBillwiseFrOutletType3WithDairymart(frIdList, fromDate, toDate);
+				} else if (dairyMartList.contains(1)) {
+					salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseFrOutletType3(frIdList,
+							fromDate, toDate);
+				} else if (dairyMartList.contains(2)) {
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseFrType1N2(frIdList,
+							fromDate, toDate, itmList, dairyMartList);
+				}
 
 			}
 
@@ -656,8 +671,21 @@ public class SalesReportController {
 
 			} else {
 				System.err.println(" else");
-				salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseAllFrOutletType3(fromDate,
-						toDate);
+
+				if (dairyMartList.contains(1) && dairyMartList.contains(2)) {
+					salesReportBillwiseList = saleReportBillwiseRepo
+							.getAdminSaleReportBillwiseAllFrOutletType3withDairymart(fromDate, toDate, dairyMartList);
+				} else if (dairyMartList.contains(1)) {
+					salesReportBillwiseList = saleReportBillwiseRepo
+							.getAdminSaleReportBillwiseAllFrOutletType3(fromDate, toDate);
+				} else if (dairyMartList.contains(2)) {
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseAllFrType1N2(fromDate,
+							toDate, itmList, dairyMartList);
+				}
+
 			}
 
 		} catch (Exception e) {
@@ -1705,7 +1733,7 @@ public class SalesReportController {
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 			@RequestParam("getBy") int getBy, @RequestParam("type") int type,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("sort") int sort) {
+			@RequestParam("sort") int sort, @RequestParam("dairy") List<String> dairy) {
 		System.out.println("getBy" + getBy);
 		List<SalesReportRoyalty> salesReportRoyaltyList = new ArrayList<>();
 		try {
@@ -1753,12 +1781,21 @@ public class SalesReportController {
 
 				} else {
 					stock = 0;
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList, catIdList,
-							fromDate, toDate);
+
+					if (dairy.contains("1") && dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletWithDairymart(frIdList, catIdList, fromDate, toDate);
+					} else if (dairy.contains("1")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList,
+								catIdList, fromDate, toDate);
+					} else if (dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletDairyMart(frIdList,
+								catIdList, fromDate, toDate);
+					}
+
 				}
 			} else if (sort == 1) {
-				
-				
+
 				if (billType == 1) {
 					stock = 1;
 
@@ -1768,32 +1805,42 @@ public class SalesReportController {
 						itmList = new ArrayList<Integer>();
 						itmList.add(0);
 						itmList.add(1);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 					} else if (typeIdList.contains("1") && listSize == 1) {
 
 						itmList = new ArrayList<Integer>();
 						itmList.add(0);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 						System.err.println(" 1");
 
 					} else if (typeIdList.contains("2") && listSize == 1) {
 
 						itmList = new ArrayList<Integer>();
 						itmList.add(1);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByQty(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 						System.err.println(" 2");
 
 					}
 
 				} else {
 					stock = 0;
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByQty(frIdList, catIdList,
-							fromDate, toDate);
+
+					if (dairy.contains("1") && dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletWithDairymartSortQty(frIdList, catIdList, fromDate,
+										toDate);
+					} else if (dairy.contains("1")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByQty(frIdList,
+								catIdList, fromDate, toDate);
+					} else if (dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletDairyMartSortQty(frIdList, catIdList, fromDate, toDate);
+					}
+
 				}
-				
 
 			} else if (sort == 2) {
 
@@ -1806,32 +1853,43 @@ public class SalesReportController {
 						itmList = new ArrayList<Integer>();
 						itmList.add(0);
 						itmList.add(1);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 					} else if (typeIdList.contains("1") && listSize == 1) {
 
 						itmList = new ArrayList<Integer>();
 						itmList.add(0);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 						System.err.println(" 1");
 
 					} else if (typeIdList.contains("2") && listSize == 1) {
 
 						itmList = new ArrayList<Integer>();
 						itmList.add(1);
-						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(frIdList,
-								catIdList, fromDate, toDate, itmList, stock);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportRoyConsoByCatSortByValue(
+								frIdList, catIdList, fromDate, toDate, itmList, stock);
 						System.err.println(" 2");
 
 					}
 
 				} else {
 					stock = 0;
-					salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByValue(frIdList, catIdList,
-							fromDate, toDate);
+
+					if (dairy.contains("1") && dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletWithDairymartSortAmt(frIdList, catIdList, fromDate,
+										toDate);
+					} else if (dairy.contains("1")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletSortByValue(frIdList, catIdList, fromDate, toDate);
+					} else if (dairy.contains("2")) {
+						salesReportRoyaltyList = salesReportRoyaltyRepo
+								.getAdminSaleReportCompOutletDairyMartSortAmt(frIdList, catIdList, fromDate, toDate);
+					}
+
 				}
-				
+
 			}
 
 			System.out.println("getSaleReportBillwise" + salesReportRoyaltyList.toString());
@@ -1842,6 +1900,168 @@ public class SalesReportController {
 		}
 		return salesReportRoyaltyList;
 	}
+
+	// ---------------------------------------------
+	// Anmol 8-4-2020 chart
+
+	@Autowired
+	DateWiseSaleForItemRepo dateWiseSaleForItemRepo;
+
+	@RequestMapping(value = { "/getDateWiseSaleForItem" }, method = RequestMethod.POST)
+	public @ResponseBody List<DateWiseSaleForItem> getDateWiseSaleForItem(
+			@RequestParam("frIdList") List<String> frIdList, @RequestParam("catIdList") List<String> catIdList,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
+			@RequestParam("dairy") List<String> dairy, @RequestParam("itemId") int itemId) {
+		List<DateWiseSaleForItem> saleReport = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			System.out.println("Input received for report 10 roy by category few fr Selected " + fromDate + "" + toDate
+					+ "" + frIdList + "cat=" + catIdList);
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
+
+			int stock = 0;
+
+			if (billType == 1) {
+				stock = 1;
+
+				if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+
+					System.err.println("1 2");
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+				} else if (typeIdList.contains("1") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+					System.err.println(" 1");
+
+				} else if (typeIdList.contains("2") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(1);
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+					System.err.println(" 2");
+
+				}
+
+			} else {
+				stock = 0;
+
+				if (dairy.contains("1") && dairy.contains("2")) {
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleCompOutletDairymartAndRegular(frIdList,
+							fromDate, toDate, itemId);
+				} else if (dairy.contains("1")) {
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleCompOutletRegular(frIdList, fromDate, toDate,
+							itemId);
+				} else if (dairy.contains("2")) {
+					saleReport = dateWiseSaleForItemRepo.getDateWiseSaleCompOutletDairymart(frIdList, fromDate, toDate,
+							itemId);
+				}
+
+			}
+
+			System.out.println("saleReport" + saleReport.toString());
+
+		} catch (Exception e) {
+			System.out.println(" Exce in sales Report Royalty  By Category " + e.getMessage());
+			e.printStackTrace();
+		}
+		return saleReport;
+	}
+
+	// -----------------------------------------------
+
+	// ---------------------------------------------
+	// Anmol 8-4-2020 chart FR
+
+	@Autowired
+	FrWiseSaleForItemRepo frWiseSaleForItemRepo;
+
+	@RequestMapping(value = { "/getFrWiseSaleForItem" }, method = RequestMethod.POST)
+	public @ResponseBody List<FrWiseSaleForItem> getFrWiseSaleForItem(@RequestParam("frIdList") List<String> frIdList,
+			@RequestParam("catIdList") List<String> catIdList, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("typeIdList") List<String> typeIdList,
+			@RequestParam("billType") int billType, @RequestParam("dairy") List<String> dairy,
+			@RequestParam("itemId") int itemId) {
+		List<FrWiseSaleForItem> saleReport = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			System.out.println("Input received for report 10 roy by category few fr Selected " + fromDate + "" + toDate
+					+ "" + frIdList + "cat=" + catIdList);
+			int listSize = typeIdList.size();
+			List<Integer> itmList = new ArrayList<Integer>();
+			System.err.println("type list" + typeIdList.toString());
+
+			int stock = 0;
+
+			if (billType == 1) {
+				stock = 1;
+
+				if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
+
+					System.err.println("1 2");
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					itmList.add(1);
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+				} else if (typeIdList.contains("1") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(0);
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+					System.err.println(" 1");
+
+				} else if (typeIdList.contains("2") && listSize == 1) {
+
+					itmList = new ArrayList<Integer>();
+					itmList.add(1);
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleFrAndCDC(frIdList, fromDate, toDate, itmList,
+							itemId);
+					System.err.println(" 2");
+
+				}
+
+			} else {
+				stock = 0;
+
+				if (dairy.contains("1") && dairy.contains("2")) {
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleCompOutletDairymartAndRegular(frIdList, fromDate,
+							toDate, itemId);
+				} else if (dairy.contains("1")) {
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleCompOutletRegular(frIdList, fromDate, toDate,
+							itemId);
+				} else if (dairy.contains("2")) {
+					saleReport = frWiseSaleForItemRepo.getFrWiseSaleCompOutletDairymart(frIdList, fromDate, toDate,
+							itemId);
+				}
+
+			}
+
+			System.out.println("FR saleReport" + saleReport.toString());
+
+		} catch (Exception e) {
+			System.out.println(" Exce in sales Report Royalty  By Category " + e.getMessage());
+			e.printStackTrace();
+		}
+		return saleReport;
+	}
+
+	// -----------------------------------------------
 
 	// report no 10 all fr and multiple category
 
@@ -1965,8 +2185,8 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getAdminSalesReturnQtyReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReturnQtyReportList> getAdminSalesReturnQtyReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
-			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType)
-			throws ParseException {
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
+			@RequestParam("dairy") List<String> dairy) throws ParseException {
 
 		List<SalesReturnQtyReportList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2025,7 +2245,25 @@ public class SalesReportController {
 
 				}
 			} else {
-				salesReturnQtyDao = salesReturnQtyDaoRepository.getAdminSalesReturnQtyReportCompOutlet(months.get(i));
+
+				if (dairy != null) {
+					if (dairy.contains("1") && dairy.contains("2")) {
+
+						salesReturnQtyDao = salesReturnQtyDaoRepository
+								.getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(months.get(i));
+
+					} else if (dairy.contains("1")) {
+
+						salesReturnQtyDao = salesReturnQtyDaoRepository
+								.getAdminSalesReturnQtyReportCompOutlet(months.get(i));
+
+					} else if (dairy.contains("2")) {
+
+						salesReturnQtyDao = salesReturnQtyDaoRepository
+								.getAdminSalesReturnQtyReportCompOutletDairymart(months.get(i));
+					}
+				}
+
 			}
 
 			salesReturnQtyReportList.setSalesReturnQtyDaoList(salesReturnQtyDao);
@@ -2134,8 +2372,8 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getAdminSalesReturnValueReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReturnValueDaoList> getAdminSalesReturnValueReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
-			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType)
-			throws ParseException {
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
+			@RequestParam("dairy") List<String> dairy) throws ParseException {
 
 		List<SalesReturnValueDaoList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2197,8 +2435,22 @@ public class SalesReportController {
 				}
 
 			} else {
-				salesReturnValueDao = salesReturnValueDaoRepository
-						.getAdminSalesReturnValueReportCompOutlet(months.get(i));
+
+				if (dairy != null) {
+
+					if (dairy.contains("1") && dairy.contains("2")) {
+						salesReturnValueDao = salesReturnValueDaoRepository
+								.getAdminSalesReturnValueReportCompOutletDairyAndReg(months.get(i));
+					} else if (dairy.contains("1")) {
+						salesReturnValueDao = salesReturnValueDaoRepository
+								.getAdminSalesReturnValueReportCompOutlet(months.get(i));
+					} else if (dairy.contains("2")) {
+						salesReturnValueDao = salesReturnValueDaoRepository
+								.getAdminSalesReturnValueReportCompOutletDairymart(months.get(i));
+					}
+
+				}
+
 			}
 
 			salesReturnValueReportList.setSalesReturnQtyValueList(salesReturnValueDao);
@@ -2255,7 +2507,8 @@ public class SalesReportController {
 	public @ResponseBody List<SalesReturnItemDaoList> getAdminSalesValueItemReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
 			@RequestParam("subCatId") List<String> subCatId, @RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("billType") int billType) throws ParseException {
+			@RequestParam("billType") int billType, @RequestParam("dairyList") List<String> dairyList)
+			throws ParseException {
 
 		List<SalesReturnItemDaoList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2290,6 +2543,19 @@ public class SalesReportController {
 			type.add(1);
 		}
 
+		List<Integer> dairy = new ArrayList<>();
+		if (dairyList.contains("1") && dairyList.contains("2")) {
+			dairy.clear();
+			dairy.add(1);
+			dairy.add(2);
+		} else if (dairyList.contains("1")) {
+			dairy.clear();
+			dairy.add(1);
+		} else if (dairyList.contains("2")) {
+			dairy.clear();
+			dairy.add(2);
+		}
+
 		for (int i = 0; i < months.size(); i++) {
 			SimpleDateFormat parser = new SimpleDateFormat("yyyy-MM");
 			// output format: yyyy-MM-dd
@@ -2305,8 +2571,19 @@ public class SalesReportController {
 			} else {
 				System.err.println("MONTH - " + months.get(i));
 
-				salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReportComp(months.get(i),
-						subCat);
+				if (dairy.contains(1) && dairy.contains(2)) {
+					salesReturnValueDao = salesReturnValueItemDaoRepo
+							.getAdminMonthWiseSalesReportCompDairyAndReg(months.get(i), subCat);
+				} else if (dairy.contains(1)) {
+					salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReportComp(months.get(i),
+							subCat);
+				} else if (dairy.contains(2)) {
+					salesReturnValueDao = salesReturnValueItemDaoRepo
+							.getAdminMonthWiseSalesReportCompDairy(months.get(i), subCat);
+				}
+
+//				salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReportComp(months.get(i),
+//						subCat);
 
 				System.err.println("DATA - " + salesReturnValueDao);
 			}

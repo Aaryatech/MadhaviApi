@@ -376,6 +376,187 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 	
 	
 	
+	//Anmol---10-4-2020    COMP OUTLET DAIRY AND REGULAR
+	@Query(value = "SELECT\n" + 
+			"    fr_id,\n" + 
+			"    fr_code,\n" + 
+			"    fr_name,\n" + 
+			"    fr_city,\n" + 
+			"    SUM(sale_value) AS sale_value,\n" + 
+			"    SUM(grn_value) AS grn_value,\n" + 
+			"    SUM(gvn_value) AS gvn_value\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        fr_id,\n" + 
+			"        fr_code,\n" + 
+			"        fr_name,\n" + 
+			"        fr_city,\n" + 
+			"        sale_value,\n" + 
+			"        grn_value + gvn_value AS grn_value,\n" + 
+			"        0 AS gvn_value\n" + 
+			"    FROM\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            m_franchisee.fr_id,\n" + 
+			"            m_franchisee.fr_code,\n" + 
+			"            m_franchisee.fr_name,\n" + 
+			"            m_franchisee.fr_city,\n" + 
+			"            COALESCE(\n" + 
+			"                (\n" + 
+			"                SELECT\n" + 
+			"                    SUM(t_bill_header.grand_total)\n" + 
+			"                FROM\n" + 
+			"                    t_bill_header\n" + 
+			"                WHERE\n" + 
+			"                    t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.is_dairy_mart = 2\n" + 
+			"            ),\n" + 
+			"            0\n" + 
+			"            ) AS sale_value,\n" + 
+			"            COALESCE(\n" + 
+			"                (\n" + 
+			"                SELECT\n" + 
+			"                    SUM(\n" + 
+			"                        t_credit_note_header.crn_grand_total\n" + 
+			"                    )\n" + 
+			"                FROM\n" + 
+			"                    t_credit_note_header\n" + 
+			"                WHERE\n" + 
+			"                    t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.is_grn = 1 AND m_franchisee.fr_id = t_credit_note_header.fr_id\n" + 
+			"            ),\n" + 
+			"            0\n" + 
+			"            ) AS grn_value,\n" + 
+			"            COALESCE(\n" + 
+			"                (\n" + 
+			"                SELECT\n" + 
+			"                    SUM(\n" + 
+			"                        t_credit_note_header.crn_grand_total\n" + 
+			"                    )\n" + 
+			"                FROM\n" + 
+			"                    t_credit_note_header\n" + 
+			"                WHERE\n" + 
+			"                    t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.is_grn = 0 AND m_franchisee.fr_id = t_credit_note_header.fr_id\n" + 
+			"            ),\n" + 
+			"            0\n" + 
+			"            ) AS gvn_value\n" + 
+			"        FROM\n" + 
+			"            m_franchisee\n" + 
+			"        WHERE\n" + 
+			"            m_franchisee.fr_id IN(:frIdList) AND m_franchisee.del_status = 0\n" + 
+			"        ORDER BY\n" + 
+			"            m_franchisee.fr_name\n" + 
+			"    ) t1\n" + 
+			"UNION\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        m_franchisee.fr_id,\n" + 
+			"        m_franchisee.fr_code,\n" + 
+			"        m_franchisee.fr_name,\n" + 
+			"        m_franchisee.fr_city,\n" + 
+			"        COALESCE(\n" + 
+			"            (\n" + 
+			"            SELECT\n" + 
+			"                SUM(h.grand_total)\n" + 
+			"            FROM\n" + 
+			"                t_sell_bill_header h\n" + 
+			"            WHERE\n" + 
+			"                h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND m_franchisee.fr_id = h.fr_id\n" + 
+			"        ),\n" + 
+			"        0\n" + 
+			"        ) AS sale_value,\n" + 
+			"        COALESCE(\n" + 
+			"            (\n" + 
+			"            SELECT\n" + 
+			"                SUM(c.grand_total)\n" + 
+			"            FROM\n" + 
+			"                t_credit_note_pos c\n" + 
+			"            WHERE\n" + 
+			"                c.crn_date BETWEEN :fromDate AND :toDate AND c.del_status = 0 AND m_franchisee.fr_id = c.ex_int1\n" + 
+			"        ),\n" + 
+			"        0\n" + 
+			"        ) AS grn_value,\n" + 
+			"        0 AS gvn_value\n" + 
+			"    FROM\n" + 
+			"        m_franchisee\n" + 
+			"    WHERE\n" + 
+			"        m_franchisee.fr_id IN(:frIdList) AND m_franchisee.del_status = 0\n" + 
+			"    ORDER BY\n" + 
+			"        m_franchisee.fr_name\n" + 
+			")\n" + 
+			") t1\n" + 
+			"GROUP BY\n" + 
+			"    fr_id", nativeQuery = true)
+
+	List<SalesReport> getSalesReportFrCompOutletDairyAndReg(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+			 @Param("frIdList") List<String> frIdList);
+	
+	
+	//Anmol---10-4-2020    COMP OUTLET DAIRY
+		@Query(value = "SELECT\n" + 
+				"    fr_id,\n" + 
+				"    fr_code,\n" + 
+				"    fr_name,\n" + 
+				"    fr_city,\n" + 
+				"    sale_value,\n" + 
+				"    grn_value + gvn_value AS grn_value,\n" + 
+				"    0 AS gvn_value\n" + 
+				"FROM\n" + 
+				"    (\n" + 
+				"    SELECT\n" + 
+				"        m_franchisee.fr_id,\n" + 
+				"        m_franchisee.fr_code,\n" + 
+				"        m_franchisee.fr_name,\n" + 
+				"        m_franchisee.fr_city,\n" + 
+				"        COALESCE(\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(t_bill_header.grand_total)\n" + 
+				"            FROM\n" + 
+				"                t_bill_header\n" + 
+				"            WHERE\n" + 
+				"                t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND m_franchisee.fr_id = t_bill_header.fr_id AND t_bill_header.is_dairy_mart = 2\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"        ) AS sale_value,\n" + 
+				"        COALESCE(\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(\n" + 
+				"                    t_credit_note_header.crn_grand_total\n" + 
+				"                )\n" + 
+				"            FROM\n" + 
+				"                t_credit_note_header\n" + 
+				"            WHERE\n" + 
+				"                t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.is_grn = 1 AND m_franchisee.fr_id = t_credit_note_header.fr_id\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"        ) AS grn_value,\n" + 
+				"        COALESCE(\n" + 
+				"            (\n" + 
+				"            SELECT\n" + 
+				"                SUM(\n" + 
+				"                    t_credit_note_header.crn_grand_total\n" + 
+				"                )\n" + 
+				"            FROM\n" + 
+				"                t_credit_note_header\n" + 
+				"            WHERE\n" + 
+				"                t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.is_grn = 0 AND m_franchisee.fr_id = t_credit_note_header.fr_id\n" + 
+				"        ),\n" + 
+				"        0\n" + 
+				"        ) AS gvn_value\n" + 
+				"    FROM\n" + 
+				"        m_franchisee\n" + 
+				"    WHERE\n" + 
+				"        m_franchisee.fr_id IN(:frIdList) AND m_franchisee.del_status = 0\n" + 
+				"    ORDER BY\n" + 
+				"        m_franchisee.fr_name\n" + 
+				") t1", nativeQuery = true)
+
+		List<SalesReport> getSalesReportFrCompOutletDairy(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
+				 @Param("frIdList") List<String> frIdList);
+	
+	
+	
 
 	@Query(value = "SELECT\n" + 
 			"    m_franchisee.fr_id,\n" + 

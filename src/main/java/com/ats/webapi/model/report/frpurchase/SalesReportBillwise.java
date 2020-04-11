@@ -8,72 +8,89 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class SalesReportBillwise implements Serializable {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="bill_no") //sell_bill_no
+	@Column(name = "bill_no") // sell_bill_no
 	private int billNo;
-		
-	@Column(name="tax_applicable") //0
+
+	@Column(name = "tax_applicable") // 0
 	private int taxApplicable;
-	
-	@Column(name="invoice_no")//same 
+
+	@Column(name = "invoice_no") // same
 	private String invoiceNo;
-	
-	@Column(name="fr_name")
+
+	@Column(name = "fr_name")
 	private String frName;
-	
-	@Column(name="bill_date") //same
+
+	@Column(name = "bill_date") // same
 	private Date billDate;
-	
-	@Column(name="fr_id")
+
+	@Column(name = "fr_id")
 	private int frId;
-	
-	@Column(name="fr_code")
+
+	@Column(name = "fr_code")
 	private String frCode;
-	
-	@Column(name="grand_total")//same 
+
+	@Column(name = "grand_total") // same
 	private float grandTotal;
-	
-	@Column(name="taxable_amt") //same
+
+	@Column(name = "taxable_amt") // same
 	private float taxableAmt;
-	
-	@Column(name="total_tax") //same
+
+	@Column(name = "total_tax") // same
 	private float totalTax;
 
-	@Column(name="sgst_sum") //sum
+	@Column(name = "sgst_sum") // sum
 	private float sgstSum;
-	
-	@Column(name="cgst_sum") // sum
+
+	@Column(name = "cgst_sum") // sum
 	private float cgstSum;
-	
-	@Column(name="igst_sum") //sum
+
+	@Column(name = "igst_sum") // sum
 	private float igstSum;
-	
-	@Column(name="round_off")
+
+	@Column(name = "round_off")
 	private float roundOff;
-	
-	@Column(name="fr_city")
+
+	@Column(name = "fr_city")
 	private String frCity;
-	 
-	@Column(name="fr_gst_no")
+
+	@Column(name = "fr_gst_no")
 	private String frGstNo;
-	 
-	 @Column(name="is_same_state")
+
+	@Column(name = "is_same_state")
 	private int isSameState;
-	 
-	 String month;
-	 
-	 private String custName;
-	 private int custId;
-	 
-	 
+
+	String month;
+
+	private String custName;
+	private int custId;
+
+	private float discPer;
+	private float discAmt;
+
+	public float getDiscPer() {
+		return discPer;
+	}
+
+	public void setDiscPer(float discPer) {
+		this.discPer = discPer;
+	}
+
+	public float getDiscAmt() {
+		return discAmt;
+	}
+
+	public void setDiscAmt(float discAmt) {
+		this.discAmt = discAmt;
+	}
 
 	public String getCustName() {
 		return custName;
@@ -82,8 +99,6 @@ public class SalesReportBillwise implements Serializable {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
-
-
 
 	public int getCustId() {
 		return custId;
@@ -116,7 +131,8 @@ public class SalesReportBillwise implements Serializable {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public Date getBillDate() {
 		return billDate;
@@ -237,8 +253,6 @@ public class SalesReportBillwise implements Serializable {
 	public void setMonth(String month) {
 		this.month = month;
 	}
-	
-	
 
 	@Override
 	public String toString() {
@@ -247,9 +261,7 @@ public class SalesReportBillwise implements Serializable {
 				+ ", grandTotal=" + grandTotal + ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", sgstSum="
 				+ sgstSum + ", cgstSum=" + cgstSum + ", igstSum=" + igstSum + ", roundOff=" + roundOff + ", frCity="
 				+ frCity + ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", month=" + month + ", custName="
-				+ custName + ", custId=" + custId + "]";
+				+ custName + ", custId=" + custId + ", discPer=" + discPer + ", discAmt=" + discAmt + "]";
 	}
 
-	
-	
 }

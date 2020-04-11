@@ -20,6 +20,17 @@ public class AdminCompOutletDateWiseSale {
 	private float expTotal;
 	private float creditTotal;
 	private float withdrawlTotal;
+	private String dateStr;
+	
+	
+
+	public String getDateStr() {
+		return dateStr;
+	}
+
+	public void setDateStr(String dateStr) {
+		this.dateStr = dateStr;
+	}
 
 	public String getId() {
 		return id;
@@ -108,13 +119,15 @@ public class AdminCompOutletDateWiseSale {
 	public void setWithdrawlTotal(float withdrawlTotal) {
 		this.withdrawlTotal = withdrawlTotal;
 	}
+	
+	
 
 	@Override
 	public String toString() {
 		return "AdminCompOutletDateWiseSale [id=" + id + ", billDate=" + billDate + ", frId=" + frId + ", frName="
 				+ frName + ", billTotal=" + billTotal + ", discTotal=" + discTotal + ", trTotal=" + trTotal
 				+ ", advTotal=" + advTotal + ", expTotal=" + expTotal + ", creditTotal=" + creditTotal
-				+ ", withdrawlTotal=" + withdrawlTotal + "]";
+				+ ", withdrawlTotal=" + withdrawlTotal + ", dateStr=" + dateStr + "]";
 	}
 
 }
