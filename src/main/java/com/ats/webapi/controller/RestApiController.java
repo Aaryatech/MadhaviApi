@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.commons.Common;
+import com.ats.webapi.commons.EmailUtility;
 import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.*;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
@@ -2084,6 +2085,28 @@ public class RestApiController {
 		System.err.println("inside bills " + list.toString());
 		billList = generateBillRepository.getBillOfAdvOrder(list);
 		System.err.println("inside billList " + billList.toString());
+		System.err.println("Header-----------"+header);
+		if(billList!=null) {
+			 String senderEmail = UserUtilApi.senderEmail;//"madhvierp@gmail.com";
+			 String senderPassword = UserUtilApi.senderPassword;//"madhvi@#2020";
+			 System.out.println("Credentials--------"+senderEmail+" "+senderPassword);
+			 
+			 int frId = header.getFrId();
+			 Franchisee frDetails =  franchiseeRepository.findOne(frId);
+			 String frEmail = frDetails.getFrEmail();
+			 String frContact = frDetails.getFrMob();
+			 String frCode = frDetails.getFrCode();
+			 String defPass = "";
+			 String mailsubject = "DairyMart Order Alert for Outlet Code : ("+frCode+")   Order Dated : ("+header.getOrderDate()+")";
+			 String text = "\n DairyMart Order Alert for Outlet Code : ("+frCode+"): Total Orders : ("+header.getTotal()+")\n"+
+					 		"Item Name | Qty.\n";
+			 /*String values = "";
+			 for(int i = 0 ; i <= billList.size() ; i++) {
+				 values = billList.get(i).getItemName()
+			 }*/
+			EmailUtility.sendEmail(senderEmail, senderPassword, frEmail, mailsubject, text, defPass);
+		}
+		
 
 		return billList;
 
@@ -2337,7 +2360,7 @@ public class RestApiController {
 
 			if (user.getDelStatus() == 0) {
 				result = updateUserRepo.updateUser(user.getId(), user.getPassword(), user.getUsertype(),
-						user.getDeptId(), user.getEmail(), user.getContact());
+						user.getDeptId(), user.getEmail(), user.getContact(), user.getDelStatus());
 			} else {
 				result = updateUserRepo.delteUser(user.getId(), user.getDelStatus());
 			}
@@ -2925,6 +2948,36 @@ public class RestApiController {
 			jsonScheduler = schedulerService.save(scheduler);
 
 			System.out.println("Json intesrted " + jsonScheduler);
+			if(jsonScheduler!=null) {
+
+				String senderEmail = UserUtilApi.senderEmail;
+				String senderPassword = UserUtilApi.senderPassword;
+				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
+						String mailSublect="";
+						String mailText = "";
+						String defPass= scheduler.getSchMessage();
+						String msg = "";
+						List<String> mobList = new ArrayList<String>();
+					for (int i = 0; i <= frList.size(); i++) {
+						
+						try {
+							mobList.add(frList.get(i).getFrMob().trim());
+							msg = "Important Msg for Retail Outlets: "+mailText+"("+frList.get(i).getFrCode()+")";
+							EmailUtility.sendinBulk(msg, mobList);
+							mobList.clear();
+						}catch (Exception e) {
+							e.getMessage();
+						}
+						try {
+						 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
+						 mailText = schMessage;
+						 EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
+						System.err.println("Mail Send To : "+frList.get(i).getFrCode());
+						}catch (Exception e) {
+							e.getMessage();
+						}
+					}
+			}
 
 		} catch (Exception e) {
 			System.out.println("Insert Scheduler Eror in controller " + e.getMessage());
@@ -4331,6 +4384,36 @@ public class RestApiController {
 				info.setError(true);
 				info.setMessage("scheduler Update failure");
 			} else if (jsonResult != null) {
+
+				String senderEmail = UserUtilApi.senderEmail;
+				String senderPassword = UserUtilApi.senderPassword;
+				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
+				String mailSublect="";
+				String mailText = "";
+				String defPass= scheduler.getSchMessage();
+				String msg = "";
+				List<String> mobList = new ArrayList<String>();
+					for (int i = 0; i <= frList.size(); i++) {
+						
+						try {
+							
+							mobList.add(frList.get(i).getFrMob().trim());
+							msg = "Important Msg for Retail Outlets: "+mailText+"("+frList.get(i).getFrCode()+")";
+							EmailUtility.sendinBulk(msg, mobList);
+							mobList.clear();
+						}catch (Exception e) {
+							e.getMessage();
+						}
+						try {
+						 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
+						 mailText = schMessage;
+						 EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
+						System.err.println("Mail Send To : "+frList.get(i).getFrCode());
+						}catch (Exception e) {
+							e.getMessage();
+						}
+					}
+			
 				info.setError(false);
 				info.setMessage("scheduler Update successfully");
 			}

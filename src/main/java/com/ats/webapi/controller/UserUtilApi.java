@@ -67,8 +67,8 @@ public class UserUtilApi {
 		return res;
 	}
 	
-	static String senderEmail ="madhvierp@gmail.com";
-	static String senderPassword ="madhvi@#2020";
+	public static String senderEmail ="madhvierp@gmail.com";
+	public static String senderPassword ="madhvi@#2020";
 	static String mailsubject = "";
 	String otp1 = null;
 	@RequestMapping(value = { "/getUserInfoByUsername" }, method = RequestMethod.POST)

@@ -1,10 +1,13 @@
 package com.ats.webapi.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.commons.EmailUtility;
+import com.ats.webapi.model.Franchisee;
 import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.PettyCashEmp;
@@ -27,6 +32,12 @@ import com.ats.webapi.model.pettycash.PettyCashDao;
 import com.ats.webapi.model.pettycash.PettyCashManagmt;
 import com.ats.webapi.model.pettycash.SellBillDetailAdv;
 import com.ats.webapi.model.pettycash.SpCakeAdv;
+import com.ats.webapi.model.posdashboard.BillHeaderDashCount;
+import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
+import com.ats.webapi.model.posdashboard.CreaditAmtDash;
+import com.ats.webapi.model.posdashboard.DashAdvanceOrderCounts;
+import com.ats.webapi.model.posdashboard.PosDashCounts;
+import com.ats.webapi.model.posdashboard.SellBillHeaderDashCounts;
 import com.ats.webapi.repo.FrEmpMasterRepo;
 import com.ats.webapi.repo.GetTotalAmtRepo;
 import com.ats.webapi.repo.OtherBillDetailAdvRepo;
@@ -35,7 +46,13 @@ import com.ats.webapi.repo.PettyCashHandoverRepo;
 import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repo.SellBillDetailAdvRepo;
 import com.ats.webapi.repo.SpCakeAdvRepo;
+import com.ats.webapi.repo.posdashboard.BillHeaderDashCountRepo;
+import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
+import com.ats.webapi.repo.posdashboard.CreaditAmtDashRepo;
+import com.ats.webapi.repo.posdashboard.DashAdvanceOrderCountsRepo;
+import com.ats.webapi.repo.posdashboard.SellBillHeaderDashCountsRepo;
 import com.ats.webapi.repository.ExpressBillRepository;
+import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GetCashAdvAndExpAmtRepo;
 import com.ats.webapi.repository.SettingRepository;
 
@@ -56,6 +73,9 @@ public class PettyCashApiController {
 
 	@Autowired
 	GetCashAdvAndExpAmtRepo getCashAdvAndExpAmtRepo;
+	
+	@Autowired
+	FranchiseeRepository franchiseeRepository;
 
 	@RequestMapping(value = { "/getPettyCashDetails" }, method = RequestMethod.POST)
 	public PettyCashManagmt getPettyCashDetails(@RequestParam("frId") int frId) {
@@ -106,6 +126,42 @@ public class PettyCashApiController {
 		PettyCashManagmt cash = new PettyCashManagmt();
 		try {
 			cash = pettyRepo.save(pettycash);
+			
+			if(cash!=null) {
+				String senderEmail = UserUtilApi.senderEmail;
+				String senderPassword = UserUtilApi.senderPassword;
+				
+				SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+				Date date = new Date();
+				
+				int frId = cash.getFrId();
+				Franchisee frDetails =  franchiseeRepository.findOne(frId);
+				
+				String fromDate =  sf.format(date);
+				String toDate =  sf.format(date);
+				
+				System.out.println("Cashhhhhhhhhhhhhh--------------"+cash);
+				
+				PosDashCounts posDetails = getPosDashData(fromDate, toDate, frDetails.getFrId(), frDetails.getFrRateCat());
+				System.out.println("posDetails----------"+posDetails);
+				
+				String msg = "Total summary for ("+frDetails.getFrCode()+") at ("+sf.format(date)+")\n" + 
+						"E-Pay - ("+posDetails.getEpayAmt()+")\n" + 
+						"Cash - ("+posDetails.getCardAmt()+")\n" + 
+						"Card - ("+posDetails.getCardAmt()+")\n" + 
+						"Sales - ("+posDetails.getSaleAmt()+")\n" + 
+						"Discount - ("+posDetails.getDiscountAmt()+")\n" + 
+						"Purchase  - ("+posDetails.getPurchaseAmt()+")\n" + 
+						"Advance - ("+posDetails.getAdvanceAmt()+")\n" + 
+						"Credit Bill - ("+posDetails.getCreditAmt()+")\n" + 
+						"Expenses - ("+posDetails.getExpenseAmt()+")";
+				
+				EmailUtility.send(frDetails.getFrMob(), msg);
+				
+				String mailSubject = "Total summary for ("+frDetails.getFrCode()+") at ("+sf.format(date)+")";
+				String defPass="";
+				EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailSubject, msg, defPass);
+			}
 		} catch (Exception e) {
 			System.err.println("Exception in addPettyCash : " + e.getMessage());
 			e.printStackTrace();
@@ -498,5 +554,176 @@ public class PettyCashApiController {
 	}
 	
 	
+	/*****************************************************************/
+	@Autowired
+	SellBillHeaderDashCountsRepo sellBillHeaderDashCountsRepo;
+
+	@Autowired
+	BillTransactionDetailDashCountRepo billTransactionDetailDashCountRepo;
+
+	@Autowired
+	BillHeaderDashCountRepo billHeaderDashCountRepo;
+
+	@Autowired
+	CreaditAmtDashRepo creaditAmtDashRepo;
+
+	@Autowired
+	DashAdvanceOrderCountsRepo dashAdvanceOrderCountsRepo;
+	
+	public PosDashCounts getPosDashData(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId,
+			@RequestParam("frRateCat") int frRateCat) {
+
+		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Calcutta"));
+		Date date = calendar.getTime();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String currentDate = df.format(date);
+		PosDashCounts crnReport = new PosDashCounts();
+
+		SellBillHeaderDashCounts headcount = new SellBillHeaderDashCounts();
+		BillTransactionDetailDashCount tranCount = new BillTransactionDetailDashCount();
+		BillHeaderDashCount billCountch = new BillHeaderDashCount();
+		BillHeaderDashCount billCountpur = new BillHeaderDashCount();
+		CreaditAmtDash daseqe = new CreaditAmtDash();
+
+		List<DashAdvanceOrderCounts> dailyList = new ArrayList<DashAdvanceOrderCounts>();
+		List<DashAdvanceOrderCounts> advOrderList = new ArrayList<DashAdvanceOrderCounts>();
+
+		System.err.println("PARAM ------ " + fromDate + "       " + toDate + "         " + frId);
+
+		System.err.println("DashBoardReporApi data is " + fromDate + toDate + frId);
+		try {
+			
+			try {
+				headcount = sellBillHeaderDashCountsRepo.getDataFordash(fromDate, toDate, frId);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				tranCount = billTransactionDetailDashCountRepo.getD1ataFordash(fromDate, toDate, frId);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				billCountch = billHeaderDashCountRepo.getD1ataFordash2Ch(fromDate, toDate, frId);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				billCountpur = billHeaderDashCountRepo.getD1ataFordash2pur(fromDate, toDate, frId);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				daseqe = creaditAmtDashRepo.getDataFordash(fromDate, toDate, frId);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				dailyList = dashAdvanceOrderCountsRepo.getAdvDetail(currentDate, frId, 2);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			try {
+				advOrderList = dashAdvanceOrderCountsRepo.getAdvDetail(currentDate, frId, 1);
+			}catch (Exception e) {
+				e.getMessage();
+			}
+			
+			System.err.println("DashBoardReporApi ***" + daseqe.toString());
+			crnReport.setDailyMartList(dailyList);
+			crnReport.setAdvOrderList(advOrderList);
+
+			System.err.println("PURCHASE ====================== " + billCountpur);
+
+			GetTotalAmt getAdvAmt = getTotalAmtRepo.getTotalAmount(frId, fromDate, toDate);
+			float advAmt = 0;
+			if (getAdvAmt != null) {
+				advAmt = getAdvAmt.getTotalAmt();
+			}
+
+			GetTotalAmt getProfitAmt = getTotalAmtRepo.getTotalProfit(frId, fromDate, toDate);
+			float profitAmt = 0;
+			if (getProfitAmt != null) {
+				profitAmt = getProfitAmt.getTotalAmt();
+			}
+
+			crnReport.setProfitAmt((int) profitAmt);
+
+			// System.err.println( "DashBoardReporApi /tranCount" + tranCount.toString());
+			// System.err.println( "DashBoardReporApi /billCountch" +
+			// billCountch.toString());
+			// System.err.println( "DashBoardReporApi /billCountpur" +
+			// billCountpur.toString());
+
+			// crnReport.setAdvanceAmt(headcount.getAdvanceAmt());
+			crnReport.setAdvanceAmt(advAmt);
+
+			if (tranCount.getCardAmt() == "" || tranCount.getCardAmt() == null) {
+				crnReport.setCardAmt(0);
+			} else {
+				crnReport.setCardAmt(Float.parseFloat(tranCount.getCardAmt()));
+			}
+			if (tranCount.getCashAmt() == "" || tranCount.getCashAmt() == null) {
+				crnReport.setCashAmt(0);
+			} else {
+				crnReport.setCashAmt(Float.parseFloat(tranCount.getCashAmt()));
+			}
+
+			if (tranCount.getePayAmt() == "" || tranCount.getePayAmt() == null) {
+				crnReport.setEpayAmt(0);
+			} else {
+				crnReport.setEpayAmt(Float.parseFloat(tranCount.getePayAmt()));
+			}
+
+			if (daseqe.getCreditAmt() == "" || daseqe.getCreditAmt() == null) {
+				crnReport.setCreditAmt(0);
+			} else {
+				// crnReport.setEpayAmt(Float.parseFloat(tranCount.getePayAmt()));
+				crnReport.setCreditAmt(Float.parseFloat(daseqe.getCreditAmt()));
+			}
+
+			crnReport.setDiscountAmt(headcount.getDiscAmt());
+
+			crnReport.setNoOfBillGenerated(headcount.getNoBillGen());
+			crnReport.setSaleAmt(headcount.getSellAmt());
+
+			// crnReport.setProfitAmt(headcount.getProfitAmt());
+
+			try {
+				crnReport.setPurchaseAmt(Float.parseFloat(billCountpur.getPurchaeAmt()));
+			} catch (Exception e) {
+				crnReport.setPurchaseAmt(0);
+			}
+			/*if (billCountpur.getPurchaeAmt() == "" || billCountpur.getPurchaeAmt() == null
+					|| billCountpur.getPurchaeAmt() == "0") {
+				crnReport.setPurchaseAmt(0);
+			} else {
+				crnReport.setPurchaseAmt(Float.parseFloat(billCountpur.getPurchaeAmt()));
+			}*/
+
+			if (billCountch.getChAmt() == "" || billCountch.getChAmt() == null || billCountch.getChAmt() == "0") {
+				crnReport.setExpenseAmt(0);
+			} else {
+				crnReport.setExpenseAmt(Float.parseFloat(billCountch.getChAmt()));
+			}
+
+			System.err.println("DashBoardReporApi /getCredNoteReport" + crnReport.toString());
+
+		} catch (Exception e) {
+
+			System.err.println("Exception in DashBoardReporApi /getCredNoteReport" + e.getMessage());
+
+			e.printStackTrace();
+		}
+
+		return crnReport;
+	}
 
 }

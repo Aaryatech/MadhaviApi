@@ -22,7 +22,7 @@ public interface FranchiseeRepository extends JpaRepository<Franchisee, Integer>
 
 		//public Franchisee findByFrCode(String frCode);
 
-		//public List<Franchisee> findAllByDelStatus(int i);
+		public List<Franchisee> findAllByDelStatus(int i);
 		
 
 		@Modifying

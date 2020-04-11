@@ -1,6 +1,7 @@
 package com.ats.webapi.commons ;
 
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -71,14 +72,20 @@ public class EmailUtility {
 			e.printStackTrace();
 			info.setError(true);
 			info.setMessage("email_exce");
+			//System.err.println("Mail Response1 : "+info);
+			System.err.println("Ex1"+e.getMessage());
 		}
 			
 			info.setError(false);
 			info.setMessage("success_email");
+			//System.err.println("Mail Response2 : "+info);
+			
 		}catch (Exception e) {
 			
 			info.setError(true);
 			info.setMessage("email_exce");
+			//System.err.println("Mail Response3 : "+info);
+			System.err.println("Ex2"+e.getMessage());
 		}
 		
 		return info;
@@ -236,7 +243,7 @@ public class EmailUtility {
 		return info;
 	}
 	
-	public static Info send(String OTP, String phoneNo) {
+	public static Info send(String phoneNo, String msg) {
 		
 		Info info=new Info();
 		
@@ -245,8 +252,8 @@ public class EmailUtility {
 			RestTemplate restTemplate = new RestTemplate();
 			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
 			
-			String msg = "We welcome You to Madhvi!\n"+
-						 "Your OTP to change your password is ("+OTP+").";
+//			String msg = "We welcome You to Madhvi!\n"+
+//						 "Your OTP to change your password is ("+OTP+").";
 						 
 			String message = msg;
 			String mob = phoneNo.trim();
@@ -255,14 +262,55 @@ public class EmailUtility {
 		
 			info.setError(false);
 			info.setMessage(sms);
+			System.err.println("SMS Resp : "+info);
 		  
 		}catch (Exception e) {
 			
 			info.setError(true);
 			info.setMessage("sendMsg");
+			System.err.println("SMS Resp : "+info);
+			System.err.println("SMS Ex : "+e.getMessage());			
 		}
 		
 		return info;
+	}
+
+	public static void sendinBulk(String msg, List<String> mobList) {
+		
+		Info info=new Info();
+		
+		try {
+			   
+			RestTemplate restTemplate = new RestTemplate();
+			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+			
+//			String msg = "We welcome You to Madhvi!\n"+
+//						 "Your OTP to change your password is ("+OTP+").";
+			String sms="";	 
+			String message = msg;
+			List<String> mob = mobList;
+			for (int i = 0; i < mob.size(); i++) {
+				System.out.println("Fr Mobile No.----"+mob.get(i));
+				try {
+				sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob.get(i)+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
+				}catch (Exception e) {
+					System.err.println("Ex in Bulk SMS : "+e.getMessage());
+				}
+			}
+		
+			 
+			info.setError(false);
+			info.setMessage(sms);
+			System.err.println("SMS Resp : "+info);
+		  
+		}catch (Exception e) {
+			
+			info.setError(true);
+			info.setMessage("sendMsg");
+			System.err.println("SMS Resp : "+info);
+			System.err.println("SMS Ex : "+e.getMessage());			
+		}
+		
 	}
 
 }
