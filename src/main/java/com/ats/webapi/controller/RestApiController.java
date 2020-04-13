@@ -1986,7 +1986,7 @@ public class RestApiController {
                     
                 }
                    text=text+"</table></body></html>";
-                   System.out.println("Mail-----"+senderEmail+" "+senderPassword+" "+fr.getFrEmail());
+                  
                 Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
                 System.err.println("Mail Resp : "+info);
             

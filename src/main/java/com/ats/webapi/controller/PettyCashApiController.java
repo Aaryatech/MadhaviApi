@@ -156,11 +156,14 @@ public class PettyCashApiController {
 						"Credit Bill - ("+posDetails.getCreditAmt()+")\n" + 
 						"Expenses - ("+posDetails.getExpenseAmt()+")";
 				
-				EmailUtility.send(frDetails.getFrMob(), msg);
+				
 				
 				String mailSubject = "Total summary for ("+frDetails.getFrCode()+") at ("+sf.format(date)+")";
 				String defPass="";
-				EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailSubject, msg, defPass);
+				Info inf = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailSubject, msg, defPass);
+				 if(inf.isError()!=true){
+						 EmailUtility.send(frDetails.getFrMob(), msg);
+				 }
 			}
 		} catch (Exception e) {
 			System.err.println("Exception in addPettyCash : " + e.getMessage());
