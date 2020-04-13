@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repo.OpsItemListForCustomerBillRepo;
 import com.ats.webapi.repositories.ExpenseTransactionRepo;
+import com.ats.webapi.repository.BookedOrderMailedRepo;
 import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
 import com.ats.webapi.repository.FlavourRepository;
@@ -1930,11 +1932,12 @@ public class RestApiController {
 		return errorMessage;
 	}
 
+	@Autowired BookedOrderMailedRepo bookOrderrepo;
 	// Place Item Order
 	@RequestMapping(value = { "/placeOrder" }, method = RequestMethod.POST)
 	public @ResponseBody List<Orders> placeItemOrder(@RequestBody List<Orders> orderJson)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
-
+		System.err.println("Order Found---------"+orderJson.toString());
 		List<Orders> jsonResult;
 		OrderLog log = new OrderLog();
 		log.setFrId(orderJson.get(0).getFrId());
@@ -1942,6 +1945,56 @@ public class RestApiController {
 		logRespository.save(log);
 
 		jsonResult = orderService.placeOrder(orderJson);
+		System.out.println("Saved Order---------"+jsonResult);
+		if(jsonResult!=null) {
+			try {
+				Franchisee fr = franchiseeRepository.findOne(jsonResult.get(0).getFrId());
+				String frCode = fr.getFrCode();
+                String senderEmail = UserUtilApi.senderEmail;
+                String senderPassword = UserUtilApi.senderPassword;
+                double orderAmt = 0;           
+                String mailsubject="Order Booking Details";
+                int srno = 0;
+
+                List<BookedOrderMailed> orderList = bookOrderrepo.getOrderPlacedByOrderDate(jsonResult.get(0).getOrderDate(), jsonResult.get(0).getOrderSubType());
+                
+                for (int i = 0; i < orderList.size(); i++) {
+                        double calAmt = orderList.get(i).getOrderRate()*orderList.get(i).getOrderQty();
+                        orderAmt = orderAmt + calAmt;
+            }
+                
+                String text = "";
+                text="<html><body>"
+                        + "<table style='border:2px solid black'>"+
+                        "<tr>"+
+                           "<td>OutLet Code: "+frCode+"</td>"+
+                           "<td>Delivery Date: "+orderList.get(0).getDeliveryDate()+"</td>"+
+                           "<td>Order Amt: "+orderAmt+"</td></tr>"+
+                        "<tr bgcolor=\"#33CC99\">"+
+                        "<th>Sr. No.</th>"+
+                   "<th>Item Name</th>"+
+                   "<th>UOM</th>"+
+                   "<th>QTY</th></tr>";
+                for (int i = 0; i < orderList.size(); i++) {
+                	srno=srno+1;
+                       text=text+"<tr align='center'>"
+                        +"<td>" + srno + "</td>" 
+                                +"<td>" + orderList.get(i).getItemName() + "</td>"
+                                +"<td>" + orderList.get(i).getItemUom() + "</td>"
+                                +"<td>" + orderList.get(i).getOrderQty() + "</td>"
+                                +"</tr>";
+                    
+                }
+                   text=text+"</table></body></html>";
+                   System.out.println("Mail-----"+senderEmail+" "+senderPassword+" "+fr.getFrEmail());
+                Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
+                System.err.println("Mail Resp : "+info);
+            
+			}catch (Exception e) {
+				 System.err.println(" Ex in placeOrder (send mail) : "+e.getMessage());
+				 e.printStackTrace();
+			}
+		}
 		return jsonResult;
 	}
 
@@ -3999,12 +4052,14 @@ public class RestApiController {
 		System.out.println("input param items= " + items.toString());
 
 		System.out.println("date param = " + date.toString());
-
+		SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+		String orderDate = "";
 		try {
 			itemList = getFrItemsService.findFrItems(items);
 			try {
+				
 				orderList = prevItemOrderService.findFrItemOrders(items, frId, date, menuId);
-
+				
 				for (int i = 0; i < itemList.size(); i++) {
 
 					ItemWithSubCat item = itemList.get(i);
@@ -4035,9 +4090,12 @@ public class RestApiController {
 					getFrItems.setMinQty(item.getMinQty());
 					getFrItems.setItemRate3(item.getItemRate3());
 					getFrItems.setCatName(item.getCatName());
-
+					  
+					
 					for (int j = 0; j < orderList.size(); j++) {
-
+						Date ordDate = orderList.get(j).getDeliveryDate();
+						orderDate = format1.format(ordDate); 
+						
 						if (String.valueOf(item.getId()).equalsIgnoreCase(orderList.get(j).getItemId())) {
 
 							getFrItems.setItemQty(orderList.get(j).getOrderQty());
@@ -4060,11 +4118,11 @@ public class RestApiController {
 					frItemList.add(getFrItems);
 
 				}
-
 			} catch (Exception e) {
 				System.out.println("Exception fr Prev Item order " + e.getMessage());
 			}
 			System.out.println("All Prev Order Record" + orderList.toString());
+			System.out.println("All Prev Item Order Record" + frItemList.toString());
 
 		} catch (Exception e) {
 			System.out.println("Exception fr Items " + e.getClass());
