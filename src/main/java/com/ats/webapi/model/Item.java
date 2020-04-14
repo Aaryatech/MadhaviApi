@@ -42,7 +42,7 @@ public class Item implements Serializable {
 	private float itemRate1;
 	
 	@Column(name="item_rate2")
-	private float itemRate2;
+	private int itemRate2;	// franchisee Id
 	
 	@Column(name="item_mrp1")
 	private float itemMrp1;
@@ -172,11 +172,11 @@ public class Item implements Serializable {
 		this.itemRate1 = itemRate1;
 	}
 
-	public float getItemRate2() {
+	public int getItemRate2() {
 		return itemRate2;
 	}
 
-	public void setItemRate2(float itemRate2) {
+	public void setItemRate2(int itemRate2) {
 		this.itemRate2 = itemRate2;
 	}
 

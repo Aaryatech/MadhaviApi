@@ -244,7 +244,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItem(@Param("catId")int catId,@Param("frId")int frId);
 
-	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
+	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, int frId, int j);
 
 	public List<Item> findByDelStatusAndIsStockableOrderByItemGrp1AscItemGrp2AscItemNameAsc(int i, int j);
 

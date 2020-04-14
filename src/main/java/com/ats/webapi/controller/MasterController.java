@@ -206,7 +206,7 @@ public class MasterController {
 	PettyCashManagmtRepo pettyCashManagmtRepo;
 
 	@RequestMapping(value = "/getOtherItemsByCatIdAndFrId", method = RequestMethod.POST)
-	public @ResponseBody List<Item> getOtherItemsByCatIdAndFrId(@RequestParam double frId) {
+	public @ResponseBody List<Item> getOtherItemsByCatIdAndFrId(@RequestParam int frId) {
 
 		List<Item> items = itemRepository.findByItemGrp1AndItemRate2AndDelStatus("7", frId, 0);
 
