@@ -24,7 +24,10 @@ import com.ats.webapi.commons.EmailUtility;
 import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.controller.PettyCashApiController;
 import com.ats.webapi.controller.UserUtilApi;
+import com.ats.webapi.model.FranchiseSup;
+import com.ats.webapi.model.FranchiseSupList;
 import com.ats.webapi.model.Franchisee;
+import com.ats.webapi.model.GetFranchiseSup;
 import com.ats.webapi.model.GetTotalAmt;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.SellBillHeader;
@@ -55,7 +58,9 @@ import com.ats.webapi.repository.FrAniversaryRepository;
 import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GetCashAdvAndExpAmtRepo;
+import com.ats.webapi.repository.GetFranchiseSupRepository;
 import com.ats.webapi.repository.SellBillHeaderRepository;
+import com.ats.webapi.service.FranchiseeService;
 
 import ch.qos.logback.classic.pattern.DateConverter;
 
@@ -506,5 +511,324 @@ public class ScheduleTask {
 		return crnReport;
 	}
 
+	@Autowired
+	GetFranchiseSupRepository franchiseeSupRepo;
+	//Send mail and SMS to  all franchise when there license are expired
+	//@Scheduled(cron = "0 1 * * * * *")	
+	//@Scheduled(cron = "*/5 * * * * ?")
+		@Scheduled(cron = "0 0 7 * * *")
+		public void crownForLicencesExpiry() {
+			try {
+				 	Date date = new Date();  
+				    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+				    String currDate= formatter.format(date);  
+				    System.out.println("Today's Date-----------------------"+currDate);  
+				    
+				    Date fdaLiscExpDate = new Date();  
+				    Date weighingScaleDate1 = new Date();
+				    Date weighingScaleDate2 = new Date();
+				    Date shopEstbActDate = new Date();
+				    Date profTaxDate = new Date();
+				    Date frExpiryDate = new Date();
+				    
+				    List<FranchiseSup> franchiseSupList = new ArrayList<FranchiseSup>();
+				 
+					List<Franchisee> franchisee = new ArrayList<Franchisee>();
+					franchisee = franchiseeRepository.findAllByDelStatusOrderByFrNameAsc(0);
+					
+					String senderEmail = UserUtilApi.senderEmail;
+					String senderPassword = UserUtilApi.senderPassword;
+					String mailsubject = ""; 
+					String mailText = ""; 
+					String frCode = "";
+					
+					String fdaLic = "FDA License";
+					String weighingScale1Lisc = "Weighing Scale License 1";
+					String weighingScale2Lisc = "Weighing Scale License 2";
+					String shopEstActLisc = "License under Shops & Establishment Act";
+					String proTaxLisc = "Professional Tax License";
+					String frExpiryAgreement = "Madhvi Franchise Agreement";
+					
+					Date currentDate = formatter.parse(currDate);
+					
+					 franchiseSupList = franchiseSupRepository.findByDelStatus(0);
+					/********************************FDA License****************************/
+					for (int i = 0; i < franchisee.size(); i++) {
+						
+						if(franchisee.get(i).getFrAgreementDate()!=null) {
+							
+							fdaLiscExpDate = franchisee.get(i).getFrAgreementDate();
+							frCode = franchisee.get(i).getFrCode();
+							System.out.println("FDA Lisc Date ------------"+fdaLiscExpDate+" "+franchisee.get(i).getFrId()+" "+frCode);
+							
+							
+						    
+						       long difference = fdaLiscExpDate.getTime() - currentDate.getTime();
+						       long daysBetween = (difference / (1000*60*60*24));					               
+						       System.out.println("FDA Number of Days between dates: "+daysBetween);
+						       
+						       
+						       if(daysBetween>=1 && daysBetween<=15) {
+						    	   mailsubject = fdaLic+" License will expiry soon for Outlet : "+frCode;
+								   mailText = "Hello Sir/Madam,\n"+
+												"<br>&nbsp;&nbsp; Your "+fdaLic+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(fdaLiscExpDate)+".\n"+
+												"<br>&nbsp;&nbsp; Please renew your license.";
+						    	   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+						    	   System.out.println("INFO Mail--------"+info);
+						    	   if(info.isError()==false) {
+						    		   String msg ="Welcome to Madhvi!\n" + 
+						    		   		""+frCode+" your "+fdaLic+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(fdaLiscExpDate)+".\n" + 
+						    		   		"Please renew your license.";
+						    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+						    		   
+						    		   System.out.println("INFO SMS---------"+inf);
+						    	   }
+						       }else {
+						    	   System.err.println("FDA Date is More than 15-----------"+frCode);
+						       }
+							}
+							
+					}
+					
+					 /********************************Weighing Scale License Date1****************************/
+					
+				      for (int j = 0; j < franchiseSupList.size(); j++) {
+				    	   
+				    	   for (int i = 0; i < franchisee.size(); i++) {
+				    		   
+				    		   if(franchiseSupList.get(j).getFrId()==franchisee.get(i).getFrId()) {
+				    			   
+				    	System.out.println("Fr Supp Found Weigh Scal1-------------"+franchiseSupList.get(j).getFrId());
+				    	
+				    		   if(franchiseSupList.get(j).getPass2()!=null) {
+				    			   
+				    			   weighingScaleDate1 = franchiseSupList.get(j).getPass2();
+				    			 
+							       long difference = weighingScaleDate1.getTime() - currentDate.getTime();
+							       long daysBetween = (difference / (1000*60*60*24));
+							       
+							       if(daysBetween>=1 && daysBetween<=15) {
+							    	   frCode = franchisee.get(i).getFrCode();
+							    	    
+							    	   mailsubject = weighingScale1Lisc+" will expiry soon for Outlet : "+frCode;
+									   mailText = "Hello Sir/Madam,\n"+
+													"<br>&nbsp;&nbsp; Your "+weighingScale1Lisc+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(weighingScaleDate1)+".\n"+
+													"<br>&nbsp;&nbsp; Please renew your license.";
+							    	  
+									   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+							    	   System.out.println("INFO Mail--------"+info);
+							    	   
+							    	   if(info.isError()==false) {
+							    		   String msg ="Welcome to Madhvi!\n" + 
+							    		   		""+frCode+" your "+weighingScale1Lisc+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(weighingScaleDate1)+".\n" + 
+							    		   		"Please renew your license.";
+							    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+							    		   System.out.println("Resp----------"+franchisee.get(i).getFrMob()+"   "+weighingScaleDate1);
+							    		   System.out.println("INFO SMS---------"+inf);
+							    	   }
+							       }else {
+							    	   System.err.println(weighingScale1Lisc+" Date is More than 15-----------"+frCode);
+							       }
+						              
+							       System.out.println("Weighing Scale 1 Number of Days between dates: "+daysBetween);
+				    		   }
+				    		 }
+				       }
+					}
+				       
+				       /********************************Weighing Scale License Date2****************************/
+						 
+					      for (int j = 0; j < franchiseSupList.size(); j++) {
+					    	   
+					    	   for (int i = 0; i < franchisee.size(); i++) {
+					    		   
+					    		   if(franchiseSupList.get(j).getFrId()==franchisee.get(i).getFrId()) {
+					    			   
+					    	System.out.println("Fr Supp Found Weigh Scal2------------"+franchiseSupList.get(j).getFrId());
+					    	
+					    		   if(franchiseSupList.get(j).getPass3()!=null) {
+					    			   
+					    			   weighingScaleDate2 = franchiseSupList.get(j).getPass3();
+					    			 
+								       long difference = weighingScaleDate2.getTime() - currentDate.getTime();
+								       long daysBetween = (difference / (1000*60*60*24));
+								       
+								       if(daysBetween>=1 && daysBetween<=15) {
+								    	   frCode = franchisee.get(i).getFrCode();
+								    	    
+								    	   mailsubject = weighingScale2Lisc+" will expiry soon for Outlet : "+frCode;
+										   mailText = "Hello Sir/Madam,\n"+
+														"<br>&nbsp;&nbsp; Your "+weighingScale2Lisc+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(weighingScaleDate2)+".\n"+
+														"<br>&nbsp;&nbsp; Please renew your license.";
+								    	  
+										   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+								    	   System.out.println("INFO Mail--------"+info);
+								    	   
+								    	   if(info.isError()==false) {
+								    		   String msg ="Welcome to Madhvi!\n" + 
+								    		   		""+frCode+" your "+weighingScale2Lisc+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(weighingScaleDate2)+".\n" + 
+								    		   		"Please renew your license.";
+								    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+								    		   System.out.println("Resp----------"+franchisee.get(i).getFrMob()+"   "+weighingScaleDate2);
+								    		   System.out.println("INFO SMS---------"+inf);
+								    	   }
+								       }else {
+								    	   System.err.println(weighingScale2Lisc+" Date is More than 15-----------"+frCode);
+								       }
+							              
+								       System.out.println("Weighing Scale 2 Number of Days between dates: "+daysBetween);
+					    		   }
+					    		 }
+					       }
+						}
+					
+					       /*******************************License under Shops & Establishment Act***************************/
+					       for (int j = 0; j < franchiseSupList.size(); j++) {
+					    	   
+					    	   for (int i = 0; i < franchisee.size(); i++) {
+					    		   
+					    		   if(franchiseSupList.get(j).getFrId()==franchisee.get(i).getFrId()) {
+					    			   frCode = franchisee.get(i).getFrCode();
+					    			  
+					    	
+					    		   if(franchiseSupList.get(j).getPass4()!=null) {
+					    			   
+					    			   shopEstbActDate = franchiseSupList.get(j).getPass4();
+					    			   
+					    			   System.out.println("Shop Estb Act Lisc------------"+shopEstbActDate+"**********"+franchisee.get(i).getFrId()+"**********"+frCode);
+					    			 
+								       long difference = shopEstbActDate.getTime() - currentDate.getTime();
+								       long daysBetween = (difference / (1000*60*60*24));
+								       
+								       if(daysBetween>=1 && daysBetween<=15) {
+								    	   
+								    	    
+								    	   mailsubject = shopEstActLisc+" will expiry soon for Outlet : "+frCode;
+										   mailText = "Hello Sir/Madam,\n"+
+														"<br>&nbsp;&nbsp; Your "+shopEstActLisc+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(shopEstbActDate)+".\n"+
+														"<br>&nbsp;&nbsp; Please renew your license.";
+								    	  
+										   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+								    	   System.out.println("INFO Mail--------"+info);
+								    	   
+								    	   if(info.isError()==false) {
+								    		   String msg ="Welcome to Madhvi!\n" + 
+								    		   		""+frCode+" your "+shopEstActLisc+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(shopEstbActDate)+".\n" + 
+								    		   		"Please renew your license.";
+								    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+								    		   System.out.println("Resp----------"+franchisee.get(i).getFrMob()+"   "+shopEstbActDate);
+								    		   System.out.println("INFO SMS---------"+inf);
+								    	   }
+								       }else {
+								    	   System.err.println(shopEstActLisc+" Date is More than 15-----------"+frCode);
+								       }
+							              
+								       System.out.println("Shop Estb Act Number of Days between dates: "+daysBetween);
+					    		   }
+					    		 }
+					       }
+						}
+			
+					       /********************************Professional Tax License****************************/
+							 
+						       for (int j = 0; j < franchiseSupList.size(); j++) {
+						    	   
+						    	   for (int i = 0; i < franchisee.size(); i++) {
+						    		   
+						    		   if(franchiseSupList.get(j).getFrId()==franchisee.get(i).getFrId()) {
+						    			   
+						    	System.out.println("Fr Supp Prof Tax------------"+franchiseSupList.get(j).getFrId());
+						    	
+						    		   if(franchiseSupList.get(j).getRemainderDate()!=null) {
+						    			   
+						    			   profTaxDate = franchiseSupList.get(j).getRemainderDate();
+						    			 
+									       long difference = profTaxDate.getTime() - currentDate.getTime();
+									       long daysBetween = (difference / (1000*60*60*24));
+									       
+									       if(daysBetween>=1 && daysBetween<=15) {
+									    	   frCode = franchisee.get(i).getFrCode();
+									    	    
+									    	   mailsubject = proTaxLisc+" will expiry soon for Outlet : "+frCode;
+											   mailText = "Hello Sir/Madam,\n"+
+															"<br>&nbsp;&nbsp; Your "+proTaxLisc+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(profTaxDate)+".\n"+
+															"<br>&nbsp;&nbsp; Please renew your license.";
+									    	  
+											   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+									    	   System.out.println("INFO Mail--------"+info);
+									    	   
+									    	   if(info.isError()==false) {
+									    		   String msg ="Welcome to Madhvi!\n" + 
+									    		   		""+frCode+" your "+proTaxLisc+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(profTaxDate)+".\n" + 
+									    		   		"Please renew your license.";
+									    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+									    		   System.out.println("Resp----------"+franchisee.get(i).getFrMob()+"   "+profTaxDate);
+									    		   System.out.println("INFO SMS---------"+inf);
+									    	   }
+									       }else {
+									    	   System.err.println(proTaxLisc+" Date is More than 15-----------"+frCode);
+									       }
+								              
+									       System.out.println("Prof Tax Number of Days between dates: "+daysBetween);
+						    		   }
+						    		 }
+						       }
+							}
+						       
+						       /********************************Madhvi Franchisee Agreement Expiry****************************/
+								
+							       for (int j = 0; j < franchiseSupList.size(); j++) {
+							    	   
+							    	   for (int i = 0; i < franchisee.size(); i++) {
+							    		   
+							    		   if(franchiseSupList.get(j).getFrId()==franchisee.get(i).getFrId()) {	
+							    			   
+							    			   //System.out.println("Fr Agreement------------"+franchiseSupList.get(j).getFrId());
+							    	
+							    		   if(franchiseSupList.get(j).getPestControlDate()!=null) {
+							    			   frCode = franchisee.get(i).getFrCode();
+							    			   frExpiryDate = franchiseSupList.get(j).getPestControlDate();
+							    			   
+							    			   System.out.println("Madhvi Franchisee Agreement Date------------"+frExpiryDate+"**********"+franchisee.get(i).getFrId()+"**********"+frCode);
+								    			 
+										       long difference = frExpiryDate.getTime() - currentDate.getTime();
+										       long daysBetween = (difference / (1000*60*60*24));
+										       
+										       if(daysBetween>=1 && daysBetween<=15) {
+										    	   
+										    	    
+										    	   mailsubject = frExpiryAgreement+" will expiry soon for Outlet : "+frCode;
+												   mailText = "Hello Sir/Madam,\n"+
+																"<br>&nbsp;&nbsp; Your "+frExpiryAgreement+" will expiry soon for Outlet : "+frCode+" on "+new SimpleDateFormat("dd-MM-yyyy").format(frExpiryDate)+".\n"+
+																"<br>&nbsp;&nbsp; Please renew your license.";
+										    	  
+												   Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, franchisee.get(i).getFrEmail(), mailsubject, mailText);
+										    	   System.out.println("INFO Mail--------"+info);
+										    	   
+										    	   if(info.isError()==false) {
+										    		   String msg ="Welcome to Madhvi!\n" + 
+										    		   		""+frCode+" your "+frExpiryAgreement+" will expire on "+new SimpleDateFormat("dd-MM-yyyy").format(frExpiryDate)+".\n" + 
+										    		   		"Please renew your license.";
+										    		   Info inf = EmailUtility.send(franchisee.get(i).getFrMob(), msg);
+										    		   System.out.println("Resp----------"+franchisee.get(i).getFrMob()+"   "+frExpiryDate);
+										    		   System.out.println("INFO SMS---------"+inf);
+										    	   }
+										       }else {
+										    	   System.err.println(frExpiryAgreement+" Date is More than 15-----------"+frCode+"----"+daysBetween);
+										       }
+									              
+										       System.out.println("Franchisee Agreement Number of Days between dates: "+daysBetween);
+							    		   }
+							    		 }
+							       }
+								}
+			System.err.println("***********************************END*****************************************");
+			
+			}catch (Exception e) {
+				System.err.println("Ex in crownForLicencesExpiry : "+e.getMessage());
+				e.printStackTrace();
+			}
+			
+		}
 
 }

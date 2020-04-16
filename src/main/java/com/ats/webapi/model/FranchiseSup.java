@@ -43,19 +43,19 @@ public class FranchiseSup implements Serializable{
 	
 	private String pass1;
 
-	private String pass2;
+	private Date pass2; 	//Weighing Scale License Date1
 
-	private String pass3;
+	private Date pass3;	//Weighing Scale License Date2
 
-	private String pass4;
+	private Date pass4;	//License under Shops & Establishment Act Date
 	
 	private String pass5;
 	
     private int frequency;
 	
-	private Date pestControlDate;
+	private Date pestControlDate; //Madhvi Franchisee Agreement Expiry Date
 	
-	private Date remainderDate;
+	private Date remainderDate;	//Professional Tax License Date
 	
 	private int delStatus;
 	
@@ -84,7 +84,7 @@ public class FranchiseSup implements Serializable{
 	public Date getPestControlDate() {
 		return pestControlDate;
 	}
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	
 	public void setPestControlDate(Date pestControlDate) {
 		this.pestControlDate = pestControlDate;
 	}
@@ -92,7 +92,7 @@ public class FranchiseSup implements Serializable{
 	public Date getRemainderDate() {
 		return remainderDate;
 	}
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	
 	public void setRemainderDate(Date remainderDate) {
 		this.remainderDate = remainderDate;
 	}
@@ -105,11 +105,12 @@ public class FranchiseSup implements Serializable{
 		this.isTallySync = isTallySync;
 	}
 
-	public String getPass4() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass4() {
 		return pass4;
 	}
 
-	public void setPass4(String pass4) {
+	public void setPass4(Date pass4) {
 		this.pass4 = pass4;
 	}
 
@@ -129,19 +130,21 @@ public class FranchiseSup implements Serializable{
 		this.pass1 = pass1;
 	}
 
-	public String getPass2() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass2() {
 		return pass2;
 	}
 
-	public void setPass2(String pass2) {
+	public void setPass2(Date pass2) {
 		this.pass2 = pass2;
 	}
 
-	public String getPass3() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass3() {
 		return pass3;
 	}
 
-	public void setPass3(String pass3) {
+	public void setPass3(Date pass3) {
 		this.pass3 = pass3;
 	}
 

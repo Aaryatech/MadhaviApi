@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ats.webapi.model.FranchiseSup;
+import com.ats.webapi.model.GetFranchiseSup;
 
 @Repository
 public interface FranchiseSupRepository extends JpaRepository<FranchiseSup, Integer>{
@@ -57,6 +58,16 @@ public interface FranchiseSupRepository extends JpaRepository<FranchiseSup, Inte
 	@Transactional
 	@Query(value="Update m_franchise_sup SET pass1=:newPass WHERE fr_id=:frId and del_status=0",nativeQuery=true)
 	int updateOPSFrPwd(@Param("frId")int frId,@Param("newPass") String newPass);
+
+	
+	List<FranchiseSup> findByDelStatus(int del);
+
+	/************************************************************************************/
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE m_franchise_sup SET pass2=:weighingScale1Date, pass3=:weighingScale2Date, pass4=:shopEstbLicsDate, pest_control_date=:frAgreementDate, remainder_date=:profTaxDate WHERE fr_id=:frId",nativeQuery=true)
+	int updateFrSupLicsDates(@Param("frId") int frId, @Param("frAgreementDate") String frAgreementDate, @Param("weighingScale1Date") String weighingScale1Date, @Param("weighingScale2Date") String weighingScale2Date,
+			@Param("shopEstbLicsDate") String shopEstbLicsDate, @Param("profTaxDate") String profTaxDate);
 
 
 	

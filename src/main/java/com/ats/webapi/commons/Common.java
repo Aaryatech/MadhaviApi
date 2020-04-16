@@ -136,6 +136,25 @@ public  static String getAlphaNumericString(int n)
         return otp; 
     } 
 	
+ 
+ 
+ public static java.sql.Date stringToSqlDate(String date) {
+		java.sql.Date sqlDate = null;
+		System.out.println("Formating Date = "+date);
+		try {
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+			java.util.Date utilDate;
+
+			utilDate = sdf1.parse(date);
+			sqlDate = new java.sql.Date(utilDate.getTime());
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sqlDate;
+
+	}
 	
 	
 

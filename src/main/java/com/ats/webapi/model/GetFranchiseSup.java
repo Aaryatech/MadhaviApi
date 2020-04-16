@@ -33,11 +33,11 @@ public class GetFranchiseSup implements Serializable{
 
 	private String pass1;
 	
-	private String pass2;
+	private Date pass2;
 	
-	private String pass3;
+	private Date pass3;
 	
-	private String pass4;
+	private Date pass4;
 
 	private String pass5;
 
@@ -45,7 +45,7 @@ public class GetFranchiseSup implements Serializable{
 	
 	private String pestControlDate;
 	
-	private String remainderDate;
+	private Date remainderDate;
 	
 	private int isTallySync;
 	
@@ -77,11 +77,11 @@ public class GetFranchiseSup implements Serializable{
 		this.pestControlDate = pestControlDate;
 	}
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-	public String getRemainderDate() {
+	public Date getRemainderDate() {
 		return remainderDate;
 	}
 
-	public void setRemainderDate(String remainderDate) {
+	public void setRemainderDate(Date remainderDate) {
 		this.remainderDate = remainderDate;
 	}
 
@@ -100,28 +100,28 @@ public class GetFranchiseSup implements Serializable{
 	public void setPass1(String pass1) {
 		this.pass1 = pass1;
 	}
-
-	public String getPass2() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass2() {
 		return pass2;
 	}
 
-	public void setPass2(String pass2) {
+	public void setPass2(Date pass2) {
 		this.pass2 = pass2;
 	}
-
-	public String getPass3() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass3() {
 		return pass3;
 	}
 
-	public void setPass3(String pass3) {
+	public void setPass3(Date pass3) {
 		this.pass3 = pass3;
 	}
-
-	public String getPass4() {
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getPass4() {
 		return pass4;
 	}
 
-	public void setPass4(String pass4) {
+	public void setPass4(Date pass4) {
 		this.pass4 = pass4;
 	}
 

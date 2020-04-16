@@ -2512,7 +2512,7 @@ public class RestApiController {
 	public Item saveItem(@RequestParam("itemId") String itemId, @RequestParam("itemName") String itemName,
 			@RequestParam("itemGrp1") String itemGrp1, @RequestParam("itemGrp2") String itemGrp2,
 			@RequestParam("itemGrp3") String itemGrp3, @RequestParam("itemRate1") float itemRate1,
-			@RequestParam("itemRate2") float itemRate2, @RequestParam("itemRate3") float itemRate3,
+			@RequestParam("itemRate2") int itemRate2, @RequestParam("itemRate3") float itemRate3,
 			@RequestParam("itemMrp1") float itemMrp1, @RequestParam("itemMrp2") float itemMrp2,
 			@RequestParam("itemMrp3") float itemMrp3, @RequestParam("minQty") int minQty,
 			@RequestParam("itemImage") String itemImage, @RequestParam("itemTax1") float itemTax1,
@@ -3286,7 +3286,7 @@ public class RestApiController {
 	public ErrorMessage updateItem(@RequestParam("id") int id, @RequestParam("itemId") String itemId,
 			@RequestParam("itemName") String itemName, @RequestParam("itemGrp1") String itemGrp1,
 			@RequestParam("itemGrp2") String itemGrp2, @RequestParam("itemGrp3") String itemGrp3,
-			@RequestParam("itemRate1") float itemRate1, @RequestParam("itemRate2") float itemRate2,
+			@RequestParam("itemRate1") float itemRate1, @RequestParam("itemRate2") int itemRate2,
 			@RequestParam("itemRate3") float itemRate3, @RequestParam("itemMrp1") float itemMrp1,
 			@RequestParam("itemMrp2") float itemMrp2, @RequestParam("itemMrp3") float itemMrp3,
 			@RequestParam("minQty") int minQty, @RequestParam("itemImage") String itemImage,
@@ -4679,10 +4679,16 @@ public class RestApiController {
 			@RequestParam("grnTwo") int grnTwo, @RequestParam("delStatus") int delStatus,
 			@RequestParam("ownerBirthDate") String ownerBirthDate,
 			@RequestParam("fbaLicenseDate") String fbaLicenseDate,
-			@RequestParam("frAgreementDate") String frAgreementDate, @RequestParam("frGstType") int frGstType,
+			@RequestParam("frGstType") int frGstType,
 			@RequestParam("frGstNo") String frGstNo, @RequestParam("stockType") int stockType,
 			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
-			@RequestParam("isSameState") int isSameState) {
+			@RequestParam("isSameState") int isSameState,
+			@RequestParam("fdaLicsDate") String fdaLicsDate,
+			@RequestParam("frAgreementDate") String frAgreementDate,
+			@RequestParam("weighingScale1Date") String weighingScale1Date,
+			@RequestParam("weighingScale2Date") String weighingScale2Date,
+			@RequestParam("shopEstbLicsDate") String shopEstbLicsDate,
+			@RequestParam("profTaxDate") String profTaxDate) {
 		ErrorMessage jsonResult = new ErrorMessage();
 		try {
 
@@ -4696,7 +4702,7 @@ public class RestApiController {
 			}
 			Date utilFrAgreementDate = null;
 			try {
-				utilFrAgreementDate = sdf.parse(frAgreementDate);
+				utilFrAgreementDate = sdf.parse(fdaLicsDate); // FDA License Date
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -4741,7 +4747,7 @@ public class RestApiController {
 			franchisee.setDelStatus(delStatus);
 
 			franchisee.setFrAddress(frAddress);
-			franchisee.setFrAgreementDate(utilFrAgreementDate);
+			franchisee.setFrAgreementDate(utilFrAgreementDate);// FDA License Date
 			franchisee.setFrGstNo(frGstNo);
 			franchisee.setFrGstType(frGstType);
 			franchisee.setOwnerBirthDate(utilOwnerBirthDate);
@@ -4752,6 +4758,13 @@ public class RestApiController {
 
 			System.out.println("FR Data" + franchisee.toString());
 			jsonResult = franchiseeService.saveFranchisee(franchisee);
+			if(jsonResult.isError()==false) {
+				
+				
+				int res = franchiseSupRepository.updateFrSupLicsDates(frId, frAgreementDate, weighingScale1Date, weighingScale2Date, 
+						shopEstbLicsDate, profTaxDate);
+				System.out.println("Fr-Sup Res------------"+res);
+			}
 		} catch (Exception e) {
 			System.out.println("update FR rest exce " + e.getMessage());
 		}
