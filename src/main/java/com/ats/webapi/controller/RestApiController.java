@@ -1845,6 +1845,7 @@ public class RestApiController {
 		return dummyData;
 	}
 
+	
 	// Login FrontEnd Franchisee
 	@RequestMapping(value = { "/loginFr" }, method = RequestMethod.POST)
 	@ResponseBody
