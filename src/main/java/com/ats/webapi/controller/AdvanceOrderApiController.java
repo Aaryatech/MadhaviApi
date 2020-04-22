@@ -655,7 +655,7 @@ public class AdvanceOrderApiController {
 		Customer cust = new Customer();
 		try {
 
-			orderList = sellBillHeaderRepository.getSellBillHeader(custId, frId);
+			orderList = sellBillHeaderRepository.getSellBillHeaderNotInCreditNotePos(custId, frId);
 
 			cust = customerRepo.findByCustIdAndDelStatus(custId, 0);
 

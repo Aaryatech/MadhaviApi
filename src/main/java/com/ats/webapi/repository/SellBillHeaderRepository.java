@@ -27,6 +27,9 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=0  and t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.invoice_no DESC LIMIT 50",nativeQuery=true)
 	List<SellBillHeader> getSellBillHeader(@Param("custId") int custId,@Param("frId") int frId);	//LIMIT 50
 	
+	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status = 0 AND t_sell_bill_header.cust_id = :custId AND t_sell_bill_header.fr_id = :frId AND t_sell_bill_header.sell_bill_no NOT IN (SELECT t_credit_note_pos.bill_no from t_credit_note_pos WHERE t_credit_note_pos.del_status=0 ) ORDER BY t_sell_bill_header.invoice_no DESC LIMIT 50 ",nativeQuery=true)
+	List<SellBillHeader> getSellBillHeaderNotInCreditNotePos(@Param("custId") int custId,@Param("frId") int frId);	//LIMIT 50
+	
 	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.status=3 AND t_sell_bill_header.del_status=0 AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.invoice_no ASC",nativeQuery=true)
 	List<SellBillHeader> getCustBills(@Param("custId") int custId,@Param("frId") int frId);
 
@@ -68,6 +71,13 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 
 	@Query(value="SELECT * FROM t_sell_bill_header WHERE fr_id=:frId  ORDER BY sell_bill_no DESC LIMIT 1",nativeQuery=true)
 	SellBillHeader getLastBillHeaderByFrId(@Param("frId") int frId);
+	
+	
+	@Transactional
+	@Modifying
+	@Query(" UPDATE SellBillHeader SET ext_float1=(taxable_amt+total_tax-payable_amt)  WHERE sell_bill_no =:sellBillNo")
+ 	int updateRoundOff(@Param("sellBillNo") int sellBillNo);
+
 	
 
 }

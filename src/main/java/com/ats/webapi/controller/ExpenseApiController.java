@@ -83,6 +83,36 @@ public class ExpenseApiController {
 		return grnItemConfigList;
 
 	}
+	
+	//FOR OPS-----------
+	@RequestMapping(value = "/getExpenseByFrIdOps", method = RequestMethod.POST)
+	public @ResponseBody List<Expense> getExpenseByFrIdOps(@RequestParam("frId") int frId, @RequestParam("type") int type,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+		System.out.println("inside rest /getItemsForManGrnByFrAndBill");
+		List<Expense> grnItemConfigList = null;
+
+		try {
+
+			if (fromDate == null || toDate == null || type == 0) {
+				grnItemConfigList = expenseRepo.getExpenseListChkBillRec(frId);
+
+			} else {
+				grnItemConfigList = expenseRepo.getExpenseListChkBillRec(frId, type, fromDate, toDate);
+
+			}
+
+			System.out.println("grn Item getItemForManualGrn  Rest: " + grnItemConfigList.toString());
+
+		} catch (Exception e) {
+
+			System.out.println(
+					"restApi Exce for Getting Man GRN Item Conf /getItemsForManGrnByFrAndBill" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return grnItemConfigList;
+
+	}
 
 	@RequestMapping(value = "/getAllExpense", method = RequestMethod.POST)
 	public @ResponseBody List<Expense> getAllExpense(@RequestParam("type") int type,

@@ -42,7 +42,7 @@ public interface PettyCashManagmtRepo extends JpaRepository<PettyCashManagmt, In
 			"    ttl_edit_amt,\n" + 
 			"    ex_float1,\n" + 
 			"    ex_var1,\n" + 
-			"    ex_var2,\n" + 
+			"     COALESCE((SELECT e.fr_emp_name FROM m_fr_emp e WHERE e.fr_emp_id=t_pettycash_mgmnt.ex_int1),'') as ex_var2,\n" + 
 			"    CASE WHEN t_pettycash_mgmnt.date = SUBDATE(CURRENT_DATE, 1) THEN 1 ELSE 0\n" + 
 			"END AS ex_int1 FROM t_pettycash_mgmnt WHERE fr_id=:frId AND status=:status AND date BETWEEN :fromDate AND :toDate ORDER BY pettycash_id DESC",nativeQuery=true)
 	public List<PettyCashManagmt> findByFrIdAndStatusDateWise(@Param("frId") int frId,@Param("status")  int status,@Param("fromDate") String fromDate, @Param("toDate") String toDate);

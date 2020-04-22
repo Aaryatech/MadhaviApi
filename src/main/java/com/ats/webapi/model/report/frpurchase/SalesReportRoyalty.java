@@ -39,7 +39,7 @@ public class SalesReportRoyalty implements Serializable {
 	float tGvnQty;
 	float tGvnTaxableAmt;
 	
-	@Transient
+	
 	float discAmt;
 	
 	

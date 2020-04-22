@@ -38,9 +38,18 @@ public class BillHeadEwayBill {
 	private String exVarchar4;
 	private String exVarchar5;
 	
+	//NEW 15-4-2020
+	private String ewbNo;
 	
 	
 	
+	
+	public String getEwbNo() {
+		return ewbNo;
+	}
+	public void setEwbNo(String ewbNo) {
+		this.ewbNo = ewbNo;
+	}
 	public String getPartyName() {
 		return partyName;
 	}
@@ -156,7 +165,8 @@ public class BillHeadEwayBill {
 				+ frId + ", frCode=" + frCode + ", taxableAmt=" + taxableAmt + ", grandTotal=" + grandTotal
 				+ ", sgstSum=" + sgstSum + ", cgstSum=" + cgstSum + ", igstSum=" + igstSum + ", partyName=" + partyName
 				+ ", partyGstin=" + partyGstin + ", partyAddress=" + partyAddress + ", exVarchar3=" + exVarchar3
-				+ ", exVarchar4=" + exVarchar4 + ", exVarchar5=" + exVarchar5 + ", itemList=" + itemList + "]";
+				+ ", exVarchar4=" + exVarchar4 + ", exVarchar5=" + exVarchar5 + ", ewbNo=" + ewbNo + ", itemList="
+				+ itemList + "]";
 	}
 	
 	

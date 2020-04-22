@@ -33,7 +33,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer.address,\r\n" + 
 			"    t_transaction_detail.cash_amt as cash,\r\n" + 
 			"    t_transaction_detail.card_amt as card,\r\n" + 
-			"    t_transaction_detail.e_pay_amt as e_pay\r\n" + 
+			"    t_transaction_detail.e_pay_amt as e_pay,\r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -69,7 +70,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer.address,\r\n" + 
 			"    t_transaction_detail.cash_amt as cash,\r\n" + 
 			"    t_transaction_detail.card_amt as card,\r\n" + 
-			"    t_transaction_detail.e_pay_amt as e_pay\r\n" + 
+			"    t_transaction_detail.e_pay_amt as e_pay,\r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -110,7 +112,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"        m_customer.address,\r\n" + 
 			"        t_transaction_detail.cash_amt as cash,\r\n" + 
 			"        t_transaction_detail.card_amt as card,\r\n" + 
-			"        t_transaction_detail.e_pay_amt as e_pay  \r\n" + 
+			"        t_transaction_detail.e_pay_amt as e_pay,  \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"    FROM\r\n" + 
 			"        t_sell_bill_header,\r\n" + 
 			"        t_transaction_detail,\r\n" + 
@@ -157,7 +160,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"        m_customer.address,\r\n" + 
 			"        t_transaction_detail.cash_amt as cash,\r\n" + 
 			"        t_transaction_detail.card_amt as card,\r\n" + 
-			"        t_transaction_detail.e_pay_amt as e_pay  \r\n" + 
+			"        t_transaction_detail.e_pay_amt as e_pay,  \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"    FROM\r\n" + 
 			"        t_sell_bill_header,\r\n" + 
 			"        t_transaction_detail,\r\n" + 
@@ -199,7 +203,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer.address,\r\n" + 
 			"    t_transaction_detail.cash_amt AS cash,\r\n" + 
 			"    t_transaction_detail.card_amt AS card,\r\n" + 
-			"    t_transaction_detail.e_pay_amt AS e_pay\r\n" + 
+			"    t_transaction_detail.e_pay_amt AS e_pay, \r\n" +
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -246,7 +251,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer.address,\r\n" + 
 			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
-			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -301,7 +307,8 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer.address,\r\n" + 
 			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
-			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 

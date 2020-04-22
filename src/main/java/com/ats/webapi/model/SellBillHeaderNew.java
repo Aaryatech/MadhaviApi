@@ -50,6 +50,9 @@ public class SellBillHeaderNew {
 	private float cash;
 	private float card;
 	private float ePay;
+	
+	
+	private float roundOff;//15-4-2020
 
 	public String getId() {
 		return id;
@@ -227,6 +230,18 @@ public class SellBillHeaderNew {
 	public void setDiscountAmt(float discountAmt) {
 		this.discountAmt = discountAmt;
 	}
+	
+	
+
+	public float getRoundOff() {
+		return roundOff;
+	}
+
+	public void setRoundOff(float roundOff) {
+		this.roundOff = roundOff;
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -236,7 +251,7 @@ public class SellBillHeaderNew {
 				+ ", paymentMode=" + paymentMode + ", discountPer=" + discountPer + ", payableAmt=" + payableAmt
 				+ ", frName=" + frName + ", custId=" + custId + ", custName=" + custName + ", phoneNumber="
 				+ phoneNumber + ", gstNo=" + gstNo + ", address=" + address + ", cash=" + cash + ", card=" + card
-				+ ", ePay=" + ePay + "]";
+				+ ", ePay=" + ePay + ", roundOff=" + roundOff + "]";
 	}
 
 }

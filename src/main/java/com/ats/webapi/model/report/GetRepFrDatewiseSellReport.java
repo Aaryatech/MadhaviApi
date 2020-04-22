@@ -27,6 +27,7 @@ public class GetRepFrDatewiseSellReport {
 	private float creditNoteTotalAmt;
 	private float withdrawalAmt;
 	private float grandTotal;
+	private float roundOff;
 
 	
 	public String getDay() {
@@ -157,6 +158,18 @@ public class GetRepFrDatewiseSellReport {
 	public void setGrandTotal(float grandTotal) {
 		this.grandTotal = grandTotal;
 	}
+	
+	
+
+	public float getRoundOff() {
+		return roundOff;
+	}
+
+	public void setRoundOff(float roundOff) {
+		this.roundOff = roundOff;
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -164,7 +177,7 @@ public class GetRepFrDatewiseSellReport {
 				+ ", day=" + day + ", cash=" + cash + ", card=" + card + ", other=" + other + ", frName=" + frName
 				+ ", discountAmt=" + discountAmt + ", pendingAmt=" + pendingAmt + ", advAmt=" + advAmt + ", regular="
 				+ regular + ", chalan=" + chalan + ", creditNoteTotalAmt=" + creditNoteTotalAmt + ", withdrawalAmt="
-				+ withdrawalAmt + ", grandTotal=" + grandTotal + "]";
+				+ withdrawalAmt + ", grandTotal=" + grandTotal + ", roundOff=" + roundOff + "]";
 	}
 
 }

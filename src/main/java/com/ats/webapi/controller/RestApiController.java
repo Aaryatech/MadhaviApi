@@ -31,6 +31,9 @@ import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.*;
 import com.ats.webapi.model.advorder.AdvanceOrderDetail;
 import com.ats.webapi.model.advorder.AdvanceOrderHeader;
+import com.ats.webapi.model.bill.BillReceiptDetail;
+import com.ats.webapi.model.bill.BillReceiptHeader;
+import com.ats.webapi.model.bill.BillReceiptHeaderDisplay;
 import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Expense;
 import com.ats.webapi.model.bill.ItemListForCustomerBill;
@@ -53,6 +56,9 @@ import com.ats.webapi.repo.ExpenseRepo;
 import com.ats.webapi.repo.ItemListForCustomerBillRepo;
 import com.ats.webapi.repo.OpsItemListForCustomerBillRepo;
 import com.ats.webapi.repositories.ExpenseTransactionRepo;
+import com.ats.webapi.repository.BillReceiptDetailRepo;
+import com.ats.webapi.repository.BillReceiptHeaderDisplayRepo;
+import com.ats.webapi.repository.BillReceiptHeaderRepo;
 import com.ats.webapi.repository.BookedOrderMailedRepo;
 import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
@@ -5979,5 +5985,102 @@ public class RestApiController {
 		return getSellBillHeaderList;
 
 	}
+	
+	// get setting value
+
+		@RequestMapping(value = "/getSettingValueById", method = RequestMethod.POST)
+		public @ResponseBody int getSettingValueById(@RequestParam("settingId") int settingId) {
+			int value = 0;
+
+			Setting setting = settingRepository.findBySettingId(59);
+			value = setting.getSettingValue();
+
+			System.out.println("getSettingValueById " + value);
+			return value;
+
+		}
+
+		@Autowired
+		BillReceiptHeaderRepo billReceiptHeaderRepo;
+		@Autowired
+		BillReceiptDetailRepo billReceiptDetailRepo;
+		@Autowired
+		BillReceiptHeaderDisplayRepo billReceiptHeaderDisplayRepo;
+
+		@RequestMapping(value = { "/insertBillReceiptData" }, method = RequestMethod.POST)
+		public @ResponseBody BillReceiptHeader insertBillReceiptData(@RequestBody BillReceiptHeader billReceiptHeader)
+				throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+			BillReceiptHeader res = null;
+
+			Info info = new Info();
+			try {
+				res = billReceiptHeaderRepo.save(billReceiptHeader);
+
+				if (res != null) {
+
+					Setting setting = settingRepository.findBySettingId(59);
+					int val = setting.getSettingValue() + 1;
+					int value = settingRepository.udatekeyvalueForId(59, val);
+
+					for (BillReceiptDetail det : billReceiptHeader.getBillReceiptDetailList()) {
+
+						det.setBillReceiptId(res.getBillReceiptId());
+						billReceiptDetailRepo.save(det);
+
+					}
+
+				}
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in insertBillReceiptData rest Api " + e.getMessage());
+				e.printStackTrace();
+			}
+			return res;
+
+		}
+
+		@RequestMapping(value = "/getBillReceiptList", method = RequestMethod.POST)
+		public @ResponseBody List<BillReceiptHeaderDisplay> getBillReceiptList(@RequestParam("fromDate") String fromDate,
+				@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			System.err.println("DATE - " + fromDate + "        -    " + toDate + "             - " + frId);
+
+			List<BillReceiptHeaderDisplay> getList;
+
+			getList = billReceiptHeaderDisplayRepo.getBillReceiptHeaders(fromDate, toDate, frId);
+
+			System.out.println("List getBillReceiptList -  " + getList.toString());
+			return getList;
+
+		}
+
+		@RequestMapping(value = "/getBillReceiptDetailList", method = RequestMethod.POST)
+		public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailList(@RequestParam("headerId") int headerId) {
+
+			List<BillReceiptDetail> getList;
+
+			getList = billReceiptDetailRepo.findAllByBillReceiptId(headerId);
+
+			System.out.println("List getBillReceiptDetailList -  " + getList.toString());
+			return getList;
+
+		}
+		
+		@RequestMapping(value = "/getBillReceiptDetailListForOpsByExpId", method = RequestMethod.POST)
+		public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailListForOpsByExpId(@RequestParam("expId") int expId) {
+
+			List<BillReceiptDetail> getList;
+
+			getList = billReceiptDetailRepo.getBillReceiptDetailByExpId(expId);
+
+			System.out.println("List getBillReceiptDetailListForOpsByExpId -  " + getList.toString());
+			return getList;
+
+		}
 
 }

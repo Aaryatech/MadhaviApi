@@ -151,7 +151,7 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 
 			if (postBillHeaders != null && postBillHeaders.getBillNo() > 0) {
 				BillTransaction bt = new BillTransaction();
-				bt.setBillAmt(String.valueOf(postBillHeaders.getGrandTotal()));
+				bt.setBillAmt(String.valueOf(Math.round(postBillHeaders.getGrandTotal())));
 				bt.setBillHeadId(postBillHeaders.getBillNo());
 				bt.setBillNo(String.valueOf(postBillHeaders.getInvoiceNo()));
 				bt.setExInt1(0);
@@ -165,7 +165,7 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 				bt.setFrId(postBillHeaders.getFrId());
 				bt.setIsClosed(0);
 				bt.setPaidAmt("0");
-				bt.setPendingAmt(String.valueOf(postBillHeaders.getGrandTotal()));
+				bt.setPendingAmt(String.valueOf(Math.round(postBillHeaders.getGrandTotal())));
 				bt.setBillDate(new Date());
 				BillTransaction jsonResult = billTransationRepo.save(bt);
 				// save Bill transaction ends

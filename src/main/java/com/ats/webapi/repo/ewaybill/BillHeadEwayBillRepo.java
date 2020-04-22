@@ -17,7 +17,8 @@ public interface BillHeadEwayBillRepo extends JpaRepository<BillHeadEwayBill, In
 			"CASE WHEN m_franchisee.is_same_state=0 THEN t_bill_header.igst_sum ELSE 0 END as igst_sum,"
 			+ ""
 			+ "          t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, " + 
-			"            t_bill_header.ex_varchar3,t_bill_header.ex_varchar4,t_bill_header.ex_varchar5 " + 
+			"            t_bill_header.ex_varchar3,t_bill_header.ex_varchar4,t_bill_header.ex_varchar5, " + 
+			" t_bill_header.is_tally_sync as ewb_no " +
 			"FROM t_bill_header,m_franchisee WHERE t_bill_header.fr_id=m_franchisee.fr_id and t_bill_header.bill_no IN(:billIdList)",nativeQuery=true)
 	public List<BillHeadEwayBill>  getBillHeaderForEwayBill(@Param("billIdList") List<String> billIdList);
 
