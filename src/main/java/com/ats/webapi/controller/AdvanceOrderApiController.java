@@ -827,6 +827,38 @@ public class AdvanceOrderApiController {
 
 		return inf;
 	}
+	
+	
+	@RequestMapping(value = { "/deleteBillByIdAddRemark" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Info deleteBillByIdAddRemark(@RequestParam int sellBillNo, @RequestParam int status,@RequestParam String remark) {
+
+		Info inf = new Info();
+
+		try {
+
+			int del = sellBillHeaderRepository.deleteBillWithRemark(status, sellBillNo,remark);
+	       	 transactionDetailRepository.deleteTransactionDetails(sellBillNo);
+
+			if (del > 0) {
+				inf.setError(false);
+				inf.setMessage("success");
+			} else {
+				inf.setError(true);
+				inf.setMessage("failed");
+			}
+
+		} catch (Exception e) {
+
+			inf.setError(true);
+			inf.setMessage("failed");
+			e.printStackTrace();
+		}
+
+		return inf;
+	}
+	
+	
 
 	// Sachin 26-12-2019
 	@RequestMapping(value = { "/getAdvOrdDetailByHeadId" }, method = RequestMethod.POST)

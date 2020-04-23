@@ -53,6 +53,11 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@Modifying
 	@Query(" UPDATE SellBillHeader SET del_status=:status  WHERE sell_bill_no =:sellBillNo")
  	int deleteBill(@Param("status") int status,@Param("sellBillNo") int sellBillNo);
+	
+	@Transactional
+	@Modifying
+	@Query(" UPDATE SellBillHeader SET del_status=:status,ext_var1=:remark  WHERE sell_bill_no =:sellBillNo")
+ 	int deleteBillWithRemark(@Param("status") int status,@Param("sellBillNo") int sellBillNo,@Param("remark") String remark);
 
 
 	@Query(value="SELECT * FROM t_sell_bill_header WHERE t_sell_bill_header.del_status=1  and t_sell_bill_header.cust_id=:custId AND t_sell_bill_header.fr_id=:frId ORDER BY  t_sell_bill_header.sell_bill_no DESC ",nativeQuery=true)

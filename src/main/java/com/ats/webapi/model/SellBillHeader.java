@@ -110,8 +110,21 @@ public class SellBillHeader implements Serializable{
 	@Column(name="ext_float1")
 	private int extFloat1;
 	
+	@Column(name="ext_var1")
+	private String extVar1;
+	
 	
  
+
+	
+
+	public String getExtVar1() {
+		return extVar1;
+	}
+
+	public void setExtVar1(String extVar1) {
+		this.extVar1 = extVar1;
+	}
 
 	public int getExtFloat1() {
 		return extFloat1;
@@ -381,7 +394,8 @@ public class SellBillHeader implements Serializable{
 				+ ", userPhone=" + userPhone + ", status=" + status + ", isDairyMartBill=" + isDairyMartBill
 				+ ", couponNo=" + couponNo + ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt="
 				+ custLoyaltyPt + ", delStatus=" + delStatus + ", billType=" + billType + ", extInt1=" + extInt1
-				+ ", extFloat1=" + extFloat1 + ", sellBillDetailsList=" + sellBillDetailsList + "]";
+				+ ", extFloat1=" + extFloat1 + ", extVar1=" + extVar1 + ", sellBillDetailsList=" + sellBillDetailsList
+				+ "]";
 	}
 
 	 

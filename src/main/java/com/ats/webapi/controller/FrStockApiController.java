@@ -34,6 +34,7 @@ import com.ats.webapi.model.FranchiseeList;
 import com.ats.webapi.model.GetCurrentStockDetails;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.Item;
+import com.ats.webapi.model.OpsFrItemStock;
 import com.ats.webapi.model.PostFrItemStockDetail;
 import com.ats.webapi.model.PostFrItemStockHeader;
 import com.ats.webapi.model.RegularSpecialStockCal;
@@ -43,6 +44,7 @@ import com.ats.webapi.model.StockRegSpSell;
 import com.ats.webapi.model.ViewFrStockBackEnd;
 import com.ats.webapi.repository.AdminGetCurrentStockDetailsRepo;
 import com.ats.webapi.repository.GetFrItemStockConfigurationRepository;
+import com.ats.webapi.repository.OpsFrItemStockRepo;
 import com.ats.webapi.repository.PostFrOpStockDetailRepository;
 import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.StockCalculationRepository;
@@ -95,6 +97,9 @@ public class FrStockApiController {
 
 	@Autowired
 	StockCalculationRepository stockCalculationRepository;
+
+	@Autowired
+	OpsFrItemStockRepo opsFrItemStockRepo;
 
 	/*
 	 * @RequestMapping(value = "/getCurrentOpStock", method = RequestMethod.POST)
@@ -1101,6 +1106,30 @@ public class FrStockApiController {
 		System.out.println("ViewFrStockBackEnd Result:  " + backEndFrStockList.toString());
 
 		return backEndFrStockList;
+
+	}
+
+	// Anmol--22-04-2020
+	@RequestMapping(value = "/getOpsFrCurrentStock", method = RequestMethod.POST)
+	public @ResponseBody List<OpsFrItemStock> getOpsFrCurrentStock(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("month") int month, @RequestParam("year") int year,
+			@RequestParam("frStockType") int frStockType) {
+
+		List<OpsFrItemStock> res = new ArrayList<OpsFrItemStock>();
+
+		System.out.println("inside rest getCurrentStock : I/p : frId: " + frId);
+		System.out.println("inside rest getCurrentStock : I/p : frStockType: " + frStockType);
+		System.out.println("inside rest getCurrentStock : I/p : fromDate: " + fromDate);
+		System.out.println("inside rest getCurrentStock : I/p : toDate: " + toDate);
+		System.out.println("inside rest getCurrentStock : I/p : currentMonth: " + month);
+		System.out.println("inside rest getCurrentStock : I/p : year: " + year);
+
+		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType);
+
+		System.out.println("OPS FR STOCK Result:  " + res.toString());
+
+		return res;
 
 	}
 
