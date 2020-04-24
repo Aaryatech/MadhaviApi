@@ -29,6 +29,9 @@ public class TransactionDetailWithDisc {
 	private String exVar2;
 	private float discAmt;
 	private float discPer;
+	
+	private String remark;
+	
 
 	public int getTrId() {
 		return trId;
@@ -173,6 +176,18 @@ public class TransactionDetailWithDisc {
 	public void setDiscPer(float discPer) {
 		this.discPer = discPer;
 	}
+	
+	
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -181,7 +196,7 @@ public class TransactionDetailWithDisc {
 				+ ", ePayType=" + ePayType + ", ePayAmt=" + ePayAmt + ", discType=" + discType + ", delStatus="
 				+ delStatus + ", exInt1=" + exInt1 + ", exInt2=" + exInt2 + ", exFloat1=" + exFloat1 + ", exFloat2="
 				+ exFloat2 + ", exVar1=" + exVar1 + ", exVar2=" + exVar2 + ", discAmt=" + discAmt + ", discPer="
-				+ discPer + "]";
+				+ discPer + ", remark=" + remark + "]";
 	}
 
 }

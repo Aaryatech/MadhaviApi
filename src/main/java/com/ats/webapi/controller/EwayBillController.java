@@ -74,6 +74,56 @@ public class EwayBillController {
 
 		return billHeadList;
 	}
+	
+	//Anmol
+	@RequestMapping(value = { "/getGrnGvnListForEwaybill" }, method = RequestMethod.POST)
+	public @ResponseBody List<BillHeadEwayBill> getGrnGvnListForEwaybill(
+			@RequestParam("billIdList") List<String> billIdList) {
+		System.err.println("In getGrnGvnListForEwaybill");
+		List<BillHeadEwayBill> billHeadList = new ArrayList<>();
+		try {
+
+			billHeadList = billHeadEwayBillRepo.getGrnGvnHeaderForEwayBill(billIdList);
+
+			for (int i = 0; i < billHeadList.size(); i++) {
+				try {
+
+					List<EwayItemList> billDetail = ewayItemListRepo
+							.getGrnGvnDetailForEwayBill(billHeadList.get(i).getBillNo());
+
+					if (billHeadList.get(i).getIgstSum() == 0) {
+
+						for (int j = 0; j < billDetail.size(); j++) {
+
+							billDetail.get(j).setIgstRate(0);
+
+						}
+
+					} else {
+
+						for (int j = 0; j < billDetail.size(); j++) {
+
+							billDetail.get(j).setCgstRate(0);
+							billDetail.get(j).setSgstRate(0);
+
+						}
+
+					}
+
+					billHeadList.get(i).setItemList(billDetail);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return billHeadList;
+	}
 
 	@RequestMapping(value = { "/getCreditListForEwaybill" }, method = RequestMethod.POST)
 	public @ResponseBody List<BillHeadEwayBill> getCreditListForEwaybill(

@@ -36,6 +36,21 @@ public interface BillHeadEwayBillRepo extends JpaRepository<BillHeadEwayBill, In
 			"	WHERE t_credit_note_header.fr_id=m_franchisee.fr_id AND t_credit_note_header.crn_id IN (:crnIdList)",nativeQuery=true)
 	public List<BillHeadEwayBill>  getCreditNoteHeaderForEwayBill(@Param("crnIdList") List<String> crnIdList);
 	
+	
+	
+	//Anmol
+	@Query(value="SELECT h.grn_gvn_header_id as bill_no,h.grngvn_srno as invoice_no,h.grngvn_date as bill_date,h.fr_id,f.fr_code as fr_code,h.taxable_amt,h.total_amt as grand_total,\n" + 
+			"CASE WHEN f.is_same_state=1 THEN h.apr_sgst_rs ELSE 0 END as sgst_sum,\n" + 
+			"CASE WHEN f.is_same_state=1 THEN h.apr_cgst_rs ELSE 0 END as cgst_sum,\n" + 
+			"CASE WHEN f.is_same_state=0 THEN h.apr_igst_rs ELSE 0 END as igst_sum,\n" + 
+			"e.to_cust as party_name,e.to_gst as party_gstin,\n" + 
+			"e.to_add as party_address,(SELECT c.comp_name FROM m_company c ORDER BY c.comp_id DESC LIMIT 1) as ex_varchar3,(SELECT c.gstin FROM m_company c ORDER BY c.comp_id DESC LIMIT 1) as ex_varchar4,(SELECT c.fact_address FROM m_company c ORDER BY c.comp_id DESC LIMIT 1) as ex_varchar5, e.eway_no as ewb_no\n" + 
+			"FROM t_grn_gvn_header h, m_franchisee f,t_grn_gvn_eway e WHERE h.fr_id=f.fr_id AND h.grn_gvn_header_id=e.grn_gvn_header_id\n" + 
+			"AND h.grn_gvn_header_id IN(:billIdList)",nativeQuery=true)
+	public List<BillHeadEwayBill>  getGrnGvnHeaderForEwayBill(@Param("billIdList") List<String> billIdList);
+
+	
+	
 	/*
 	 * @Query(value=" SELECT " +
 	 * "	  t_bill_header.bill_no,t_bill_header.invoice_no,t_bill_header.bill_date, "

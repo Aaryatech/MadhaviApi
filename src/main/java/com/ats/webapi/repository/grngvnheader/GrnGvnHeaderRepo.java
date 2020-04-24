@@ -18,9 +18,21 @@ public interface GrnGvnHeaderRepo extends JpaRepository<GrnGvnHeader, Integer> {
 	
 	List<GrnGvnHeader> findByfrIdAndGrngvnSrnoAndIsGrn(int frId,String grnGvnSrNo,int isGrn);//Front End getGrnHeader using grnSrNo
 	
-	@Query(value="SELECT * FROM  t_grn_gvn_header WHERE grngvn_date BETWEEN"
-			+ ":fromDate AND :toDate AND fr_id IN (:frIdList) AND is_grn IN(:isGrn) ",nativeQuery=true)
+//	@Query(value="SELECT * FROM  t_grn_gvn_header WHERE grngvn_date BETWEEN"
+//			+ ":fromDate AND :toDate AND fr_id IN (:frIdList) AND is_grn IN(:isGrn) ",nativeQuery=true)
+//	List<GrnGvnHeader> findGrnGvnHeader(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("frIdList")List<String> frIdList,@Param("isGrn")List<String> isGrn);
+
+	
+	@Query(value="  SELECT h.grn_gvn_header_id,  h.grngvn_srno " + 
+			"    , h.grngvn_date, "
+			+ "h.is_grn, h.taxable_amt, h.tax_amt, h.total_amt, h.fr_id, h.grngvn_status, h.approved_amt, "
+			+ "h.is_credit_note, h.credit_note_id, e.eway_no as approved_datetime, h.apr_taxable_amt, "
+			+ "h.apr_total_tax, h.apr_sgst_rs, h.apr_cgst_rs, h.apr_igst_rs, h.apr_grand_total, h.apr_r_off "
+			+ "FROM t_grn_gvn_header h, t_grn_gvn_eway e WHERE h.is_grn IN(:isGrn) AND h.fr_id IN (:frIdList) "
+			+ " AND h.grngvn_date BETWEEN :fromDate AND :toDate "
+			+ "AND h.grn_gvn_header_id = e.grn_gvn_header_id ",nativeQuery=true)
 	List<GrnGvnHeader> findGrnGvnHeader(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("frIdList")List<String> frIdList,@Param("isGrn")List<String> isGrn);
+	
 	
 	
 	GrnGvnHeader findByGrnGvnHeaderId(int headerId);
@@ -47,17 +59,37 @@ public interface GrnGvnHeaderRepo extends JpaRepository<GrnGvnHeader, Integer> {
 	
 	
 
-	@Query(value="  SELECT * FROM t_grn_gvn_header WHERE is_grn IN(:isGrn) AND is_credit_note=0 AND t_grn_gvn_header.grngvn_status "
-			+ "IN (:statusList) AND grngvn_date BETWEEN  :fromDate AND :toDate",nativeQuery=true)
+//	@Query(value="  SELECT * FROM t_grn_gvn_header WHERE is_grn IN(:isGrn) AND is_credit_note=0 AND t_grn_gvn_header.grngvn_status "
+//			+ "IN (:statusList) AND grngvn_date BETWEEN  :fromDate AND :toDate",nativeQuery=true)
+//	List<GrnGvnHeader> findGrnGvnHeaderOnLoad(@Param("isGrn")List<String> isGrn,@Param("statusList") List<String> statusList,@Param("fromDate")Date fromDate,@Param("toDate") Date toDate);
+	
+	@Query(value="  SELECT h.grn_gvn_header_id,  h.grngvn_srno " + 
+			"    , h.grngvn_date, "
+			+ "h.is_grn, h.taxable_amt, h.tax_amt, h.total_amt, h.fr_id, h.grngvn_status, h.approved_amt, "
+			+ "h.is_credit_note, h.credit_note_id, e.eway_no as approved_datetime, h.apr_taxable_amt, "
+			+ "h.apr_total_tax, h.apr_sgst_rs, h.apr_cgst_rs, h.apr_igst_rs, h.apr_grand_total, h.apr_r_off "
+			+ "FROM t_grn_gvn_header h, t_grn_gvn_eway e WHERE h.is_grn IN(:isGrn) AND h.is_credit_note = 0 "
+			+ "AND h.grngvn_status IN(:statusList) AND h.grngvn_date BETWEEN :fromDate AND :toDate "
+			+ "AND h.grn_gvn_header_id = e.grn_gvn_header_id ",nativeQuery=true)
 	List<GrnGvnHeader> findGrnGvnHeaderOnLoad(@Param("isGrn")List<String> isGrn,@Param("statusList") List<String> statusList,@Param("fromDate")Date fromDate,@Param("toDate") Date toDate);
+		
 	
 	
-	
-	
-	@Query(value=" SELECT * FROM  t_grn_gvn_header WHERE grngvn_date BETWEEN "
-			+ ":fromDate AND :toDate AND is_grn IN (:isGrn) ",nativeQuery=true)
-	List<GrnGvnHeader> findGrnGvnHeaderAllFr(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("isGrn")List<String> isGrn);
+//	@Query(value=" SELECT * FROM  t_grn_gvn_header WHERE grngvn_date BETWEEN "
+//			+ ":fromDate AND :toDate AND is_grn IN (:isGrn) ",nativeQuery=true)
+//	List<GrnGvnHeader> findGrnGvnHeaderAllFr(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("isGrn")List<String> isGrn);
 
+	
+	@Query(value="  SELECT h.grn_gvn_header_id,  h.grngvn_srno " + 
+			"   , h.grngvn_date, "
+			+ "h.is_grn, h.taxable_amt, h.tax_amt, h.total_amt, h.fr_id, h.grngvn_status, h.approved_amt, "
+			+ "h.is_credit_note, h.credit_note_id, e.eway_no as approved_datetime, h.apr_taxable_amt, "
+			+ "h.apr_total_tax, h.apr_sgst_rs, h.apr_cgst_rs, h.apr_igst_rs, h.apr_grand_total, h.apr_r_off "
+			+ "FROM t_grn_gvn_header h, t_grn_gvn_eway e WHERE h.is_grn IN(:isGrn) "
+			+ " AND h.grngvn_date BETWEEN :fromDate AND :toDate "
+			+ "AND h.grn_gvn_header_id = e.grn_gvn_header_id ",nativeQuery=true)
+	List<GrnGvnHeader> findGrnGvnHeaderAllFr(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("isGrn")List<String> isGrn);
+	
 	@Transactional
 	@Modifying
 	@Query(value="update t_grn_gvn_header inner join t_grn_gvn on t_grn_gvn_header.grn_gvn_header_id = t_grn_gvn.grn_gvn_header_id \n" + 

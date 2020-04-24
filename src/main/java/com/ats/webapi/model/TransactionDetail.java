@@ -13,58 +13,60 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
-@Table(name="t_transaction_detail")
-public class TransactionDetail implements Serializable{
-	
+@Table(name = "t_transaction_detail")
+public class TransactionDetail implements Serializable {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="tr_id")
+	@Column(name = "tr_id")
 	private int trId;
-	
-	@Column(name="sell_bill_no")
+
+	@Column(name = "sell_bill_no")
 	private int sellBillNo;
-	
-	@Column(name="transaction_date")
+
+	@Column(name = "transaction_date")
 	private Date transactionDate;
-	
-	@Column(name="pay_mode")
+
+	@Column(name = "pay_mode")
 	private int payMode;
-	
-	@Column(name="cash_amt")
+
+	@Column(name = "cash_amt")
 	private float cashAmt;
-	
-	@Column(name="card_amt")
+
+	@Column(name = "card_amt")
 	private float cardAmt;
-	
-	@Column(name="e_pay_type")
+
+	@Column(name = "e_pay_type")
 	private int ePayType;
-	
-	@Column(name="e_pay_amt")
+
+	@Column(name = "e_pay_amt")
 	private float ePayAmt;
-	
-	@Column(name="disc_type")
+
+	@Column(name = "disc_type")
 	private int discType;
-	
-	@Column(name="del_status")
+
+	@Column(name = "del_status")
 	private int delStatus;
-	
-	@Column(name="ex_int1")
+
+	@Column(name = "ex_int1")
 	private int exInt1;
-	
-	@Column(name="ex_int2")
+
+	@Column(name = "ex_int2")
 	private int exInt2;
-	
-	@Column(name="ex_float1")
+
+	@Column(name = "ex_float1")
 	private float exFloat1;
-	
-	@Column(name="ex_float2")
+
+	@Column(name = "ex_float2")
 	private float exFloat2;
-	
-	@Column(name="ex_var1")
+
+	@Column(name = "ex_var1")
 	private String exVar1;
-		
-	@Column(name="ex_var2")
+
+	@Column(name = "ex_var2")
 	private String exVar2;
+
+	private String remark;
 
 	public int getTrId() {
 		return trId;
@@ -81,7 +83,8 @@ public class TransactionDetail implements Serializable{
 	public void setSellBillNo(int sellBillNo) {
 		this.sellBillNo = sellBillNo;
 	}
-	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 
 	public Date getTransactionDate() {
 		return transactionDate;
@@ -195,12 +198,20 @@ public class TransactionDetail implements Serializable{
 		this.exVar2 = exVar2;
 	}
 
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	@Override
 	public String toString() {
 		return "TransactionDetail [trId=" + trId + ", sellBillNo=" + sellBillNo + ", transactionDate=" + transactionDate
 				+ ", payMode=" + payMode + ", cashAmt=" + cashAmt + ", cardAmt=" + cardAmt + ", ePayType=" + ePayType
 				+ ", ePayAmt=" + ePayAmt + ", discType=" + discType + ", delStatus=" + delStatus + ", exInt1=" + exInt1
 				+ ", exInt2=" + exInt2 + ", exFloat1=" + exFloat1 + ", exFloat2=" + exFloat2 + ", exVar1=" + exVar1
-				+ ", exVar2=" + exVar2 + "]";
+				+ ", exVar2=" + exVar2 + ", remark=" + remark + "]";
 	}
 }

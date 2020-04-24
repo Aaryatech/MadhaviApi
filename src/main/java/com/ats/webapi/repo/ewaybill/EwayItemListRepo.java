@@ -31,5 +31,11 @@ public interface EwayItemListRepo extends JpaRepository<EwayItemList, Integer> {
 			+ "WHERE m_item_sup.item_id=m_item.id AND m_item.id=t_credit_note_details.item_id AND t_credit_note_details.grn_gvn_qty>0 and "
 			+ "t_credit_note_details.crn_id=:crnId", nativeQuery = true)
 	public List<EwayItemList> getCreditNoteDetailForEwayBill(@Param("crnId") int crnId);
+	
+	
+	//Anmol
+	@Query(value = " SELECT g.grn_gvn_id as bill_detail_no, i.item_name as product_name,i.item_name as product_desc,s.item_hsncd as hsn_code,g.grn_gvn_qty as quantity, s.item_uom as qty_unit, g.cgst_per cgst_rate,g.sgst_per as sgst_rate, 0 as igst_rate,0 as cess_rate, 0 as cess_non_advol,g.taxable_amt as taxable_amount \n" + 
+			"FROM t_grn_gvn g , m_item i, m_item_sup s WHERE g.item_id=i.id AND i.id=s.item_id AND g.item_id=s.item_id AND g.grn_gvn_header_id = :billNo", nativeQuery = true)
+	public List<EwayItemList> getGrnGvnDetailForEwayBill(@Param("billNo") int billNo);
 
 }

@@ -72,6 +72,7 @@ import com.ats.webapi.repository.GetBillHeaderRepository;
 import com.ats.webapi.repository.GetGrnItemConfigRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
 import com.ats.webapi.repository.GetReorderByStockTypeRepository;
+import com.ats.webapi.repository.GrnGvnEwayRepo;
 import com.ats.webapi.repository.ItemDiscConfiguredRepository;
 import com.ats.webapi.repository.ItemRepository;
 import com.ats.webapi.repository.ItemResponseRepository;
@@ -80,6 +81,7 @@ import com.ats.webapi.repository.MainMenuConfigurationRepository;
 import com.ats.webapi.repository.MessageRepository;
 import com.ats.webapi.repository.OrderLogRespository;
 import com.ats.webapi.repository.OrderRepository;
+import com.ats.webapi.repository.PostBillHeaderRepository;
 import com.ats.webapi.repository.PostFrOpStockDetailRepository;
 import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.RouteMasterRepository;
@@ -445,6 +447,10 @@ public class RestApiController {
 
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
+	
+	@Autowired
+	PostBillHeaderRepository postBillHeaderRepository;
+	
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
 	public @ResponseBody Info changeAdminUserPass(@RequestBody User user) {
@@ -6106,6 +6112,56 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			System.out.println("List getBillReceiptDetailListForOpsByExpId -  " + getList.toString());
 			return getList;
 
+		}
+		
+		
+		
+		@RequestMapping(value = { "/getPurchaseBillHeaderById" }, method = RequestMethod.POST)
+		public @ResponseBody PostBillHeader getPurchaseBillHeaderById(@RequestParam("billNo") int billNo)
+				throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+			PostBillHeader res = null;
+
+			try {
+				res = postBillHeaderRepository.findByBillNo(billNo);
+
+			} catch (Exception e) {
+
+				System.out.println("Exc in getPurchaseBillHeaderById rest Api " + e.getMessage());
+				e.printStackTrace();
+			}
+			return res;
+
+		}
+		
+		
+		@Autowired
+		GrnGvnEwayRepo grnGvnEwayRepo;
+		
+		@RequestMapping(value = { "/updateEwayBillNoForGrnGvn" }, method = RequestMethod.POST)
+		public @ResponseBody ErrorMessage updateEwayBillNoForGrnGvn(@RequestParam int billNo, @RequestParam long ewayBillNo) {
+			System.err.println("Hiiii");
+			ErrorMessage errorMessage = null;
+			try {
+				int res = grnGvnEwayRepo.updateEwayBillNo(billNo, ewayBillNo);
+				
+				if(res>0) {
+					errorMessage = new ErrorMessage();
+					errorMessage.setError(false);
+					errorMessage.setMessage("Success");
+				}else {
+					errorMessage = new ErrorMessage();
+					errorMessage.setError(true);
+					errorMessage.setMessage("Failed");
+
+				}
+				
+				// errorMessage.set
+			} catch (Exception e) {
+				e.printStackTrace();
+				errorMessage = new ErrorMessage();
+			}
+			return errorMessage;
 		}
 
 }

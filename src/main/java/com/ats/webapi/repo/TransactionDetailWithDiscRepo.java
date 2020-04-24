@@ -31,7 +31,8 @@ public interface TransactionDetailWithDiscRepo extends JpaRepository<Transaction
 			"    t_sell_bill_header.grand_total AS ex_float1,\r\n" + 
 			"    t_sell_bill_header.remaining_amt AS ex_float2,\r\n" + 
 			"    t_sell_bill_header.discount_per AS disc_per,\r\n" + 
-			"    t_sell_bill_header.discount_amt AS disc_amt\r\n" + 
+			"    t_sell_bill_header.discount_amt AS disc_amt, \r\n" + 
+			"    t_transaction_detail.remark \r\n" + 
 			"FROM\r\n" + 
 			"    t_transaction_detail,\r\n" + 
 			"    t_sell_bill_header\r\n" + 
@@ -66,7 +67,8 @@ public interface TransactionDetailWithDiscRepo extends JpaRepository<Transaction
 					"    t_sell_bill_header.grand_total AS ex_float1,\r\n" + 
 					"    t_sell_bill_header.remaining_amt AS ex_float2,\r\n" + 
 					"    t_sell_bill_header.discount_per AS disc_per,\r\n" + 
-					"    t_sell_bill_header.discount_amt AS disc_amt\r\n" + 
+					"    t_sell_bill_header.discount_amt AS disc_amt, \r\n" + 
+					"    t_transaction_detail.remark \r\n" + 
 					"FROM\r\n" + 
 					"    t_transaction_detail,\r\n" + 
 					"    t_sell_bill_header\r\n" + 
