@@ -179,6 +179,28 @@ public class GrnGvnApiController {
 		return responseHeader;
 		
 	}
+	
+	
+	//Anmol
+	@RequestMapping(value = { "/getHeaderByHeaderIdForOPS" }, method = RequestMethod.POST)
+	public @ResponseBody GrnGvnHeader getHeaderByHeaderIdForOPS(@RequestParam("headerId")
+	int headerId) {
+		
+		GrnGvnHeader responseHeader=new GrnGvnHeader();
+		try {
+			
+			responseHeader = grnGvnHeaderRepo.getGrnGvnHeaderById(headerId);
+			
+		} catch (Exception e) {
+
+			System.out.println("Exce in Getting getHeaderByHeaderId /GrnGvnApiController " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		return responseHeader;
+		
+	}
+	
 	@RequestMapping(value = { "/updateGrnGvnDate" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateGrnGvnDate(@RequestParam int grnGvnHeaderId,@RequestParam String grnGvnDate) {
 

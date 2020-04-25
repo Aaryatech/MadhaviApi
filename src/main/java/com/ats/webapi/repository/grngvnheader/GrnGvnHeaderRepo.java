@@ -34,6 +34,17 @@ public interface GrnGvnHeaderRepo extends JpaRepository<GrnGvnHeader, Integer> {
 	List<GrnGvnHeader> findGrnGvnHeader(@Param("fromDate")Date fromDate,@Param("toDate") Date toDate,@Param("frIdList")List<String> frIdList,@Param("isGrn")List<String> isGrn);
 	
 	
+	@Query(value="  SELECT h.grn_gvn_header_id,  h.grngvn_srno " + 
+			"    , h.grngvn_date, "
+			+ "h.is_grn, h.taxable_amt, h.tax_amt, h.total_amt, h.fr_id, h.grngvn_status, h.approved_amt, "
+			+ "h.is_credit_note, h.credit_note_id, e.eway_no as approved_datetime, h.apr_taxable_amt, "
+			+ "h.apr_total_tax, h.apr_sgst_rs, h.apr_cgst_rs, h.apr_igst_rs, h.apr_grand_total, h.apr_r_off "
+			+ "FROM t_grn_gvn_header h, t_grn_gvn_eway e WHERE  "
+			+ " h.grn_gvn_header_id=:headerId  "
+			+ "AND h.grn_gvn_header_id = e.grn_gvn_header_id ",nativeQuery=true)
+	GrnGvnHeader getGrnGvnHeaderById(@Param("headerId")int headerId);
+	
+	
 	
 	GrnGvnHeader findByGrnGvnHeaderId(int headerId);
 	
