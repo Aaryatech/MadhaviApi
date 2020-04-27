@@ -284,7 +284,7 @@ public class UserUtilApi {
 
 @RequestMapping(value = { "/getFranchiseeByMob" }, method = RequestMethod.POST)
 @ResponseBody
-public FrEmpMaster getFranchiseeByMob(@RequestParam("mob") String mob) {
+public FrEmpMaster getFranchiseeByMob(@RequestParam("mob") String mob, @RequestParam("empId") int empId) {
 
 	OTPVerification.setConNumber(null);
 	OTPVerification.setEmailId(null);
@@ -293,7 +293,7 @@ public FrEmpMaster getFranchiseeByMob(@RequestParam("mob") String mob) {
 	Info info = new Info();
 	FrEmpMaster frEmp = new FrEmpMaster();
 	try {
-		frEmp = frEmpRepo.findByFrEmpContact(mob);
+		frEmp = frEmpRepo.findByfrEmpContactAndFrEmpId(mob, empId);
 		System.out.println("JsonString" + frEmp);
 		if(frEmp!= null) {
 			OTPVerification.setUserId(frEmp.getFrEmpId());

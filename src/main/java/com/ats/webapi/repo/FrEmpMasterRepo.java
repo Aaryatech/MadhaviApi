@@ -50,7 +50,7 @@ public interface FrEmpMasterRepo extends JpaRepository<FrEmpMaster, Integer> {
 
 	public FrEmpMaster findByFrEmpContact(String mob);
 
-
+	public FrEmpMaster findByfrEmpContactAndFrEmpId(String mob, int empId);
 
 	public FrEmpMaster findByFrEmpIdAndDelStatus(int userId, int i);
 
