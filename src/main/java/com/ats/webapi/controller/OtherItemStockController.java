@@ -125,12 +125,13 @@ public class OtherItemStockController {
 	public@ResponseBody List<OtherItemCurStock> getOtherItemCurStock(@RequestParam("catId") int catId,
 			@RequestParam("frId") int frId,@RequestParam("month") int month, @RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate){
-		
+		System.err.println("In Cur Stock Api");
 		List<OtherItemCurStock> othItemCurStockList = new ArrayList<>();
 		
 		try {
 			
 			othItemCurStockList=getOtherItemCurStockRepo.getCurOtherItemCurStock(catId, month, frId, fromDate, toDate);
+			//othItemCurStockList=getOtherItemCurStockRepo.getCurOtherItemCurStock(catId, month, fromDate, toDate);
 			
 		
 		}catch(Exception e){

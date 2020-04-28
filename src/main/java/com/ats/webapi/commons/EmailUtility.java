@@ -367,10 +367,11 @@ public class EmailUtility {
 			info.setMessage("email_exce");
 			//System.err.println("Mail Response1 : "+info);
 			System.err.println("Ex1"+e.getMessage());
+			e.printStackTrace();
 		}
 			
 			info.setError(false);
-			info.setMessage("success_email");
+			info.setMessage("success_email");			
 			//System.err.println("Mail Response2 : "+info);
 			
 		}catch (Exception e) {
@@ -379,6 +380,7 @@ public class EmailUtility {
 			info.setMessage("email_exce");
 			//System.err.println("Mail Response3 : "+info);
 			System.err.println("Ex2"+e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return info;

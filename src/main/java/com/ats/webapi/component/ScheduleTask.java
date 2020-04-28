@@ -514,9 +514,9 @@ public class ScheduleTask {
 	@Autowired
 	GetFranchiseSupRepository franchiseeSupRepo;
 	//Send mail and SMS to  all franchise when there license are expired
-		//@Scheduled(cron = "0 1 * * * * *")	
+		//@Scheduled(cron = "0 1 * * * * ")	
 		//@Scheduled(cron = "*/5 * * * * ?")
-		@Scheduled(cron = "0 0 7 * * *")
+		//@Scheduled(cron = "0 0 7 * * *")
 		public void crownForLicencesExpiry() {
 			try {
 				 	Date date = new Date();  

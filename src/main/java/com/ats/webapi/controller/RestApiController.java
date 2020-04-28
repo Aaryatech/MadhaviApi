@@ -2183,19 +2183,43 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			 System.out.println("Credentials--------"+senderEmail+" "+senderPassword);
 			 
 			 int frId = header.getFrId();
+			 int srno = 0;
 			 Franchisee frDetails =  franchiseeRepository.findOne(frId);
 			 String frEmail = frDetails.getFrEmail();
 			 String frContact = frDetails.getFrMob();
 			 String frCode = frDetails.getFrCode();
 			 String defPass = "";
-			 String mailsubject = "DairyMart Order Alert for Outlet Code : ("+frCode+")   Order Dated : ("+header.getOrderDate()+")";
-			 String text = "\n DairyMart Order Alert for Outlet Code : ("+frCode+"): Total Orders : ("+header.getTotal()+")\n"+
-					 		"Item Name | Qty.\n";
-			 /*String values = "";
-			 for(int i = 0 ; i <= billList.size() ; i++) {
-				 values = billList.get(i).getItemName()
-			 }*/
-			EmailUtility.sendEmail(senderEmail, senderPassword, frEmail, mailsubject, text, defPass);
+			 String mailsubject = "DairyMart Order Alert for Outlet Code : ("+frCode+") Order Dated : ("+header.getOrderDate()+")";
+			 String text = "";
+			/*
+			 * String values = ""; for(int i = 0 ; i <= billList.size() ; i++) { values =
+			 * billList.get(i).getItemName() }
+			 */
+			//EmailUtility.sendEmail(senderEmail, senderPassword, frEmail, mailsubject, text, defPass);
+			 
+			
+             text="<html><body>"+
+            		 	"<p>DairyMart Order Alert for Outlet Code : ("+frCode+"): Total Orders : ("+header.getTotal()+")</p> <br>"+
+            		 	"<table style='border:2px solid black'>"+                 
+            		 	"<tr bgcolor=\"#33CC99\">"+
+            		 	"<th>Sr. No.</th>"+
+            		 	"<th>Item Name</th>"+
+            		 	/* "<th>UOM</th>"+ */
+            		 	"<th>QTY</th></tr>";
+             for (int i = 0; i < billList.size(); i++) {
+             	srno=srno+1;
+                    text=text+"<tr align='center'>"
+                     +"<td>" + srno + "</td>" 
+                             +"<td>" + billList.get(i).getItemName() + "</td>"
+								/* +"<td>" + billList.get(i).getItemUom() + "</td>" */
+                             +"<td>" + billList.get(i).getOrderQty() + "</td>" 
+                             +"</tr>";
+                 
+             }
+                text=text+"</table></body></html>";
+               
+             Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, frEmail, mailsubject, text);
+             System.err.println("Mail Resp : "+info);
 		}
 		
 
