@@ -224,7 +224,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        t_sell_bill_header.invoice_no," + 
 			"        t_sell_bill_header.fr_id," + 
 			"        t_sell_bill_header.fr_code," + 
-			"        '0' as tax_applicable," + 
+			"        '2' as tax_applicable," + 
 			"        sum(t_sell_bill_header.taxable_amt) as taxable_amt," + 
 			"        sum(t_sell_bill_header.total_tax) as total_tax," + 
 			"        SUM(t_sell_bill_header.grand_total) AS grand_total," + 
@@ -271,7 +271,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        t_sell_bill_header.invoice_no," + 
 			"        t_sell_bill_header.fr_id," + 
 			"        t_sell_bill_header.fr_code," + 
-			"       '0' as tax_applicable," + 
+			"       '2' as tax_applicable," + 
 			"        sum(t_sell_bill_detail.taxable_amt) as taxable_amt," + 
 			"        sum(t_sell_bill_detail.total_tax) as total_tax," + 
 			"        SUM(t_sell_bill_detail.grand_total) AS grand_total," + 
@@ -331,7 +331,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,  (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt \n" + 
 				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
@@ -355,7 +355,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    t_sell_bill_header.invoice_no,\n" + 
 				"    t_sell_bill_header.fr_id,\n" + 
 				"    t_sell_bill_header.fr_code,\n" + 
-				"    '0' AS tax_applicable,\n" + 
+				"    '2' AS tax_applicable,\n" + 
 				"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 				"    SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 				"    SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -389,7 +389,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        t_sell_bill_header.invoice_no," + 
 				"        t_sell_bill_header.fr_id," + 
 				"        t_sell_bill_header.fr_code," + 
-				"        '0' as tax_applicable," + 
+				"        '2' as tax_applicable," + 
 				"        sum(t_sell_bill_header.taxable_amt) as taxable_amt," + 
 				"        sum(t_sell_bill_header.total_tax) as total_tax," + 
 				"        SUM(t_sell_bill_header.grand_total) AS grand_total," + 
@@ -430,7 +430,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    t_sell_bill_header.invoice_no,\n" + 
 				"    t_sell_bill_header.fr_id,\n" + 
 				"    t_sell_bill_header.fr_code,\n" + 
-				"    '0' AS tax_applicable,\n" + 
+				"    '2' AS tax_applicable,\n" + 
 				"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 				"    SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 				"    SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -488,7 +488,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_gst_no,\n" + 
 				"        m_franchisee.is_same_state,\n" + 
 				"        'cust' AS cust_name,\n" + 
-				"        0 AS cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per \n" + 
+				"        0 AS cust_id, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt \n" + 
 				"\n" + 
 				"    FROM\n" + 
 				"        m_franchisee,\n" + 
@@ -507,7 +507,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"            t_sell_bill_header.invoice_no,\n" + 
 				"            t_sell_bill_header.fr_id,\n" + 
 				"            t_sell_bill_header.fr_code,\n" + 
-				"            '0' AS tax_applicable,\n" + 
+				"            '2' AS tax_applicable,\n" + 
 				"            SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 				"            SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 				"            SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -658,7 +658,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_city," + 
 				"        m_franchisee.fr_gst_no," + 
 				"        m_franchisee.is_same_state," + 
-				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+				"        m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per,  t_bill_header.disc_amt \n" + 
 				" " + 
 				"    FROM" + 
 				"        m_franchisee," + 
@@ -683,7 +683,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    t_sell_bill_header.invoice_no,\n" + 
 				"    t_sell_bill_header.fr_id,\n" + 
 				"    t_sell_bill_header.fr_code,\n" + 
-				"    '0' AS tax_applicable,\n" + 
+				"    '2' AS tax_applicable,\n" + 
 				"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 				"    SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 				"    SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -717,7 +717,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        t_sell_bill_header.invoice_no," + 
 				"        t_sell_bill_header.fr_id," + 
 				"        t_sell_bill_header.fr_code," + 
-				"        '0' as tax_applicable," + 
+				"        '2' as tax_applicable," + 
 				"        sum(t_sell_bill_header.taxable_amt) as taxable_amt," + 
 				"        sum(t_sell_bill_header.total_tax) as total_tax," + 
 				"        SUM(t_sell_bill_header.grand_total) AS grand_total," + 
@@ -759,7 +759,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"				        t_sell_bill_header.invoice_no,  \n" + 
 				"				        t_sell_bill_header.fr_id,  \n" + 
 				"				        t_sell_bill_header.fr_code,  \n" + 
-				"				        '0' as tax_applicable,  \n" + 
+				"				        '2' as tax_applicable,  \n" + 
 				"				        t_sell_bill_header.taxable_amt as taxable_amt,  \n" + 
 				"				        t_sell_bill_header.total_tax as total_tax,  \n" + 
 				"				        t_sell_bill_header.grand_total AS grand_total,  \n" + 
@@ -819,8 +819,8 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        m_franchisee.fr_gst_no,\n" + 
 				"        m_franchisee.is_same_state,\n" + 
 				"        'cust' AS cust_name,\n" + 
-				"        0 AS cust_id, t_bill_header.disc_amt,\n" + 
-				"(t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per" + 
+				"        0 AS cust_id, \n" + 
+				"(t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt " + 
 				"    FROM\n" + 
 				"        m_franchisee,\n" + 
 				"        t_bill_header,\n" + 
@@ -838,7 +838,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"            t_sell_bill_header.invoice_no,\n" + 
 				"            t_sell_bill_header.fr_id,\n" + 
 				"            t_sell_bill_header.fr_code,\n" + 
-				"            '0' AS tax_applicable,\n" + 
+				"            2 AS tax_applicable,\n" + 
 				"            t_sell_bill_header.taxable_amt AS taxable_amt,\n" + 
 				"            t_sell_bill_header.total_tax AS total_tax,\n" + 
 				"            t_sell_bill_header.grand_total AS grand_total,\n" + 
@@ -1090,7 +1090,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    t_sell_bill_header.invoice_no,\n" + 
 			"    t_sell_bill_header.fr_id,\n" + 
 			"    t_sell_bill_header.fr_code,\n" + 
-			"    '0' AS tax_applicable,\n" + 
+			"    '2' AS tax_applicable,\n" + 
 			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 			"    SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -1133,7 +1133,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    t_sell_bill_header.invoice_no,\n" + 
 			"    t_sell_bill_header.fr_id,\n" + 
 			"    t_sell_bill_header.fr_code,\n" + 
-			"    '0' AS tax_applicable,\n" + 
+			"    '2' AS tax_applicable,\n" + 
 			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 			"    SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -1183,7 +1183,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt \n" + 
 			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
@@ -1201,7 +1201,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        t_sell_bill_header.invoice_no,\n" + 
 			"        t_sell_bill_header.fr_id,\n" + 
 			"        t_sell_bill_header.fr_code,\n" + 
-			"        '0' AS tax_applicable,\n" + 
+			"        '2' AS tax_applicable,\n" + 
 			"        SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 			"        SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 			"        SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -1263,7 +1263,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 
 
 	@Query(value=" SELECT CONCAT(MONTHNAME(t_sell_bill_header.bill_date),'--',YEAR(t_sell_bill_header.bill_date) )as month, t_sell_bill_header.sell_bill_no as bill_no,t_sell_bill_header.bill_date,t_sell_bill_header.invoice_no,t_sell_bill_header.fr_id,t_sell_bill_header.fr_code," + 
-			" '0' as tax_applicable,SUM(t_sell_bill_header.taxable_amt) as taxable_amt ,sum(t_sell_bill_header.total_tax) as total_tax,SUM(t_sell_bill_header.grand_total) AS grand_total ,'0' as round_off," + 
+			" '2' as tax_applicable,SUM(t_sell_bill_header.taxable_amt) as taxable_amt ,sum(t_sell_bill_header.total_tax) as total_tax,SUM(t_sell_bill_header.grand_total) AS grand_total ,'0' as round_off," + 
 			"SUM(t_sell_bill_detail.sgst_rs) as sgst_sum ,SUM(t_sell_bill_detail.cgst_rs) as cgst_sum ,SUM(t_sell_bill_detail.igst_rs) as igst_sum,m_franchisee.fr_name,m_franchisee.fr_city,m_franchisee.fr_gst_no," + 
 			"m_franchisee.is_same_state,m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
 			"  FROM m_franchisee,t_sell_bill_detail,t_sell_bill_header  WHERE t_sell_bill_header.fr_id=m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) "
@@ -1294,7 +1294,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,  (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt \n" + 
 			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
@@ -1316,7 +1316,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        t_sell_bill_header.invoice_no,\n" + 
 			"        t_sell_bill_header.fr_id,\n" + 
 			"        t_sell_bill_header.fr_code,\n" + 
-			"        '0' AS tax_applicable,\n" + 
+			"        '2' AS tax_applicable,\n" + 
 			"        SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 			"        SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 			"        SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 
@@ -1366,7 +1366,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"    m_franchisee.fr_city,\n" + 
 			"    m_franchisee.fr_gst_no,\n" + 
 			"    m_franchisee.is_same_state,\n" + 
-			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id, t_bill_header.disc_amt, (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per\n" + 
+			"    m_franchisee.fr_name, 'cust' as cust_name, 0 as cust_id,  (t_bill_header.disc_amt * 100) /(t_bill_header.grand_total + t_bill_header.disc_amt) AS disc_per, t_bill_header.disc_amt \n" + 
 			" \n" + 
 			"FROM\n" + 
 			"    m_franchisee,\n" + 
@@ -1388,7 +1388,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 			"        t_sell_bill_header.invoice_no,\n" + 
 			"        t_sell_bill_header.fr_id,\n" + 
 			"        t_sell_bill_header.fr_code,\n" + 
-			"        '0' AS tax_applicable,\n" + 
+			"        '2' AS tax_applicable,\n" + 
 			"        SUM(t_sell_bill_header.taxable_amt) AS taxable_amt,\n" + 
 			"        SUM(t_sell_bill_header.total_tax) AS total_tax,\n" + 
 			"        SUM(t_sell_bill_header.grand_total) AS grand_total,\n" + 

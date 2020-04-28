@@ -353,7 +353,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"    WHERE\r\n" + 
 				"        t_bill_header.fr_id = m_franchisee.fr_id AND t_bill_header.fr_id IN(:frIdList) AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status = 0 AND t_bill_header.is_dairy_mart = 2\r\n" + 
 				"    GROUP BY\r\n" + 
-				"        t_bill_header.bill_date\r\n" + 
+				"        t_bill_header.bill_date, t_bill_header.fr_id\r\n" + 
 				"    UNION\r\n" + 
 				"        (\r\n" + 
 				"        SELECT\r\n" + 
