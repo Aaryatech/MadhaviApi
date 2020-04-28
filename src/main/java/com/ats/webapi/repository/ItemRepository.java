@@ -245,6 +245,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> getItemsNameByIdWithOtherItem(@Param("catId")int catId,@Param("frId")int frId);
 
 	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, int frId, int j);
+	
+	public List<Item> findByItemGrp1AndDelStatus(String i, int j);
 
 	public List<Item> findByDelStatusAndIsStockableOrderByItemGrp1AscItemGrp2AscItemNameAsc(int i, int j);
 

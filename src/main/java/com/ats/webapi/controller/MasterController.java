@@ -213,6 +213,15 @@ public class MasterController {
 		return items;
 
 	}
+	
+	@RequestMapping(value = "/getOtherItemsByCatId", method = RequestMethod.GET)
+	public @ResponseBody List<Item> getOtherItemsByCatId() {
+
+		List<Item> items = itemRepository.findByItemGrp1AndDelStatus("7", 0);
+
+		return items;
+
+	}
 
 	@RequestMapping(value = { "/updateBillStatusToProduction" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateBillStatusToProduction(@RequestParam("spOrderNo") List<Integer> spOrderNo,
