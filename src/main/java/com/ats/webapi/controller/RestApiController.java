@@ -1976,6 +1976,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 	public @ResponseBody List<Orders> placeItemOrder(@RequestBody List<Orders> orderJson)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
 		System.err.println("Order Found---------"+orderJson.toString());
+		Info info = new Info();
 		List<Orders> jsonResult;
 		OrderLog log = new OrderLog();
 		log.setFrId(orderJson.get(0).getFrId());
@@ -2000,13 +2001,14 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
                         double calAmt = orderList.get(i).getOrderRate()*orderList.get(i).getOrderQty();
                         orderAmt = orderAmt + calAmt;
             }
-                
+                SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+                String delvDate = format1.format(orderList.get(0).getDeliveryDate());
                 String text = "";
-                text="<html><body>"
+                text="<html><body>"						
                         + "<table style='border:2px solid black'>"+
                         "<tr>"+
                            "<td>OutLet Code: "+frCode+"</td>"+
-                           "<td>Delivery Date: "+orderList.get(0).getDeliveryDate()+"</td>"+
+                           "<td>Delivery Date: "+delvDate+"</td>"+
                            "<td>Order Amt: "+orderAmt+"</td></tr>"+
                         "<tr bgcolor=\"#ed3f3c\">"+
                         "<th style=\"color: #ffffff;\">Sr. No.</th>"+
@@ -2025,9 +2027,19 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
                 }
                    text=text+"</table></body></html>";
                   
-                Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
+                 info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
                 System.err.println("Mail Resp : "+info);
-            
+                if(info.isError()==false) {
+//                	String msg = "Order Booking Details of Outlet Code: "+frCode+" Delivery Date: "+delvDate+" Order Amt: "+orderAmt+".\n"
+//                			+ "Check your email for more details.";
+                	//Template Name = Order Booking
+                	String msg = "Order Booking Details for Outlet Code: ("+frCode+")\n" + 
+	                			"Delivery Date: ("+delvDate+")\n" + 
+	                			"Order Amt: ("+orderAmt+")\n" + 
+	                			"Check your email for more details.";
+                	info = EmailUtility.send(fr.getFrMob(), msg);
+                	System.err.println("SMS Resp : "+info);
+                }
 			}catch (Exception e) {
 				 System.err.println(" Ex in placeOrder (send mail) : "+e.getMessage());
 				 e.printStackTrace();

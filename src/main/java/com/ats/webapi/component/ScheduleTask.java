@@ -301,7 +301,7 @@ public class ScheduleTask {
 									
 									String msg = "Total summary for ("+frDetails.getFrCode()+") at ("+Common.convertToDMY(fromDate)+")\n" + 
 											"E-Pay - ("+posDetails.getEpayAmt()+")\n" + 
-											"Cash - ("+posDetails.getCardAmt()+")\n" + 
+											"Cash - ("+posDetails.getCashAmt()+")\n" + 
 											"Card - ("+posDetails.getCardAmt()+")\n" + 
 											"Sales - ("+posDetails.getSaleAmt()+")\n" + 
 											"Discount - ("+posDetails.getDiscountAmt()+")\n" + 
