@@ -517,6 +517,7 @@ public class ScheduleTask {
 		//@Scheduled(cron = "0 1 * * * * ")	
 		//@Scheduled(cron = "*/5 * * * * ?")
 		//@Scheduled(cron = "0 0 7 * * *")
+		@Scheduled(cron = "0 0 11 * * *")
 		public void crownForLicencesExpiry() {
 			try {
 				 	Date date = new Date();  

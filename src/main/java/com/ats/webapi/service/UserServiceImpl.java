@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 		String dbPassword = null;
         LoginResponse loginResponse=null;
 		try {
-			user = userRepository.findByUsername(username);
+			user = userRepository.findByUsernameAndDelStatus(username, 0);
 			dbUsername = user.getUsername();
 			dbPassword = user.getPassword();
 		} catch (Exception e) {
