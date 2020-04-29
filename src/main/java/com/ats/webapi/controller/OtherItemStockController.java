@@ -130,9 +130,7 @@ public class OtherItemStockController {
 		
 		try {
 			
-			othItemCurStockList=getOtherItemCurStockRepo.getCurOtherItemCurStock(catId, month, frId, fromDate, toDate);
-			//othItemCurStockList=getOtherItemCurStockRepo.getCurOtherItemCurStock(catId, month, fromDate, toDate);
-			
+			othItemCurStockList=getOtherItemCurStockRepo.getCurOtherItemCurStock(catId, month, frId, fromDate, toDate);	
 		
 		}catch(Exception e){
 			

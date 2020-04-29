@@ -2008,16 +2008,16 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
                            "<td>OutLet Code: "+frCode+"</td>"+
                            "<td>Delivery Date: "+orderList.get(0).getDeliveryDate()+"</td>"+
                            "<td>Order Amt: "+orderAmt+"</td></tr>"+
-                        "<tr bgcolor=\"#33CC99\">"+
-                        "<th>Sr. No.</th>"+
-                   "<th>Item Name</th>"+
-                   "<th>UOM</th>"+
-                   "<th>QTY</th></tr>";
+                        "<tr bgcolor=\"#ed3f3c\">"+
+                        "<th style=\"color: #ffffff;\">Sr. No.</th>"+
+                        "<th style=\"color: #ffffff;\">Item Name</th>"+
+                        "<th style=\"color: #ffffff;\">UOM</th>"+
+                        "<th style=\"color: #ffffff;\">QTY</th></tr>";
                 for (int i = 0; i < orderList.size(); i++) {
                 	srno=srno+1;
                        text=text+"<tr align='center'>"
                         +"<td>" + srno + "</td>" 
-                                +"<td>" + orderList.get(i).getItemName() + "</td>"
+                                +"<td style=\"text-align: left;\">" + orderList.get(i).getItemName() + "</td>"
                                 +"<td>" + orderList.get(i).getItemUom() + "</td>"
                                 +"<td>" + orderList.get(i).getOrderQty() + "</td>"
                                 +"</tr>";
