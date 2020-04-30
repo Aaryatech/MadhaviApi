@@ -1311,6 +1311,30 @@ public class RestApiController {
 
 				info.setError(false);
 				info.setMessage("post bill header inserted  Successfully");
+				
+				 
+                int frId = jsonBillHeader.get(0).getFrId();
+                Franchisee frDetails =  franchiseeRepository.findOne(frId);
+                
+                
+                String senderEmail = UserUtilApi.senderEmail;
+                String senderPassword = UserUtilApi.senderPassword;
+                String billNo = jsonBillHeader.get(0).getInvoiceNo();
+                float billAmt = jsonBillHeader.get(0).getGrandTotal();
+                String frCode = jsonBillHeader.get(0).getFrCode();
+                String defPass ="";
+                String mailsubject = "Billing/Delivery Challan Detail";
+                String  defUsrName = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+"\n"
+                        +"Bill No.: "+billNo+"\n"
+                        +"Bill AMt: "+billAmt;
+                info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject, defUsrName, defPass);
+                System.err.println("Email Resp----"+info);
+                if(info.isError()==false) {
+                	String msg = "";
+                	info = EmailUtility.send(frDetails.getFrMob(), msg);
+                	 System.err.println("SMS Resp----"+info);
+                }
+                		
 			} else {
 				info.setError(true);
 				info.setMessage("Error in post bill header insertion : RestApi");
@@ -1995,8 +2019,8 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
                 String mailsubject="Order Booking Details";
                 int srno = 0;
 
-                List<BookedOrderMailed> orderList = bookOrderrepo.getOrderPlacedByOrderDate(jsonResult.get(0).getOrderDate(), jsonResult.get(0).getOrderSubType());
-                
+                List<BookedOrderMailed> orderList = bookOrderrepo.getOrderPlacedByOrderDate(jsonResult.get(0).getOrderDate(), fr.getFrId(), jsonResult.get(0).getMenuId());
+                System.out.println("BookedOrderMailed----"+orderList);
                 for (int i = 0; i < orderList.size(); i++) {
                         double calAmt = orderList.get(i).getOrderRate()*orderList.get(i).getOrderQty();
                         orderAmt = orderAmt + calAmt;
@@ -2005,7 +2029,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
                 String delvDate = format1.format(orderList.get(0).getDeliveryDate());
                 String text = "";
                 text="<html><body>"						
-                        + "<table style='border:2px solid black'>"+
+                        + "<table style=' border:2px solid black'>"+
                         "<tr>"+
                            "<td>OutLet Code: "+frCode+"</td>"+
                            "<td>Delivery Date: "+delvDate+"</td>"+
@@ -4757,7 +4781,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			@RequestParam("frGstNo") String frGstNo, @RequestParam("stockType") int stockType,
 			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
 			@RequestParam("isSameState") int isSameState,
-			@RequestParam("fdaLicsDate") String fdaLicsDate,
+			@RequestParam("fdaAgreementDate") String fdaAgreementDate,
 			@RequestParam("frAgreementDate") String frAgreementDate,
 			@RequestParam("weighingScale1Date") String weighingScale1Date,
 			@RequestParam("weighingScale2Date") String weighingScale2Date,
@@ -4776,7 +4800,111 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			}
 			Date utilFrAgreementDate = null;
 			try {
-				utilFrAgreementDate = sdf.parse(fdaLicsDate); // FDA License Date
+				utilFrAgreementDate = sdf.parse(fdaAgreementDate); // FDA License Date
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Date utilOwnerBirthDate = null;
+			try {
+				utilOwnerBirthDate = sdf.parse(ownerBirthDate);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+//			Date utilFbaLicenseDate = null;
+//			try { 
+//				utilFbaLicenseDate = sdf.parse(fbaLicenseDate); 
+//			 } catch (Exception e) {
+//				e.printStackTrace(); 
+//			 }
+			 
+
+			Franchisee franchisee = franchiseeService.findFranchisee(frId);
+
+			// franchisee.setFrId(frId);
+			franchisee.setFrName(frName);
+			franchisee.setFrCode(frCode);
+			franchisee.setFrOpeningDate(date);
+			franchisee.setFrRate(frRate);
+			franchisee.setFrImage(frImage);
+			franchisee.setFrRouteId(frRouteId);
+			franchisee.setFrCity(frCity);
+			franchisee.setFrKg1(frKg1);
+			franchisee.setFrKg2(frKg2);
+			franchisee.setFrKg3(frKg3);
+			franchisee.setFrKg4(frKg4);
+			franchisee.setFrEmail(frEmail);
+			franchisee.setFrPassword(frPassword);
+			franchisee.setFrMob(frMob);
+			franchisee.setFrOwner(frOwner);
+			franchisee.setFrRateCat(frRateCat);
+			franchisee.setGrnTwo(grnTwo);
+			franchisee.setFrRmn1("");
+			franchisee.setFrOpening(0);
+			franchisee.setShowItems("");
+			franchisee.setNotShowItems("");
+			franchisee.setFrPasswordKey("");
+			franchisee.setDelStatus(delStatus);
+			franchisee.setFbaLicenseDate(fbaLicenseDate);
+			franchisee.setFrAddress(frAddress);
+			franchisee.setFrAgreementDate(utilFrAgreementDate);// FDA License Date
+			franchisee.setFrGstNo(frGstNo);
+			franchisee.setFrGstType(frGstType);
+			franchisee.setOwnerBirthDate(utilOwnerBirthDate);
+			franchisee.setStockType(stockType);
+			franchisee.setFrTarget(frTarget);
+			franchisee.setIsSameState(isSameState);
+
+			System.out.println("FR Data" + franchisee.toString());
+			jsonResult = franchiseeService.saveFranchisee(franchisee);
+			if(jsonResult.isError()==false) {
+				
+				
+				int res = franchiseSupRepository.updateFrSupLicsDates(frId, frAgreementDate, weighingScale1Date, weighingScale2Date, 
+						shopEstbLicsDate, profTaxDate);
+				System.out.println("Fr-Sup Res------------"+res);
+			}
+		} catch (Exception e) {
+			System.out.println("update FR rest exce " + e.getMessage());
+		}
+
+		return jsonResult;
+		// return "abc";
+	}
+	
+	@RequestMapping(value = { "/updateAdminFranchisee" }, method = RequestMethod.POST)
+	@ResponseBody
+	public ErrorMessage updateAdminFranchisee(@RequestParam("frId") int frId, @RequestParam("frName") String frName,
+			@RequestParam("frCode") String frCode, @RequestParam("frOpeningDate") String frOpeningDate,
+			@RequestParam("frRate") int frRate, @RequestParam("frImage") String frImage,
+			@RequestParam("frRouteId") int frRouteId, @RequestParam("frCity") String frCity,
+			@RequestParam("frKg1") int frKg1, @RequestParam("frKg2") int frKg2, @RequestParam("frKg3") int frKg3,
+			@RequestParam("frKg4") int frKg4, @RequestParam("frEmail") String frEmail,
+			@RequestParam("frPassword") String frPassword, @RequestParam("frMob") String frMob,
+			@RequestParam("frOwner") String frOwner, @RequestParam("frRateCat") int frRateCat,
+			@RequestParam("grnTwo") int grnTwo, @RequestParam("delStatus") int delStatus,
+			@RequestParam("ownerBirthDate") String ownerBirthDate,
+			@RequestParam("fbaLicenseDate") String fbaLicenseDate,
+			@RequestParam("frGstType") int frGstType,
+			@RequestParam("frGstNo") String frGstNo, @RequestParam("stockType") int stockType,
+			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
+			@RequestParam("isSameState") int isSameState,			
+			@RequestParam("frAgreementDate") String frAgreementDate) {
+		ErrorMessage jsonResult = new ErrorMessage();
+		System.out.println("Update Franchisee By Admin");
+		try {
+
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+			Date date = null;
+			try {
+				date = sdf.parse(frOpeningDate);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			Date utilFrAgreementDate = null;
+			try {
+				utilFrAgreementDate = sdf.parse(frAgreementDate); // FDA License Date
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -4832,12 +4960,9 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 
 			System.out.println("FR Data" + franchisee.toString());
 			jsonResult = franchiseeService.saveFranchisee(franchisee);
-			if(jsonResult.isError()==false) {
+			if(jsonResult.isError()==false) {			
 				
 				
-				int res = franchiseSupRepository.updateFrSupLicsDates(frId, frAgreementDate, weighingScale1Date, weighingScale2Date, 
-						shopEstbLicsDate, profTaxDate);
-				System.out.println("Fr-Sup Res------------"+res);
 			}
 		} catch (Exception e) {
 			System.out.println("update FR rest exce " + e.getMessage());

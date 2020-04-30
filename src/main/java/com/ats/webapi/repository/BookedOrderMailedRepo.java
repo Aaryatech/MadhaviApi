@@ -32,7 +32,6 @@ public interface BookedOrderMailedRepo extends JpaRepository<BookedOrderMailed, 
 			"	m_item.id=m_item_sup.item_id AND\n" + 
 			"    t_order.item_id=m_item.id AND\n" + 
 			"    t_order.fr_id=m_franchisee.fr_id AND\n" + 
-			"    t_order.order_date=:orderDate AND\n" + 
-			"    t_order.order_sub_type=:orderSubType", nativeQuery=true)
-	public List<BookedOrderMailed> getOrderPlacedByOrderDate(@Param("orderDate") Date orderDate, @Param("orderSubType") int orderSubType);
+			"    t_order.order_date=:orderDate AND t_order.fr_id=:frId AND t_order.menu_id=:menuId", nativeQuery=true)
+	public List<BookedOrderMailed> getOrderPlacedByOrderDate(@Param("orderDate") Date orderDate,@Param("frId") int frId,@Param("menuId") int menuId);
 }

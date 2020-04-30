@@ -349,9 +349,9 @@ public class EmailUtility {
 			Store mailStore = session.getStore(mailStoreType);
 			mailStore.connect(emailSMTPserver, username, password);
 
-			String address =frEmail;// "atsinfosoft@gmail.com";// address of to
+			String address =frEmail;
 
-			String subject = mailsubject;//" Login Credentials For RUSA Login  ";
+			String subject = mailsubject;
 
 			Message mimeMessage = new MimeMessage(session);
 			mimeMessage.setFrom(new InternetAddress(username));
