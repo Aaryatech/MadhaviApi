@@ -56,4 +56,6 @@ public interface FranchiseeService {
 	public Franchisee getFranchiseeByFrCode(String frCode);
 
 	public Franchisee findByFrId(int frId);
+
+	public List<Franchisee> findFranchisee();
 }

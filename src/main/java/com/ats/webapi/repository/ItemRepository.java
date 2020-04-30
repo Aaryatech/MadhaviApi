@@ -194,7 +194,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        where\n" + 
 			"            s.item_id=i.id  " + 
 			"            AND i.del_status=0  " + 
-			"        	AND i.is_saleable=1 " + 
+			"        	AND i.is_saleable=1 AND i.item_is_used=1 " + 
 			"        UNION ALL            select\n" + 
 			"            i.id,\n" + 
 			"            i.item_id,\n" + 
@@ -236,7 +236,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            and  i.del_status=0  " + 
 			"            and i.item_grp1=:catId " +
 			"            and i.item_rate2=:frId " + 
-			"         	and i.is_saleable=1 " + 
+			"         	and i.is_saleable=1 AND i.item_is_used=1" + 
 			"    ) a   " + 
 			"ORDER BY " + 
 			"    a.item_grp1, " + 

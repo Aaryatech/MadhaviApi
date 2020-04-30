@@ -82,10 +82,8 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 	@Override
 	public List<Franchisee> findAllFranchisee() {
 		 List<Franchisee> franchisee=new ArrayList<Franchisee>();
-			franchisee=franchiseeRepository.findAllByDelStatusOrderByFrNameAsc(0);
-	
-		
-		return franchisee;
+			franchisee=franchiseeRepository.findAllByDelStatusOrderByFrNameAsc(0);	
+			return franchisee;
 	}
 
 	@Override
@@ -684,6 +682,13 @@ public class FranchiseeServiceImpl implements FranchiseeService {
 	public Franchisee findByFrId(int frId) {
 		Franchisee fr = new Franchisee(); 
 		return fr = franchiseeRepository.findOne(frId);
+	}
+
+	@Override
+	public List<Franchisee> findFranchisee() {
+		 List<Franchisee> franchisee=new ArrayList<Franchisee>();
+			franchisee=franchiseeRepository.findAllFranchisee();
+			return franchisee;
 	}
 	
 }

@@ -1330,7 +1330,9 @@ public class RestApiController {
                 info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject, defUsrName, defPass);
                 System.err.println("Email Resp----"+info);
                 if(info.isError()==false) {
-                	String msg = "";
+                	//String msg = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+" Bill No.: "+billNo+" Bill AMt: "+billAmt;
+                	String msg="Welcome to Madhvi!\n" + 
+                		       "Billing/Delivery Challan Alert for Outlets Code: "+frCode+" Bill No.: "+billNo+" Bill Amt: "+billAmt;
                 	info = EmailUtility.send(frDetails.getFrMob(), msg);
                 	 System.err.println("SMS Resp----"+info);
                 }
@@ -3106,28 +3108,24 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
 						String mailSublect="";
 						String mailText = "";
-						String defPass= scheduler.getSchMessage();
-						String msg = "";
-						List<String> mobList = new ArrayList<String>();
-					for (int i = 0; i <= frList.size(); i++) {
+						String defPass= "";
 						
+						Info info = new Info();
+						
+					for (int i = 0; i <= frList.size(); i++) {
 						try {
-							mobList.add(frList.get(i).getFrMob().trim());
-							msg = "Important Msg for Retail Outlets: "+mailText+"("+frList.get(i).getFrCode()+")";
-							EmailUtility.sendinBulk(msg, mobList);
-							mobList.clear();
-						}catch (Exception e) {
-							e.getMessage();
+							
+							 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
+							 mailText = schMessage;
+							
+							 info =  EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
+							
+							 System.err.println("Mail Send To : "+frList.get(i).getFrCode()+"------Mail Resp : "+info);
+							
+							}catch (Exception e) {
+								e.getMessage();
+							}
 						}
-						try {
-						 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
-						 mailText = schMessage;
-						 EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
-						System.err.println("Mail Send To : "+frList.get(i).getFrCode());
-						}catch (Exception e) {
-							e.getMessage();
-						}
-					}
 			}
 
 		} catch (Exception e) {
@@ -4398,7 +4396,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 	// Get All Franchisees
 	@RequestMapping(value = { "/getAllFranchisee" }, method = RequestMethod.GET)
 	public @ResponseBody FranchiseeList getAllFranchinsees() {
-		List<Franchisee> franchisee = franchiseeService.findAllFranchisee();
+		List<Franchisee> franchisee = franchiseeService.findFranchisee();
 		FranchiseeList franchiseeList = new FranchiseeList();
 		franchiseeList.setFranchiseeList(franchisee);
 		ErrorMessage errorMessage = new ErrorMessage();
@@ -4546,25 +4544,18 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
 				String mailSublect="";
 				String mailText = "";
-				String defPass= scheduler.getSchMessage();
-				String msg = "";
-				List<String> mobList = new ArrayList<String>();
+				String defPass= "";
+			
 					for (int i = 0; i <= frList.size(); i++) {
-						
 						try {
 							
-							mobList.add(frList.get(i).getFrMob().trim());
-							msg = "Important Msg for Retail Outlets: "+mailText+"("+frList.get(i).getFrCode()+")";
-							EmailUtility.sendinBulk(msg, mobList);
-							mobList.clear();
-						}catch (Exception e) {
-							e.getMessage();
-						}
-						try {
 						 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
 						 mailText = schMessage;
-						 EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
-						System.err.println("Mail Send To : "+frList.get(i).getFrCode());
+						
+						 info =  EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
+						
+						 System.err.println("Mail Send To : "+frList.get(i).getFrCode()+"------Mail Resp : "+info);							
+						
 						}catch (Exception e) {
 							e.getMessage();
 						}
@@ -5654,7 +5645,11 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 
 			info.setError(false);
 			info.setMessage("Update   Successfully");
-
+			String msg="Billing / Delivery Challan Alert for Outlet Code : ("+updateBillStatusRes.getFrCode()+").\n" + 
+					"Dated ("+updateBillStatusRes.getBillDate()+") issued, kindly check your email for a copy.";
+			Franchisee frDetails =  franchiseeRepository.findOne(updateBillStatusRes.getFrId());
+			info=EmailUtility.send(frDetails.getFrMob(), msg);
+			System.out.println("Mail Resp----"+info);
 		}
 
 		else {
