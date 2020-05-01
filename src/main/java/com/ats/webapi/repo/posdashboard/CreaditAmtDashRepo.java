@@ -10,7 +10,7 @@ public interface CreaditAmtDashRepo extends JpaRepository<CreaditAmtDash, String
 	
 	
 	@Query(value = "SELECT\n" + 
-			"            UUID() AS uid,  SUM(tsh.grand_total) as credit_amt \n" + 
+			"            UUID() AS uid,  SUM(tsh.remaining_amt) as credit_amt \n" + 
 			"        FROM\n" + 
 			"            t_sell_bill_header tsh\n" + 
 			"        WHERE\n" + 
