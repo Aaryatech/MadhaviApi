@@ -3382,7 +3382,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 	public ErrorMessage updateItem(@RequestParam("id") int id, @RequestParam("itemId") String itemId,
 			@RequestParam("itemName") String itemName, @RequestParam("itemGrp1") String itemGrp1,
 			@RequestParam("itemGrp2") String itemGrp2, @RequestParam("itemGrp3") String itemGrp3,
-			@RequestParam("itemRate1") float itemRate1, @RequestParam("itemRate2") int itemRate2,
+			@RequestParam("itemRate1") float itemRate1, @RequestParam("itemRate2") double itemRate2,
 			@RequestParam("itemRate3") float itemRate3, @RequestParam("itemMrp1") float itemMrp1,
 			@RequestParam("itemMrp2") float itemMrp2, @RequestParam("itemMrp3") float itemMrp3,
 			@RequestParam("minQty") int minQty, @RequestParam("itemImage") String itemImage,
@@ -3405,7 +3405,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		item.setItemMrp2(itemMrp2);
 		item.setItemMrp3(itemMrp3);
 		item.setItemRate1(itemRate1);
-		item.setItemRate2(itemRate2);
+		item.setItemRate2((int) itemRate2);
 		item.setItemRate3(itemRate3);
 		item.setItemName(itemName);
 		item.setItemSortId(itemSortId);
