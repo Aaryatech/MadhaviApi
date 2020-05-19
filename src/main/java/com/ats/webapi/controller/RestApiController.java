@@ -4773,11 +4773,13 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
 			@RequestParam("isSameState") int isSameState,
 			@RequestParam("fdaAgreementDate") String fdaAgreementDate,
-			@RequestParam("frAgreementDate") String frAgreementDate,
-			@RequestParam("weighingScale1Date") String weighingScale1Date,
-			@RequestParam("weighingScale2Date") String weighingScale2Date,
-			@RequestParam("shopEstbLicsDate") String shopEstbLicsDate,
-			@RequestParam("profTaxDate") String profTaxDate) {
+			@RequestParam("frAgreementDate") String frAgreementDate)
+	
+//			@RequestParam("weighingScale1Date") String weighingScale1Date,
+//			@RequestParam("weighingScale2Date") String weighingScale2Date,
+//			@RequestParam("shopEstbLicsDate") String shopEstbLicsDate,
+//			@RequestParam("profTaxDate") String profTaxDate) 
+	{
 		ErrorMessage jsonResult = new ErrorMessage();
 		try {
 
@@ -4848,13 +4850,13 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 
 			System.out.println("FR Data" + franchisee.toString());
 			jsonResult = franchiseeService.saveFranchisee(franchisee);
-			if(jsonResult.isError()==false) {
-				
-				
-				int res = franchiseSupRepository.updateFrSupLicsDates(frId, frAgreementDate, weighingScale1Date, weighingScale2Date, 
-						shopEstbLicsDate, profTaxDate);
-				System.out.println("Fr-Sup Res------------"+res);
-			}
+//			if(jsonResult.isError()==false) {
+//				
+//				
+//				int res = franchiseSupRepository.updateFrSupLicsDates(frId, frAgreementDate, weighingScale1Date, weighingScale2Date, 
+//						shopEstbLicsDate, profTaxDate);
+//				System.out.println("Fr-Sup Res------------"+res);
+//			}
 		} catch (Exception e) {
 			System.out.println("update FR rest exce " + e.getMessage());
 		}

@@ -8,11 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ats.webapi.model.Info;
 import com.ats.webapi.model.Item;
-import com.ats.webapi.model.ItemIdOnly;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
@@ -194,7 +191,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        where\n" + 
 			"            s.item_id=i.id  " + 
 			"            AND i.del_status=0  " + 
-			"        	AND i.is_saleable=1 AND i.item_is_used=1 " + 
+			"        	AND i.is_saleable=1 AND i.item_is_used=1" + 
 			"        UNION ALL            select\n" + 
 			"            i.id,\n" + 
 			"            i.item_id,\n" + 
@@ -236,7 +233,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            and  i.del_status=0  " + 
 			"            and i.item_grp1=:catId " +
 			"            and i.item_rate2=:frId " + 
-			"         	and i.is_saleable=1 AND i.item_is_used=1" + 
+			"         	and i.is_saleable=1 and i.item_is_used=1" + 
 			"    ) a   " + 
 			"ORDER BY " + 
 			"    a.item_grp1, " + 
@@ -244,10 +241,10 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"    a.item_sort_id",nativeQuery=true)
 	public List<Item> getItemsNameByIdWithOtherItem(@Param("catId")int catId,@Param("frId")int frId);
 
-	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, int frId, int j);
-	
-	public List<Item> findByItemGrp1AndDelStatus(String i, int j);
+	public List<Item> findByItemGrp1AndItemRate2AndDelStatus(String i, double frId, int j);
 
+	public List<Item> findByItemGrp1AndDelStatus(String i, int j);
+	
 	public List<Item> findByDelStatusAndIsStockableOrderByItemGrp1AscItemGrp2AscItemNameAsc(int i, int j);
 
 	@Transactional
@@ -329,7 +326,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        where\n" + 
 			"            s.item_id=i.id \n" + 
 			"            AND i.del_status=0 \n" + 
-			"        	AND i.is_saleable=1 and i.item_grp1=:cat\n" + 
+			"        	AND i.is_saleable=1 and i.item_grp1=:cat and i.item_is_used=1\n" + 
 			"        UNION\n" + 
 			"        ALL            select\n" + 
 			"            i.id,\n" + 
@@ -372,7 +369,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            and  i.del_status=0 \n" + 
 			"            and i.item_grp1=:catId \n" +
 			"            and i.item_rate2=:frId\n" + 
-			"         	and i.is_saleable=1\n" + 
+			"         	and i.is_saleable=1 and i.item_is_used=1 \n" + 
 			"    ) a  \n" + 
 			"ORDER BY\n" + 
 			"    a.item_grp1,\n" + 
@@ -454,7 +451,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        where\n" + 
 			"            s.item_id=i.id \n" + 
 			"            AND i.del_status=0 \n" + 
-			"        	AND i.is_saleable=1 and i.item_grp2=:cat\n" + 
+			"        	AND i.is_saleable=1 and i.item_grp2=:cat and i.item_is_used=1\n" + 
 			"        UNION\n" + 
 			"        ALL            select\n" + 
 			"            i.id,\n" + 
@@ -497,7 +494,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            and  i.del_status=0 \n" + 
 			"            and i.item_grp1=:catId \n" +
 			"            and i.item_rate2=:frId\n" + 
-			"         	and i.is_saleable=1\n" + 
+			"         	and i.is_saleable=1 and i.item_is_used=1 \n" + 
 			"    ) a  \n" + 
 			"ORDER BY\n" + 
 			"    a.item_grp1,\n" + 
@@ -512,3 +509,4 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public int updateItemRateAndMrp(@Param("id")int id,@Param("rate") float rate,@Param("mrp") float mrp);
 
  }
+
