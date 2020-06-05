@@ -137,7 +137,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"    FROM\r\n" + 
 			"        m_expense\r\n" + 
 			"    WHERE\r\n" + 
-			"        fr_id IN(:frId) AND exp_type = 2\r\n" + 
+			"        fr_id IN(:frId) AND exp_type = 2 AND del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        exp_date\r\n" + 
 			"    ORDER BY\r\n" + 
@@ -173,7 +173,7 @@ public interface RepFrDatewiseSellRepository extends JpaRepository<GetRepFrDatew
 			"        t_credit_note_pos,\r\n" + 
 			"        t_sell_bill_header\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_credit_note_pos.bill_no = t_sell_bill_header.sell_bill_no AND t_credit_note_pos.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_pos.del_status = 0 AND t_sell_bill_header.fr_id=:frId\r\n" + 
+			"        t_credit_note_pos.bill_no = t_sell_bill_header.sell_bill_no AND t_credit_note_pos.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_pos.del_status = 0 AND t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.del_status = 0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        t_credit_note_pos.crn_date ORDER BY t_credit_note_pos.crn_date DESC\r\n" + 
 			") e\r\n" + 

@@ -88,7 +88,7 @@ public interface RepTaxSellRepository extends JpaRepository<GetRepTaxSell, Integ
 			"        h.fr_id IN(:frId) \r\n" + 
 			"        AND h.sell_bill_no = d.sell_bill_no \r\n" + 
 			"        AND h.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
-			"        AND f.fr_id = h.fr_id  \r\n" + 
+			"        AND f.fr_id = h.fr_id AND h.del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"    h.fr_id ,\r\n" + 
 			"     h.bill_date,\r\n" + 
@@ -171,7 +171,7 @@ public interface RepTaxSellRepository extends JpaRepository<GetRepTaxSell, Integ
 			"    t_sell_bill_header h,\r\n" + 
 			"    m_franchisee f\r\n" + 
 			"WHERE\r\n" + 
-			"    h.fr_id IN(:frId) AND h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = h.fr_id AND h.user_gst_no !=''\r\n" + 
+			"    h.fr_id IN(:frId) AND h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = h.fr_id AND h.user_gst_no !='' AND h.del_status=0 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    (d.cgst_per+d.sgst_per),\r\n" + 
 			"    h.sell_bill_no,\r\n" + 

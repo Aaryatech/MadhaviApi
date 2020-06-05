@@ -32,7 +32,7 @@ public interface CRNSaleTaxBillReportRepo extends JpaRepository<CRNSaleTaxBillRe
 			"    m_customer c,\r\n" + 
 			"    m_franchisee f\r\n" + 
 			"WHERE\r\n" + 
-			"    cr.ex_int1 IN(:frId) AND h.sell_bill_no = cr.bill_no AND cr.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = cr.ex_int1 AND  cr.cust_id=c.cust_id AND  c.gst_no != ''\r\n" + 
+			"    cr.ex_int1 IN(:frId) AND h.sell_bill_no = cr.bill_no AND cr.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = cr.ex_int1 AND  cr.cust_id=c.cust_id AND  c.gst_no != '' AND h.del_status=0 AND cr.del_status=0 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    (cr.cgst_per+cr.sgst_per)\r\n" + 
 			""

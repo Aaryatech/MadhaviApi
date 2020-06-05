@@ -56,7 +56,7 @@ public interface RepFrMonthwiseSellRepository extends JpaRepository<GetMonthWise
 			"        t_transaction_detail,\r\n" + 
 			"        m_franchisee\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.fr_id IN(:frId) AND m_franchisee.fr_id = t_sell_bill_header.fr_id\r\n" + 
+			"        t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.fr_id IN(:frId) AND m_franchisee.fr_id = t_sell_bill_header.fr_id AND t_sell_bill_header.del_status=0 AND t_transaction_detail.del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"       \r\n" + 
 			"        t_sell_bill_header.fr_id,MONTH\r\n" + 
@@ -156,7 +156,7 @@ public interface RepFrMonthwiseSellRepository extends JpaRepository<GetMonthWise
 			"   \r\n" + 
 			") f\r\n" + 
 			"ON\r\n" + 
-			"    a.fr_id = f.fr_id AND  a.MONTH = f.MONTH",nativeQuery=true)
+			"    a.fr_id = f.fr_id AND  a.MONTH = f.MONTH  ORDER BY bill_date",nativeQuery=true)
 			List<GetMonthWiseReport> getRepFrMonthwiseSell(@Param("fromDate") String fromDate,
 					@Param("toDate") String toDate, @Param("frId") List<String> frId);
 }

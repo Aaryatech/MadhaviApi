@@ -75,13 +75,13 @@ public class ReportsController {
 
 	@Autowired
 	ItemReportDetailRepo itemReportDetailRepo;
-	
+
 	@Autowired
 	SpKgSummaryRepository spKgSummaryRepository;
 
 	@Autowired
 	RepFrItemwiseSellRepository repFrItemwiseSellRepository;
-	
+
 	@RequestMapping(value = { "/getItemDetailReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<ItemReportDetail> getItemDetailReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("itemId") int itemId, @RequestParam("frId") int frId) {
@@ -158,40 +158,44 @@ public class ReportsController {
 
 		return ItemWiseDetailList;
 	}
-	
+
 	@RequestMapping(value = { "/showItemWiseDetailsReportByCatId" }, method = RequestMethod.POST)
 	public @ResponseBody ItemWiseDetailList showItemWiseDetailsReportByCatId(@RequestParam("frId") int frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("subCat") int subCat,@RequestParam("catId") int catId,@RequestParam("itemIds") List<Integer> itemIds) {
+			@RequestParam("subCat") int subCat, @RequestParam("catId") int catId,
+			@RequestParam("itemIds") List<Integer> itemIds) {
 
 		ItemWiseDetailList ItemWiseDetailList = new ItemWiseDetailList();
-		
+
 		try {
-			System.err.println("catId : "+catId);
-			System.err.println("subCat : "+subCat);
-			System.err.println("itemIds : "+itemIds);
-			/*if(itemIds.contains(0)) {
-				ItemWiseDetailList = reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate);
-			}else {
-				
-				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId,catId, itemIds, fromDate, toDate);
-				
-			}*/
-			
-			
-			if(itemIds.contains(0)) {
-				ItemWiseDetailList = reportsService.getItemWiseDetailReportsubCat(frId,catId, subCat, fromDate, toDate);
-			}else {
-				
-				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId,catId,subCat, itemIds, fromDate, toDate);
-				
+			System.err.println("catId : " + catId);
+			System.err.println("subCat : " + subCat);
+			System.err.println("itemIds : " + itemIds);
+			/*
+			 * if(itemIds.contains(0)) { ItemWiseDetailList =
+			 * reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate); }else
+			 * {
+			 * 
+			 * ItemWiseDetailList =
+			 * reportsService.getItemWiseDetailReportByItemIds(frId,catId, itemIds,
+			 * fromDate, toDate);
+			 * 
+			 * }
+			 */
+
+			if (itemIds.contains(0)) {
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportsubCat(frId, catId, subCat, fromDate,
+						toDate);
+			} else {
+
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId, catId, subCat, itemIds,
+						fromDate, toDate);
+
 			}
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
 
 		return ItemWiseDetailList;
 	}
@@ -205,13 +209,14 @@ public class ReportsController {
 
 		return ItemWiseReportList;
 	}
-	
+
 	@RequestMapping(value = { "/showItemWiseReportByTypeId" }, method = RequestMethod.POST)
 	public @ResponseBody ItemWiseReportList showItemWiseReportByTypeId(@RequestParam("frId") int frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("catId") int catId,@RequestParam("typeId") int typeId) {
+			@RequestParam("catId") int catId, @RequestParam("typeId") int typeId) {
 
-		ItemWiseReportList ItemWiseReportList = reportsService.showItemWiseReportByTypeId(frId, catId, fromDate, toDate,typeId);
+		ItemWiseReportList ItemWiseReportList = reportsService.showItemWiseReportByTypeId(frId, catId, fromDate, toDate,
+				typeId);
 
 		return ItemWiseReportList;
 	}
@@ -224,12 +229,14 @@ public class ReportsController {
 
 		return monthWiseReportList;
 	}
-	
+
 	@RequestMapping(value = { "/showMonthWiseReportByTypeId" }, method = RequestMethod.POST)
 	public @ResponseBody MonthWiseReportList showMonthWiseReportByTypeId(@RequestParam("frId") int frId,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeId") int typeId) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("typeId") int typeId) {
 
-		MonthWiseReportList monthWiseReportList = reportsService.getMonthWiseReportByTypeId(frId, fromDate, toDate,typeId);
+		MonthWiseReportList monthWiseReportList = reportsService.getMonthWiseReportByTypeId(frId, fromDate, toDate,
+				typeId);
 
 		return monthWiseReportList;
 	}
@@ -242,12 +249,14 @@ public class ReportsController {
 
 		return billWiseTaxReportList;
 	}
-	
+
 	@RequestMapping(value = { "/showBillWiseTaxReportByTypeId" }, method = RequestMethod.POST)
 	public @ResponseBody BillWiseTaxReportList showBillWiseTaxReportByTypeId(@RequestParam("frId") int frId,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeId") int typeId) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("typeId") int typeId) {
 
-		BillWiseTaxReportList billWiseTaxReportList = reportsService.getBillWiseTaxReport(frId, fromDate, toDate,typeId);
+		BillWiseTaxReportList billWiseTaxReportList = reportsService.getBillWiseTaxReport(frId, fromDate, toDate,
+				typeId);
 
 		return billWiseTaxReportList;
 	}
@@ -258,46 +267,46 @@ public class ReportsController {
 	@RequestMapping(value = "/getRepDatewiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepFrDatewiseSellReport> getRepDatewiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
-		
+
 		List<GetRepFrDatewiseSellReport> tempList = new ArrayList<GetRepFrDatewiseSellReport>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		
+
 		tempList = repFrSellServise.getDatewiseSellReport(fromDate, toDate, frId);
-		
-		/*List<GetRepFrDatewiseSell> repFrDatewiseSellList = repFrSellServise.getDatewiseSellReport(fromDate, toDate,
-				frId);
 
-		LinkedHashMap<Date, GetRepFrDatewiseSell> hashList = new LinkedHashMap<Date, GetRepFrDatewiseSell>();
+		/*
+		 * List<GetRepFrDatewiseSell> repFrDatewiseSellList =
+		 * repFrSellServise.getDatewiseSellReport(fromDate, toDate, frId);
+		 * 
+		 * LinkedHashMap<Date, GetRepFrDatewiseSell> hashList = new LinkedHashMap<Date,
+		 * GetRepFrDatewiseSell>();
+		 * 
+		 * for (int i = 0; i < repFrDatewiseSellList.size(); i++) { float cash = 0, card
+		 * = 0, other = 0;
+		 * 
+		 * if (hashList.containsKey(repFrDatewiseSellList.get(i).getBillDate()) ==
+		 * false) {
+		 * 
+		 * for (int j = 0; j < repFrDatewiseSellList.size(); j++) {
+		 * 
+		 * if
+		 * (repFrDatewiseSellList.get(j).getBillDate().equals(repFrDatewiseSellList.get(
+		 * i).getBillDate())) { cash = cash + repFrDatewiseSellList.get(j).getCash();
+		 * card = card + repFrDatewiseSellList.get(j).getCard(); other = other +
+		 * repFrDatewiseSellList.get(j).getOther(); } }
+		 * 
+		 * // System.err.println(getRepFrDatewiseSellResponse.get(i).getBillDate() + "
+		 * cash // " + cash + "card " // + card + "other " + other);
+		 * repFrDatewiseSellList.get(i).setCash(cash);
+		 * repFrDatewiseSellList.get(i).setCard(card);
+		 * repFrDatewiseSellList.get(i).setOther(other);
+		 * hashList.put(repFrDatewiseSellList.get(i).getBillDate(),
+		 * repFrDatewiseSellList.get(i));
+		 * 
+		 * } } tempList = new ArrayList<GetRepFrDatewiseSell>(hashList.values());
+		 */
 
-		for (int i = 0; i < repFrDatewiseSellList.size(); i++) {
-			float cash = 0, card = 0, other = 0;
-
-			if (hashList.containsKey(repFrDatewiseSellList.get(i).getBillDate()) == false) {
-
-				for (int j = 0; j < repFrDatewiseSellList.size(); j++) {
-
-					if (repFrDatewiseSellList.get(j).getBillDate().equals(repFrDatewiseSellList.get(i).getBillDate())) {
-						cash = cash + repFrDatewiseSellList.get(j).getCash();
-						card = card + repFrDatewiseSellList.get(j).getCard();
-						other = other + repFrDatewiseSellList.get(j).getOther();
-					}
-				}
-
-				// System.err.println(getRepFrDatewiseSellResponse.get(i).getBillDate() + " cash
-				// " + cash + "card "
-				// + card + "other " + other);
-				repFrDatewiseSellList.get(i).setCash(cash);
-				repFrDatewiseSellList.get(i).setCard(card);
-				repFrDatewiseSellList.get(i).setOther(other);
-				hashList.put(repFrDatewiseSellList.get(i).getBillDate(), repFrDatewiseSellList.get(i));
-
-			}
-		}
-		tempList = new ArrayList<GetRepFrDatewiseSell>(hashList.values());
-		*/
- 
 		return tempList;
 
 	}
@@ -352,6 +361,34 @@ public class ReportsController {
 
 	}
 
+	// ---------------------------------PDispatch Check List - 4-6-2020
+	// Report-----------------------------------------
+	@RequestMapping(value = "/getDispatchChkListReport", method = RequestMethod.POST)
+	public @ResponseBody List<PDispatchReport> getDispatchChkListReport(
+			@RequestParam("productionDate") String productionDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("menuId") List<Integer> menuId, @RequestParam("advOrd") int advOrd) {
+
+		String productionDateYMD = Common.convertToYMD(productionDate);
+
+		System.out.println(" fr................." + frId.toString());
+		System.out.println(" DATE................." + productionDate);
+		System.out.println(" menuId................." + menuId);
+		System.out.println(" advOrd................." + advOrd);
+
+		List<PDispatchReport> dispatchReportList = new ArrayList<>();
+
+		if (advOrd == 1) {
+			dispatchReportList = pDispatchReportRepository.getDispatchChkListIfAdvOrd(productionDateYMD, frId, menuId);
+		} else {
+			dispatchReportList = pDispatchReportRepository.getDispatchChkListIfRegOrd(productionDateYMD, frId, menuId);
+		}
+
+		System.out.println(" fr................." + dispatchReportList.toString());
+
+		return dispatchReportList;
+
+	}
+
 	// ------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getRepMonthwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetMonthWiseReport> getRepMonthwiseSell(@RequestParam("fromDate") String fromDate,
@@ -396,7 +433,7 @@ public class ReportsController {
 
 			}
 		}
-		System.err.println("Month Wise -----------"+tempList);
+		System.err.println("Month Wise -----------" + tempList);
 		tempList = new ArrayList<GetMonthWiseReport>(hashList.values());
 		return tempList;
 
@@ -419,6 +456,7 @@ public class ReportsController {
 		return getRepItemwiseSellList;
 
 	}
+
 	/************************************************************************************/
 	@RequestMapping(value = "/getRepAllItemwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<CatWiseItemWiseSale> getRepAllItemwiseSell(@RequestParam("fromDate") String fromDate,
@@ -427,14 +465,16 @@ public class ReportsController {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		
-			getRepItemwiseSellList = repo.getAllItemWiseSellDetails(fromDate, toDate, frId);
-			
+
+		getRepItemwiseSellList = repo.getAllItemWiseSellDetails(fromDate, toDate, frId);
+
 		return getRepItemwiseSellList;
 
 	}
-	
-	@Autowired CatWiseItemWiseSaleRepo repo;
+
+	@Autowired
+	CatWiseItemWiseSaleRepo repo;
+
 	@RequestMapping(value = "/getItemWiseSellRep", method = RequestMethod.POST)
 	public @ResponseBody List<CatWiseItemWiseSale> getItemWiseSellRep(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
@@ -443,31 +483,38 @@ public class ReportsController {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		
+
 		getItemSaleList = repo.getItemWiseSellReportDetails(fromDate, toDate, frId, catId);
-		
+
 		return getItemSaleList;
 
 	}
-/********************************************************************************************
-	/*
+
+	/********************************************************************************************
+	 * /*
+	 * 
 	 * @RequestMapping(value = "/getRepItemwiseSellForCat5", method =
-	 * RequestMethod.POST) public @ResponseBody List<GetRepItemwiseSell>
-	 * getRepItemwiseSellForCat5(@RequestParam("fromDate") String fromDate,
+	 *                       RequestMethod.POST) public @ResponseBody
+	 *                       List<GetRepItemwiseSell>
+	 *                       getRepItemwiseSellForCat5(@RequestParam("fromDate")
+	 *                       String fromDate,
 	 * 
-	 * @RequestParam("toDate") String toDate, @RequestParam("frId") List<String>
-	 * frId, @RequestParam("catId") List<String> catId) { List<GetRepItemwiseSell>
-	 * getRepItemwiseSellList=new ArrayList<>(); fromDate =
-	 * Common.convertToYMD(fromDate); toDate = Common.convertToYMD(toDate);
-	 * System.err.println("cat Id " +catId); if(catId.contains(5)) {
-	 * getRepItemwiseSellList=repFrSellServise.getItemwiseSellReportForCat5(
-	 * fromDate, toDate, frId, catId);
+	 *                       @RequestParam("toDate") String
+	 *                       toDate, @RequestParam("frId") List<String>
+	 *                       frId, @RequestParam("catId") List<String> catId) {
+	 *                       List<GetRepItemwiseSell> getRepItemwiseSellList=new
+	 *                       ArrayList<>(); fromDate =
+	 *                       Common.convertToYMD(fromDate); toDate =
+	 *                       Common.convertToYMD(toDate); System.err.println("cat Id
+	 *                       " +catId); if(catId.contains(5)) {
+	 *                       getRepItemwiseSellList=repFrSellServise.getItemwiseSellReportForCat5(
+	 *                       fromDate, toDate, frId, catId);
 	 * 
-	 * }else {
-	 * getRepItemwiseSellList=repFrSellServise.getItemwiseSellReport(fromDate,
-	 * toDate, frId, catId); } return getRepItemwiseSellList;
+	 *                       }else {
+	 *                       getRepItemwiseSellList=repFrSellServise.getItemwiseSellReport(fromDate,
+	 *                       toDate, frId, catId); } return getRepItemwiseSellList;
 	 * 
-	 * }
+	 *                       }
 	 */
 	@RequestMapping(value = "/getRepMenuwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepMenuwiseSell> getRepMenuwiseSell(@RequestParam("fromDate") String fromDate,
@@ -490,7 +537,8 @@ public class ReportsController {
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 		if (catId.contains("-1")) {
-			getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCat(fromDate, toDate, frId);
+			getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCat(fromDate, toDate,
+					frId);
 
 		} else {
 			getRepItemwiseSellList = repFrSellServise.getDateItemwiseSellReport(fromDate, toDate, frId, catId);
@@ -513,8 +561,10 @@ public class ReportsController {
 	}
 
 	// Sac May 10 change Tax Report for SP
-	
-	@Autowired GetSellTAxRepSummaryRepo sellTaxRepo;
+
+	@Autowired
+	GetSellTAxRepSummaryRepo sellTaxRepo;
+
 	@RequestMapping(value = "/getRepTaxSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetSellTaxRepSummary> getRepTaxSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
@@ -560,8 +610,7 @@ public class ReportsController {
 		return tempList;
 
 	}
-	
-	
+
 	@RequestMapping(value = "/getCRNTaxSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetSellTaxRepSummary> getCRNTaxSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
@@ -614,7 +663,7 @@ public class ReportsController {
 		 * } }
 		 */
 
-		//tempList = new ArrayList<GetRepTaxSell>(hashList.values());
+		// tempList = new ArrayList<GetRepTaxSell>(hashList.values());
 		System.out.println("  List  :" + getRepTaxSellList);
 		return getRepTaxSellList;
 
@@ -628,28 +677,26 @@ public class ReportsController {
 		toDate = Common.convertToYMD(toDate);
 		List<GetRepTaxSell> getRepTaxSellList = repFrSellServise.getBillwiseTaxSellReport(fromDate, toDate, frId);
 		System.out.println("  List  :" + getRepTaxSellList);
-		return getRepTaxSellList; 
+		return getRepTaxSellList;
 
 	}
-	
-	
-	
+
 	@Autowired
 	CRNSaleTaxBillReportRepo cRNSaleTaxBillReportRepo;
-	
-	//Anmol--10-03-2020
+
+	// Anmol--10-03-2020
 	@RequestMapping(value = "/getRepCRNBillwiseTaxSell", method = RequestMethod.POST)
 	public @ResponseBody List<CRNSaleTaxBillReport> getRepCRNBillwiseTaxSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		List<CRNSaleTaxBillReport> getRepTaxSellList = cRNSaleTaxBillReportRepo.getRepFrCrnwiseTaxSell(fromDate, toDate, frId);
+		List<CRNSaleTaxBillReport> getRepTaxSellList = cRNSaleTaxBillReportRepo.getRepFrCrnwiseTaxSell(fromDate, toDate,
+				frId);
 		System.out.println("  List  :" + getRepTaxSellList);
 		return getRepTaxSellList;
 
 	}
-	
 
 	// Sell Report
 	// End-------------------------------------------------------------------
@@ -692,13 +739,14 @@ public class ReportsController {
 		return dispatchReportList;
 
 	}
+
 	// ------------------------------------------------------------------------------------------------
 	@RequestMapping(value = "/getSpKgSummaryReport", method = RequestMethod.POST)
-	public @ResponseBody List<SpKgSummaryDao> getSpKgSummaryReport(
-			@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate, @RequestParam("frId") List<Integer> frId) {
+	public @ResponseBody List<SpKgSummaryDao> getSpKgSummaryReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<Integer> frId) {
 
 		List<SpKgSummaryDao> spKgSummaryDaoList = spKgSummaryRepository.getSpKgSummaryReport(fromDate, toDate, frId);
-	
+
 		return spKgSummaryDaoList;
 
 	}

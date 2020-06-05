@@ -165,6 +165,7 @@ public class ScheduleTask {
 	// Petty Cash Day End Process every morning 6.00 am
 	//@Scheduled(cron = "6 * * * * *")
 	@Scheduled(cron = "0 0 7 * * *")
+	//@Scheduled(cron = "2 * * * * *")
 	public void crownForPettyCashDayEnd() {
 
 		List<Franchisee> franchisee = new ArrayList<Franchisee>();
@@ -187,6 +188,8 @@ public class ScheduleTask {
 					e.printStackTrace();
 					empId=0;
 				}
+				
+				System.err.println("EMP ID = "+empId+"    FOR - FR ="+fr.getFrId());
 
 				PettyCashManagmt petty = new PettyCashManagmt();
 				try {
@@ -831,5 +834,7 @@ public class ScheduleTask {
 			}
 			
 		}
+		
+		
 
 }

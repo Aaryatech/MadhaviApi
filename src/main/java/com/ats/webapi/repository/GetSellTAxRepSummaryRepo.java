@@ -48,7 +48,7 @@ public interface GetSellTAxRepSummaryRepo extends JpaRepository<GetSellTaxRepSum
 			"        t_sell_bill_header h,\n" + 
 			"        m_franchisee f\n" + 
 			"    WHERE\n" + 
-			"        h.fr_id IN(:frId) AND h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = h.fr_id AND h.user_gst_no = ''\n" + 
+			"        h.fr_id IN(:frId) AND h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = h.fr_id AND h.user_gst_no = '' AND h.del_status=0 \n" + 
 			"    GROUP BY\n" + 
 			"        (d.cgst_per + d.sgst_per),\n" + 
 			"        h.fr_id\n" + 
@@ -106,7 +106,7 @@ public interface GetSellTAxRepSummaryRepo extends JpaRepository<GetSellTaxRepSum
 			"        m_franchisee f,\n" + 
 			"        m_customer c\n" + 
 			"    WHERE\n" + 
-			"        cr.ex_int1 IN(:frId) AND cr.cust_id = c.cust_id AND cr.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = cr.ex_int1 AND c.gst_no = ''\n" + 
+			"        cr.ex_int1 IN(:frId) AND cr.cust_id = c.cust_id AND cr.crn_date BETWEEN :fromDate AND :toDate AND f.fr_id = cr.ex_int1 AND c.gst_no = '' AND cr.del_status=0 \n" + 
 			"    GROUP BY\n" + 
 			"        (cr.cgst_per + cr.sgst_per),\n" + 
 			"        cr.ex_int1\n" + 

@@ -24,7 +24,7 @@ public interface CatWiseItemWiseSaleRepo extends JpaRepository<CatWiseItemWiseSa
 			"        d.mrp_base_rate as rate,\n" + 
 			"        d.mrp as mrp,\n" + 
 			"        sum(d.qty) as qty,\n" + 
-			"        sum(d.mrp*d.qty) as amount, sum(d.disc_amt) as disc_amt, sum(d.disc_amt+d.ext_float1) as payable_amt \n" + 
+			"        sum(d.mrp*d.qty) as amount, sum(d.disc_amt) as disc_amt, sum(d.grand_total) as payable_amt \n" + 
 			"    from\n" + 
 			"        t_sell_bill_detail d,\n" + 
 			"        t_sell_bill_header h,\n" + 
@@ -56,7 +56,7 @@ public interface CatWiseItemWiseSaleRepo extends JpaRepository<CatWiseItemWiseSa
 			"        d.cat_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
 			"        d.mrp_base_rate as rate,\n" + 
-			"        d.mrp as mrp, sum(d.disc_amt) as disc_amt, sum(d.disc_amt+d.ext_float1) as payable_amt,\n" + 
+			"        d.mrp as mrp, sum(d.disc_amt) as disc_amt, sum(d.grand_total) as payable_amt,\n" + 
 			"        sum(d.qty) as qty,\r\n" + 
 			"        sum(d.mrp*d.qty) as amount \r\n" + 
 			"    from\r\n" + 

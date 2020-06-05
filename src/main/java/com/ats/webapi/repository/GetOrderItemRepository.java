@@ -157,7 +157,7 @@ public interface GetOrderItemRepository extends JpaRepository<GetOrderItemQty, I
 			"		 t_adv_order_header h, " +		
 			"        m_item i\r\n" + 
 			"    WHERE\r\n" + 
-			"        d.prod_date =:productionDate AND h.adv_header_id=d.adv_detail_id AND h.del_status=0 AND d.is_bill_generated = 0 AND i.id = d.item_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN (:menuId))\r\n" + 
+			"        d.prod_date =:productionDate AND h.adv_header_id=d.adv_header_id AND h.del_status=0 AND d.is_bill_generated = 0 AND i.id = d.item_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN (:menuId))\r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.item_id\r\n" + 
 			") t1\r\n" + 

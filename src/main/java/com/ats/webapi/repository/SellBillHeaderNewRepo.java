@@ -79,7 +79,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    m_customer\r\n" + 
 			"WHERE\r\n" + 
 			"    m_franchisee.fr_id = t_sell_bill_header.fr_id AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.fr_id IN(:frId) AND t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
-			"    AND m_customer.cust_id=t_sell_bill_header.cust_id ORDER BY t_sell_bill_header.sell_bill_no DESC", nativeQuery = true)
+			"    AND m_customer.cust_id=t_sell_bill_header.cust_id AND t_sell_bill_header.del_status=0  ORDER BY t_sell_bill_header.sell_bill_no DESC", nativeQuery = true)
 	
 	List<SellBillHeaderNew> getFrSellBillHeaderAllCust(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,@Param("frId") List<String> frId);
 

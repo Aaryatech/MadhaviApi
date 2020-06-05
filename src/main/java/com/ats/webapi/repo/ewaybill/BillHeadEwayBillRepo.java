@@ -16,8 +16,12 @@ public interface BillHeadEwayBillRepo extends JpaRepository<BillHeadEwayBill, In
 			"CASE WHEN m_franchisee.is_same_state=1 THEN t_bill_header.cgst_sum ELSE 0 END as cgst_sum,\n" + 
 			"CASE WHEN m_franchisee.is_same_state=0 THEN t_bill_header.igst_sum ELSE 0 END as igst_sum,"
 			+ ""
-			+ "          t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, " + 
-			"            t_bill_header.ex_varchar3,t_bill_header.ex_varchar4,t_bill_header.ex_varchar5, " + 
+			+ "          COALESCE(t_bill_header.party_name,'') as party_name,\n" + 
+			"COALESCE(t_bill_header.party_gstin,'') as party_gstin,\n" + 
+			"COALESCE(t_bill_header.party_address,'') as party_address,\n" + 
+			"COALESCE(t_bill_header.ex_varchar3,'') as ex_varchar3,\n" + 
+			"COALESCE(t_bill_header.ex_varchar4,'') as ex_varchar4,\n" + 
+			"COALESCE(t_bill_header.ex_varchar5,'') as ex_varchar5, " + 
 			" t_bill_header.is_tally_sync as ewb_no " +
 			"FROM t_bill_header,m_franchisee WHERE t_bill_header.fr_id=m_franchisee.fr_id and t_bill_header.bill_no IN(:billIdList)",nativeQuery=true)
 	public List<BillHeadEwayBill>  getBillHeaderForEwayBill(@Param("billIdList") List<String> billIdList);

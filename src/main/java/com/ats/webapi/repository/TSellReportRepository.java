@@ -47,7 +47,7 @@ public interface TSellReportRepository extends JpaRepository<TSellReport, Intege
 			"        t_sell_bill_header h,\r\n" + 
 			"        m_item_sup s\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId\r\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId AND h.del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        hsn_no\r\n" + 
 			") t1\r\n" + 
@@ -67,7 +67,7 @@ public interface TSellReportRepository extends JpaRepository<TSellReport, Intege
 			"        m_item i,\r\n" + 
 			"        m_item_sup s\r\n" + 
 			"    WHERE\r\n" + 
-			"        c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId\r\n" + 
+			"        c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId AND c.del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        hsn_no\r\n" + 
 			") t2\r\n" + 
@@ -89,7 +89,7 @@ public interface TSellReportRepository extends JpaRepository<TSellReport, Intege
 			"    m_item i,\r\n" + 
 			"    m_item_sup s\r\n" + 
 			"WHERE\r\n" + 
-			"    c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId AND s.item_hsncd NOT IN(\r\n" + 
+			"    c.crn_date BETWEEN :fromDate AND :toDate AND c.item_id = i.id AND c.item_id = s.item_id AND c.ex_int1 = :frId AND c.del_status=0 AND s.item_hsncd NOT IN(\r\n" + 
 			"    SELECT\r\n" + 
 			"        s.item_hsncd AS hsn_no\r\n" + 
 			"    FROM\r\n" + 
@@ -98,7 +98,7 @@ public interface TSellReportRepository extends JpaRepository<TSellReport, Intege
 			"        t_sell_bill_header h,\r\n" + 
 			"        m_item_sup s\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId\r\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND d.item_id = i.id AND d.item_id = s.item_id AND h.fr_id = :frId AND h.del_status=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        hsn_no\r\n" + 
 			")\r\n" + 

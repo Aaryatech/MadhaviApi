@@ -165,7 +165,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"        YEAR(h.bill_date) as yr,\r\n" + 
 			"        MONTH(h.bill_date) as mnt,\r\n" + 
 			"        f.fr_id,\r\n" + 
-			"        f.fr_name,\r\n" + 
+			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\r\n" + 
 			"        SUM(h.grand_total) AS grand_total,\r\n" + 
 			"        SUM(h.discount_amt) AS disc_total,\r\n" + 
 			"        0 AS tr_total,\r\n" + 
@@ -518,7 +518,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"            YEAR(t_bill_header.bill_date)\r\n" + 
 				"        ) AS bill_date,\r\n" + 
 				"        t_bill_header.fr_id,\r\n" + 
-				"        m_franchisee.fr_name,\r\n" + 
+				"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\r\n" + 
 				"        SUM(t_bill_header.grand_total) AS bill_total,\r\n" + 
 				"        SUM(t_bill_header.disc_amt) AS disc_total,\r\n" + 
 				"        0 AS tr_total,\r\n" + 
@@ -567,7 +567,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"                YEAR(h.bill_date) AS yr,\r\n" + 
 				"                MONTH(h.bill_date) AS mnt,\r\n" + 
 				"                f.fr_id,\r\n" + 
-				"                f.fr_name,\r\n" + 
+				"                CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\r\n" + 
 				"                SUM(h.grand_total) AS grand_total,\r\n" + 
 				"                SUM(h.discount_amt) AS disc_total,\r\n" + 
 				"                0 AS tr_total,\r\n" + 
@@ -703,7 +703,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"        YEAR(t_bill_header.bill_date)\r\n" + 
 				"    ) AS bill_date,\r\n" + 
 				"    t_bill_header.fr_id,\r\n" + 
-				"    m_franchisee.fr_name,\r\n" + 
+				"    CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\r\n" + 
 				"    SUM(t_bill_header.grand_total) AS bill_total,\r\n" + 
 				"    SUM(t_bill_header.disc_amt) AS disc_total,\r\n" + 
 				"    0 AS tr_total,\r\n" + 
