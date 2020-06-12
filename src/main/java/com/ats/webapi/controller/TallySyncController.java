@@ -1,7 +1,12 @@
 package com.ats.webapi.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.BillInfo;
 import com.ats.webapi.model.ErrorMessage;
 import com.ats.webapi.model.MaterialRecNote;
 import com.ats.webapi.model.SupplierMaster.SupplierDetails;
@@ -26,13 +32,17 @@ import com.ats.webapi.model.tally.ItemList;
 import com.ats.webapi.model.tally.MaterialRecNoteList;
 import com.ats.webapi.model.tally.MaterialReceiptNote;
 import com.ats.webapi.model.tally.RawMaterialResList;
+import com.ats.webapi.model.tally.SalesInvoices;
 import com.ats.webapi.model.tally.SalesVoucher;
 import com.ats.webapi.model.tally.SalesVoucherList;
 import com.ats.webapi.model.tally.SpCakeList;
 import com.ats.webapi.model.tally.SuppliersList;
+import com.ats.webapi.model.tally.TallySalesInvoiceList;
+import com.ats.webapi.model.tally.TallySalesInvoiceListGroupByBills;
 import com.ats.webapi.model.tally.TallySyncModel;
 import com.ats.webapi.model.tally.TallySyncModelItemAsHsn;
 import com.ats.webapi.repository.PostBillHeaderRepository;
+import com.ats.webapi.repository.tally.SalesInvoicesRepo;
 import com.ats.webapi.repository.tally.TallyCreditNoteRepository;
 import com.ats.webapi.repository.tally.TallySalesVoucherRepository;
 import com.ats.webapi.repository.tally.TallySyncModelItemAsHsnRepo;
@@ -546,43 +556,117 @@ public class TallySyncController {
 		return new ResponseEntity<byte[]>(output, responseHeaders, HttpStatus.OK);
 	}
 
+//	@RequestMapping(value = { "/getBillsForTallySync" }, method = RequestMethod.GET)
+//	public @ResponseBody List<TallySyncModel> getBillsForTallySync() {
+//
+//		List<TallySyncModel> tallyList = new ArrayList<>();
+//		tallyList = tallySyncModelRepo.getTallySyncData();
+//
+//		return tallyList;
+//	}
+
+	@Autowired
+	SalesInvoicesRepo salesInvoiceRepo;
+
 	@RequestMapping(value = { "/getBillsForTallySync" }, method = RequestMethod.GET)
-	public @ResponseBody List<TallySyncModel> getBillsForTallySync() {
+	public @ResponseBody TallySalesInvoiceList getBillsForTallySync() {
 
-		List<TallySyncModel> tallyList = new ArrayList<>();
-		tallyList = tallySyncModelRepo.getTallySyncData();
+		TallySalesInvoiceList res = new TallySalesInvoiceList();
 
-		return tallyList;
+		List<SalesInvoices> tallyList = new ArrayList<>();
+		tallyList = salesInvoiceRepo.getTallySyncData();
+
+		if (tallyList == null) {
+			tallyList = new ArrayList<>();
+		}
+
+		res.setSalesInvoices(tallyList);
+
+		return res;
 	}
-	
-	
+
+	@RequestMapping(value = { "/getBillsForTallySyncGroupBy" }, method = RequestMethod.GET)
+	public @ResponseBody TallySalesInvoiceListGroupByBills getBillsForTallySyncGroupBy() {
+
+		TallySalesInvoiceListGroupByBills res = new TallySalesInvoiceListGroupByBills();
+
+		List<SalesInvoices> tallyList = new ArrayList<>();
+		tallyList = salesInvoiceRepo.getTallySyncData();
+
+		List<com.ats.webapi.model.SalesInvoices> salesList = new ArrayList<>();
+
+		if (tallyList != null) {
+
+			Set<String> invoiceSet = new HashSet<String>();
+			for (SalesInvoices bills : tallyList) {
+				invoiceSet.add(bills.getBillNo());
+			}
+
+			List<String> invList = new ArrayList<>();
+			invList.addAll(invoiceSet);
+
+			Collections.sort(invList);
+
+			for (String invoice : invList) {
+
+				com.ats.webapi.model.SalesInvoices salesModel = new com.ats.webapi.model.SalesInvoices();
+				salesModel.setBillNo(invoice);
+
+				List<BillInfo> billList = new ArrayList<>();
+
+				for (SalesInvoices bills : tallyList) {
+					if (invoice.equalsIgnoreCase(bills.getBillNo())) {
+
+						BillInfo bill = new BillInfo(bills.getBillNo(), bills.getDate(), bills.geteWayBillNo(),
+								bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
+								bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
+								bills.getShipToGstNo(), bills.getShipToAddress(), bills.getShipToState(),
+								bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
+								bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
+								bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
+								bills.getIgst(), bills.getOtherLedger(), bills.getRoundOff(), bills.getTotalAmount());
+						billList.add(bill);
+
+					}
+				}
+				salesModel.setBillInfo(billList);
+				salesList.add(salesModel);
+			}
+
+			res.setSalesInvoices(salesList);
+
+		}
+
+		return res;
+	}
+
 	@Autowired
 	PostBillHeaderRepository postBillHeaderRepository;
-	
+
 	@RequestMapping(value = { "/updateTallySyncFlag" }, method = RequestMethod.POST)
-	public @ResponseBody ErrorMessage updateTallySync(@RequestParam("billNo") String billNo, @RequestParam("status") int status) {
+	public @ResponseBody ErrorMessage updateTallySync(@RequestParam("billNo") String billNo,
+			@RequestParam("status") int status) {
 
 		int res = postBillHeaderRepository.updateTallySyncFlag(billNo, status);
 
-		ErrorMessage errorMessage=new ErrorMessage();
-		if(res!=0) {
+		ErrorMessage errorMessage = new ErrorMessage();
+		if (res != 0) {
 			errorMessage.setError(false);
 			errorMessage.setMessage("Success");
-		}else {
+		} else {
 			errorMessage.setError(true);
 			errorMessage.setMessage("Falied");
 		}
 
 		return errorMessage;
 	}
-	
-	
+
 	@Autowired
 	TallySyncModelItemAsHsnRepo tallySyncModelItemAsHsnRepo;
 
 	@RequestMapping(value = { "/getBillsForTallySyncItemAsHsnApi" }, method = RequestMethod.POST)
 	public @ResponseBody List<TallySyncModelItemAsHsn> getBillsForTallySyncItemAsHsn() {
-System.err.println("Hiii");
+		System.err.println("Hiii");
 		List<TallySyncModelItemAsHsn> tallyList = new ArrayList<>();
 		tallyList = tallySyncModelItemAsHsnRepo.getTallySyncDataItemAsHsn();
 
