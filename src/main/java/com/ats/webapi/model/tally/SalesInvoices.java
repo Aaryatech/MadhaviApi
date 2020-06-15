@@ -7,6 +7,8 @@ import javax.persistence.Id;
 public class SalesInvoices {
 
 	@Id
+	private String id;
+	private int frId;
 	private String billNo;
 	private String date;
 	private String eWayBillNo;
@@ -41,6 +43,24 @@ public class SalesInvoices {
 	private String otherLedger;
 	private String roundOff;
 	private String totalAmount;
+	
+	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getFrId() {
+		return frId;
+	}
+
+	public void setFrId(int frId) {
+		this.frId = frId;
+	}
 
 	public String getBillNo() {
 		return billNo;
@@ -273,18 +293,20 @@ public class SalesInvoices {
 	public void setTotalAmount(String totalAmount) {
 		this.totalAmount = totalAmount;
 	}
+	
+	
 
 	@Override
 	public String toString() {
-		return "SalesInvoices [billNo=" + billNo + ", date=" + date + ", eWayBillNo=" + eWayBillNo + ", eWayBillDate="
-				+ eWayBillDate + ", customerName=" + customerName + ", gstNo=" + gstNo + ", address=" + address
-				+ ", state=" + state + ", stateCode=" + stateCode + ", shipToCustomerName=" + shipToCustomerName
-				+ ", shipToGstNo=" + shipToGstNo + ", shipToAddress=" + shipToAddress + ", shipToState=" + shipToState
-				+ ", shipToStateCode=" + shipToStateCode + ", productName=" + productName + ", partNo=" + partNo
-				+ ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer=" + gstPer + ", rate=" + rate
-				+ ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst + ", sgst=" + sgst + ", igst="
-				+ igst + ", otherLedger=" + otherLedger + ", roundOff=" + roundOff + ", totalAmount=" + totalAmount
-				+ "]";
+		return "SalesInvoices [id=" + id + ", frId=" + frId + ", billNo=" + billNo + ", date=" + date + ", eWayBillNo="
+				+ eWayBillNo + ", eWayBillDate=" + eWayBillDate + ", customerName=" + customerName + ", gstNo=" + gstNo
+				+ ", address=" + address + ", state=" + state + ", stateCode=" + stateCode + ", shipToCustomerName="
+				+ shipToCustomerName + ", shipToGstNo=" + shipToGstNo + ", shipToAddress=" + shipToAddress
+				+ ", shipToState=" + shipToState + ", shipToStateCode=" + shipToStateCode + ", productName="
+				+ productName + ", partNo=" + partNo + ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer="
+				+ gstPer + ", rate=" + rate + ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst
+				+ ", sgst=" + sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", roundOff=" + roundOff
+				+ ", totalAmount=" + totalAmount + "]";
 	}
 
 }
