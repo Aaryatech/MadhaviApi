@@ -639,12 +639,11 @@ public class TallySyncController {
 //
 //		return res;
 //	}
-	
-	
-	//TALLY SYNC GROUP BY BILLS WITH SELL BILL - CASH, EPAY,CREDIT
+
+	// TALLY SYNC GROUP BY BILLS WITH SELL BILL - CASH, EPAY,CREDIT
 	@RequestMapping(value = { "/getBillsForTallySyncGroupBy" }, method = RequestMethod.GET)
-	public @ResponseBody TallySalesInvoiceListGroupByBills getBillsForTallySyncGroupBy(@RequestParam("fromDate")String fromDate,
-			@RequestParam("toDate")String toDate) {
+	public @ResponseBody TallySalesInvoiceListGroupByBills getBillsForTallySyncGroupBy(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
 		TallySalesInvoiceListGroupByBills res = new TallySalesInvoiceListGroupByBills();
 
@@ -674,7 +673,7 @@ public class TallySyncController {
 
 				for (SalesInvoices bills : tallyList) {
 					if (invoice.equalsIgnoreCase(bills.getBillNo())) {
-						
+
 						BillInfo bill = new BillInfo(bills.getBillNo(), bills.getDate(), bills.geteWayBillNo(),
 								bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
 								bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
@@ -697,9 +696,6 @@ public class TallySyncController {
 
 		return res;
 	}
-	
-	
-	
 
 	@Autowired
 	PostBillHeaderRepository postBillHeaderRepository;

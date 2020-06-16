@@ -3,6 +3,10 @@ package com.ats.webapi.model.tally;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * @author MAXADMIN
+ *
+ */
 @Entity
 public class SalesInvoices {
 
@@ -43,8 +47,6 @@ public class SalesInvoices {
 	private String otherLedger;
 	private String roundOff;
 	private String totalAmount;
-	
-	
 
 	public String getId() {
 		return id;
@@ -293,8 +295,6 @@ public class SalesInvoices {
 	public void setTotalAmount(String totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	
-	
 
 	@Override
 	public String toString() {
