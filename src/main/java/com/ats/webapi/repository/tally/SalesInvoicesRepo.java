@@ -38,6 +38,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    COALESCE(b.sgst, 0) AS sgst,\r\n" + 
 			"    COALESCE(b.igst, 0) AS igst,\r\n" + 
 			"    a.other_ledger,\r\n" + 
+			"    0 as rate_total,\r\n" +
 			"    ROUND(COALESCE((b.grand_total),\r\n" + 
 			"    0),\r\n" + 
 			"    0) - ROUND(COALESCE((b.grand_total),\r\n" + 
@@ -139,9 +140,12 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    COALESCE(ROUND(b.igst, 2),\r\n" + 
 			"    0) AS igst,\r\n" + 
 			"    a.other_ledger,\r\n" + 
+			"    COALESCE(b.tot, 0) AS rate_total,\r\n" + 
 			"    0 AS round_off,\r\n" + 
 			"    ROUND(\r\n" + 
-			"        COALESCE((b.grand_total),\r\n" + 
+			"        COALESCE(b.tot, 0) + COALESCE(ROUND(b.cgst, 2),\r\n" + 
+			"        0) + COALESCE(ROUND(b.sgst, 2),\r\n" + 
+			"        0) - COALESCE(ROUND(b.amount, 2),\r\n" + 
 			"        0),\r\n" + 
 			"        2\r\n" + 
 			"    ) AS total_amount\r\n" + 
@@ -191,11 +195,18 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
 			"        d.bill_no,\r\n" + 
+			"        h.invoice_no,\r\n" + 
 			"        SUM(d.grand_total) AS grand_total,\r\n" + 
 			"        SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"        SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"        SUM(d.igst_rs) AS igst,\r\n" + 
-			"        SUM(d.remark) AS amount\r\n" + 
+			"        SUM(d.remark) AS amount,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        t_bill_detail d,\r\n" + 
 			"        t_bill_header h\r\n" + 
@@ -245,10 +256,10 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
 			"            0) AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
+			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(ROUND(t7.tot, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
 			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
 			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
 			"                0),\r\n" + 
@@ -377,7 +388,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(q * r) AS tot\r\n" + 
+			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 
@@ -444,10 +455,10 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
 			"            0) AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
+			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(ROUND(t7.tot, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
 			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
 			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
 			"                0),\r\n" + 
@@ -576,7 +587,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(q * r) AS tot\r\n" + 
+			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 
@@ -643,10 +654,10 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
 			"            0) AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
+			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(ROUND(t7.tot, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
 			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
 			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
 			"                0),\r\n" + 
@@ -775,7 +786,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(q * r) AS tot\r\n" + 
+			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 

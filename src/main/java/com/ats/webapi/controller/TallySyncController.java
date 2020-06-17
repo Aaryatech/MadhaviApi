@@ -681,7 +681,7 @@ public class TallySyncController {
 								bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
 								bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
 								bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
-								bills.getIgst(), bills.getOtherLedger(), bills.getRoundOff(), bills.getTotalAmount());
+								bills.getIgst(), bills.getOtherLedger(),bills.getRateTotal(), bills.getRoundOff(), bills.getTotalAmount());
 						billList.add(bill);
 
 					}

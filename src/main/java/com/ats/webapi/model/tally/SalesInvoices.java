@@ -45,6 +45,7 @@ public class SalesInvoices {
 	private String igst;
 
 	private String otherLedger;
+	private String rateTotal;
 	private String roundOff;
 	private String totalAmount;
 
@@ -296,6 +297,14 @@ public class SalesInvoices {
 		this.totalAmount = totalAmount;
 	}
 
+	public String getRateTotal() {
+		return rateTotal;
+	}
+
+	public void setRateTotal(String rateTotal) {
+		this.rateTotal = rateTotal;
+	}
+
 	@Override
 	public String toString() {
 		return "SalesInvoices [id=" + id + ", frId=" + frId + ", billNo=" + billNo + ", date=" + date + ", eWayBillNo="
@@ -305,8 +314,8 @@ public class SalesInvoices {
 				+ ", shipToState=" + shipToState + ", shipToStateCode=" + shipToStateCode + ", productName="
 				+ productName + ", partNo=" + partNo + ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer="
 				+ gstPer + ", rate=" + rate + ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst
-				+ ", sgst=" + sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", roundOff=" + roundOff
-				+ ", totalAmount=" + totalAmount + "]";
+				+ ", sgst=" + sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal
+				+ ", roundOff=" + roundOff + ", totalAmount=" + totalAmount + "]";
 	}
 
 }

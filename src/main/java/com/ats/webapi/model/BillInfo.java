@@ -36,23 +36,21 @@ public class BillInfo {
 	private String igst;
 
 	private String otherLedger;
+	private String rateTotal;
 	private String roundOff;
 	private String totalAmount;
-	
-	
 
 	public BillInfo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	
 	public BillInfo(String billNo, String date, String eWayBillNo, String eWayBillDate, String customerName,
 			String gstNo, String address, String state, String stateCode, String shipToCustomerName, String shipToGstNo,
 			String shipToAddress, String shipToState, String shipToStateCode, String productName, String partNo,
 			String qty, String unit, String hsn, String gstPer, String rate, String discount, String amount,
-			String cgst, String sgst, String igst, String otherLedger, String roundOff, String totalAmount) {
+			String cgst, String sgst, String igst, String otherLedger, String rateTotal, String roundOff,
+			String totalAmount) {
 		super();
 		this.billNo = billNo;
 		this.date = date;
@@ -81,11 +79,10 @@ public class BillInfo {
 		this.sgst = sgst;
 		this.igst = igst;
 		this.otherLedger = otherLedger;
+		this.rateTotal = rateTotal;
 		this.roundOff = roundOff;
 		this.totalAmount = totalAmount;
 	}
-
-
 
 	public String getBillNo() {
 		return billNo;
@@ -319,6 +316,14 @@ public class BillInfo {
 		this.totalAmount = totalAmount;
 	}
 
+	public String getRateTotal() {
+		return rateTotal;
+	}
+
+	public void setRateTotal(String rateTotal) {
+		this.rateTotal = rateTotal;
+	}
+
 	@Override
 	public String toString() {
 		return "BillInfo [billNo=" + billNo + ", date=" + date + ", eWayBillNo=" + eWayBillNo + ", eWayBillDate="
@@ -328,9 +333,8 @@ public class BillInfo {
 				+ ", shipToStateCode=" + shipToStateCode + ", productName=" + productName + ", partNo=" + partNo
 				+ ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer=" + gstPer + ", rate=" + rate
 				+ ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst + ", sgst=" + sgst + ", igst="
-				+ igst + ", otherLedger=" + otherLedger + ", roundOff=" + roundOff + ", totalAmount=" + totalAmount
-				+ "]";
+				+ igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal + ", roundOff=" + roundOff
+				+ ", totalAmount=" + totalAmount + "]";
 	}
-	
-	
+
 }
