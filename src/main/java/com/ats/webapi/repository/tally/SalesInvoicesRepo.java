@@ -200,13 +200,21 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"        SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"        SUM(d.igst_rs) AS igst,\r\n" + 
-			"        SUM(d.remark) AS amount,\r\n" + 
 			"        SUM(\r\n" + 
 			"            ROUND(\r\n" + 
 			"                ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
 			"                2\r\n" + 
 			"            )\r\n" + 
-			"        ) AS tot\r\n" + 
+			"        ) AS tot,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                ROUND(\r\n" + 
+			"                    ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
+			"                    2\r\n" + 
+			"                ) *(d.disc_per / 100),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS amount\r\n" + 
 			"    FROM\r\n" + 
 			"        t_bill_detail d,\r\n" + 
 			"        t_bill_header h\r\n" + 
@@ -227,12 +235,12 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            UUID() AS id, t1.fr_id, t5.invoice AS bill_no, DATE_FORMAT(t1.date, '%d-%m-%Y') AS DATE,\r\n" + 
 			"            '' AS e_way_bill_no,\r\n" + 
 			"            '' AS e_way_bill_date,\r\n" + 
-			"            '' AS ship_to_customer_name,\r\n" + 
+			"            'Cash' AS ship_to_customer_name,\r\n" + 
 			"            '' AS ship_to_gst_no,\r\n" + 
 			"            '' AS ship_to_address,\r\n" + 
 			"            t3.state,\r\n" + 
 			"            t3.state_code,\r\n" + 
-			"            '' AS customer_name,\r\n" + 
+			"            'Cash' AS customer_name,\r\n" + 
 			"            '' AS gst_no,\r\n" + 
 			"            '' AS address,\r\n" + 
 			"            t3.state AS ship_to_state,\r\n" + 
@@ -388,14 +396,16 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
-			"            ROUND(d.mrp_base_rate, 2) AS r,\r\n" + 
-			"            SUM(ROUND(qty, 3)) AS q\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 
@@ -426,12 +436,12 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            UUID() AS id, t1.fr_id, t5.invoice AS bill_no, DATE_FORMAT(t1.date, '%d-%m-%Y') AS DATE,\r\n" + 
 			"            '' AS e_way_bill_no,\r\n" + 
 			"            '' AS e_way_bill_date,\r\n" + 
-			"            '' AS ship_to_customer_name,\r\n" + 
+			"            'E-Payment' AS ship_to_customer_name,\r\n" + 
 			"            '' AS ship_to_gst_no,\r\n" + 
 			"            '' AS ship_to_address,\r\n" + 
 			"            t3.state,\r\n" + 
 			"            t3.state_code,\r\n" + 
-			"            '' AS customer_name,\r\n" + 
+			"            'E-Payment' AS customer_name,\r\n" + 
 			"            '' AS gst_no,\r\n" + 
 			"            '' AS address,\r\n" + 
 			"            t3.state AS ship_to_state,\r\n" + 
@@ -587,14 +597,16 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
-			"            ROUND(d.mrp_base_rate, 2) AS r,\r\n" + 
-			"            SUM(ROUND(qty, 3)) AS q\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 
@@ -672,10 +684,10 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                h.bill_date AS DATE,\r\n" + 
 			"                '' AS e_way_bill_no,\r\n" + 
 			"                '' AS e_way_bill_date,\r\n" + 
-			"                '' AS ship_to_customer_name,\r\n" + 
+			"                'Credit' AS ship_to_customer_name,\r\n" + 
 			"                '' AS ship_to_gst_no,\r\n" + 
 			"                '' AS ship_to_address,\r\n" + 
-			"                '' AS customer_name,\r\n" + 
+			"                'Credit' AS customer_name,\r\n" + 
 			"                '' AS gst_no,\r\n" + 
 			"                '' AS address,\r\n" + 
 			"                0 AS part_no,\r\n" + 
@@ -786,14 +798,16 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        t.fr_id,\r\n" + 
 			"        t.bill_date,\r\n" + 
-			"        SUM(ROUND(q * r, 2)) AS tot\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
 			"        SELECT\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
-			"            ROUND(d.mrp_base_rate, 2) AS r,\r\n" + 
-			"            SUM(ROUND(qty, 3)) AS q\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 

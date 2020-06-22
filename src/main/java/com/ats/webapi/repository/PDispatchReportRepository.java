@@ -224,7 +224,7 @@ public interface PDispatchReportRepository extends JpaRepository<PDispatchReport
 			"    WHERE\n" + 
 			"        d.delivery_date = :productionDateYMD AND d.menu_id IN(:menuId) AND d.fr_id IN(:frId) AND d.del_status = 0\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id, d.fr_id \n" + 
 			") t2\n" + 
 			"ON\n" + 
 			"    t1.item_id = t2.item_id AND t1.fr_id=t2.fr_id\n" + 
@@ -278,7 +278,7 @@ public interface PDispatchReportRepository extends JpaRepository<PDispatchReport
 			"    FROM\n" + 
 			"        t_order o\n" + 
 			"    WHERE\n" + 
-			"        o.delivery_date = :productionDateYMD AND o.is_edit = 0 AND o.fr_id IN(:frId)\n" + 
+			"        o.delivery_date = :productionDateYMD AND o.is_edit = 0 AND o.fr_id IN(t1.fr_id)\n" + 
 			")",nativeQuery=true)
 	List<PDispatchReport> getDispatchChkListIfAdvOrd(@Param("productionDateYMD")String productionDateYMD,@Param("frId") List<String> frId, @Param("menuId") List<Integer> menuId); 
 	

@@ -44,7 +44,11 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
+			"        CONCAT(\n" + 
+			"            m_franchisee.fr_name,\n" + 
+			"            ' - ',\n" + 
+			"            m_franchisee.fr_code\n" + 
+			"        ) AS fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -53,14 +57,15 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        t_order.delivery_date,\n" + 
 			"        t_order.is_edit,\n" + 
 			"        t_order.edit_qty,\n" + 
-			"        t_order.is_positive\n" + 
+			"        t_order.is_positive,\n" + 
+			"        t_order.fr_id\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        m_category,\n" + 
 			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.fr_id IN(:frId) AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0 AND t_order.fr_id IN(:frId) AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
 			"    ORDER BY\n" + 
 			"        m_franchisee.fr_id,\n" + 
 			"        m_category.cat_id,\n" + 
@@ -68,7 +73,9 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_item.item_name\n" + 
 			") t1\n" + 
 			"LEFT JOIN(\n" + 
-			"    SELECT d.adv_detail_id,\n" + 
+			"    SELECT\n" + 
+			"        d.fr_id,\n" + 
+			"        d.adv_detail_id,\n" + 
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty\n" + 
@@ -78,12 +85,13 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"        d.prod_date = :date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,\n" + 
+			"        d.fr_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
-			"    t1.id = t2.id\n" + 
+			"    t1.id = t2.id AND t1.fr_id = t2.fr_id\n" + 
 			"UNION\n" + 
 			"SELECT\n" + 
 			"    t1.fr_name,\n" + 
@@ -105,31 +113,36 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
+			"        CONCAT(f.fr_name, ' - ', f.fr_code) AS fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
-			"        d.delivery_date\n" + 
+			"        d.delivery_date, d.fr_id \n" + 
 			"    FROM\n" + 
 			"        t_adv_order_detail d,\n" + 
 			"        m_franchisee f,\n" + 
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN(:menuId))\n" + 
-			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.prod_date = :date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(\n" + 
+			"        SELECT\n" + 
+			"            cat_id\n" + 
+			"        FROM\n" + 
+			"            m_fr_menu_show\n" + 
+			"        WHERE\n" + 
+			"            menu_id IN(:menuId)\n" + 
+			"    )\n" + 
+			"GROUP BY\n" + 
+			"    d.item_id,\n" + 
+			"    d.fr_id\n" + 
 			") t1\n" + 
 			"WHERE\n" + 
 			"    t1.id NOT IN(\n" + 
 			"    SELECT\n" + 
-			"        m_item.id\n" + 
+			"       t_order.item_id\n" + 
 			"    FROM\n" + 
-			"        m_franchisee,\n" + 
-			"        m_category,\n" + 
-			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id AND t_order.fr_id IN(:frId)\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0  AND t_order.menu_id IN(:menuId) AND t_order.fr_id IN(t1.fr_id)\n" + 
 			")",nativeQuery=true)
 				List<GetOrder> findAllNative(@Param("frId")List<String>  frId,@Param("menuId") List<String> menuId,@Param("date")String date);
 
@@ -165,7 +178,11 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
+			"        CONCAT(\n" + 
+			"            m_franchisee.fr_name,\n" + 
+			"            ' - ',\n" + 
+			"            m_franchisee.fr_code\n" + 
+			"        ) AS fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -174,14 +191,15 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        t_order.delivery_date,\n" + 
 			"        t_order.is_edit,\n" + 
 			"        t_order.edit_qty,\n" + 
-			"        t_order.is_positive\n" + 
+			"        t_order.is_positive,\n" + 
+			"        t_order.fr_id\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        m_category,\n" + 
 			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
 			"    ORDER BY\n" + 
 			"        m_franchisee.fr_id,\n" + 
 			"        m_category.cat_id,\n" + 
@@ -189,7 +207,9 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_item.item_name\n" + 
 			") t1\n" + 
 			"LEFT JOIN(\n" + 
-			"    SELECT d.adv_detail_id,\n" + 
+			"    SELECT\n" + 
+			"        d.fr_id,\n" + 
+			"        d.adv_detail_id,\n" + 
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty\n" + 
@@ -199,12 +219,13 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"        d.prod_date = :date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,\n" + 
+			"        d.fr_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
-			"    t1.id = t2.id\n" + 
+			"    t1.id = t2.id AND t1.fr_id = t2.fr_id\n" + 
 			"UNION\n" + 
 			"SELECT\n" + 
 			"    t1.fr_name,\n" + 
@@ -226,31 +247,36 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
+			"        CONCAT(f.fr_name, ' - ', f.fr_code) AS fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
-			"        d.delivery_date\n" + 
+			"        d.delivery_date, d.fr_id \n" + 
 			"    FROM\n" + 
 			"        t_adv_order_detail d,\n" + 
 			"        m_franchisee f,\n" + 
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(SELECT cat_id from m_fr_menu_show WHERE menu_id IN(:menuId))\n" + 
-			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.prod_date = :date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.cat_id IN(\n" + 
+			"        SELECT\n" + 
+			"            cat_id\n" + 
+			"        FROM\n" + 
+			"            m_fr_menu_show\n" + 
+			"        WHERE\n" + 
+			"            menu_id IN(:menuId)\n" + 
+			"    )\n" + 
+			"GROUP BY\n" + 
+			"    d.item_id,\n" + 
+			"    d.fr_id\n" + 
 			") t1\n" + 
 			"WHERE\n" + 
 			"    t1.id NOT IN(\n" + 
 			"    SELECT\n" + 
-			"        m_item.id\n" + 
+			"       t_order.item_id\n" + 
 			"    FROM\n" + 
-			"        m_franchisee,\n" + 
-			"        m_category,\n" + 
-			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0  AND t_order.menu_id IN(:menuId)  AND t_order.fr_id IN(t1.fr_id)\n" + 
 			")",nativeQuery=true)
 				List<GetOrder> findAllNativeAllFr(@Param("menuId")List<String> menuId,@Param("date")String date);
 	
@@ -285,7 +311,11 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
+			"        CONCAT(\n" + 
+			"            m_franchisee.fr_name,\n" + 
+			"            ' - ',\n" + 
+			"            m_franchisee.fr_code\n" + 
+			"        ) AS fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -294,14 +324,15 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        t_order.delivery_date,\n" + 
 			"        t_order.is_edit,\n" + 
 			"        t_order.edit_qty,\n" + 
-			"        t_order.is_positive\n" + 
+			"        t_order.is_positive,\n" + 
+			"        t_order.fr_id\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        m_category,\n" + 
 			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.item_id IN(:itemId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.item_id IN(:itemId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
 			"    ORDER BY\n" + 
 			"        m_franchisee.fr_id,\n" + 
 			"        m_category.cat_id,\n" + 
@@ -309,7 +340,9 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_item.item_name\n" + 
 			") t1\n" + 
 			"LEFT JOIN(\n" + 
-			"    SELECT d.adv_detail_id,\n" + 
+			"    SELECT\n" + 
+			"        d.fr_id,\n" + 
+			"        d.adv_detail_id,\n" + 
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty\n" + 
@@ -319,12 +352,13 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
+			"        d.prod_date = :date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,\n" + 
+			"        d.fr_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
-			"    t1.id = t2.id\n" + 
+			"    t1.id = t2.id AND t1.fr_id = t2.fr_id\n" + 
 			"UNION\n" + 
 			"SELECT\n" + 
 			"    t1.fr_name,\n" + 
@@ -346,31 +380,28 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
+			"        CONCAT(f.fr_name, ' - ', f.fr_code) AS fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
-			"        d.delivery_date\n" + 
+			"        d.delivery_date, d.fr_id \n" + 
 			"    FROM\n" + 
 			"        t_adv_order_detail d,\n" + 
 			"        m_franchisee f,\n" + 
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
+			"        d.prod_date = :date AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,d.fr_id\n" + 
 			") t1\n" + 
 			"WHERE\n" + 
 			"    t1.id NOT IN(\n" + 
 			"    SELECT\n" + 
-			"        m_item.id\n" + 
+			"        t_order.item_id\n" + 
 			"    FROM\n" + 
-			"        m_franchisee,\n" + 
-			"        m_category,\n" + 
-			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id AND t_order.item_id IN(:itemId)\n" + 
+			"        t_order.production_date = '2020-06-18' AND t_order.is_edit = 0 AND t_order.menu_id IN(:menuId) AND t_order.fr_id IN(t1.fr_id) AND t_order.item_id IN(:itemId)\n" + 
 			")",nativeQuery=true)
 	
 	List<GetOrder> findAllNativeAllFrByItem(@Param("menuId")List<String> menuId,@Param("date") String date,@Param("itemId") List<Integer> itemId);
@@ -405,7 +436,11 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"FROM\n" + 
 			"    (\n" + 
 			"    SELECT\n" + 
-			"        CONCAT(m_franchisee.fr_name,' - ',m_franchisee.fr_code) as fr_name,\n" + 
+			"        CONCAT(\n" + 
+			"            m_franchisee.fr_name,\n" + 
+			"            ' - ',\n" + 
+			"            m_franchisee.fr_code\n" + 
+			"        ) AS fr_name,\n" + 
 			"        m_item.id,\n" + 
 			"        m_item.item_name,\n" + 
 			"        t_order.order_id,\n" + 
@@ -414,14 +449,15 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        t_order.delivery_date,\n" + 
 			"        t_order.is_edit,\n" + 
 			"        t_order.edit_qty,\n" + 
-			"        t_order.is_positive\n" + 
+			"        t_order.is_positive,\n" + 
+			"        t_order.fr_id\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        m_category,\n" + 
 			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.fr_id IN(:frId) AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.item_id IN(:itemId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0 AND t_order.fr_id IN(:frId) AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.item_id IN(:itemId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id\n" + 
 			"    ORDER BY\n" + 
 			"        m_franchisee.fr_id,\n" + 
 			"        m_category.cat_id,\n" + 
@@ -430,6 +466,7 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			") t1\n" + 
 			"LEFT JOIN(\n" + 
 			"    SELECT\n" + 
+			"        d.fr_id,\n" + 
 			"        d.adv_detail_id,\n" + 
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
@@ -440,12 +477,13 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
+			"        d.prod_date = :date AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id AND d.item_id IN(:itemId)\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,\n" + 
+			"        d.fr_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
-			"    t1.id = t2.id\n" + 
+			"    t1.id = t2.id AND t1.fr_id = t2.fr_id\n" + 
 			"UNION\n" + 
 			"SELECT\n" + 
 			"    t1.fr_name,\n" + 
@@ -467,31 +505,29 @@ public interface GetOrderRepository extends JpaRepository<GetOrder, Integer>{
 			"        d.item_id AS id,\n" + 
 			"        COALESCE(SUM(d.qty),\n" + 
 			"        0) AS adv_qty,\n" + 
-			"        CONCAT(f.fr_name,' - ',f.fr_code) as fr_name,\n" + 
+			"        CONCAT(f.fr_name, ' - ', f.fr_code) AS fr_name,\n" + 
 			"        i.item_name,\n" + 
 			"        c.cat_name,\n" + 
-			"        d.delivery_date\n" + 
+			"        d.delivery_date, d.fr_id \n" + 
 			"    FROM\n" + 
 			"        t_adv_order_detail d,\n" + 
 			"        m_franchisee f,\n" + 
 			"        m_category c,\n" + 
 			"        m_item i\n" + 
 			"    WHERE\n" + 
-			"        d.prod_date =:date AND d.item_id IN(:itemId) AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
+			"        d.prod_date = :date AND d.item_id IN(:itemId) AND d.fr_id IN(:frId) AND d.del_status = 0 AND d.item_id = i.id AND d.fr_id = f.fr_id AND d.cat_id = c.cat_id\n" + 
 			"    GROUP BY\n" + 
-			"        d.item_id\n" + 
+			"        d.item_id,\n" + 
+			"        d.fr_id\n" + 
 			") t1\n" + 
 			"WHERE\n" + 
 			"    t1.id NOT IN(\n" + 
 			"    SELECT\n" + 
-			"        m_item.id\n" + 
+			"        t_order.item_id\n" + 
 			"    FROM\n" + 
-			"        m_franchisee,\n" + 
-			"        m_category,\n" + 
-			"        m_item,\n" + 
 			"        t_order\n" + 
 			"    WHERE\n" + 
-			"        t_order.production_date =:date AND t_order.is_edit = 0 AND t_order.item_id = m_item.id AND t_order.menu_id IN(:menuId) AND t_order.fr_id = m_franchisee.fr_id AND t_order.order_type = m_category.cat_id AND t_order.item_id IN(:itemId) AND t_order.fr_id IN(:frId)\n" + 
+			"        t_order.production_date = :date AND t_order.is_edit = 0 AND t_order.menu_id IN(:menuId) AND t_order.item_id IN(:itemId) AND t_order.fr_id IN(t1.fr_id)\n" + 
 			")",nativeQuery=true)
 	List<GetOrder> findAllNativeByItemId(@Param("frId")List<String> frId,@Param("menuId") List<String> menuId,@Param("date") String date,@Param("itemId") List<Integer> itemId);
 	

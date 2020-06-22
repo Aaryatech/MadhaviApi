@@ -673,6 +673,10 @@ public class TallySyncController {
 
 				for (SalesInvoices bills : tallyList) {
 					if (invoice.equalsIgnoreCase(bills.getBillNo())) {
+						
+//						if(invoice.equalsIgnoreCase("-c") || invoice.equalsIgnoreCase("-E") || invoice.equalsIgnoreCase("-P")) {
+//							
+//						}
 
 						BillInfo bill = new BillInfo(bills.getBillNo(), bills.getDate(), bills.geteWayBillNo(),
 								bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),

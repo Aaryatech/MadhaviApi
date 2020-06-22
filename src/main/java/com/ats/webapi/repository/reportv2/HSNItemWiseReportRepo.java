@@ -242,12 +242,11 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"    i.item_grp2 AS sub_cat_id\r\n" + 
 			"FROM\r\n" + 
 			"    t_credit_note_pos c,\r\n" + 
-			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
 			"    m_item i,\r\n" + 
 			"    m_item_sup s\r\n" + 
 			"WHERE\r\n" + 
-			"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id\r\n" + 
+			"    c.bill_detail_no = d.sell_bill_detail_no AND c.crn_date BETWEEN :fromDate AND :toDate  AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id\r\n" + 
 			"GROUP BY\r\n" + 
 			"    d.item_id\r\n" + 
 			") t1\r\n" + 
@@ -311,12 +310,11 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"    i.item_grp2 AS sub_cat_id\r\n" + 
 			"FROM\r\n" + 
 			"    t_credit_note_pos c,\r\n" + 
-			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
 			"    m_item i,\r\n" + 
 			"    m_item_sup s\r\n" + 
 			"WHERE\r\n" + 
-			"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id\r\n" + 
+			"    c.bill_detail_no = d.sell_bill_detail_no AND c.crn_date BETWEEN :fromDate AND :toDate AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id\r\n" + 
 			"GROUP BY\r\n" + 
 			"    d.item_id\r\n" + 
 			"ORDER BY\r\n" + 
@@ -342,12 +340,11 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"    i.item_grp2 AS sub_cat_id\r\n" + 
 			"FROM\r\n" + 
 			"    t_credit_note_pos c,\r\n" + 
-			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
 			"    m_item i,\r\n" + 
 			"    m_item_sup s\r\n" + 
 			"WHERE\r\n" + 
-			"    c.bill_no = h.sell_bill_no AND h.sell_bill_no = d.sell_bill_no AND c.crn_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id AND c.ex_int1 = :frId\r\n" + 
+			"    c.bill_detail_no = d.sell_bill_detail_no AND c.crn_date BETWEEN :fromDate AND :toDate AND d.item_id = i.id AND i.id = s.item_id AND d.item_id = s.item_id AND c.ex_int1 = :frId\r\n" + 
 			"GROUP BY\r\n" + 
 			"    d.item_id\r\n" + 
 			"ORDER BY\r\n" + 
