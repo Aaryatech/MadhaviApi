@@ -45,7 +45,7 @@ public interface AdminCrNoteRegItemRepo extends JpaRepository<AdminCrNoteRegItem
 			"    t_bill_header,\r\n" + 
 			"    m_franchisee\r\n" + 
 			"WHERE\r\n" + 
-			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2=0 AND t_bill_header.ex_varchar4 != ''\r\n" + 
+			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2=0 AND t_bill_header.ex_varchar4 != '' AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    t_credit_note_details.crn_id,\r\n" + 
 			"    t_credit_note_details.cgst_per + t_credit_note_details.sgst_per\r\n" + 
@@ -88,7 +88,7 @@ public interface AdminCrNoteRegItemRepo extends JpaRepository<AdminCrNoteRegItem
 			"    t_bill_header,\r\n" + 
 			"    m_franchisee\r\n" + 
 			"WHERE\r\n" + 
-			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2=0 AND t_bill_header.ex_varchar4 = ''\r\n" + 
+			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2=0 AND t_bill_header.ex_varchar4 = '' AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    t_credit_note_details.cgst_per + t_credit_note_details.sgst_per\r\n" + 
 			"ORDER BY\r\n" + 
@@ -207,7 +207,7 @@ public interface AdminCrNoteRegItemRepo extends JpaRepository<AdminCrNoteRegItem
 			"        t_bill_header,\r\n" + 
 			"        m_franchisee\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2 = 0 AND t_bill_header.ex_varchar4 != ''\r\n" + 
+			"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2 = 0 AND t_bill_header.ex_varchar4 != '' AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        t_credit_note_details.crn_id,\r\n" + 
 			"        t_credit_note_details.cgst_per + t_credit_note_details.sgst_per\r\n" + 
@@ -288,7 +288,7 @@ public interface AdminCrNoteRegItemRepo extends JpaRepository<AdminCrNoteRegItem
 				"        t_bill_header,\r\n" + 
 				"        m_franchisee\r\n" + 
 				"    WHERE\r\n" + 
-				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2 = 0 AND t_bill_header.ex_varchar4 = ''\r\n" + 
+				"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.fr_id = m_franchisee.fr_id AND t_bill_header.bill_no = t_credit_note_header.ex_int1 AND t_bill_header.ex_varchar2 = 0 AND t_bill_header.ex_varchar4 = '' AND t_credit_note_header.ex_int2!=1 \r\n" + 
 				"    GROUP BY\r\n" + 
 				"        t_credit_note_details.cgst_per + t_credit_note_details.sgst_per\r\n" + 
 				"    UNION ALL\r\n" + 

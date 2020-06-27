@@ -191,7 +191,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 			"    t_credit_note_details,\r\n" + 
 			"    t_credit_note_header\r\n" + 
 			"WHERE\r\n" + 
-			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate \r\n" + 
+			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    item_hsncd\r\n" + 
 			"ORDER BY\r\n" + 
@@ -326,7 +326,7 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 					"    t_credit_note_details,\r\n" + 
 					"    t_credit_note_header\r\n" + 
 					"WHERE\r\n" + 
-					"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate\r\n" + 
+					"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_header.ex_int2!=1 \r\n" + 
 					"GROUP BY\r\n" + 
 					"    item_hsncd\r\n" + 
 					"\r\n" + 

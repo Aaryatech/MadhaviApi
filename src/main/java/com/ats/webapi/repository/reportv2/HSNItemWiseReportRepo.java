@@ -223,7 +223,7 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"        m_item,\r\n" + 
 			"        m_item_sup\r\n" + 
 			"    WHERE\r\n" + 
-			"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_details.item_id = m_item.id AND m_item.id = m_item_sup.item_id AND t_credit_note_details.item_id = m_item_sup.item_id\r\n" + 
+			"        t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_details.item_id = m_item.id AND m_item.id = m_item_sup.item_id AND t_credit_note_details.item_id = m_item_sup.item_id AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        t_credit_note_details.item_id\r\n" + 
 			"    UNION ALL\r\n" + 
@@ -284,7 +284,7 @@ public interface HSNItemWiseReportRepo extends JpaRepository<HSNItemWiseReport, 
 			"    m_item,\r\n" + 
 			"    m_item_sup\r\n" + 
 			"WHERE\r\n" + 
-			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_details.item_id = m_item.id AND m_item.id = m_item_sup.item_id AND t_credit_note_details.item_id = m_item_sup.item_id\r\n" + 
+			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_details.item_id = m_item.id AND m_item.id = m_item_sup.item_id AND t_credit_note_details.item_id = m_item_sup.item_id AND t_credit_note_header.ex_int2!=1 \r\n" + 
 			"GROUP BY\r\n" + 
 			"    t_credit_note_details.item_id\r\n" + 
 			"ORDER BY\r\n" + 
