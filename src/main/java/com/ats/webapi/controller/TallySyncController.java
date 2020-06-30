@@ -26,6 +26,8 @@ import com.ats.webapi.model.SupplierMaster.SupplierDetails;
 import com.ats.webapi.model.rawmaterial.RawMaterialDetails;
 import com.ats.webapi.model.rawmaterial.RawMaterialDetailsList;
 import com.ats.webapi.model.tally.CreditNote;
+import com.ats.webapi.model.tally.CreditNoteInvoiceTally;
+import com.ats.webapi.model.tally.CreditNoteInvoices;
 import com.ats.webapi.model.tally.CreditNoteList;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tally.ItemList;
@@ -37,11 +39,13 @@ import com.ats.webapi.model.tally.SalesVoucher;
 import com.ats.webapi.model.tally.SalesVoucherList;
 import com.ats.webapi.model.tally.SpCakeList;
 import com.ats.webapi.model.tally.SuppliersList;
+import com.ats.webapi.model.tally.TallyCrnInvoicesGroupByBills;
 import com.ats.webapi.model.tally.TallySalesInvoiceList;
 import com.ats.webapi.model.tally.TallySalesInvoiceListGroupByBills;
 import com.ats.webapi.model.tally.TallySyncModel;
 import com.ats.webapi.model.tally.TallySyncModelItemAsHsn;
 import com.ats.webapi.repository.PostBillHeaderRepository;
+import com.ats.webapi.repository.tally.CreditNoteInvoicesRepo;
 import com.ats.webapi.repository.tally.SalesInvoicesRepo;
 import com.ats.webapi.repository.tally.TallyCreditNoteRepository;
 import com.ats.webapi.repository.tally.TallySalesVoucherRepository;
@@ -733,4 +737,72 @@ public class TallySyncController {
 
 		return tallyList;
 	}
+	
+	
+	@Autowired
+	CreditNoteInvoicesRepo creditNoteInvoicesRepo;
+	
+	
+	// TALLY SYNC CREDIT NOTE
+		@RequestMapping(value = { "/getCreditNoteForTallySyncGroupBy" }, method = RequestMethod.GET)
+		public @ResponseBody TallyCrnInvoicesGroupByBills getCrnForTallySyncGroupBy(
+				@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+			TallyCrnInvoicesGroupByBills res = new TallyCrnInvoicesGroupByBills();
+
+			List<CreditNoteInvoices> tallyList = new ArrayList<>();
+			tallyList = creditNoteInvoicesRepo.getTallyData(fromDate, toDate);
+
+			List<CreditNoteInvoiceTally> crnInvoices = new ArrayList<>();
+
+			if (tallyList != null) {
+
+				Set<String> invoiceSet = new HashSet<String>();
+				for (CreditNoteInvoices bills : tallyList) {
+					invoiceSet.add(bills.getCrnNo());
+				}
+
+				List<String> invList = new ArrayList<>();
+				invList.addAll(invoiceSet);
+
+				Collections.sort(invList);
+
+				for (String invoice : invList) {
+
+					CreditNoteInvoiceTally crnModel = new CreditNoteInvoiceTally();
+					crnModel.setCrnNo(invoice);
+
+					List<CreditNoteInvoices> billList = new ArrayList<>();
+
+					for (CreditNoteInvoices bills : tallyList) {
+						if (invoice.equalsIgnoreCase(bills.getCrnNo())) {
+							
+//							if(invoice.equalsIgnoreCase("-c") || invoice.equalsIgnoreCase("-E") || invoice.equalsIgnoreCase("-P")) {
+//								
+//							}
+
+							CreditNoteInvoices bill = new CreditNoteInvoices(bills.getCrnId(),bills.getCrnNo(), bills.getDate(), bills.getBillNo(),bills.getBillDate(),bills.geteWayBillNo(),
+									bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
+									bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
+									bills.getShipToGstNo(), bills.getShipToAddress(), bills.getShipToState(),
+									bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
+									bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
+									bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
+									bills.getIgst(), bills.getOtherLedger(),bills.getRateTotal(),bills.getRetPer(), bills.getRoundOff(), bills.getTotalAmount());
+							billList.add(bill);
+
+						}
+					}
+					crnModel.setCrnInfo(billList);
+					crnInvoices.add(crnModel);
+				}
+
+				res.setCreditNoteInvoices(crnInvoices);
+			}
+
+			return res;
+		}
+		
+		
+	
 }
