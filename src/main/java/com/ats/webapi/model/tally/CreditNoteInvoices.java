@@ -61,6 +61,53 @@ public class CreditNoteInvoices {
 	
 	
 	
+	public CreditNoteInvoices(String id, int frId, int crnId, String crnNo, String date, String billNo, String billDate,
+			String eWayBillNo, String eWayBillDate, String customerName, String gstNo, String address, String state,
+			String stateCode, String shipToCustomerName, String shipToGstNo, String shipToAddress, String shipToState,
+			String shipToStateCode, String productName, String partNo, String qty, String unit, String hsn,
+			String gstPer, String rate, String discount, String amount, String cgst, String sgst, String igst,
+			String otherLedger, String rateTotal, int retPer, String roundOff, String totalAmount) {
+		super();
+		this.id = id;
+		this.frId = frId;
+		this.crnId = crnId;
+		this.crnNo = crnNo;
+		this.date = date;
+		this.billNo = billNo;
+		this.billDate = billDate;
+		this.eWayBillNo = eWayBillNo;
+		this.eWayBillDate = eWayBillDate;
+		this.customerName = customerName;
+		this.gstNo = gstNo;
+		this.address = address;
+		this.state = state;
+		this.stateCode = stateCode;
+		this.shipToCustomerName = shipToCustomerName;
+		this.shipToGstNo = shipToGstNo;
+		this.shipToAddress = shipToAddress;
+		this.shipToState = shipToState;
+		this.shipToStateCode = shipToStateCode;
+		this.productName = productName;
+		this.partNo = partNo;
+		this.qty = qty;
+		this.unit = unit;
+		this.hsn = hsn;
+		this.gstPer = gstPer;
+		this.rate = rate;
+		this.discount = discount;
+		this.amount = amount;
+		this.cgst = cgst;
+		this.sgst = sgst;
+		this.igst = igst;
+		this.otherLedger = otherLedger;
+		this.rateTotal = rateTotal;
+		this.retPer = retPer;
+		this.roundOff = roundOff;
+		this.totalAmount = totalAmount;
+	}
+
+
+
 	public CreditNoteInvoices(int crnId, String crnNo, String date, String billNo, String billDate, String eWayBillNo,
 			String eWayBillDate, String customerName, String gstNo, String address, String state, String stateCode,
 			String shipToCustomerName, String shipToGstNo, String shipToAddress, String shipToState,

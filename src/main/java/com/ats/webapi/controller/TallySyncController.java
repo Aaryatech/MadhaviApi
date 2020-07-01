@@ -677,7 +677,7 @@ public class TallySyncController {
 
 				for (SalesInvoices bills : tallyList) {
 					if (invoice.equalsIgnoreCase(bills.getBillNo())) {
-						
+
 //						if(invoice.equalsIgnoreCase("-c") || invoice.equalsIgnoreCase("-E") || invoice.equalsIgnoreCase("-P")) {
 //							
 //						}
@@ -689,7 +689,8 @@ public class TallySyncController {
 								bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
 								bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
 								bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
-								bills.getIgst(), bills.getOtherLedger(),bills.getRateTotal(), bills.getRoundOff(), bills.getTotalAmount());
+								bills.getIgst(), bills.getOtherLedger(), bills.getRateTotal(), bills.getRoundOff(),
+								bills.getTotalAmount(), bills.getAccountType());
 						billList.add(bill);
 
 					}
@@ -737,72 +738,70 @@ public class TallySyncController {
 
 		return tallyList;
 	}
-	
-	
+
 	@Autowired
 	CreditNoteInvoicesRepo creditNoteInvoicesRepo;
-	
-	
+
 	// TALLY SYNC CREDIT NOTE
-		@RequestMapping(value = { "/getCreditNoteForTallySyncGroupBy" }, method = RequestMethod.GET)
-		public @ResponseBody TallyCrnInvoicesGroupByBills getCrnForTallySyncGroupBy(
-				@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+	@RequestMapping(value = { "/getCreditNoteForTallySyncGroupBy" }, method = RequestMethod.GET)
+	public @ResponseBody TallyCrnInvoicesGroupByBills getCrnForTallySyncGroupBy(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
-			TallyCrnInvoicesGroupByBills res = new TallyCrnInvoicesGroupByBills();
+		TallyCrnInvoicesGroupByBills res = new TallyCrnInvoicesGroupByBills();
 
-			List<CreditNoteInvoices> tallyList = new ArrayList<>();
-			tallyList = creditNoteInvoicesRepo.getTallyData(fromDate, toDate);
+		List<CreditNoteInvoices> tallyList = new ArrayList<>();
+		tallyList = creditNoteInvoicesRepo.getTallyData(fromDate, toDate);
 
-			List<CreditNoteInvoiceTally> crnInvoices = new ArrayList<>();
+		List<CreditNoteInvoiceTally> crnInvoices = new ArrayList<>();
 
-			if (tallyList != null) {
+		if (tallyList != null) {
 
-				Set<String> invoiceSet = new HashSet<String>();
+			Set<String> invoiceSet = new HashSet<String>();
+			for (CreditNoteInvoices bills : tallyList) {
+				invoiceSet.add(bills.getCrnNo());
+			}
+
+			List<String> invList = new ArrayList<>();
+			invList.addAll(invoiceSet);
+
+			Collections.sort(invList);
+
+			for (String invoice : invList) {
+
+				CreditNoteInvoiceTally crnModel = new CreditNoteInvoiceTally();
+				crnModel.setCrnNo(invoice);
+
+				List<CreditNoteInvoices> billList = new ArrayList<>();
+
 				for (CreditNoteInvoices bills : tallyList) {
-					invoiceSet.add(bills.getCrnNo());
-				}
+					if (invoice.equalsIgnoreCase(bills.getCrnNo())) {
 
-				List<String> invList = new ArrayList<>();
-				invList.addAll(invoiceSet);
-
-				Collections.sort(invList);
-
-				for (String invoice : invList) {
-
-					CreditNoteInvoiceTally crnModel = new CreditNoteInvoiceTally();
-					crnModel.setCrnNo(invoice);
-
-					List<CreditNoteInvoices> billList = new ArrayList<>();
-
-					for (CreditNoteInvoices bills : tallyList) {
-						if (invoice.equalsIgnoreCase(bills.getCrnNo())) {
-							
 //							if(invoice.equalsIgnoreCase("-c") || invoice.equalsIgnoreCase("-E") || invoice.equalsIgnoreCase("-P")) {
 //								
 //							}
 
-							CreditNoteInvoices bill = new CreditNoteInvoices(bills.getCrnId(),bills.getCrnNo(), bills.getDate(), bills.getBillNo(),bills.getBillDate(),bills.geteWayBillNo(),
-									bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
-									bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
-									bills.getShipToGstNo(), bills.getShipToAddress(), bills.getShipToState(),
-									bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
-									bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
-									bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
-									bills.getIgst(), bills.getOtherLedger(),bills.getRateTotal(),bills.getRetPer(), bills.getRoundOff(), bills.getTotalAmount());
-							billList.add(bill);
+						CreditNoteInvoices bill = new CreditNoteInvoices(bills.getId(),bills.getFrId(),bills.getCrnId(), bills.getCrnNo(),
+								bills.getDate(), bills.getBillNo(), bills.getBillDate(), bills.geteWayBillNo(),
+								bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
+								bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
+								bills.getShipToGstNo(), bills.getShipToAddress(), bills.getShipToState(),
+								bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
+								bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
+								bills.getDiscount(), bills.getAmount(), bills.getCgst(), bills.getSgst(),
+								bills.getIgst(), bills.getOtherLedger(), bills.getRateTotal(), bills.getRetPer(),
+								bills.getRoundOff(), bills.getTotalAmount());
+						billList.add(bill);
 
-						}
 					}
-					crnModel.setCrnInfo(billList);
-					crnInvoices.add(crnModel);
 				}
-
-				res.setCreditNoteInvoices(crnInvoices);
+				crnModel.setCrnInfo(billList);
+				crnInvoices.add(crnModel);
 			}
 
-			return res;
+			res.setCreditNoteInvoices(crnInvoices);
 		}
-		
-		
-	
+
+		return res;
+	}
+
 }

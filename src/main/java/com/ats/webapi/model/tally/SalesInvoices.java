@@ -48,6 +48,8 @@ public class SalesInvoices {
 	private String rateTotal;
 	private String roundOff;
 	private String totalAmount;
+	
+	private String accountType;
 
 	public String getId() {
 		return id;
@@ -304,7 +306,18 @@ public class SalesInvoices {
 	public void setRateTotal(String rateTotal) {
 		this.rateTotal = rateTotal;
 	}
+	
+	
 
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "SalesInvoices [id=" + id + ", frId=" + frId + ", billNo=" + billNo + ", date=" + date + ", eWayBillNo="
@@ -315,7 +328,7 @@ public class SalesInvoices {
 				+ productName + ", partNo=" + partNo + ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer="
 				+ gstPer + ", rate=" + rate + ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst
 				+ ", sgst=" + sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal
-				+ ", roundOff=" + roundOff + ", totalAmount=" + totalAmount + "]";
+				+ ", roundOff=" + roundOff + ", totalAmount=" + totalAmount + ", accountType=" + accountType + "]";
 	}
 
 }

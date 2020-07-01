@@ -40,9 +40,51 @@ public class BillInfo {
 	private String roundOff;
 	private String totalAmount;
 
+	private String accountType;
+
 	public BillInfo() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public BillInfo(String billNo, String date, String eWayBillNo, String eWayBillDate, String customerName,
+			String gstNo, String address, String state, String stateCode, String shipToCustomerName, String shipToGstNo,
+			String shipToAddress, String shipToState, String shipToStateCode, String productName, String partNo,
+			String qty, String unit, String hsn, String gstPer, String rate, String discount, String amount,
+			String cgst, String sgst, String igst, String otherLedger, String rateTotal, String roundOff,
+			String totalAmount, String accountType) {
+		super();
+		this.billNo = billNo;
+		this.date = date;
+		this.eWayBillNo = eWayBillNo;
+		this.eWayBillDate = eWayBillDate;
+		this.customerName = customerName;
+		this.gstNo = gstNo;
+		this.address = address;
+		this.state = state;
+		this.stateCode = stateCode;
+		this.shipToCustomerName = shipToCustomerName;
+		this.shipToGstNo = shipToGstNo;
+		this.shipToAddress = shipToAddress;
+		this.shipToState = shipToState;
+		this.shipToStateCode = shipToStateCode;
+		this.productName = productName;
+		this.partNo = partNo;
+		this.qty = qty;
+		this.unit = unit;
+		this.hsn = hsn;
+		this.gstPer = gstPer;
+		this.rate = rate;
+		this.discount = discount;
+		this.amount = amount;
+		this.cgst = cgst;
+		this.sgst = sgst;
+		this.igst = igst;
+		this.otherLedger = otherLedger;
+		this.rateTotal = rateTotal;
+		this.roundOff = roundOff;
+		this.totalAmount = totalAmount;
+		this.accountType = accountType;
 	}
 
 	public BillInfo(String billNo, String date, String eWayBillNo, String eWayBillDate, String customerName,
@@ -324,6 +366,14 @@ public class BillInfo {
 		this.rateTotal = rateTotal;
 	}
 
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+
 	@Override
 	public String toString() {
 		return "BillInfo [billNo=" + billNo + ", date=" + date + ", eWayBillNo=" + eWayBillNo + ", eWayBillDate="
@@ -334,7 +384,7 @@ public class BillInfo {
 				+ ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer=" + gstPer + ", rate=" + rate
 				+ ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst + ", sgst=" + sgst + ", igst="
 				+ igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal + ", roundOff=" + roundOff
-				+ ", totalAmount=" + totalAmount + "]";
+				+ ", totalAmount=" + totalAmount + ", accountType=" + accountType + "]";
 	}
 
 }
