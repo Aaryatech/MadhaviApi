@@ -41,7 +41,10 @@ public interface AdvanceOrderDetailRepo extends JpaRepository<AdvanceOrderDetail
 	int getIsDairyMartStatus(@Param("advDetailId") int advDetailId);
 	
 	
-	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE t_adv_order_detail SET is_bill_generated=1  WHERE item_id IN(:orderItemId) AND prod_date =:prodDate AND is_sell_bill_generated=0",nativeQuery=true)
+	int updateIsBillGeneratedStatus(@Param("orderItemId")List<String> orderItemId, @Param("prodDate")String prodDate);
 
 	
 }

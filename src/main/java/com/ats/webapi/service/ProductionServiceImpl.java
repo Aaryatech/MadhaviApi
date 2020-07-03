@@ -28,6 +28,7 @@ import com.ats.webapi.repository.PostProdPlanDetailRepository;
 import com.ats.webapi.repository.PostProdPlanHeaderRepository;
 import com.ats.webapi.repository.PostProductionDetailRepository;
 import com.ats.webapi.repository.RegularSpCkOrderRepository;
+import com.ats.webapi.repository.advorder.AdvanceOrderDetailRepo;
 
 @Service
 public class ProductionServiceImpl implements ProductionService{
@@ -58,6 +59,8 @@ public class ProductionServiceImpl implements ProductionService{
 	
 	@Autowired
 	RegularSpCkOrderRepository regularSpCkOrderRepository;
+	
+	@Autowired AdvanceOrderDetailRepo advanceOrderDetailRepo;
 	
 	@Override
 	public List<PostProductionHeader> saveProductionHeader(PostProductionHeader postProductionHeader) {
@@ -262,7 +265,10 @@ public class ProductionServiceImpl implements ProductionService{
 		//if(updateOrderStatus.getRegOrderId()!=null || !updateOrderStatus.getRegOrderId().isEmpty())
 			res=regularSpCkOrderRepository.updateRegSpCakeBillStatus(updateOrderStatus.getRegOrderItemId(), updateOrderStatus.getProdDate());
 		
-		if(res>0 || res2>0)
+			
+			int res3=advanceOrderDetailRepo.updateIsBillGeneratedStatus(updateOrderStatus.getOrderItemId(), updateOrderStatus.getProdDate());
+			
+		if(res>0 || res2>0 || res3>0)
 		{
 			info.setError(false);
 			info.setMessage("success");
