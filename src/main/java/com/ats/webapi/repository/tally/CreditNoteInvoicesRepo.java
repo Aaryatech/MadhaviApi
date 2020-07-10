@@ -50,8 +50,7 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"    ROUND(\r\n" + 
 			"        COALESCE(t2.tot, 0) + COALESCE(ROUND(t2.cgst, 2),\r\n" + 
 			"        0) + COALESCE(ROUND(t2.sgst, 2),\r\n" + 
-			"        0),\r\n" + 
-			"        2\r\n" + 
+			"        0)\r\n" + 
 			"    ) AS total_amount\r\n" + 
 			"FROM\r\n" + 
 			"    (\r\n" + 
@@ -99,7 +98,7 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"        m_company c,\r\n" + 
 			"        m_item_sup s\r\n" + 
 			"    WHERE\r\n" + 
-			"        d.del_status = 0 AND h.crn_id = d.crn_id AND i.id = d.item_id AND h.ex_int1 = bh.bill_no AND bh.del_status = 0 AND d.item_id = s.item_id AND c.comp_id = 1 AND h.crn_date BETWEEN  :fromDate AND :toDate\r\n" + 
+			"        d.del_status = 0 AND h.crn_id = d.crn_id AND i.id = d.item_id AND h.ex_int1 = bh.bill_no AND bh.del_status = 0 AND d.item_id = s.item_id AND c.comp_id = 1 AND h.crn_date BETWEEN :fromDate AND :toDate\r\n" + 
 			"    ORDER BY\r\n" + 
 			"        h.crn_id\r\n" + 
 			") t1\r\n" + 
@@ -109,12 +108,21 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"        SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"        SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"        SUM(d.igst_rs) AS igst,\r\n" + 
-			"        SUM(ROUND(d.taxable_amt, 2)) AS tot\r\n" + 
+			"        SUM(ROUND(d.taxable_amt, 2)) AS tot1,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            SUM(\r\n" + 
+			"                ROUND(d.grn_gvn_qty, 3) * ROUND(\r\n" + 
+			"                    (d.taxable_amt / d.grn_gvn_qty),\r\n" + 
+			"                    2\r\n" + 
+			"                )\r\n" + 
+			"            ),\r\n" + 
+			"            2\r\n" + 
+			"        ) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        t_credit_note_header h,\r\n" + 
 			"        t_credit_note_details d\r\n" + 
 			"    WHERE\r\n" + 
-			"        d.del_status = 0 AND h.crn_id = d.crn_id AND h.crn_date BETWEEN  :fromDate AND :toDate\r\n" + 
+			"        d.del_status = 0 AND h.crn_id = d.crn_id AND h.crn_date BETWEEN :fromDate AND :toDate\r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.crn_id\r\n" + 
 			") t2\r\n" + 
@@ -160,8 +168,7 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"        ROUND(\r\n" + 
 			"            COALESCE(t2.tot, 0) + COALESCE(ROUND(t2.cgst, 2),\r\n" + 
 			"            0) + COALESCE(ROUND(t2.sgst, 2),\r\n" + 
-			"            0),\r\n" + 
-			"            2\r\n" + 
+			"            0)\r\n" + 
 			"        ) AS total_amount\r\n" + 
 			"    FROM\r\n" + 
 			"        (\r\n" + 
@@ -213,7 +220,7 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"            m_item_sup s,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            c.bill_no = h.sell_bill_no AND c.del_status = 0 AND h.del_status = 0 AND cp.comp_id = 1 AND c.item_id = i.id AND c.item_id = s.item_id AND f.fr_id = c.ex_int1 AND f.kg_1 = 1 AND h.sell_bill_no = d.sell_bill_no AND c.bill_detail_no = d.sell_bill_detail_no AND c.crn_date BETWEEN  :fromDate AND :toDate\r\n" + 
+			"            c.bill_no = h.sell_bill_no AND c.del_status = 0 AND h.del_status = 0 AND cp.comp_id = 1 AND c.item_id = i.id AND c.item_id = s.item_id AND f.fr_id = c.ex_int1 AND f.kg_1 = 1 AND h.sell_bill_no = d.sell_bill_no AND c.bill_detail_no = d.sell_bill_detail_no AND c.crn_date BETWEEN :fromDate AND :toDate\r\n" + 
 			"    ) t1\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -222,7 +229,14 @@ public interface CreditNoteInvoicesRepo extends JpaRepository<CreditNoteInvoices
 			"        SUM(c.cgst_amt) AS cgst,\r\n" + 
 			"        SUM(c.sgst_amt) AS sgst,\r\n" + 
 			"        SUM(c.igst_amt) AS igst,\r\n" + 
-			"        SUM(ROUND(c.taxable_amt, 2)) AS tot\r\n" + 
+			"        SUM(ROUND(c.taxable_amt, 2)) AS tot1,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            SUM(\r\n" + 
+			"                ROUND(c.crn_qty, 3) * ROUND((c.taxable_amt / c.crn_qty),\r\n" + 
+			"                2)\r\n" + 
+			"            ),\r\n" + 
+			"            2\r\n" + 
+			"        ) AS tot\r\n" + 
 			"    FROM\r\n" + 
 			"        t_credit_note_pos c\r\n" + 
 			"    WHERE\r\n" + 
