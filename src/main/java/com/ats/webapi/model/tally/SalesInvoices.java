@@ -39,6 +39,9 @@ public class SalesInvoices {
 	private String rate;
 	private String discount;
 	private String amount;
+	
+	private String itemLevelDiscAmt;
+	private String itemLevelTaxableAmt;
 
 	private String cgst;
 	private String sgst;
@@ -316,8 +319,28 @@ public class SalesInvoices {
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
+	
+	
 
 	
+	public String getItemLevelDiscAmt() {
+		return itemLevelDiscAmt;
+	}
+
+	public void setItemLevelDiscAmt(String itemLevelDiscAmt) {
+		this.itemLevelDiscAmt = itemLevelDiscAmt;
+	}
+
+	public String getItemLevelTaxableAmt() {
+		return itemLevelTaxableAmt;
+	}
+
+	public void setItemLevelTaxableAmt(String itemLevelTaxableAmt) {
+		this.itemLevelTaxableAmt = itemLevelTaxableAmt;
+	}
+	
+	
+
 	@Override
 	public String toString() {
 		return "SalesInvoices [id=" + id + ", frId=" + frId + ", billNo=" + billNo + ", date=" + date + ", eWayBillNo="
@@ -326,9 +349,10 @@ public class SalesInvoices {
 				+ shipToCustomerName + ", shipToGstNo=" + shipToGstNo + ", shipToAddress=" + shipToAddress
 				+ ", shipToState=" + shipToState + ", shipToStateCode=" + shipToStateCode + ", productName="
 				+ productName + ", partNo=" + partNo + ", qty=" + qty + ", unit=" + unit + ", hsn=" + hsn + ", gstPer="
-				+ gstPer + ", rate=" + rate + ", discount=" + discount + ", amount=" + amount + ", cgst=" + cgst
-				+ ", sgst=" + sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal
-				+ ", roundOff=" + roundOff + ", totalAmount=" + totalAmount + ", accountType=" + accountType + "]";
+				+ gstPer + ", rate=" + rate + ", discount=" + discount + ", amount=" + amount + ", itemLevelDiscAmt="
+				+ itemLevelDiscAmt + ", itemLevelTaxableAmt=" + itemLevelTaxableAmt + ", cgst=" + cgst + ", sgst="
+				+ sgst + ", igst=" + igst + ", otherLedger=" + otherLedger + ", rateTotal=" + rateTotal + ", roundOff="
+				+ roundOff + ", totalAmount=" + totalAmount + ", accountType=" + accountType + "]";
 	}
 
 }
