@@ -18,6 +18,8 @@ public interface FrEmpMasterRepo extends JpaRepository<FrEmpMaster, Integer> {
 	
 	public List<FrEmpMaster> findByFrId(int frId);
 	
+	public List<FrEmpMaster> findByFrIdAndDesignationAndDelStatus(int frId, int desig, int del);
+	
 @Query(value="SELECT\n" + 
 		"    *\n" + 
 		"FROM\n" + 

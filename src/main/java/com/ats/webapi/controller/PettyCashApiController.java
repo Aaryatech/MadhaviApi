@@ -336,6 +336,22 @@ public class PettyCashApiController {
 		return list;
 
 	}
+	
+	@RequestMapping(value = { "/getAllFrEmpsByDesination" }, method = RequestMethod.POST)
+	public List<FrEmpMaster> getAllFrEmpsByDesination(@RequestParam int frId, @RequestParam int desig) {
+		List<FrEmpMaster> list = new ArrayList<FrEmpMaster>();
+		try {
+			
+			list = frEmpRepo.findByFrIdAndDesignationAndDelStatus(frId, desig, 0);
+			System.err.println("List-----------" + list);
+		} catch (Exception e) {
+			System.err.println("Exception in getAllFrEmpsByDesination : " + e.getMessage());
+			e.printStackTrace();
+		}
+		return list;
+
+	}
+	
 
 	@RequestMapping(value = { "/getFrEmpByEmpId" }, method = RequestMethod.POST)
 	public FrEmpMaster getFrEmpByEmpId(@RequestParam int empId) {
