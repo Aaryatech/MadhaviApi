@@ -271,24 +271,23 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t1.rate, 2),\r\n" + 
 			"            0) AS rate,\r\n" + 
 			"            COALESCE(t1.discount, 0) AS discount,\r\n" + 
-			"            COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"            COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"            0) AS amount,\r\n" + 
 			"             COALESCE(ROUND(t1.amount, 2),\r\n" + 
 			"            0) AS item_level_disc_amt,\r\n" + 
 			"            ROUND((ROUND(t1.qty, 3)*ROUND(t1.rate, 2)-ROUND(t1.amount, 2)),2) AS item_level_taxable_amt,\r\n" + 
-			"            COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.cgst, 2),\r\n" + 
 			"            0) AS cgst,\r\n" + 
-			"            COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.sgst, 2),\r\n" + 
 			"            0) AS sgst,\r\n" + 
-			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
-			"            0) AS igst,\r\n" + 
+			"            0 AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
 			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
-			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"                0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"                0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"                0)\r\n" + 
 			"            ) AS total_amount,\r\n" + 
 			"            t1.account_type\r\n" + 
@@ -388,55 +387,44 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			") t5\r\n" + 
 			"ON\r\n" + 
 			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
+			"            \r\n" + 
+			"            \r\n" + 
 			"LEFT JOIN(\r\n" + 
+			"    \r\n" + 
+			"        SELECT\r\n" + 
+			"    t.fr_id,\r\n" + 
+			"    t.bill_date,\r\n" + 
+			"    t.item_name,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(cgst_per/100)),2)) AS cgst,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(sgst_per/100)),2)) AS sgst\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(\r\n" + 
-			"            (sd.qty * sd.mrp_base_rate) +(\r\n" + 
-			"                sd.cgst_rs + sd.sgst_rs - sd.disc_amt\r\n" + 
-			"            )\r\n" + 
-			"        ) AS grand_total,\r\n" + 
-			"         SUM(sd.cgst_rs) AS cgst_total1,\r\n" + 
-			"        SUM(sd.sgst_rs) AS sgst_total1,\r\n" + 
-			"        SUM(sd.igst_rs) AS igst_total1,\r\n" + 
-			"        SUM(sd.disc_amt) AS amount,\r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.cgst_per/100)\r\n" + 
-			"    ) AS cgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.sgst_per/100)\r\n" + 
-			"    ) AS sgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.igst_per/100)\r\n" + 
-			"    ) AS igst_total\r\n" + 
+			"        i.id,\r\n" + 
+			"        i.item_name,\r\n" + 
+			"        CAST(\r\n" + 
+			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"        ) AS r,\r\n" + 
+			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"        CAST(SUM(d.disc_amt) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        d.cgst_per,\r\n" + 
+			"        d.sgst_per\r\n" + 
+			"        \r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
-			"        t_sell_bill_detail sd\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_item i,m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = sd.sell_bill_no AND sd.del_status = 0 AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND f.kg_1 = 1 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND d.item_id = i.id \r\n" + 
+			"       \r\n" + 
 			"    GROUP BY\r\n" + 
-			"        h.fr_id,\r\n" + 
-			"        h.bill_date\r\n" + 
-			") t6\r\n" + 
-			"ON\r\n" + 
+			"        h.bill_date,\r\n" + 
+			" 		d.item_id,\r\n" + 
+			"        h.fr_id)  t GROUP BY fr_id,bill_date\r\n" + 
+			"    \r\n" + 
+			"    ) t6 ON\r\n" + 
 			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -467,7 +455,27 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    bill_date\r\n" + 
 			") t7\r\n" + 
 			"ON\r\n" + 
-			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date) t\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"        \r\n" + 
+			"        LEFT JOIN(\r\n" + 
+			"   SELECT\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date,\r\n" + 
+			"    SUM(d.disc_amt) amount\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_header h,\r\n" + 
+			"    t_sell_bill_detail d,\r\n" + 
+			"    m_franchisee f\r\n" + 
+			"WHERE\r\n" + 
+			"    h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.kg_1 = 1 AND f.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3\r\n" + 
+			"GROUP BY\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date\r\n" + 
+			"        \r\n" + 
+			"        ) t\r\n" + 
 			"        ORDER BY\r\n" + 
 			"            DATE,\r\n" + 
 			"            fr_id\r\n" + 
@@ -502,24 +510,23 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t1.rate, 2),\r\n" + 
 			"            0) AS rate,\r\n" + 
 			"            COALESCE(t1.discount, 0) AS discount,\r\n" + 
-			"            COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"            COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"            0) AS amount,\r\n" + 
 			"             COALESCE(ROUND(t1.amount, 2),\r\n" + 
 			"            0) AS item_level_disc_amt,\r\n" + 
 			"            ROUND((ROUND(t1.qty, 3)*ROUND(t1.rate, 2)-ROUND(t1.amount, 2)),2) AS item_level_taxable_amt,\r\n" + 
-			"            COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.cgst, 2),\r\n" + 
 			"            0) AS cgst,\r\n" + 
-			"            COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.sgst, 2),\r\n" + 
 			"            0) AS sgst,\r\n" + 
-			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
-			"            0) AS igst,\r\n" + 
+			"            0 AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
 			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
-			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"                0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"                0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"                0)\r\n" + 
 			"            ) AS total_amount,\r\n" + 
 			"            t1.account_type\r\n" + 
@@ -620,54 +627,41 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"ON\r\n" + 
 			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
 			"LEFT JOIN(\r\n" + 
+			"    \r\n" + 
+			"        SELECT\r\n" + 
+			"    t.fr_id,\r\n" + 
+			"    t.bill_date,\r\n" + 
+			"    t.item_name,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(cgst_per/100)),2)) AS cgst,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(sgst_per/100)),2)) AS sgst\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(\r\n" + 
-			"            (sd.qty * sd.mrp_base_rate) +(\r\n" + 
-			"                sd.cgst_rs + sd.sgst_rs - sd.disc_amt\r\n" + 
-			"            )\r\n" + 
-			"        ) AS grand_total,\r\n" + 
-			"         SUM(sd.cgst_rs) AS cgst_total1,\r\n" + 
-			"        SUM(sd.sgst_rs) AS sgst_total1,\r\n" + 
-			"        SUM(sd.igst_rs) AS igst_total1,\r\n" + 
-			"        SUM(sd.disc_amt) AS amount,\r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.cgst_per/100)\r\n" + 
-			"    ) AS cgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.sgst_per/100)\r\n" + 
-			"    ) AS sgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.igst_per/100)\r\n" + 
-			"    ) AS igst_total\r\n" + 
+			"        i.id,\r\n" + 
+			"        i.item_name,\r\n" + 
+			"        CAST(\r\n" + 
+			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"        ) AS r,\r\n" + 
+			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"        CAST(SUM(d.disc_amt) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        d.cgst_per,\r\n" + 
+			"        d.sgst_per\r\n" + 
+			"        \r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
-			"        t_sell_bill_detail sd\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_item i,m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = sd.sell_bill_no AND sd.del_status = 0 AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND f.kg_1 = 1 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND d.item_id = i.id \r\n" + 
+			"       \r\n" + 
 			"    GROUP BY\r\n" + 
-			"        h.fr_id,\r\n" + 
-			"        h.bill_date\r\n" + 
-			") t6\r\n" + 
-			"ON\r\n" + 
+			"        h.bill_date,\r\n" + 
+			" 		d.item_id,\r\n" + 
+			"        h.fr_id)  t GROUP BY fr_id,bill_date\r\n" + 
+			"    \r\n" + 
+			"    ) t6 ON\r\n" + 
 			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -698,7 +692,27 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    bill_date\r\n" + 
 			") t7\r\n" + 
 			"ON\r\n" + 
-			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date) t\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"    \r\n" + 
+			"          LEFT JOIN(\r\n" + 
+			"   SELECT\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date,\r\n" + 
+			"    SUM(d.disc_amt) amount\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_header h,\r\n" + 
+			"    t_sell_bill_detail d,\r\n" + 
+			"    m_franchisee f\r\n" + 
+			"WHERE\r\n" + 
+			"    h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.kg_1 = 1 AND f.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3\r\n" + 
+			"GROUP BY\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date\r\n" + 
+			"        \r\n" + 
+			"        ) t\r\n" + 
 			"        ORDER BY\r\n" + 
 			"            DATE,\r\n" + 
 			"            fr_id\r\n" + 
@@ -733,24 +747,23 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            COALESCE(ROUND(t1.rate, 2),\r\n" + 
 			"            0) AS rate,\r\n" + 
 			"            COALESCE(t1.discount, 0) AS discount,\r\n" + 
-			"            COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"            COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"            0) AS amount,\r\n" + 
 			"             COALESCE(ROUND(t1.amount, 2),\r\n" + 
 			"            0) AS item_level_disc_amt,\r\n" + 
 			"            ROUND((ROUND(t1.qty, 3)*ROUND(t1.rate, 2)-ROUND(t1.amount, 2)),2) AS item_level_taxable_amt,\r\n" + 
-			"            COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.cgst, 2),\r\n" + 
 			"            0) AS cgst,\r\n" + 
-			"            COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
+			"            COALESCE(ROUND(t6.sgst, 2),\r\n" + 
 			"            0) AS sgst,\r\n" + 
-			"            COALESCE(ROUND(t6.igst_total, 2),\r\n" + 
-			"            0) AS igst,\r\n" + 
+			"            0 AS igst,\r\n" + 
 			"            0 AS other_ledger,\r\n" + 
 			"            COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
 			"            0 AS round_off,\r\n" + 
 			"            ROUND(\r\n" + 
-			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst_total, 2),\r\n" + 
-			"                0) + COALESCE(ROUND(t6.sgst_total, 2),\r\n" + 
-			"                0) - COALESCE(ROUND(t6.amount, 2),\r\n" + 
+			"                COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"                0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"                0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
 			"                0)\r\n" + 
 			"            ) AS total_amount,\r\n" + 
 			"            t1.account_type\r\n" + 
@@ -851,54 +864,41 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"ON\r\n" + 
 			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
 			"LEFT JOIN(\r\n" + 
+			"    \r\n" + 
+			"        SELECT\r\n" + 
+			"    t.fr_id,\r\n" + 
+			"    t.bill_date,\r\n" + 
+			"    t.item_name,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(cgst_per/100)),2)) AS cgst,\r\n" + 
+			"    SUM(ROUND(((ROUND(r * q, 2)-disc)*(sgst_per/100)),2)) AS sgst\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(\r\n" + 
-			"            (sd.qty * sd.mrp_base_rate) +(\r\n" + 
-			"                sd.cgst_rs + sd.sgst_rs - sd.disc_amt\r\n" + 
-			"            )\r\n" + 
-			"        ) AS grand_total,\r\n" + 
-			"        SUM(sd.cgst_rs) AS cgst_total1,\r\n" + 
-			"        SUM(sd.sgst_rs) AS sgst_total1,\r\n" + 
-			"        SUM(sd.igst_rs) AS igst_total1,\r\n" + 
-			"        SUM(sd.disc_amt) AS amount,\r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.cgst_per/100)\r\n" + 
-			"    ) AS cgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.sgst_per/100)\r\n" + 
-			"    ) AS sgst_total,\r\n" + 
-			"    \r\n" + 
-			"    SUM(\r\n" + 
-			"    ROUND(\r\n" + 
-			"            (\r\n" + 
-			"                ROUND(sd.qty, 3) * ROUND(sd.mrp_base_rate, 2) - ROUND(sd.disc_amt, 2)\r\n" + 
-			"            ),\r\n" + 
-			"            2\r\n" + 
-			"        )*(sd.igst_per/100)\r\n" + 
-			"    ) AS igst_total\r\n" + 
+			"        i.id,\r\n" + 
+			"        i.item_name,\r\n" + 
+			"        CAST(\r\n" + 
+			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"        ) AS r,\r\n" + 
+			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"        CAST(SUM(d.disc_amt) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        d.cgst_per,\r\n" + 
+			"        d.sgst_per\r\n" + 
+			"        \r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
-			"        t_sell_bill_detail sd\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_item i,m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = sd.sell_bill_no AND sd.del_status = 0 AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND f.kg_1 = 1 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND d.item_id = i.id \r\n" + 
+			"       \r\n" + 
 			"    GROUP BY\r\n" + 
-			"        h.fr_id,\r\n" + 
-			"        h.bill_date\r\n" + 
-			") t6\r\n" + 
-			"ON\r\n" + 
+			"        h.bill_date,\r\n" + 
+			" 		d.item_id,\r\n" + 
+			"        h.fr_id)  t GROUP BY fr_id,bill_date\r\n" + 
+			"    \r\n" + 
+			"    ) t6 ON\r\n" + 
 			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -929,7 +929,27 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    bill_date\r\n" + 
 			") t7\r\n" + 
 			"ON\r\n" + 
-			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date) t\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"        \r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"   SELECT\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date,\r\n" + 
+			"    SUM(d.disc_amt) amount\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_header h,\r\n" + 
+			"    t_sell_bill_detail d,\r\n" + 
+			"    m_franchisee f\r\n" + 
+			"WHERE\r\n" + 
+			"    h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.kg_1 = 1 AND f.del_status = 0 AND h.status = 3\r\n" + 
+			"GROUP BY\r\n" + 
+			"    h.fr_id,\r\n" + 
+			"    h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date\r\n" + 
+			"        \r\n" + 
+			"        ) t\r\n" + 
 			"        ORDER BY\r\n" + 
 			"            DATE,\r\n" + 
 			"            fr_id\r\n" + 
@@ -938,7 +958,8 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    fr_id,\r\n" + 
 			"    bill_no,\r\n" + 
 			"    DATE\r\n" + 
-			"DESC",nativeQuery=true)
+			"DESC\r\n" + 
+			"",nativeQuery=true)
 	List<SalesInvoices> getTallySyncDataByDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 }
