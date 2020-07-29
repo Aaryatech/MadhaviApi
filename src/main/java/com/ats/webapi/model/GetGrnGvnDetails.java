@@ -40,7 +40,7 @@ public class GetGrnGvnDetails {
 	private float itemMrp;
 
 	@Column(name = "grn_gvn_qty")
-	private int grnGvnQty;
+	private float grnGvnQty;
 
 	@Column(name = "grn_gvn_amt")
 	private float grnGvnAmt;
@@ -101,7 +101,7 @@ public class GetGrnGvnDetails {
 	private int delStatus;
 	
 	@Column(name = "grn_gvn_qty_auto")
-	private int grnGvnQtyAuto;
+	private float grnGvnQtyAuto;
 	
 	@Column(name = "item_name")
 	private String itemName;
@@ -168,13 +168,13 @@ public class GetGrnGvnDetails {
 
 	//23 FEB new Fields to handle qty variation between entry(insert) and dispatch
 	@Column(name = "apr_qty_gate")
-	int aprQtyGate;
+	float aprQtyGate;
 	
 	@Column(name = "apr_qty_store")
-	int aprQtyStore;
+	float aprQtyStore;
 	
 	@Column(name = "apr_qty_acc")
-	int aprQtyAcc;
+	float aprQtyAcc;
 	
 	@Column(name = "apr_taxable_amt")
 	float aprTaxableAmt;
@@ -309,11 +309,11 @@ public class GetGrnGvnDetails {
 		this.itemMrp = itemMrp;
 	}
 
-	public int getGrnGvnQty() {
+	public float getGrnGvnQty() {
 		return grnGvnQty;
 	}
 
-	public void setGrnGvnQty(int grnGvnQty) {
+	public void setGrnGvnQty(float grnGvnQty) {
 		this.grnGvnQty = grnGvnQty;
 	}
 
@@ -469,11 +469,11 @@ public class GetGrnGvnDetails {
 		this.delStatus = delStatus;
 	}
 
-	public int getGrnGvnQtyAuto() {
+	public float getGrnGvnQtyAuto() {
 		return grnGvnQtyAuto;
 	}
 
-	public void setGrnGvnQtyAuto(int grnGvnQtyAuto) {
+	public void setGrnGvnQtyAuto(float grnGvnQtyAuto) {
 		this.grnGvnQtyAuto = grnGvnQtyAuto;
 	}
 
@@ -573,27 +573,27 @@ public class GetGrnGvnDetails {
 		this.grnGvnHeaderId = grnGvnHeaderId;
 	}
 
-	public int getAprQtyGate() {
+	public float getAprQtyGate() {
 		return aprQtyGate;
 	}
 
-	public void setAprQtyGate(int aprQtyGate) {
+	public void setAprQtyGate(float aprQtyGate) {
 		this.aprQtyGate = aprQtyGate;
 	}
 
-	public int getAprQtyStore() {
+	public float getAprQtyStore() {
 		return aprQtyStore;
 	}
 
-	public void setAprQtyStore(int aprQtyStore) {
+	public void setAprQtyStore(float aprQtyStore) {
 		this.aprQtyStore = aprQtyStore;
 	}
 
-	public int getAprQtyAcc() {
+	public float getAprQtyAcc() {
 		return aprQtyAcc;
 	}
 
-	public void setAprQtyAcc(int aprQtyAcc) {
+	public void setAprQtyAcc(float aprQtyAcc) {
 		this.aprQtyAcc = aprQtyAcc;
 	}
 

@@ -54,13 +54,13 @@ public class UpdateGrnGvn  {
 	
 	//23 FEB new Fields to handle qty variation between entry(insert) and dispatch
 		@Column(name = "apr_qty_gate")
-		int aprQtyGate;
+		float aprQtyGate;
 		
 		@Column(name = "apr_qty_store")
-		int aprQtyStore;
+		float aprQtyStore;
 		
 		@Column(name = "apr_qty_acc")
-		int aprQtyAcc;
+		float aprQtyAcc;
 		
 		@Column(name = "apr_taxable_amt")
 		float aprTaxableAmt;
@@ -86,100 +86,188 @@ public class UpdateGrnGvn  {
 		@Column(name = "is_same_state")
 		int isSameState;
 		//23 FEB new Fields to handle qty variation between entry(insert) and dispatch
+
+		public int getGrnGvnId() {
+			return grnGvnId;
+		}
+
+		public void setGrnGvnId(int grnGvnId) {
+			this.grnGvnId = grnGvnId;
+		}
+
+		public int getGrnGvnStatus() {
+			return grnGvnStatus;
+		}
+
+		public void setGrnGvnStatus(int grnGvnStatus) {
+			this.grnGvnStatus = grnGvnStatus;
+		}
+
+		public int getApprovedLoginGate() {
+			return approvedLoginGate;
+		}
+
+		public void setApprovedLoginGate(int approvedLoginGate) {
+			this.approvedLoginGate = approvedLoginGate;
+		}
+
+		public String getApproveimedDateTimeGate() {
+			return approveimedDateTimeGate;
+		}
+
+		public void setApproveimedDateTimeGate(String approveimedDateTimeGate) {
+			this.approveimedDateTimeGate = approveimedDateTimeGate;
+		}
+
+		public String getApprovedRemarkGate() {
+			return approvedRemarkGate;
+		}
+
+		public void setApprovedRemarkGate(String approvedRemarkGate) {
+			this.approvedRemarkGate = approvedRemarkGate;
+		}
+
+		public int getApprovedLoginStore() {
+			return approvedLoginStore;
+		}
+
+		public void setApprovedLoginStore(int approvedLoginStore) {
+			this.approvedLoginStore = approvedLoginStore;
+		}
+
+		public String getApprovedDateTimeStore() {
+			return approvedDateTimeStore;
+		}
+
+		public void setApprovedDateTimeStore(String approvedDateTimeStore) {
+			this.approvedDateTimeStore = approvedDateTimeStore;
+		}
+
+		public String getApprovedRemarkStore() {
+			return approvedRemarkStore;
+		}
+
+		public void setApprovedRemarkStore(String approvedRemarkStore) {
+			this.approvedRemarkStore = approvedRemarkStore;
+		}
+
+		public int getApprovedLoginAcc() {
+			return approvedLoginAcc;
+		}
+
+		public void setApprovedLoginAcc(int approvedLoginAcc) {
+			this.approvedLoginAcc = approvedLoginAcc;
+		}
+
+		public String getApprovedDateTimeAcc() {
+			return approvedDateTimeAcc;
+		}
+
+		public void setApprovedDateTimeAcc(String approvedDateTimeAcc) {
+			this.approvedDateTimeAcc = approvedDateTimeAcc;
+		}
+
+		public String getApprovedRemarkAcc() {
+			return approvedRemarkAcc;
+		}
+
+		public void setApprovedRemarkAcc(String approvedRemarkAcc) {
+			this.approvedRemarkAcc = approvedRemarkAcc;
+		}
+
+		public float getAprQtyGate() {
+			return aprQtyGate;
+		}
+
+		public void setAprQtyGate(float aprQtyGate) {
+			this.aprQtyGate = aprQtyGate;
+		}
+
+		public float getAprQtyStore() {
+			return aprQtyStore;
+		}
+
+		public void setAprQtyStore(float aprQtyStore) {
+			this.aprQtyStore = aprQtyStore;
+		}
+
+		public float getAprQtyAcc() {
+			return aprQtyAcc;
+		}
+
+		public void setAprQtyAcc(float aprQtyAcc) {
+			this.aprQtyAcc = aprQtyAcc;
+		}
+
+		public float getAprTaxableAmt() {
+			return aprTaxableAmt;
+		}
+
+		public void setAprTaxableAmt(float aprTaxableAmt) {
+			this.aprTaxableAmt = aprTaxableAmt;
+		}
+
+		public float getAprTotalTax() {
+			return aprTotalTax;
+		}
+
+		public void setAprTotalTax(float aprTotalTax) {
+			this.aprTotalTax = aprTotalTax;
+		}
+
+		public float getAprSgstRs() {
+			return aprSgstRs;
+		}
+
+		public void setAprSgstRs(float aprSgstRs) {
+			this.aprSgstRs = aprSgstRs;
+		}
+
+		public float getAprCgstRs() {
+			return aprCgstRs;
+		}
+
+		public void setAprCgstRs(float aprCgstRs) {
+			this.aprCgstRs = aprCgstRs;
+		}
+
+		public float getAprIgstRs() {
+			return aprIgstRs;
+		}
+
+		public void setAprIgstRs(float aprIgstRs) {
+			this.aprIgstRs = aprIgstRs;
+		}
+
+		public float getAprGrandTotal() {
+			return aprGrandTotal;
+		}
+
+		public void setAprGrandTotal(float aprGrandTotal) {
+			this.aprGrandTotal = aprGrandTotal;
+		}
+
+		public float getAprROff() {
+			return aprROff;
+		}
+
+		public void setAprROff(float aprROff) {
+			this.aprROff = aprROff;
+		}
+
+		public int getIsSameState() {
+			return isSameState;
+		}
+
+		public void setIsSameState(int isSameState) {
+			this.isSameState = isSameState;
+		}
 		
 
 	
 	
 	
-	public int getGrnGvnId() {
-		return grnGvnId;
-	}
 
-	public void setGrnGvnId(int grnGvnId) {
-		this.grnGvnId = grnGvnId;
-	}
-
-	public int getGrnGvnStatus() {
-		return grnGvnStatus;
-	}
-
-	public void setGrnGvnStatus(int grnGvnStatus) {
-		this.grnGvnStatus = grnGvnStatus;
-	}
-
-	public int getApprovedLoginGate() {
-		return approvedLoginGate;
-	}
-
-	public void setApprovedLoginGate(int approvedLoginGate) {
-		this.approvedLoginGate = approvedLoginGate;
-	}
-
-	public String getApproveimedDateTimeGate() {
-		return approveimedDateTimeGate;
-	}
-
-	public void setApproveimedDateTimeGate(String approveimedDateTimeGate) {
-		this.approveimedDateTimeGate = approveimedDateTimeGate;
-	}
-
-	public String getApprovedRemarkGate() {
-		return approvedRemarkGate;
-	}
-
-	public void setApprovedRemarkGate(String approvedRemarkGate) {
-		this.approvedRemarkGate = approvedRemarkGate;
-	}
-
-	public int getApprovedLoginStore() {
-		return approvedLoginStore;
-	}
-
-	public void setApprovedLoginStore(int approvedLoginStore) {
-		this.approvedLoginStore = approvedLoginStore;
-	}
-
-	public String getApprovedDateTimeStore() {
-		return approvedDateTimeStore;
-	}
-
-	public void setApprovedDateTimeStore(String approvedDateTimeStore) {
-		this.approvedDateTimeStore = approvedDateTimeStore;
-	}
-
-	public String getApprovedRemarkStore() {
-		return approvedRemarkStore;
-	}
-
-	public void setApprovedRemarkStore(String approvedRemarkStore) {
-		this.approvedRemarkStore = approvedRemarkStore;
-	}
-
-	public int getApprovedLoginAcc() {
-		return approvedLoginAcc;
-	}
-
-	public void setApprovedLoginAcc(int approvedLoginAcc) {
-		this.approvedLoginAcc = approvedLoginAcc;
-	}
-
-	
-	public String getApprovedRemarkAcc() {
-		return approvedRemarkAcc;
-	}
-
-	public void setApprovedRemarkAcc(String approvedRemarkAcc) {
-		this.approvedRemarkAcc = approvedRemarkAcc;
-	}
-
-	public String getApprovedDateTimeAcc() {
-		return approvedDateTimeAcc;
-	}
-
-	public void setApprovedDateTimeAcc(String approvedDateTimeAcc) {
-		this.approvedDateTimeAcc = approvedDateTimeAcc;
-	}
-	
 	
 	
 	

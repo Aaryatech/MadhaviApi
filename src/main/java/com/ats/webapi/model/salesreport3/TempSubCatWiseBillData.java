@@ -10,12 +10,12 @@ public class TempSubCatWiseBillData {
 	private float taxableAmt;
 	private float taxAmt;
 
-	private int varQty;
+	private float varQty;
 	private float varAmt;
 	private float varTaxableAmt;
 	private float varTaxAmt;
 
-	private int retQty;
+	private float retQty;
 	private float retAmt;
 	private float retTaxableAmt;
 	private float retTaxAmt;
@@ -58,10 +58,10 @@ public class TempSubCatWiseBillData {
 	public void setTaxAmt(float taxAmt) {
 		this.taxAmt = taxAmt;
 	}
-	public int getVarQty() {
+	public float getVarQty() {
 		return varQty;
 	}
-	public void setVarQty(int varQty) {
+	public void setVarQty(float varQty) {
 		this.varQty = varQty;
 	}
 	public float getVarAmt() {
@@ -82,10 +82,10 @@ public class TempSubCatWiseBillData {
 	public void setVarTaxAmt(float varTaxAmt) {
 		this.varTaxAmt = varTaxAmt;
 	}
-	public int getRetQty() {
+	public float getRetQty() {
 		return retQty;
 	}
-	public void setRetQty(int retQty) {
+	public void setRetQty(float retQty) {
 		this.retQty = retQty;
 	}
 	public float getRetAmt() {

@@ -19,7 +19,7 @@ public interface UpdateGrnGvnRepository extends JpaRepository<UpdateGrnGvn, Inte
 			+ "approveimedDateTimeGate=:approveimedDateTimeGate,approvedRemarkGate=:approvedRemarkGate ,"
 			+ "grnGvnStatus=:grnGvnStatus WHERE grnGvnId =:grnGvnId ")
 	
-		int updateGateGrn(@Param("approvedLoginGate") int approvedLoginGate,@Param("aprQtyGate") int aprQtyGate,@Param("approveimedDateTimeGate") 
+		int updateGateGrn(@Param("approvedLoginGate") int approvedLoginGate,@Param("aprQtyGate") float aprQtyGate,@Param("approveimedDateTimeGate") 
 		String approveimedDateTimeGate,@Param("approvedRemarkGate") String approvedRemarkGate,@Param("grnGvnStatus") 
 		int grnGvnStatus,@Param("grnGvnId") int grnGvnId);
 	
@@ -33,7 +33,7 @@ public interface UpdateGrnGvnRepository extends JpaRepository<UpdateGrnGvn, Inte
 			+ "aprGrandTotal =:aprGrandTotal,aprROff=:aprROff"
 			+ " WHERE grnGvnId =:grnGvnId ")
 	
-		int updateAccGrn(@Param("approvedLoginAcc") int approvedLoginAcc,@Param("aprQtyAcc") int aprQtyAcc,@Param("approvedDateTimeAcc") 
+		int updateAccGrn(@Param("approvedLoginAcc") int approvedLoginAcc,@Param("aprQtyAcc") float aprQtyAcc,@Param("approvedDateTimeAcc") 
 		String approvedDateTimeAcc,@Param("approvedRemarkAcc") String approvedRemarkAcc,@Param("grnGvnStatus") 
 		int grnGvnStatus,@Param("aprTaxableAmt") float aprTaxableAmt,@Param("aprTotalTax") float aprTotalTax,@Param("aprSgstRs") float aprSgstRs,
 		@Param("aprCgstRs") float aprCgstRs,@Param("aprIgstRs") float aprIgstRs,@Param("aprGrandTotal")float aprGrandTotal,
@@ -46,7 +46,7 @@ public interface UpdateGrnGvnRepository extends JpaRepository<UpdateGrnGvn, Inte
 			+ "approvedDateTimeStore=:approvedDateTimeStore,approvedRemarkStore=:approvedRemarkStore ,"
 			+ "grnGvnStatus=:grnGvnStatus WHERE grnGvnId =:grnGvnId ")
 	
-		int updateStoreGvn(@Param("approvedLoginStore") int approvedLoginStore,@Param("aprQtyStore") int aprQtyStore,@Param("approvedDateTimeStore") 
+		int updateStoreGvn(@Param("approvedLoginStore") int approvedLoginStore,@Param("aprQtyStore") float aprQtyStore,@Param("approvedDateTimeStore") 
 		String approvedDateTimeStore,@Param("approvedRemarkStore") String approvedRemarkStore,@Param("grnGvnStatus") 
 		int grnGvnStatus,@Param("grnGvnId") int grnGvnId);
 	

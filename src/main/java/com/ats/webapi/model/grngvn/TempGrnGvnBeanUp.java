@@ -27,11 +27,11 @@ public class TempGrnGvnBeanUp {
 	private String approvedRemarkAcc;
 	
 	//23 FEB new Fields to handle qty variation between entry(insert) and dispatch
-	private	int aprQtyGate;
+	private	float aprQtyGate;
 		
-	private	int aprQtyStore;
+	private	float aprQtyStore;
 		
-	private	int aprQtyAcc;
+	private	float aprQtyAcc;
 		
 	private	float aprTaxableAmt;
 		
@@ -141,27 +141,27 @@ public class TempGrnGvnBeanUp {
 		this.approvedRemarkAcc = approvedRemarkAcc;
 	}
 
-	public int getAprQtyGate() {
+	public float getAprQtyGate() {
 		return aprQtyGate;
 	}
 
-	public void setAprQtyGate(int aprQtyGate) {
+	public void setAprQtyGate(float aprQtyGate) {
 		this.aprQtyGate = aprQtyGate;
 	}
 
-	public int getAprQtyStore() {
+	public float getAprQtyStore() {
 		return aprQtyStore;
 	}
 
-	public void setAprQtyStore(int aprQtyStore) {
+	public void setAprQtyStore(float aprQtyStore) {
 		this.aprQtyStore = aprQtyStore;
 	}
 
-	public int getAprQtyAcc() {
+	public float getAprQtyAcc() {
 		return aprQtyAcc;
 	}
 
-	public void setAprQtyAcc(int aprQtyAcc) {
+	public void setAprQtyAcc(float aprQtyAcc) {
 		this.aprQtyAcc = aprQtyAcc;
 	}
 

@@ -44,7 +44,7 @@ public class GetCrnDetails {
 	private Date grnGvnDate;
 	
 	@Column(name="grn_gvn_qty")
-	private int grnGvnQty;
+	private float grnGvnQty;
 	
 	@Column(name="taxable_amt")
 	private float taxableAmt;
@@ -196,12 +196,12 @@ public class GetCrnDetails {
 		}
 
 
-		public int getGrnGvnQty() {
+		public float getGrnGvnQty() {
 			return grnGvnQty;
 		}
 
 
-		public void setGrnGvnQty(int grnGvnQty) {
+		public void setGrnGvnQty(float grnGvnQty) {
 			this.grnGvnQty = grnGvnQty;
 		}
 

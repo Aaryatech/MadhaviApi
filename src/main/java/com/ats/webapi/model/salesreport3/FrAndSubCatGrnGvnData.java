@@ -11,7 +11,7 @@ public class FrAndSubCatGrnGvnData {
 	private int subCatId;
 	private int frId;
 	private float amt;
-	private int qty;
+	private float qty;
 	private float taxableAmt;
 	private float taxAmt;
 	private String frName;
@@ -42,10 +42,10 @@ public class FrAndSubCatGrnGvnData {
 	public void setAmt(float amt) {
 		this.amt = amt;
 	}
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 	public float getTaxableAmt() {

@@ -52,7 +52,7 @@ public class CreditNote implements Serializable{
 	private String uom;
 	
 	@Column(name="grn_gvn_qty")
-	private int qty;
+	private float qty;
 	
 	@Column(name="base_rate")
 	private float rate;
@@ -249,11 +249,11 @@ public class CreditNote implements Serializable{
 		this.uom = uom;
 	}
 
-	public int getQty() {
+	public float getQty() {
 		return qty;
 	}
 
-	public void setQty(int qty) {
+	public void setQty(float qty) {
 		this.qty = qty;
 	}
 

@@ -43,7 +43,7 @@ public class GetGrnGvnForCreditNote implements Serializable {
 	private float itemMrp;
 
 	@Column(name = "apr_qty_acc")
-	private int aprQtyAcc;
+	private float aprQtyAcc;
 
 	@Column(name = "apr_grand_total")
 	private float aprGrandTotal;
@@ -77,7 +77,7 @@ public class GetGrnGvnForCreditNote implements Serializable {
 	private int delStatus;
 	
 	@Column(name = "grn_gvn_qty_auto")
-	private int grnGvnQtyAuto;
+	private float grnGvnQtyAuto;
 	
 	
 	
@@ -215,11 +215,11 @@ public class GetGrnGvnForCreditNote implements Serializable {
 		this.itemMrp = itemMrp;
 	}
 
-	public int getAprQtyAcc() {
+	public float getAprQtyAcc() {
 		return aprQtyAcc;
 	}
 
-	public void setAprQtyAcc(int aprQtyAcc) {
+	public void setAprQtyAcc(float aprQtyAcc) {
 		this.aprQtyAcc = aprQtyAcc;
 	}
 
@@ -287,11 +287,11 @@ public class GetGrnGvnForCreditNote implements Serializable {
 		this.delStatus = delStatus;
 	}
 
-	public int getGrnGvnQtyAuto() {
+	public float getGrnGvnQtyAuto() {
 		return grnGvnQtyAuto;
 	}
 
-	public void setGrnGvnQtyAuto(int grnGvnQtyAuto) {
+	public void setGrnGvnQtyAuto(float grnGvnQtyAuto) {
 		this.grnGvnQtyAuto = grnGvnQtyAuto;
 	}
 

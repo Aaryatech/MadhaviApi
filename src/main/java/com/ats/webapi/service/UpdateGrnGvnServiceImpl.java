@@ -14,7 +14,7 @@ public class UpdateGrnGvnServiceImpl implements  UpdateGrnGvnService {
 	UpdateGrnGvnRepository updateGrnGvnRepository;
 
 	@Override
-	public int updateGrnForGate(int approvedLoginGate,int aprQtyGate, String approveimedDateTimeGate, String approvedRemarkGate,
+	public int updateGrnForGate(int approvedLoginGate,float aprQtyGate, String approveimedDateTimeGate, String approvedRemarkGate,
 			int grnGvnStatus,int grnGvnId) {
 		
 		int i=updateGrnGvnRepository.updateGateGrn(approvedLoginGate, aprQtyGate, approveimedDateTimeGate, approvedRemarkGate, grnGvnStatus, grnGvnId);
@@ -25,7 +25,7 @@ public class UpdateGrnGvnServiceImpl implements  UpdateGrnGvnService {
 	}
 
 	@Override
-	public int updateGrnForAcc(int approvedLoginAcc, int aprQtyAcc,String approvedDateTimeAcc, String approvedRemarkAcc,
+	public int updateGrnForAcc(int approvedLoginAcc, float aprQtyAcc,String approvedDateTimeAcc, String approvedRemarkAcc,
 			int grnGvnStatus,float aprTaxableAmt,float aprTotalTax,float aprSgstRs,float aprCgstRs,float aprIgstRs,float aprGrandTotal,
 			float aprROff,int grnGvnId) {
 
@@ -36,7 +36,7 @@ public class UpdateGrnGvnServiceImpl implements  UpdateGrnGvnService {
 	}
 
 	@Override
-	public int updateGrnGvnForStore(int approvedLoginStore,int aprQtyStore, String approvedDateTimeStore, String approvedRemarkStore,
+	public int updateGrnGvnForStore(int approvedLoginStore,float aprQtyStore, String approvedDateTimeStore, String approvedRemarkStore,
 			int grnGvnStatus, int grnGvnId) {
 		
 		int i=updateGrnGvnRepository.updateStoreGvn(approvedLoginStore,aprQtyStore, approvedDateTimeStore, approvedRemarkStore, grnGvnStatus, grnGvnId);
