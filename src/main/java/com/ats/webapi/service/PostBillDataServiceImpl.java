@@ -5,19 +5,23 @@ import java.text.SimpleDateFormat;
 
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.ats.webapi.model.FrItemStockConfigureList;
 import com.ats.webapi.model.PostBillDetail;
 import com.ats.webapi.model.PostBillHeader;
 import com.ats.webapi.model.bill.BillTransaction;
 import com.ats.webapi.model.bill.Company;
+import com.ats.webapi.model.bill.ItemBillQty;
 import com.ats.webapi.repo.BillTransationRepo;
+import com.ats.webapi.repo.ItemBillQtyRepo;
 import com.ats.webapi.repository.CompanyRepository;
 import com.ats.webapi.repository.FrItemStockConfigureRepository;
 import com.ats.webapi.repository.OrderRepository;
@@ -84,6 +88,8 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 	@Autowired
 	CompanyRepository companyRepository;
 
+	//Sachin 29-07-2020
+	@Autowired ItemBillQtyRepo itemBillQtyRepo;
 	@Override
 	public List<PostBillHeader> saveBillHeader(List<PostBillHeader> postBillHeader) {
 
@@ -236,6 +242,37 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 																	// id from detail
 			// gdd 6-1-2020
 		}
+		
+        StringBuilder sbString = new StringBuilder("");
+        
+        //iterate through ArrayList
+        for(PostBillHeader bill : pbHeaderList){
+            
+            //append ArrayList element followed by comma
+            sbString.append(bill.getBillNo()).append(",");
+        }
+        
+        //convert StringBuffer to String
+        String commaSepBillNos = sbString.toString();
+        
+        //remove last comma from String if you want
+        if( commaSepBillNos.length() > 0 )
+        	commaSepBillNos = commaSepBillNos.substring(0, commaSepBillNos.length() - 1);
+        
+        System.out.println("Comma Seperated BillNos "+commaSepBillNos);  
+        //A) Web Service to get ids and bill qty 
+        
+        //B) Send output of A)  to Store web api  and do their MRN, issue calculation.
+        
+        List<String> billNoList = Arrays.asList(commaSepBillNos.split(",", -1));
+        
+        List<ItemBillQty> itemBillQtyList=itemBillQtyRepo.getItemBillQtyListByBillNos(billNoList);
+        System.err.println("itemBillQtyList " +itemBillQtyList.toString());
+    	RestTemplate rest = new RestTemplate();
+
+        Object res = rest.postForObject("http://107.180.91.43:8080/MadhviStoreApi" + "/autoIssueItemsWhenBilled", itemBillQtyList,
+				Object.class);
+	
 		return pbHeaderList;
 	}
 

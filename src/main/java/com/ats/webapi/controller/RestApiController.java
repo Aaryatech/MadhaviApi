@@ -1327,13 +1327,13 @@ public class RestApiController {
                 String  defUsrName = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+"\n"
                         +"Bill No.: "+billNo+"\n"
                         +"Bill AMt: "+billAmt;
-                info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject, defUsrName, defPass);
+                //Sac -comment //info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject, defUsrName, defPass);
                 System.err.println("Email Resp----"+info);
                 if(info.isError()==false) {
                 	//String msg = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+" Bill No.: "+billNo+" Bill AMt: "+billAmt;
                 	String msg="Welcome to Madhvi!\n" + 
                 		       "Billing/Delivery Challan Alert for Outlets Code: "+frCode+" Bill No.: "+billNo+" Bill Amt: "+billAmt;
-                	info = EmailUtility.send(frDetails.getFrMob(), msg);
+                //Sac -comment	info = EmailUtility.send(frDetails.getFrMob(), msg);
                 	 System.err.println("SMS Resp----"+info);
                 }
                 		
