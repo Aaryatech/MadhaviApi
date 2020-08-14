@@ -507,6 +507,434 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	@Modifying
 	@Query(value="UPDATE Item SET item_rate1=:rate,item_mrp1=:mrp WHERE id=:id")
 	public int updateItemRateAndMrp(@Param("id")int id,@Param("rate") float rate,@Param("mrp") float mrp);
+	
+	
+	
+	@Query(value="SELECT\n" + 
+			"    *\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        t2.id,\n" + 
+			"        t2.item_id,\n" + 
+			"        t2.item_name,\n" + 
+			"        t2.item_grp1,\n" + 
+			"        t2.item_grp2,\n" + 
+			"        t2.item_grp3,\n" + 
+			"        t2.item_rate1,\n" + 
+			"        t2.item_rate2,\n" + 
+			"        t2.item_rate3,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp1,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp2,\n" + 
+			"        COALESCE(t1.sp_rate_amt, 0) AS item_mrp3,\n" + 
+			"        t2.item_image,\n" + 
+			"        COALESCE(t1.cgst_per, 0) AS item_tax1,\n" + 
+			"        COALESCE(t1.sgst_per, 0) AS item_tax2,\n" + 
+			"        COALESCE(t1.igst_per, 0) AS item_tax3,\n" + 
+			"        t2.item_is_used,\n" + 
+			"        t2.item_sort_id,\n" + 
+			"        t2.grn_two,\n" + 
+			"        t2.del_status,\n" + 
+			"        t2.min_qty,\n" + 
+			"        t2.item_shelf_life,\n" + 
+			"        t2.is_saleable,\n" + 
+			"        t2.is_stockable,\n" + 
+			"        t2.is_fact_or_fr,\n" + 
+			"        t2.ext_int1,\n" + 
+			"        t2.ext_int2,\n" + 
+			"        t2.ext_float1,\n" + 
+			"        t2.ext_float2,\n" + 
+			"        t2.ext_var1,\n" + 
+			"        COALESCE(t1.hsncd, '') AS ext_var2,\n" + 
+			"        t2.ext_var3\n" + 
+			"    FROM\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            d.item_id,\n" + 
+			"            d.item_config_detail_id,\n" + 
+			"            d.rate_amt,\n" + 
+			"            d.mrp_amt,\n" + 
+			"            d.sp_rate_amt,\n" + 
+			"            d.cgst_per,\n" + 
+			"            d.sgst_per,\n" + 
+			"            d.igst_per,\n" + 
+			"            d.hsncd\n" + 
+			"        FROM\n" + 
+			"            tn_item_config_header h,\n" + 
+			"            tn_item_config_detail d\n" + 
+			"        WHERE\n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"    ) t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        i.id,\n" + 
+			"        i.item_id,\n" + 
+			"        i.item_name,\n" + 
+			"        i.item_grp1,\n" + 
+			"        i.item_grp2,\n" + 
+			"        i.item_grp3,\n" + 
+			"        i.item_rate1,\n" + 
+			"        i.item_rate2,\n" + 
+			"        i.item_rate3,\n" + 
+			"        i.item_mrp1,\n" + 
+			"        i.item_mrp2,\n" + 
+			"        i.item_mrp3,\n" + 
+			"        i.item_image,\n" + 
+			"        i.item_tax1,\n" + 
+			"        i.item_tax2,\n" + 
+			"        i.item_tax3,\n" + 
+			"        i.item_is_used,\n" + 
+			"        i.item_sort_id,\n" + 
+			"        i.del_status,\n" + 
+			"        i.min_qty,\n" + 
+			"        i.item_shelf_life,\n" + 
+			"        i.grn_two,\n" + 
+			"        i.is_saleable,\n" + 
+			"        i.is_stockable,\n" + 
+			"        i.is_fact_or_fr,\n" + 
+			"        i.ext_int1,\n" + 
+			"        i.ext_int2,\n" + 
+			"        i.ext_float1,\n" + 
+			"        i.ext_float2,\n" + 
+			"        i.ext_var1,\n" + 
+			"        s.item_hsncd AS ext_var2,\n" + 
+			"        s.item_uom AS ext_var3\n" + 
+			"    FROM\n" + 
+			"        m_item i,\n" + 
+			"        m_item_sup s\n" + 
+			"    WHERE\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.item_id = t2.id\n" + 
+			") a\n" + 
+			"ORDER BY\n" + 
+			"    a.item_grp1,\n" + 
+			"    a.item_grp2,\n" + 
+			"    a.item_sort_id",nativeQuery=true)
+	public List<Item> getAllItemByFrAndConfigType(@Param("frId")int frId,@Param("configType") int configType);
+	
+	@Query(value="SELECT\n" + 
+			"    *\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        t2.id,\n" + 
+			"        t2.item_id,\n" + 
+			"        t2.item_name,\n" + 
+			"        t2.item_grp1,\n" + 
+			"        t2.item_grp2,\n" + 
+			"        t2.item_grp3,\n" + 
+			"        t2.item_rate1,\n" + 
+			"        t2.item_rate2,\n" + 
+			"        t2.item_rate3,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp1,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp2,\n" + 
+			"        COALESCE(t1.sp_rate_amt, 0) AS item_mrp3,\n" + 
+			"        t2.item_image,\n" + 
+			"        COALESCE(t1.cgst_per, 0) AS item_tax1,\n" + 
+			"        COALESCE(t1.sgst_per, 0) AS item_tax2,\n" + 
+			"        COALESCE(t1.igst_per, 0) AS item_tax3,\n" + 
+			"        t2.item_is_used,\n" + 
+			"        t2.item_sort_id,\n" + 
+			"        t2.grn_two,\n" + 
+			"        t2.del_status,\n" + 
+			"        t2.min_qty,\n" + 
+			"        t2.item_shelf_life,\n" + 
+			"        t2.is_saleable,\n" + 
+			"        t2.is_stockable,\n" + 
+			"        t2.is_fact_or_fr,\n" + 
+			"        t2.ext_int1,\n" + 
+			"        t2.ext_int2,\n" + 
+			"        t2.ext_float1,\n" + 
+			"        t2.ext_float2,\n" + 
+			"        t2.ext_var1,\n" + 
+			"        COALESCE(t1.hsncd, '') AS ext_var2,\n" + 
+			"        t2.ext_var3\n" + 
+			"    FROM\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            d.item_id,\n" + 
+			"            d.item_config_detail_id,\n" + 
+			"            d.rate_amt,\n" + 
+			"            d.mrp_amt,\n" + 
+			"            d.sp_rate_amt,\n" + 
+			"            d.cgst_per,\n" + 
+			"            d.sgst_per,\n" + 
+			"            d.igst_per,\n" + 
+			"            d.hsncd\n" + 
+			"        FROM\n" + 
+			"            tn_item_config_header h,\n" + 
+			"            tn_item_config_detail d,\n" + 
+			"            m_item i\n" + 
+			"        WHERE\n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp1 = :catId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"    ) t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        i.id,\n" + 
+			"        i.item_id,\n" + 
+			"        i.item_name,\n" + 
+			"        i.item_grp1,\n" + 
+			"        i.item_grp2,\n" + 
+			"        i.item_grp3,\n" + 
+			"        i.item_rate1,\n" + 
+			"        i.item_rate2,\n" + 
+			"        i.item_rate3,\n" + 
+			"        i.item_mrp1,\n" + 
+			"        i.item_mrp2,\n" + 
+			"        i.item_mrp3,\n" + 
+			"        i.item_image,\n" + 
+			"        i.item_tax1,\n" + 
+			"        i.item_tax2,\n" + 
+			"        i.item_tax3,\n" + 
+			"        i.item_is_used,\n" + 
+			"        i.item_sort_id,\n" + 
+			"        i.del_status,\n" + 
+			"        i.min_qty,\n" + 
+			"        i.item_shelf_life,\n" + 
+			"        i.grn_two,\n" + 
+			"        i.is_saleable,\n" + 
+			"        i.is_stockable,\n" + 
+			"        i.is_fact_or_fr,\n" + 
+			"        i.ext_int1,\n" + 
+			"        i.ext_int2,\n" + 
+			"        i.ext_float1,\n" + 
+			"        i.ext_float2,\n" + 
+			"        i.ext_var1,\n" + 
+			"        s.item_hsncd AS ext_var2,\n" + 
+			"        s.item_uom AS ext_var3\n" + 
+			"    FROM\n" + 
+			"        m_item i,\n" + 
+			"        m_item_sup s\n" + 
+			"    WHERE\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.item_id = t2.id\n" + 
+			") a\n" + 
+			"ORDER BY\n" + 
+			"    a.item_grp1,\n" + 
+			"    a.item_grp2,\n" + 
+			"    a.item_sort_id",nativeQuery=true)
+	public List<Item> getAllItemByFrAndConfigTypeAndCat(@Param("frId")int frId,@Param("configType") int configType, @Param("catId") int catId);
+	
+	
+	@Query(value="SELECT\n" + 
+			"    *\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        t2.id,\n" + 
+			"        t2.item_id,\n" + 
+			"        t2.item_name,\n" + 
+			"        t2.item_grp1,\n" + 
+			"        t2.item_grp2,\n" + 
+			"        t2.item_grp3,\n" + 
+			"        t2.item_rate1,\n" + 
+			"        t2.item_rate2,\n" + 
+			"        t2.item_rate3,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp1,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp2,\n" + 
+			"        COALESCE(t1.sp_rate_amt, 0) AS item_mrp3,\n" + 
+			"        t2.item_image,\n" + 
+			"        COALESCE(t1.cgst_per, 0) AS item_tax1,\n" + 
+			"        COALESCE(t1.sgst_per, 0) AS item_tax2,\n" + 
+			"        COALESCE(t1.igst_per, 0) AS item_tax3,\n" + 
+			"        t2.item_is_used,\n" + 
+			"        t2.item_sort_id,\n" + 
+			"        t2.grn_two,\n" + 
+			"        t2.del_status,\n" + 
+			"        t2.min_qty,\n" + 
+			"        t2.item_shelf_life,\n" + 
+			"        t2.is_saleable,\n" + 
+			"        t2.is_stockable,\n" + 
+			"        t2.is_fact_or_fr,\n" + 
+			"        t2.ext_int1,\n" + 
+			"        t2.ext_int2,\n" + 
+			"        t2.ext_float1,\n" + 
+			"        t2.ext_float2,\n" + 
+			"        t2.ext_var1,\n" + 
+			"        COALESCE(t1.hsncd, '') AS ext_var2,\n" + 
+			"        t2.ext_var3\n" + 
+			"    FROM\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            d.item_id,\n" + 
+			"            d.item_config_detail_id,\n" + 
+			"            d.rate_amt,\n" + 
+			"            d.mrp_amt,\n" + 
+			"            d.sp_rate_amt,\n" + 
+			"            d.cgst_per,\n" + 
+			"            d.sgst_per,\n" + 
+			"            d.igst_per,\n" + 
+			"            d.hsncd\n" + 
+			"        FROM\n" + 
+			"            tn_item_config_header h,\n" + 
+			"            tn_item_config_detail d,\n" + 
+			"            m_item i\n" + 
+			"        WHERE\n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp2 = :subCatId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"    ) t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        i.id,\n" + 
+			"        i.item_id,\n" + 
+			"        i.item_name,\n" + 
+			"        i.item_grp1,\n" + 
+			"        i.item_grp2,\n" + 
+			"        i.item_grp3,\n" + 
+			"        i.item_rate1,\n" + 
+			"        i.item_rate2,\n" + 
+			"        i.item_rate3,\n" + 
+			"        i.item_mrp1,\n" + 
+			"        i.item_mrp2,\n" + 
+			"        i.item_mrp3,\n" + 
+			"        i.item_image,\n" + 
+			"        i.item_tax1,\n" + 
+			"        i.item_tax2,\n" + 
+			"        i.item_tax3,\n" + 
+			"        i.item_is_used,\n" + 
+			"        i.item_sort_id,\n" + 
+			"        i.del_status,\n" + 
+			"        i.min_qty,\n" + 
+			"        i.item_shelf_life,\n" + 
+			"        i.grn_two,\n" + 
+			"        i.is_saleable,\n" + 
+			"        i.is_stockable,\n" + 
+			"        i.is_fact_or_fr,\n" + 
+			"        i.ext_int1,\n" + 
+			"        i.ext_int2,\n" + 
+			"        i.ext_float1,\n" + 
+			"        i.ext_float2,\n" + 
+			"        i.ext_var1,\n" + 
+			"        s.item_hsncd AS ext_var2,\n" + 
+			"        s.item_uom AS ext_var3\n" + 
+			"    FROM\n" + 
+			"        m_item i,\n" + 
+			"        m_item_sup s\n" + 
+			"    WHERE\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.item_id = t2.id\n" + 
+			") a\n" + 
+			"ORDER BY\n" + 
+			"    a.item_grp1,\n" + 
+			"    a.item_grp2,\n" + 
+			"    a.item_sort_id",nativeQuery=true)
+	public List<Item> getAllItemByFrAndConfigTypeAndSubCat(@Param("frId")int frId,@Param("configType") int configType, @Param("subCatId") int subCatId);
+	
+	
 
+	
+	@Query(value="SELECT\n" + 
+			"    *\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        t2.id,\n" + 
+			"        t2.item_id,\n" + 
+			"        t2.item_name,\n" + 
+			"        t2.item_grp1,\n" + 
+			"        t2.item_grp2,\n" + 
+			"        t2.item_grp3,\n" + 
+			"        t2.item_rate1,\n" + 
+			"        t2.item_rate2,\n" + 
+			"        t2.item_rate3,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp1,\n" + 
+			"        COALESCE(t1.mrp_amt, 0) AS item_mrp2,\n" + 
+			"        COALESCE(t1.sp_rate_amt, 0) AS item_mrp3,\n" + 
+			"        t2.item_image,\n" + 
+			"        COALESCE(t1.cgst_per, 0) AS item_tax1,\n" + 
+			"        COALESCE(t1.sgst_per, 0) AS item_tax2,\n" + 
+			"        COALESCE(t1.igst_per, 0) AS item_tax3,\n" + 
+			"        t2.item_is_used,\n" + 
+			"        t2.item_sort_id,\n" + 
+			"        t2.grn_two,\n" + 
+			"        t2.del_status,\n" + 
+			"        t2.min_qty,\n" + 
+			"        t2.item_shelf_life,\n" + 
+			"        t2.is_saleable,\n" + 
+			"        t2.is_stockable,\n" + 
+			"        t2.is_fact_or_fr,\n" + 
+			"        t2.ext_int1,\n" + 
+			"        t2.ext_int2,\n" + 
+			"        t2.ext_float1,\n" + 
+			"        t2.ext_float2,\n" + 
+			"        t2.ext_var1,\n" + 
+			"        COALESCE(t1.hsncd, '') AS ext_var2,\n" + 
+			"        t2.ext_var3\n" + 
+			"    FROM\n" + 
+			"        (\n" + 
+			"        SELECT\n" + 
+			"            d.item_id,\n" + 
+			"            d.item_config_detail_id,\n" + 
+			"            d.rate_amt,\n" + 
+			"            d.mrp_amt,\n" + 
+			"            d.sp_rate_amt,\n" + 
+			"            d.cgst_per,\n" + 
+			"            d.sgst_per,\n" + 
+			"            d.igst_per,\n" + 
+			"            d.hsncd\n" + 
+			"        FROM\n" + 
+			"            tn_item_config_header h,\n" + 
+			"            tn_item_config_detail d,\n" + 
+			"            m_item i\n" + 
+			"        WHERE\n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND h.fr_id =:frId AND d.status = 0 AND h.config_type = :configType AND d.item_id IN(:itemList) \n" + 
+			"    ) t1\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        i.id,\n" + 
+			"        i.item_id,\n" + 
+			"        i.item_name,\n" + 
+			"        i.item_grp1,\n" + 
+			"        i.item_grp2,\n" + 
+			"        i.item_grp3,\n" + 
+			"        i.item_rate1,\n" + 
+			"        i.item_rate2,\n" + 
+			"        i.item_rate3,\n" + 
+			"        i.item_mrp1,\n" + 
+			"        i.item_mrp2,\n" + 
+			"        i.item_mrp3,\n" + 
+			"        i.item_image,\n" + 
+			"        i.item_tax1,\n" + 
+			"        i.item_tax2,\n" + 
+			"        i.item_tax3,\n" + 
+			"        i.item_is_used,\n" + 
+			"        i.item_sort_id,\n" + 
+			"        i.del_status,\n" + 
+			"        i.min_qty,\n" + 
+			"        i.item_shelf_life,\n" + 
+			"        i.grn_two,\n" + 
+			"        i.is_saleable,\n" + 
+			"        i.is_stockable,\n" + 
+			"        i.is_fact_or_fr,\n" + 
+			"        i.ext_int1,\n" + 
+			"        i.ext_int2,\n" + 
+			"        i.ext_float1,\n" + 
+			"        i.ext_float2,\n" + 
+			"        i.ext_var1,\n" + 
+			"        s.item_hsncd AS ext_var2,\n" + 
+			"        s.item_uom AS ext_var3\n" + 
+			"    FROM\n" + 
+			"        m_item i,\n" + 
+			"        m_item_sup s\n" + 
+			"    WHERE\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			") t2\n" + 
+			"ON\n" + 
+			"    t1.item_id = t2.id\n" + 
+			") a\n" + 
+			"ORDER BY\n" + 
+			"    a.item_grp1,\n" + 
+			"    a.item_grp2,\n" + 
+			"    a.item_sort_id",nativeQuery=true)
+	public List<Item> getItemByIdsAndFr(@Param("itemList") List<Integer> itemList, @Param("frId") int frId, @Param("configType") int configType);
+	
+	
+	
+	
  }
 

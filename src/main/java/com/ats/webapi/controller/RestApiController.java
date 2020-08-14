@@ -447,10 +447,9 @@ public class RestApiController {
 
 	@Autowired
 	SellBillHeaderRepository sellBillHeaderRepository;
-	
+
 	@Autowired
 	PostBillHeaderRepository postBillHeaderRepository;
-	
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
 	public @ResponseBody Info changeAdminUserPass(@RequestBody User user) {
@@ -1311,34 +1310,33 @@ public class RestApiController {
 
 				info.setError(false);
 				info.setMessage("post bill header inserted  Successfully");
-				
-				 
-                int frId = jsonBillHeader.get(0).getFrId();
-                Franchisee frDetails =  franchiseeRepository.findOne(frId);
-                
-                
-                String senderEmail = UserUtilApi.senderEmail;
-                String senderPassword = UserUtilApi.senderPassword;
-                String billNo = jsonBillHeader.get(0).getInvoiceNo();
-                float billAmt = jsonBillHeader.get(0).getGrandTotal();
-                String frCode = jsonBillHeader.get(0).getFrCode();
-                String defPass ="";
-                String mailsubject = "Billing/Delivery Challan Detail";
-                String  defUsrName = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+"\n"
-                        +"Bill No.: "+billNo+"\n"
-                        +"Bill AMt: "+billAmt;
-                //Sac -comment //
-                info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject, defUsrName, defPass);
-                System.err.println("Email Resp----"+info);
-                if(info.isError()==false) {
-                	//String msg = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+" Bill No.: "+billNo+" Bill AMt: "+billAmt;
-                	String msg="Welcome to Madhvi!\n" + 
-                		       "Billing/Delivery Challan Alert for Outlets Code: "+frCode+" Bill No.: "+billNo+" Bill Amt: "+billAmt;
-                //Sac -comment//
-                	info = EmailUtility.send(frDetails.getFrMob(), msg);
-                	 System.err.println("SMS Resp----"+info);
-                }
-                		
+
+				int frId = jsonBillHeader.get(0).getFrId();
+				Franchisee frDetails = franchiseeRepository.findOne(frId);
+
+				String senderEmail = UserUtilApi.senderEmail;
+				String senderPassword = UserUtilApi.senderPassword;
+				String billNo = jsonBillHeader.get(0).getInvoiceNo();
+				float billAmt = jsonBillHeader.get(0).getGrandTotal();
+				String frCode = jsonBillHeader.get(0).getFrCode();
+				String defPass = "";
+				String mailsubject = "Billing/Delivery Challan Detail";
+				String defUsrName = "Billing/Delivery Challan Alert for Outlet Code: " + frCode + "\n" + "Bill No.: "
+						+ billNo + "\n" + "Bill AMt: " + billAmt;
+				// Sac -comment //
+				info = EmailUtility.sendEmail(senderEmail, senderPassword, frDetails.getFrEmail(), mailsubject,
+						defUsrName, defPass);
+				System.err.println("Email Resp----" + info);
+				if (info.isError() == false) {
+					// String msg = "Billing/Delivery Challan Alert for Outlet Code: "+frCode+" Bill
+					// No.: "+billNo+" Bill AMt: "+billAmt;
+					String msg = "Welcome to Madhvi!\n" + "Billing/Delivery Challan Alert for Outlets Code: " + frCode
+							+ " Bill No.: " + billNo + " Bill Amt: " + billAmt;
+					// Sac -comment//
+					info = EmailUtility.send(frDetails.getFrMob(), msg);
+					System.err.println("SMS Resp----" + info);
+				}
+
 			} else {
 				info.setError(true);
 				info.setMessage("Error in post bill header insertion : RestApi");
@@ -1634,7 +1632,7 @@ public class RestApiController {
 
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate, @RequestParam("configType") int configType) {
 
 		GetBillHeaderList billHeaderList = null;
 		try {
@@ -1653,7 +1651,17 @@ public class RestApiController {
 				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
+				//billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
+				
+				
+				GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
+				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFrAllNew(fromDate, toDate,itmList,configType);
+				if (billHeaders != null) {
+					getBillHeaderList.setGetBillHeaders(billHeaders);
+				}
+				
+				billHeaderList=getBillHeaderList;
+				
 
 			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
@@ -1692,7 +1700,16 @@ public class RestApiController {
 			} else {
 				System.err.println(" 3");
 
-				billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
+				//billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
+				
+				GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
+				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr3New(fromDate, toDate,configType);
+				if (billHeaders != null) {
+					getBillHeaderList.setGetBillHeaders(billHeaders);
+				}
+				
+				billHeaderList=getBillHeaderList;
+				
 
 			}
 		} catch (Exception e) {
@@ -1804,14 +1821,14 @@ public class RestApiController {
 			GetFrItemStockConfiguration frItemStockConfigurePostParent = frItemStockConfigurePosts.get(i);
 
 			boolean isUnique = true;
-for (int m = 0; m < frStockResponseList.size(); m++) {
-				
-				FrStockResponse resp=frStockResponseList.get(m);
+			for (int m = 0; m < frStockResponseList.size(); m++) {
+
+				FrStockResponse resp = frStockResponseList.get(m);
 
 				if (resp.getItemId() == frItemStockConfigurePostParent.getItemId()) {
-					
-					List<StockDetails> stockDetailsList =resp.getStockDetails();
-					
+
+					List<StockDetails> stockDetailsList = resp.getStockDetails();
+
 					for (int j = 0; j < frItemStockConfigurePosts.size(); j++) {
 
 						GetFrItemStockConfiguration frItemStockConfigurePostChild = frItemStockConfigurePosts.get(j);
@@ -1831,7 +1848,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 						}
 					}
 					resp.setStockDetails(stockDetailsList);
-					
+
 					isUnique = false;
 				}
 
@@ -1910,7 +1927,6 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return dummyData;
 	}
 
-	
 	// Login FrontEnd Franchisee
 	@RequestMapping(value = { "/loginFr" }, method = RequestMethod.POST)
 	@ResponseBody
@@ -1998,12 +2014,14 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return errorMessage;
 	}
 
-	@Autowired BookedOrderMailedRepo bookOrderrepo;
+	@Autowired
+	BookedOrderMailedRepo bookOrderrepo;
+
 	// Place Item Order
 	@RequestMapping(value = { "/placeOrder" }, method = RequestMethod.POST)
 	public @ResponseBody List<Orders> placeItemOrder(@RequestBody List<Orders> orderJson)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
-		System.err.println("Order Found---------"+orderJson.toString());
+		System.err.println("Order Found---------" + orderJson.toString());
 		Info info = new Info();
 		List<Orders> jsonResult;
 		OrderLog log = new OrderLog();
@@ -2012,65 +2030,56 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		logRespository.save(log);
 
 		jsonResult = orderService.placeOrder(orderJson);
-		System.out.println("Saved Order---------"+jsonResult);
-		if(jsonResult!=null) {
+		System.out.println("Saved Order---------" + jsonResult);
+		if (jsonResult != null) {
 			try {
 				Franchisee fr = franchiseeRepository.findOne(jsonResult.get(0).getFrId());
 				String frCode = fr.getFrCode();
-                String senderEmail = UserUtilApi.senderEmail;
-                String senderPassword = UserUtilApi.senderPassword;
-                double orderAmt = 0;           
-                String mailsubject="Order Booking Details";
-                int srno = 0;
+				String senderEmail = UserUtilApi.senderEmail;
+				String senderPassword = UserUtilApi.senderPassword;
+				double orderAmt = 0;
+				String mailsubject = "Order Booking Details";
+				int srno = 0;
 
-                List<BookedOrderMailed> orderList = bookOrderrepo.getOrderPlacedByOrderDate(jsonResult.get(0).getOrderDate(), fr.getFrId(), jsonResult.get(0).getMenuId());
-                System.out.println("BookedOrderMailed----"+orderList);
-                for (int i = 0; i < orderList.size(); i++) {
-                        double calAmt = orderList.get(i).getOrderRate()*orderList.get(i).getOrderQty();
-                        orderAmt = orderAmt + calAmt;
-            }
-                SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
-                String delvDate = format1.format(orderList.get(0).getDeliveryDate());
-                String text = "";
-                text="<html><body>"						
-                        + "<table style=' border:2px solid black'>"+
-                        "<tr>"+
-                           "<td>OutLet Code: "+frCode+"</td>"+
-                           "<td>Delivery Date: "+delvDate+"</td>"+
-                           "<td>Order Amt: "+orderAmt+"</td></tr>"+
-                        "<tr bgcolor=\"#ed3f3c\">"+
-                        "<th style=\"color: #ffffff;\">Sr. No.</th>"+
-                        "<th style=\"color: #ffffff;\">Item Name</th>"+
-                        "<th style=\"color: #ffffff;\">UOM</th>"+
-                        "<th style=\"color: #ffffff;\">QTY</th></tr>";
-                for (int i = 0; i < orderList.size(); i++) {
-                	srno=srno+1;
-                       text=text+"<tr align='center'>"
-                        +"<td>" + srno + "</td>" 
-                                +"<td style=\"text-align: left;\">" + orderList.get(i).getItemName() + "</td>"
-                                +"<td>" + orderList.get(i).getItemUom() + "</td>"
-                                +"<td>" + orderList.get(i).getOrderQty() + "</td>"
-                                +"</tr>";
-                    
-                }
-                   text=text+"</table></body></html>";
-                  
-                 info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
-                System.err.println("Mail Resp : "+info);
-                if(info.isError()==false) {
+				List<BookedOrderMailed> orderList = bookOrderrepo.getOrderPlacedByOrderDate(
+						jsonResult.get(0).getOrderDate(), fr.getFrId(), jsonResult.get(0).getMenuId());
+				System.out.println("BookedOrderMailed----" + orderList);
+				for (int i = 0; i < orderList.size(); i++) {
+					double calAmt = orderList.get(i).getOrderRate() * orderList.get(i).getOrderQty();
+					orderAmt = orderAmt + calAmt;
+				}
+				SimpleDateFormat format1 = new SimpleDateFormat("dd-MM-yyyy");
+				String delvDate = format1.format(orderList.get(0).getDeliveryDate());
+				String text = "";
+				text = "<html><body>" + "<table style=' border:2px solid black'>" + "<tr>" + "<td>OutLet Code: "
+						+ frCode + "</td>" + "<td>Delivery Date: " + delvDate + "</td>" + "<td>Order Amt: " + orderAmt
+						+ "</td></tr>" + "<tr bgcolor=\"#ed3f3c\">" + "<th style=\"color: #ffffff;\">Sr. No.</th>"
+						+ "<th style=\"color: #ffffff;\">Item Name</th>" + "<th style=\"color: #ffffff;\">UOM</th>"
+						+ "<th style=\"color: #ffffff;\">QTY</th></tr>";
+				for (int i = 0; i < orderList.size(); i++) {
+					srno = srno + 1;
+					text = text + "<tr align='center'>" + "<td>" + srno + "</td>" + "<td style=\"text-align: left;\">"
+							+ orderList.get(i).getItemName() + "</td>" + "<td>" + orderList.get(i).getItemUom()
+							+ "</td>" + "<td>" + orderList.get(i).getOrderQty() + "</td>" + "</tr>";
+
+				}
+				text = text + "</table></body></html>";
+
+				info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, fr.getFrEmail(), mailsubject, text);
+				System.err.println("Mail Resp : " + info);
+				if (info.isError() == false) {
 //                	String msg = "Order Booking Details of Outlet Code: "+frCode+" Delivery Date: "+delvDate+" Order Amt: "+orderAmt+".\n"
 //                			+ "Check your email for more details.";
-                	//Template Name = Order Booking
-                	String msg = "Order Booking Details for Outlet Code: ("+frCode+")\n" + 
-	                			"Delivery Date: ("+delvDate+")\n" + 
-	                			"Order Amt: ("+orderAmt+")\n" + 
-	                			"Check your email for more details.";
-                	info = EmailUtility.send(fr.getFrMob(), msg);
-                	System.err.println("SMS Resp : "+info);
-                }
-			}catch (Exception e) {
-				 System.err.println(" Ex in placeOrder (send mail) : "+e.getMessage());
-				 e.printStackTrace();
+					// Template Name = Order Booking
+					String msg = "Order Booking Details for Outlet Code: (" + frCode + ")\n" + "Delivery Date: ("
+							+ delvDate + ")\n" + "Order Amt: (" + orderAmt + ")\n"
+							+ "Check your email for more details.";
+					info = EmailUtility.send(fr.getFrMob(), msg);
+					System.err.println("SMS Resp : " + info);
+				}
+			} catch (Exception e) {
+				System.err.println(" Ex in placeOrder (send mail) : " + e.getMessage());
+				e.printStackTrace();
 			}
 		}
 		return jsonResult;
@@ -2216,52 +2225,47 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		System.err.println("inside bills " + list.toString());
 		billList = generateBillRepository.getBillOfAdvOrder(list);
 		System.err.println("inside billList " + billList.toString());
-		System.err.println("Header-----------"+header);
-		if(billList!=null) {
-			 String senderEmail = UserUtilApi.senderEmail;//"madhvierp@gmail.com";
-			 String senderPassword = UserUtilApi.senderPassword;//"madhvi@#2020";
-			 System.out.println("Credentials--------"+senderEmail+" "+senderPassword);
-			 
-			 int frId = header.getFrId();
-			 int srno = 0;
-			 Franchisee frDetails =  franchiseeRepository.findOne(frId);
-			 String frEmail = frDetails.getFrEmail();
-			 String frContact = frDetails.getFrMob();
-			 String frCode = frDetails.getFrCode();
-			 String defPass = "";
-			 String mailsubject = "DairyMart Order Alert for Outlet Code : ("+frCode+") Order Dated : ("+header.getOrderDate()+")";
-			 String text = "";
+		System.err.println("Header-----------" + header);
+		if (billList != null) {
+			String senderEmail = UserUtilApi.senderEmail;// "madhvierp@gmail.com";
+			String senderPassword = UserUtilApi.senderPassword;// "madhvi@#2020";
+			System.out.println("Credentials--------" + senderEmail + " " + senderPassword);
+
+			int frId = header.getFrId();
+			int srno = 0;
+			Franchisee frDetails = franchiseeRepository.findOne(frId);
+			String frEmail = frDetails.getFrEmail();
+			String frContact = frDetails.getFrMob();
+			String frCode = frDetails.getFrCode();
+			String defPass = "";
+			String mailsubject = "DairyMart Order Alert for Outlet Code : (" + frCode + ") Order Dated : ("
+					+ header.getOrderDate() + ")";
+			String text = "";
 			/*
 			 * String values = ""; for(int i = 0 ; i <= billList.size() ; i++) { values =
 			 * billList.get(i).getItemName() }
 			 */
-			//EmailUtility.sendEmail(senderEmail, senderPassword, frEmail, mailsubject, text, defPass);
-			 
-			
-             text="<html><body>"+
-            		 	"<p>DairyMart Order Alert for Outlet Code : ("+frCode+"): Total Orders : ("+header.getTotal()+")</p> <br>"+
-            		 	"<table style='border:2px solid black'>"+                 
-            		 	"<tr bgcolor=\"#33CC99\">"+
-            		 	"<th>Sr. No.</th>"+
-            		 	"<th>Item Name</th>"+
-            		 	/* "<th>UOM</th>"+ */
-            		 	"<th>QTY</th></tr>";
-             for (int i = 0; i < billList.size(); i++) {
-             	srno=srno+1;
-                    text=text+"<tr align='center'>"
-                     +"<td>" + srno + "</td>" 
-                             +"<td>" + billList.get(i).getItemName() + "</td>"
-								/* +"<td>" + billList.get(i).getItemUom() + "</td>" */
-                             +"<td>" + billList.get(i).getOrderQty() + "</td>" 
-                             +"</tr>";
-                 
-             }
-                text=text+"</table></body></html>";
-               
-             Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, frEmail, mailsubject, text);
-             System.err.println("Mail Resp : "+info);
+			// EmailUtility.sendEmail(senderEmail, senderPassword, frEmail, mailsubject,
+			// text, defPass);
+
+			text = "<html><body>" + "<p>DairyMart Order Alert for Outlet Code : (" + frCode + "): Total Orders : ("
+					+ header.getTotal() + ")</p> <br>" + "<table style='border:2px solid black'>"
+					+ "<tr bgcolor=\"#33CC99\">" + "<th>Sr. No.</th>" + "<th>Item Name</th>" +
+					/* "<th>UOM</th>"+ */
+					"<th>QTY</th></tr>";
+			for (int i = 0; i < billList.size(); i++) {
+				srno = srno + 1;
+				text = text + "<tr align='center'>" + "<td>" + srno + "</td>" + "<td>" + billList.get(i).getItemName()
+						+ "</td>"
+						/* +"<td>" + billList.get(i).getItemUom() + "</td>" */
+						+ "<td>" + billList.get(i).getOrderQty() + "</td>" + "</tr>";
+
+			}
+			text = text + "</table></body></html>";
+
+			Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, frEmail, mailsubject, text);
+			System.err.println("Mail Resp : " + info);
 		}
-		
 
 		return billList;
 
@@ -3103,31 +3107,32 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			jsonScheduler = schedulerService.save(scheduler);
 
 			System.out.println("Json intesrted " + jsonScheduler);
-			if(jsonScheduler!=null) {
+			if (jsonScheduler != null) {
 
 				String senderEmail = UserUtilApi.senderEmail;
 				String senderPassword = UserUtilApi.senderPassword;
 				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
-						String mailSublect="";
-						String mailText = "";
-						String defPass= "";
-						
-						Info info = new Info();
-						
-					for (int i = 0; i <= frList.size(); i++) {
-						try {
-							
-							 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
-							 mailText = schMessage;
-							
-							 info =  EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
-							
-							 System.err.println("Mail Send To : "+frList.get(i).getFrCode()+"------Mail Resp : "+info);
-							
-							}catch (Exception e) {
-								e.getMessage();
-							}
-						}
+				String mailSublect = "";
+				String mailText = "";
+				String defPass = "";
+
+				Info info = new Info();
+
+				for (int i = 0; i <= frList.size(); i++) {
+					try {
+
+						mailSublect = "Important Msg for Retail Outlets: (" + frList.get(i).getFrCode() + ")";
+						mailText = schMessage;
+
+						info = EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(),
+								mailSublect, mailText, defPass);
+
+						System.err.println("Mail Send To : " + frList.get(i).getFrCode() + "------Mail Resp : " + info);
+
+					} catch (Exception e) {
+						e.getMessage();
+					}
+				}
 			}
 
 		} catch (Exception e) {
@@ -3538,8 +3543,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		}
 		return errorMessage;
 	}
-	
-	
+
 	@RequestMapping(value = "/activateItems", method = RequestMethod.POST)
 	public @ResponseBody ErrorMessage activateItems(@RequestParam List<Integer> id) {
 
@@ -3557,8 +3561,6 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		}
 		return errorMessage;
 	}
-	
-	
 
 	// Delete Flavor
 	@RequestMapping(value = "/updateFlavourStatus", method = RequestMethod.POST)
@@ -3941,19 +3943,19 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return items;
 
 	}
-	
+
 	@RequestMapping(value = "/getItemsResByCatAndSubCatId", method = RequestMethod.POST)
-	public @ResponseBody List<ItemRes> getItemsResByCatAndSubCatId(@RequestParam("subCatId") int subCatId, @RequestParam("catId") int catId) {
+	public @ResponseBody List<ItemRes> getItemsResByCatAndSubCatId(@RequestParam("subCatId") int subCatId,
+			@RequestParam("catId") int catId) {
 
 		List<ItemRes> items = new ArrayList<ItemRes>();
 		try {
-			System.out.println("Cat - SuvCat ----------"+catId+ " - "+subCatId);
-			if (subCatId == -1 && catId ==-1) {
+			System.out.println("Cat - SuvCat ----------" + catId + " - " + subCatId);
+			if (subCatId == -1 && catId == -1) {
 				items = itemResRepository.findByAllItemGrp2OrderByItemGrp2AscItemNameAsc();
-			} else if(subCatId == -1 && catId!=-1) {
+			} else if (subCatId == -1 && catId != -1) {
 				items = itemResRepository.findByItemsByItemGrp1(catId, 0);
-			}
-			else {				
+			} else {
 				items = itemResRepository.findByItemsByItemGrp1AndItemGrp2(catId, subCatId, 0);
 			}
 		} catch (Exception e) {
@@ -4155,9 +4157,9 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		try {
 			itemList = getFrItemsService.findFrItems(items);
 			try {
-				
+
 				orderList = prevItemOrderService.findFrItemOrders(items, frId, date, menuId);
-				
+
 				for (int i = 0; i < itemList.size(); i++) {
 
 					ItemWithSubCat item = itemList.get(i);
@@ -4188,12 +4190,11 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 					getFrItems.setMinQty(item.getMinQty());
 					getFrItems.setItemRate3(item.getItemRate3());
 					getFrItems.setCatName(item.getCatName());
-					  
-					
+
 					for (int j = 0; j < orderList.size(); j++) {
 						Date ordDate = orderList.get(j).getDeliveryDate();
-						orderDate = format1.format(ordDate); 
-						
+						orderDate = format1.format(ordDate);
+
 						if (String.valueOf(item.getId()).equalsIgnoreCase(orderList.get(j).getItemId())) {
 
 							getFrItems.setItemQty(orderList.get(j).getOrderQty());
@@ -4544,25 +4545,26 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 				String senderEmail = UserUtilApi.senderEmail;
 				String senderPassword = UserUtilApi.senderPassword;
 				List<Franchisee> frList = franchiseeRepository.findAllByDelStatus(0);
-				String mailSublect="";
+				String mailSublect = "";
 				String mailText = "";
-				String defPass= "";
-			
-					for (int i = 0; i <= frList.size(); i++) {
-						try {
-							
-						 mailSublect="Important Msg for Retail Outlets: ("+frList.get(i).getFrCode()+")";
-						 mailText = schMessage;
-						
-						 info =  EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(), mailSublect, mailText, defPass);
-						
-						 System.err.println("Mail Send To : "+frList.get(i).getFrCode()+"------Mail Resp : "+info);							
-						
-						}catch (Exception e) {
-							e.getMessage();
-						}
+				String defPass = "";
+
+				for (int i = 0; i <= frList.size(); i++) {
+					try {
+
+						mailSublect = "Important Msg for Retail Outlets: (" + frList.get(i).getFrCode() + ")";
+						mailText = schMessage;
+
+						info = EmailUtility.sendEmail(senderEmail, senderPassword, frList.get(i).getFrEmail(),
+								mailSublect, mailText, defPass);
+
+						System.err.println("Mail Send To : " + frList.get(i).getFrCode() + "------Mail Resp : " + info);
+
+					} catch (Exception e) {
+						e.getMessage();
 					}
-			
+				}
+
 				info.setError(false);
 				info.setMessage("scheduler Update successfully");
 			}
@@ -4769,14 +4771,12 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			@RequestParam("frOwner") String frOwner, @RequestParam("frRateCat") int frRateCat,
 			@RequestParam("grnTwo") int grnTwo, @RequestParam("delStatus") int delStatus,
 			@RequestParam("ownerBirthDate") String ownerBirthDate,
-			@RequestParam("fbaLicenseDate") String fbaLicenseDate,
-			@RequestParam("frGstType") int frGstType,
+			@RequestParam("fbaLicenseDate") String fbaLicenseDate, @RequestParam("frGstType") int frGstType,
 			@RequestParam("frGstNo") String frGstNo, @RequestParam("stockType") int stockType,
 			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
-			@RequestParam("isSameState") int isSameState,
-			@RequestParam("fdaAgreementDate") String fdaAgreementDate,
+			@RequestParam("isSameState") int isSameState, @RequestParam("fdaAgreementDate") String fdaAgreementDate,
 			@RequestParam("frAgreementDate") String frAgreementDate)
-	
+
 //			@RequestParam("weighingScale1Date") String weighingScale1Date,
 //			@RequestParam("weighingScale2Date") String weighingScale2Date,
 //			@RequestParam("shopEstbLicsDate") String shopEstbLicsDate,
@@ -4805,14 +4805,13 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 //			Date utilFbaLicenseDate = null;
 //			try { 
 //				utilFbaLicenseDate = sdf.parse(fbaLicenseDate); 
 //			 } catch (Exception e) {
 //				e.printStackTrace(); 
 //			 }
-			 
 
 			Franchisee franchisee = franchiseeService.findFranchisee(frId);
 
@@ -4866,7 +4865,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return jsonResult;
 		// return "abc";
 	}
-	
+
 	@RequestMapping(value = { "/updateAdminFranchisee" }, method = RequestMethod.POST)
 	@ResponseBody
 	public ErrorMessage updateAdminFranchisee(@RequestParam("frId") int frId, @RequestParam("frName") String frName,
@@ -4879,12 +4878,10 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 			@RequestParam("frOwner") String frOwner, @RequestParam("frRateCat") int frRateCat,
 			@RequestParam("grnTwo") int grnTwo, @RequestParam("delStatus") int delStatus,
 			@RequestParam("ownerBirthDate") String ownerBirthDate,
-			@RequestParam("fbaLicenseDate") String fbaLicenseDate,
-			@RequestParam("frGstType") int frGstType,
+			@RequestParam("fbaLicenseDate") String fbaLicenseDate, @RequestParam("frGstType") int frGstType,
 			@RequestParam("frGstNo") String frGstNo, @RequestParam("stockType") int stockType,
 			@RequestParam("frAddress") String frAddress, @RequestParam("frTarget") int frTarget,
-			@RequestParam("isSameState") int isSameState,			
-			@RequestParam("frAgreementDate") String frAgreementDate) {
+			@RequestParam("isSameState") int isSameState, @RequestParam("frAgreementDate") String frAgreementDate) {
 		ErrorMessage jsonResult = new ErrorMessage();
 		System.out.println("Update Franchisee By Admin");
 		try {
@@ -4955,9 +4952,8 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 
 			System.out.println("FR Data" + franchisee.toString());
 			jsonResult = franchiseeService.saveFranchisee(franchisee);
-			if(jsonResult.isError()==false) {			
-				
-				
+			if (jsonResult.isError() == false) {
+
 			}
 		} catch (Exception e) {
 			System.out.println("update FR rest exce " + e.getMessage());
@@ -5574,27 +5570,58 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 	@RequestMapping(value = "/getSellBillHeaderNew", method = RequestMethod.POST)
 	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNew(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
-			@RequestParam("custId") List<String> custId, @RequestParam("age") String age) {
+			@RequestParam("custId") List<String> custId, @RequestParam("age") String age,
+			@RequestParam("configType") int configType) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
 		List<SellBillHeaderNew> getSellBillHeaderList;
 
-		System.err.println("CUST -------------------- " + custId+"-----AGE=="+age );
+		System.err.println("CUST -------------------- " + custId + "-----AGE==" + age);
 
 		if (custId.contains("0")) {
 			System.err.println("CUST -------------------- 0");
-			if(age.equals("0")) {
+			if (age.equals("0")) {
 				getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCust(fromDate, toDate, frId);
-				
-			}else {
-				getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCustByAge(fromDate, toDate, frId, age);
+
+			} else {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeaderAllCustByAge(fromDate, toDate, frId,
+						age);
 			}
 		} else {
 			System.err.println("CUST -----------*********** " + custId);
 
 			getSellBillHeaderList = sellBillHeaderNewRepo.getFrSellBillHeader(fromDate, toDate, frId, custId);
+		}
+
+		if (configType > 0) {
+			if (getSellBillHeaderList != null) {
+
+				List<SellBillHeaderNew> tempList = new ArrayList<>();
+				tempList.addAll(getSellBillHeaderList);
+
+				getSellBillHeaderList.clear();
+
+				for (int i = 0; i < tempList.size(); i++) {
+
+					if (configType == 1) {
+
+						if (tempList.get(i).getOrderId() == 0) {
+							getSellBillHeaderList.add(tempList.get(i));
+						}
+
+					} else if (configType == 2) {
+
+						if (tempList.get(i).getOrderId() > 0) {
+							getSellBillHeaderList.add(tempList.get(i));
+						}
+
+					}
+
+				}
+			}
+
 		}
 
 		System.out.println("List Sell Bill Header  " + getSellBillHeaderList.toString());
@@ -5649,11 +5676,12 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 
 			info.setError(false);
 			info.setMessage("Update   Successfully");
-			String msg="Billing / Delivery Challan Alert for Outlet Code : ("+updateBillStatusRes.getFrCode()+").\n" + 
-					"Dated ("+updateBillStatusRes.getBillDate()+") issued, kindly check your email for a copy.";
-			Franchisee frDetails =  franchiseeRepository.findOne(updateBillStatusRes.getFrId());
-			info=EmailUtility.send(frDetails.getFrMob(), msg);
-			System.out.println("Mail Resp----"+info);
+			String msg = "Billing / Delivery Challan Alert for Outlet Code : (" + updateBillStatusRes.getFrCode()
+					+ ").\n" + "Dated (" + updateBillStatusRes.getBillDate()
+					+ ") issued, kindly check your email for a copy.";
+			Franchisee frDetails = franchiseeRepository.findOne(updateBillStatusRes.getFrId());
+			info = EmailUtility.send(frDetails.getFrMob(), msg);
+			System.out.println("Mail Resp----" + info);
 		}
 
 		else {
@@ -6036,9 +6064,7 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return itm;
 
 	}
-	
-	
-	
+
 	@Autowired
 	OpsItemListForCustomerBillRepo opsItemListForCustomerBillRepo;
 
@@ -6071,7 +6097,6 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return itm;
 
 	}
-
 
 	@RequestMapping("/getSellBillItemsBySellBillNoForEdit")
 	public @ResponseBody SellBillHeader getBillHeaderById(@RequestParam int sellBillNo) throws ParseException {
@@ -6153,175 +6178,192 @@ for (int m = 0; m < frStockResponseList.size(); m++) {
 		return getSellBillHeaderList;
 
 	}
-	
+
 	@RequestMapping(value = "/getCustSellDetails", method = RequestMethod.POST)
 	public @ResponseBody List<SellBillHeaderNew> getCustSellDetails(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
-			@RequestParam("custId") List<String> custId) {
+			@RequestParam("custId") List<String> custId, @RequestParam("configType") int configType) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
-		List<SellBillHeaderNew> getSellBillHeaderList;
-			System.err.println("CUST -----------" + custId);
+		List<SellBillHeaderNew> getSellBillHeaderList =new ArrayList<>();
+		System.err.println("CUST -----------" + custId);
+
+		if (configType == 0) {
+
 			if (custId.contains("0")) {
 				getSellBillHeaderList = sellBillHeaderNewRepo.getAllCustSellReport(fromDate, toDate, frId);
-			}else {
+			} else {
 				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReport(fromDate, toDate, frId, custId);
 			}
-			
-		
+
+		} else if (configType == 1) {
+
+			if (custId.contains("0")) {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getAllCustSellReportForPOS(fromDate, toDate, frId);
+			} else {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReportForPOS(fromDate, toDate, frId, custId);
+			}
+
+		} else if (configType == 2) {
+
+			if (custId.contains("0")) {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getAllCustSellReportForOnline(fromDate, toDate, frId);
+			} else {
+				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReportForOnline(fromDate, toDate, frId, custId);
+			}
+		}
 
 		System.out.println("List Cust Sell Bill " + getSellBillHeaderList.toString());
 		return getSellBillHeaderList;
 
 	}
-	
+
 	// get setting value
 
-		@RequestMapping(value = "/getSettingValueById", method = RequestMethod.POST)
-		public @ResponseBody int getSettingValueById(@RequestParam("settingId") int settingId) {
-			int value = 0;
+	@RequestMapping(value = "/getSettingValueById", method = RequestMethod.POST)
+	public @ResponseBody int getSettingValueById(@RequestParam("settingId") int settingId) {
+		int value = 0;
 
-			Setting setting = settingRepository.findBySettingId(59);
-			value = setting.getSettingValue();
+		Setting setting = settingRepository.findBySettingId(59);
+		value = setting.getSettingValue();
 
-			System.out.println("getSettingValueById " + value);
-			return value;
+		System.out.println("getSettingValueById " + value);
+		return value;
 
-		}
+	}
 
-		@Autowired
-		BillReceiptHeaderRepo billReceiptHeaderRepo;
-		@Autowired
-		BillReceiptDetailRepo billReceiptDetailRepo;
-		@Autowired
-		BillReceiptHeaderDisplayRepo billReceiptHeaderDisplayRepo;
+	@Autowired
+	BillReceiptHeaderRepo billReceiptHeaderRepo;
+	@Autowired
+	BillReceiptDetailRepo billReceiptDetailRepo;
+	@Autowired
+	BillReceiptHeaderDisplayRepo billReceiptHeaderDisplayRepo;
 
-		@RequestMapping(value = { "/insertBillReceiptData" }, method = RequestMethod.POST)
-		public @ResponseBody BillReceiptHeader insertBillReceiptData(@RequestBody BillReceiptHeader billReceiptHeader)
-				throws ParseException, JsonParseException, JsonMappingException, IOException {
+	@RequestMapping(value = { "/insertBillReceiptData" }, method = RequestMethod.POST)
+	public @ResponseBody BillReceiptHeader insertBillReceiptData(@RequestBody BillReceiptHeader billReceiptHeader)
+			throws ParseException, JsonParseException, JsonMappingException, IOException {
 
-			BillReceiptHeader res = null;
+		BillReceiptHeader res = null;
 
-			Info info = new Info();
-			try {
-				res = billReceiptHeaderRepo.save(billReceiptHeader);
+		Info info = new Info();
+		try {
+			res = billReceiptHeaderRepo.save(billReceiptHeader);
 
-				if (res != null) {
+			if (res != null) {
 
-					Setting setting = settingRepository.findBySettingId(59);
-					int val = setting.getSettingValue() + 1;
-					int value = settingRepository.udatekeyvalueForId(59, val);
+				Setting setting = settingRepository.findBySettingId(59);
+				int val = setting.getSettingValue() + 1;
+				int value = settingRepository.udatekeyvalueForId(59, val);
 
-					for (BillReceiptDetail det : billReceiptHeader.getBillReceiptDetailList()) {
+				for (BillReceiptDetail det : billReceiptHeader.getBillReceiptDetailList()) {
 
-						det.setBillReceiptId(res.getBillReceiptId());
-						billReceiptDetailRepo.save(det);
-
-					}
+					det.setBillReceiptId(res.getBillReceiptId());
+					billReceiptDetailRepo.save(det);
 
 				}
 
-			} catch (Exception e) {
-
-				System.out.println("Exc in insertBillReceiptData rest Api " + e.getMessage());
-				e.printStackTrace();
 			}
-			return res;
 
+		} catch (Exception e) {
+
+			System.out.println("Exc in insertBillReceiptData rest Api " + e.getMessage());
+			e.printStackTrace();
 		}
+		return res;
 
-		@RequestMapping(value = "/getBillReceiptList", method = RequestMethod.POST)
-		public @ResponseBody List<BillReceiptHeaderDisplay> getBillReceiptList(@RequestParam("fromDate") String fromDate,
-				@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+	}
 
-			fromDate = Common.convertToYMD(fromDate);
-			toDate = Common.convertToYMD(toDate);
+	@RequestMapping(value = "/getBillReceiptList", method = RequestMethod.POST)
+	public @ResponseBody List<BillReceiptHeaderDisplay> getBillReceiptList(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
 
-			System.err.println("DATE - " + fromDate + "        -    " + toDate + "             - " + frId);
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
 
-			List<BillReceiptHeaderDisplay> getList;
+		System.err.println("DATE - " + fromDate + "        -    " + toDate + "             - " + frId);
 
-			getList = billReceiptHeaderDisplayRepo.getBillReceiptHeaders(fromDate, toDate, frId);
+		List<BillReceiptHeaderDisplay> getList;
 
-			System.out.println("List getBillReceiptList -  " + getList.toString());
-			return getList;
+		getList = billReceiptHeaderDisplayRepo.getBillReceiptHeaders(fromDate, toDate, frId);
 
+		System.out.println("List getBillReceiptList -  " + getList.toString());
+		return getList;
+
+	}
+
+	@RequestMapping(value = "/getBillReceiptDetailList", method = RequestMethod.POST)
+	public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailList(@RequestParam("headerId") int headerId) {
+
+		List<BillReceiptDetail> getList;
+
+		getList = billReceiptDetailRepo.findAllByBillReceiptId(headerId);
+
+		System.out.println("List getBillReceiptDetailList -  " + getList.toString());
+		return getList;
+
+	}
+
+	@RequestMapping(value = "/getBillReceiptDetailListForOpsByExpId", method = RequestMethod.POST)
+	public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailListForOpsByExpId(
+			@RequestParam("expId") int expId) {
+
+		List<BillReceiptDetail> getList;
+
+		getList = billReceiptDetailRepo.getBillReceiptDetailByExpId(expId);
+
+		System.out.println("List getBillReceiptDetailListForOpsByExpId -  " + getList.toString());
+		return getList;
+
+	}
+
+	@RequestMapping(value = { "/getPurchaseBillHeaderById" }, method = RequestMethod.POST)
+	public @ResponseBody PostBillHeader getPurchaseBillHeaderById(@RequestParam("billNo") int billNo)
+			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		PostBillHeader res = null;
+
+		try {
+			res = postBillHeaderRepository.findByBillNo(billNo);
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in getPurchaseBillHeaderById rest Api " + e.getMessage());
+			e.printStackTrace();
 		}
+		return res;
 
-		@RequestMapping(value = "/getBillReceiptDetailList", method = RequestMethod.POST)
-		public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailList(@RequestParam("headerId") int headerId) {
+	}
 
-			List<BillReceiptDetail> getList;
+	@Autowired
+	GrnGvnEwayRepo grnGvnEwayRepo;
 
-			getList = billReceiptDetailRepo.findAllByBillReceiptId(headerId);
+	@RequestMapping(value = { "/updateEwayBillNoForGrnGvn" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage updateEwayBillNoForGrnGvn(@RequestParam int billNo,
+			@RequestParam long ewayBillNo) {
+		System.err.println("Hiiii");
+		ErrorMessage errorMessage = null;
+		try {
+			int res = grnGvnEwayRepo.updateEwayBillNo(billNo, ewayBillNo);
 
-			System.out.println("List getBillReceiptDetailList -  " + getList.toString());
-			return getList;
-
-		}
-		
-		@RequestMapping(value = "/getBillReceiptDetailListForOpsByExpId", method = RequestMethod.POST)
-		public @ResponseBody List<BillReceiptDetail> getBillReceiptDetailListForOpsByExpId(@RequestParam("expId") int expId) {
-
-			List<BillReceiptDetail> getList;
-
-			getList = billReceiptDetailRepo.getBillReceiptDetailByExpId(expId);
-
-			System.out.println("List getBillReceiptDetailListForOpsByExpId -  " + getList.toString());
-			return getList;
-
-		}
-		
-		
-		
-		@RequestMapping(value = { "/getPurchaseBillHeaderById" }, method = RequestMethod.POST)
-		public @ResponseBody PostBillHeader getPurchaseBillHeaderById(@RequestParam("billNo") int billNo)
-				throws ParseException, JsonParseException, JsonMappingException, IOException {
-
-			PostBillHeader res = null;
-
-			try {
-				res = postBillHeaderRepository.findByBillNo(billNo);
-
-			} catch (Exception e) {
-
-				System.out.println("Exc in getPurchaseBillHeaderById rest Api " + e.getMessage());
-				e.printStackTrace();
-			}
-			return res;
-
-		}
-		
-		
-		@Autowired
-		GrnGvnEwayRepo grnGvnEwayRepo;
-		
-		@RequestMapping(value = { "/updateEwayBillNoForGrnGvn" }, method = RequestMethod.POST)
-		public @ResponseBody ErrorMessage updateEwayBillNoForGrnGvn(@RequestParam int billNo, @RequestParam long ewayBillNo) {
-			System.err.println("Hiiii");
-			ErrorMessage errorMessage = null;
-			try {
-				int res = grnGvnEwayRepo.updateEwayBillNo(billNo, ewayBillNo);
-				
-				if(res>0) {
-					errorMessage = new ErrorMessage();
-					errorMessage.setError(false);
-					errorMessage.setMessage("Success");
-				}else {
-					errorMessage = new ErrorMessage();
-					errorMessage.setError(true);
-					errorMessage.setMessage("Failed");
-
-				}
-				
-				// errorMessage.set
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (res > 0) {
 				errorMessage = new ErrorMessage();
+				errorMessage.setError(false);
+				errorMessage.setMessage("Success");
+			} else {
+				errorMessage = new ErrorMessage();
+				errorMessage.setError(true);
+				errorMessage.setMessage("Failed");
+
 			}
-			return errorMessage;
+
+			// errorMessage.set
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMessage = new ErrorMessage();
 		}
+		return errorMessage;
+	}
 
 }

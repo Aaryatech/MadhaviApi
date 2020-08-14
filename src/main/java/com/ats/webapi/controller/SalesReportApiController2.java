@@ -184,7 +184,7 @@ public class SalesReportApiController2 {
 	@RequestMapping(value = { "/getAdminSubCatReportApi" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatReport> getAdminSubCatReportApi(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("billType") int billType, @RequestParam("dairy") List<String> dairy) {
+			@RequestParam("billType") int billType, @RequestParam("dairy") List<String> dairy, @RequestParam("configType") int configType) {
 
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
@@ -238,12 +238,12 @@ public class SalesReportApiController2 {
 
 					if (dairy.contains("1") && dairy.contains("2")) {
 						
-						catReportBill = subCatBillRepRepo.getAdminDataCompOutletDairyAndReg(fromDate, toDate);
+						catReportBill = subCatBillRepRepo.getAdminDataCompOutletDairyAndReg(fromDate, toDate, configType);
 						subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRNCompDairyAndReg(fromDate, toDate);
 						
 					} else if (dairy.contains("1")) {
 						
-						catReportBill = subCatBillRepRepo.getAdminDataCompOutlet(fromDate, toDate);
+						catReportBill = subCatBillRepRepo.getAdminDataCompOutlet(fromDate, toDate, configType);
 						subCatCreditGrnRep = subCatCreditGrnRepRepo.getAdminDataCRN(fromDate, toDate);
 						
 
@@ -615,7 +615,7 @@ public class SalesReportApiController2 {
 			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<Integer> frIdList,
 			@RequestParam("subCatIdList") List<Integer> subCatIdList,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("dairy") List<String> dairy) {
+			@RequestParam("dairy") List<String> dairy, @RequestParam("configType") int configType) {
 
 		List<SubCatItemReport> catReportList = new ArrayList<>();
 		List<SubCatFrItemRepBill> catReportBill = null;
@@ -665,14 +665,14 @@ public class SalesReportApiController2 {
 				if (dairyList.contains(1) && dairyList.contains(2)) {
 
 					catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutletDairyAndRegular(fromDate, toDate,
-							frIdList, subCatIdList);
+							frIdList, subCatIdList,configType);
 
 					subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutletDairyAndRegular(fromDate,
 							toDate, frIdList, subCatIdList);
 
 				} else if (dairyList.contains(1)) {
 					catReportBill = subCatFrItemRepBillRepo.getAdminDataCompOutlet(fromDate, toDate, frIdList,
-							subCatIdList);
+							subCatIdList,configType);
 
 					subCatCreditGrnRep = subCatCreditGrnFrItemRepRepo.getAdminDataCRNCompOutlet(fromDate, toDate,
 							frIdList, subCatIdList);

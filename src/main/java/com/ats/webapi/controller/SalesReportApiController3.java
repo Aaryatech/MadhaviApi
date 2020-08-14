@@ -236,7 +236,7 @@ public class SalesReportApiController3 {
 	@RequestMapping(value = { "/getYearlyFrSubCatSaleReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<YearlyFrSubCatData> getYearlyFrSubCatSaleReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("subCatIdList") List<Integer> subCatIdList,
-			@RequestParam("frIdList") List<Integer> frIdList) {
+			@RequestParam("frIdList") List<Integer> frIdList, @RequestParam("configType") int configType) {
 
 		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
 				+ "     SC : " + subCatIdList + "          FR : " + frIdList);
@@ -246,8 +246,10 @@ public class SalesReportApiController3 {
 
 		try {
 
-			List<FrAndSubCatBillData> soldList = frAndSubCatBillDataRepo.getBillData(fromDate, toDate, frIdList,
-					subCatIdList);
+			List<FrAndSubCatBillData> soldList = new ArrayList<>();
+
+			soldList = frAndSubCatBillDataRepo.getBillData(fromDate, toDate, frIdList, subCatIdList);
+
 			List<FrAndSubCatGrnGvnData> varList = frAndSubCatGrnGvnDataRepo.getVariationData(fromDate, toDate, frIdList,
 					subCatIdList);
 			List<FrAndSubCatGrnGvnData> retList = frAndSubCatGrnGvnDataRepo.getReturnData(fromDate, toDate, frIdList,
@@ -1191,7 +1193,8 @@ public class SalesReportApiController3 {
 	@RequestMapping(value = { "/getOpsItemwiseYearlySellReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<FrItemWiseYearlyData> getOpsItemwiseYearlySellReport(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("catIdList") List<Integer> catIdList, @RequestParam("frId") int frId) {
+			@RequestParam("catIdList") List<Integer> catIdList, @RequestParam("frId") int frId,
+			@RequestParam("configType") int configType) {
 
 		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
 				+ "     CAT : " + catIdList + "          FRID : " + frId);
@@ -1200,9 +1203,15 @@ public class SalesReportApiController3 {
 		List<SubCatWiseItems> frWiseSubCatList = new ArrayList<>();
 
 		try {
+			List<FrItemWiseSellData> soldList = new ArrayList<>();
 
-			List<FrItemWiseSellData> soldList = frItemWiseSellDataRepo.getItemwiseSellBillData(fromDate, toDate,
-					catIdList, frId);
+			if (configType == 0) {
+				soldList = frItemWiseSellDataRepo.getItemwiseSellBillData(fromDate, toDate, catIdList, frId);
+			} else if (configType == 1) {
+				soldList = frItemWiseSellDataRepo.getItemwiseSellBillDataForPOS(fromDate, toDate, catIdList, frId);
+			} else if (configType == 2) {
+				soldList = frItemWiseSellDataRepo.getItemwiseSellBillDataForOnline(fromDate, toDate, catIdList, frId);
+			}
 
 			System.err.println("SOLD -- " + soldList);
 
@@ -1376,7 +1385,7 @@ public class SalesReportApiController3 {
 	@RequestMapping(value = { "/getSubCatDateWiseSellReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatDateWiseData> getSubCatDateWiseSellReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<Integer> catIdList,
-			@RequestParam("frId") int frId) {
+			@RequestParam("frId") int frId, @RequestParam("configType") int configType) {
 
 		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
 				+ "     CAT : " + catIdList + "          FR : " + frId);
@@ -1388,9 +1397,17 @@ public class SalesReportApiController3 {
 			if (catIdList.get(0) == 5) {
 
 				reportList = subCatDateWiseDataRepo.getSellBillDataspcake(fromDate, toDate, frId, catIdList);
-				
+
 			} else {
-				reportList = subCatDateWiseDataRepo.getSellBillData(fromDate, toDate, frId, catIdList);
+
+				if (configType == 0) {
+					reportList = subCatDateWiseDataRepo.getSellBillData(fromDate, toDate, frId, catIdList);
+				} else if (configType == 1) {
+					reportList = subCatDateWiseDataRepo.getSellBillDataForPOS(fromDate, toDate, frId, catIdList);
+				} else if (configType == 2) {
+					reportList = subCatDateWiseDataRepo.getSellBillDataForOnline(fromDate, toDate, frId, catIdList);
+				}
+
 			}
 
 			System.err.println("SOLD -- " + reportList);

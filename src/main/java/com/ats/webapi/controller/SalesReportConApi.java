@@ -618,8 +618,8 @@ public class SalesReportConApi {
 	@RequestMapping(value = { "/getAdminDateWiseCompOutletReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<AdminCompOutletDateWiseSale> getAdminDateWiseCompOutletReport(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("frIdList") List<String> frIdList,@RequestParam("dairyList") List<String> dairyList) {
-		
+			@RequestParam("frIdList") List<String> frIdList, @RequestParam("dairyList") List<String> dairyList,
+			@RequestParam("configType") int configType) {
 
 		List<AdminCompOutletDateWiseSale> result = new ArrayList<>();
 
@@ -639,15 +639,20 @@ public class SalesReportConApi {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			
-			//result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSale(frIdList, fromDate, toDate);
+
+			// result =
+			// adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSale(frIdList,
+			// fromDate, toDate);
 
 			if (dmList.contains(1) && dmList.contains(2)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSaleDairymartAndReg(frIdList, fromDate, toDate);
+				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSaleDairymartAndReg(frIdList,
+						fromDate, toDate, configType);
 			} else if (dmList.contains(1)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSale(frIdList, fromDate, toDate);
+				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSale(frIdList, fromDate, toDate,
+						configType);
 			} else if (dmList.contains(2)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSaleDairymart(frIdList, fromDate, toDate);
+				result = adminCompOutletDateWiseSaleRepo.getAdminDateWiseCompOutletSaleDairymart(frIdList, fromDate,
+						toDate);
 			}
 
 		} catch (Exception e) {
@@ -662,10 +667,11 @@ public class SalesReportConApi {
 	@RequestMapping(value = { "/getAdminMonthWiseCompOutletReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<AdminCompOutletDateWiseSale> getAdminMonthWiseCompOutletReport(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("frIdList") List<String> frIdList,@RequestParam("dairyList") List<String> dairyList) {
+			@RequestParam("frIdList") List<String> frIdList, @RequestParam("dairyList") List<String> dairyList,
+			@RequestParam("configType") int configType) {
 
 		List<AdminCompOutletDateWiseSale> result = new ArrayList<>();
-		
+
 		List<Integer> dmList = new ArrayList<Integer>();
 		if (dairyList.contains("1") && dairyList.contains("2")) {
 			dmList = new ArrayList<Integer>();
@@ -682,17 +688,16 @@ public class SalesReportConApi {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			
-			if(dmList.contains(1) && dmList.contains(2)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSaleDairyAndRegular(frIdList, fromDate, toDate);
-			}else if(dmList.contains(1)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSale(frIdList, fromDate, toDate);
-			}else if(dmList.contains(2)) {
-				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSaleDairy(frIdList, fromDate, toDate);
-			}
-			
 
-			
+			if (dmList.contains(1) && dmList.contains(2)) {
+				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSaleDairyAndRegular(frIdList,
+						fromDate, toDate,configType);
+			} else if (dmList.contains(1)) {
+				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSale(frIdList, fromDate, toDate,configType);
+			} else if (dmList.contains(2)) {
+				result = adminCompOutletDateWiseSaleRepo.getAdminMonthWiseCompOutletSaleDairy(frIdList, fromDate,
+						toDate);
+			}
 
 		} catch (Exception e) {
 			System.out.println(" Exce in getAdminDateWiseCompOutletReport Report " + e.getMessage());

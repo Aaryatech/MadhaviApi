@@ -348,7 +348,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"        FROM\n" + 
 			"            t_sell_bill_header h\n" + 
 			"        WHERE\n" + 
-			"            h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND m_franchisee.fr_id = h.fr_id\n" + 
+			"            h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND m_franchisee.fr_id = h.fr_id AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 			"    ),\n" + 
 			"    0\n" + 
 			"    ) AS sale_value,\n" + 
@@ -372,7 +372,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    m_franchisee.fr_name", nativeQuery = true)
 
 	List<SalesReport> getSalesReportFrCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-			 @Param("frIdList") List<String> frIdList);
+			 @Param("frIdList") List<String> frIdList, @Param("configType") int configType);
 	
 	
 	
@@ -460,7 +460,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"            FROM\n" + 
 			"                t_sell_bill_header h\n" + 
 			"            WHERE\n" + 
-			"                h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND m_franchisee.fr_id = h.fr_id\n" + 
+			"                h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND m_franchisee.fr_id = h.fr_id AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 			"        ),\n" + 
 			"        0\n" + 
 			"        ) AS sale_value,\n" + 
@@ -488,7 +488,7 @@ public interface SalesReportRepo extends JpaRepository<SalesReport, Integer> {
 			"    fr_id", nativeQuery = true)
 
 	List<SalesReport> getSalesReportFrCompOutletDairyAndReg(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-			 @Param("frIdList") List<String> frIdList);
+			 @Param("frIdList") List<String> frIdList, @Param("configType") int configType);
 	
 	
 	//Anmol---10-4-2020    COMP OUTLET DAIRY

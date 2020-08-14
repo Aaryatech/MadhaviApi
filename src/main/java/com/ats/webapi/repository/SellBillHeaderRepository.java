@@ -82,6 +82,11 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	@Modifying
 	@Query(" UPDATE SellBillHeader SET ext_float1=(taxable_amt+total_tax-payable_amt)  WHERE sell_bill_no =:sellBillNo")
  	int updateRoundOff(@Param("sellBillNo") int sellBillNo);
+	
+	
+	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.ext_int2=:orderId",nativeQuery=true)
+	SellBillHeader getBillHeaderByOrderId(@Param("orderId") int orderId);
+	
 
 	
 

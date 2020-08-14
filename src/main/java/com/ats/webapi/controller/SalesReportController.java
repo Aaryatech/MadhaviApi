@@ -461,7 +461,7 @@ public class SalesReportController {
 	public @ResponseBody List<SalesReportBillwise> getAdminSaleReportBillwise(
 			@RequestParam("frIdList") List<String> frIdList, @RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("dairyList") List<String> dairyList) {
+			@RequestParam("dairyList") List<String> dairyList, @RequestParam("configType") int configType) {
 
 		List<SalesReportBillwise> salesReportBillwiseList = null;
 
@@ -513,10 +513,11 @@ public class SalesReportController {
 
 				if (dairyMartList.contains(1) && dairyMartList.contains(2)) {
 					salesReportBillwiseList = saleReportBillwiseRepo
-							.getAdminSaleReportBillwiseFrOutletType3WithDairymart(frIdList, fromDate, toDate);
+							.getAdminSaleReportBillwiseFrOutletType3WithDairymart(frIdList, fromDate, toDate,
+									configType);
 				} else if (dairyMartList.contains(1)) {
 					salesReportBillwiseList = saleReportBillwiseRepo.getAdminSaleReportBillwiseFrOutletType3(frIdList,
-							fromDate, toDate);
+							fromDate, toDate, configType);
 				} else if (dairyMartList.contains(2)) {
 					itmList = new ArrayList<Integer>();
 					itmList.add(0);
@@ -618,7 +619,8 @@ public class SalesReportController {
 	@RequestMapping(value = { "/getAdminBillWiseReportAllFr" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportBillwise> getAdminBillWiseReportAllFr(
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("dairyList") List<String> dairyList) {
+			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("dairyList") List<String> dairyList,
+			@RequestParam("configType") int configType) {
 
 		System.err.println("IS DAIRY MART - " + dairyList);
 
@@ -674,10 +676,11 @@ public class SalesReportController {
 
 				if (dairyMartList.contains(1) && dairyMartList.contains(2)) {
 					salesReportBillwiseList = saleReportBillwiseRepo
-							.getAdminSaleReportBillwiseAllFrOutletType3withDairymart(fromDate, toDate, dairyMartList);
+							.getAdminSaleReportBillwiseAllFrOutletType3withDairymart(fromDate, toDate, dairyMartList,
+									configType);
 				} else if (dairyMartList.contains(1)) {
 					salesReportBillwiseList = saleReportBillwiseRepo
-							.getAdminSaleReportBillwiseAllFrOutletType3(fromDate, toDate);
+							.getAdminSaleReportBillwiseAllFrOutletType3(fromDate, toDate, configType);
 				} else if (dairyMartList.contains(2)) {
 					itmList = new ArrayList<Integer>();
 					itmList.add(0);
@@ -1733,7 +1736,8 @@ public class SalesReportController {
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 			@RequestParam("getBy") int getBy, @RequestParam("type") int type,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("sort") int sort, @RequestParam("dairy") List<String> dairy) {
+			@RequestParam("sort") int sort, @RequestParam("dairy") List<String> dairy,
+			@RequestParam("configType") int configType) {
 		System.out.println("getBy" + getBy);
 		List<SalesReportRoyalty> salesReportRoyaltyList = new ArrayList<>();
 		try {
@@ -1783,11 +1787,11 @@ public class SalesReportController {
 					stock = 0;
 
 					if (dairy.contains("1") && dairy.contains("2")) {
-						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getAdminSaleReportCompOutletWithDairymart(frIdList, catIdList, fromDate, toDate);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletWithDairymart(
+								frIdList, catIdList, fromDate, toDate, configType);
 					} else if (dairy.contains("1")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutlet(frIdList,
-								catIdList, fromDate, toDate);
+								catIdList, fromDate, toDate, configType);
 					} else if (dairy.contains("2")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletDairyMart(frIdList,
 								catIdList, fromDate, toDate);
@@ -1830,11 +1834,11 @@ public class SalesReportController {
 
 					if (dairy.contains("1") && dairy.contains("2")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getAdminSaleReportCompOutletWithDairymartSortQty(frIdList, catIdList, fromDate,
-										toDate);
+								.getAdminSaleReportCompOutletWithDairymartSortQty(frIdList, catIdList, fromDate, toDate,
+										configType);
 					} else if (dairy.contains("1")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByQty(frIdList,
-								catIdList, fromDate, toDate);
+								catIdList, fromDate, toDate, configType);
 					} else if (dairy.contains("2")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo
 								.getAdminSaleReportCompOutletDairyMartSortQty(frIdList, catIdList, fromDate, toDate);
@@ -1878,11 +1882,11 @@ public class SalesReportController {
 
 					if (dairy.contains("1") && dairy.contains("2")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getAdminSaleReportCompOutletWithDairymartSortAmt(frIdList, catIdList, fromDate,
-										toDate);
+								.getAdminSaleReportCompOutletWithDairymartSortAmt(frIdList, catIdList, fromDate, toDate,
+										configType);
 					} else if (dairy.contains("1")) {
-						salesReportRoyaltyList = salesReportRoyaltyRepo
-								.getAdminSaleReportCompOutletSortByValue(frIdList, catIdList, fromDate, toDate);
+						salesReportRoyaltyList = salesReportRoyaltyRepo.getAdminSaleReportCompOutletSortByValue(
+								frIdList, catIdList, fromDate, toDate, configType);
 					} else if (dairy.contains("2")) {
 						salesReportRoyaltyList = salesReportRoyaltyRepo
 								.getAdminSaleReportCompOutletDairyMartSortAmt(frIdList, catIdList, fromDate, toDate);
@@ -2186,7 +2190,7 @@ public class SalesReportController {
 	public @ResponseBody List<SalesReturnQtyReportList> getAdminSalesReturnQtyReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("dairy") List<String> dairy) throws ParseException {
+			@RequestParam("dairy") List<String> dairy, @RequestParam("configType") int configType) throws ParseException {
 
 		List<SalesReturnQtyReportList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2250,12 +2254,12 @@ public class SalesReportController {
 					if (dairy.contains("1") && dairy.contains("2")) {
 
 						salesReturnQtyDao = salesReturnQtyDaoRepository
-								.getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(months.get(i));
+								.getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(months.get(i),configType);
 
 					} else if (dairy.contains("1")) {
 
 						salesReturnQtyDao = salesReturnQtyDaoRepository
-								.getAdminSalesReturnQtyReportCompOutlet(months.get(i));
+								.getAdminSalesReturnQtyReportCompOutlet(months.get(i),configType);
 
 					} else if (dairy.contains("2")) {
 
@@ -2373,7 +2377,7 @@ public class SalesReportController {
 	public @ResponseBody List<SalesReturnValueDaoList> getAdminSalesReturnValueReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("dairy") List<String> dairy) throws ParseException {
+			@RequestParam("dairy") List<String> dairy, @RequestParam("configType") int configType) throws ParseException {
 
 		List<SalesReturnValueDaoList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2440,10 +2444,10 @@ public class SalesReportController {
 
 					if (dairy.contains("1") && dairy.contains("2")) {
 						salesReturnValueDao = salesReturnValueDaoRepository
-								.getAdminSalesReturnValueReportCompOutletDairyAndReg(months.get(i));
+								.getAdminSalesReturnValueReportCompOutletDairyAndReg(months.get(i),configType);
 					} else if (dairy.contains("1")) {
 						salesReturnValueDao = salesReturnValueDaoRepository
-								.getAdminSalesReturnValueReportCompOutlet(months.get(i));
+								.getAdminSalesReturnValueReportCompOutlet(months.get(i), configType);
 					} else if (dairy.contains("2")) {
 						salesReturnValueDao = salesReturnValueDaoRepository
 								.getAdminSalesReturnValueReportCompOutletDairymart(months.get(i));
@@ -2507,8 +2511,8 @@ public class SalesReportController {
 	public @ResponseBody List<SalesReturnItemDaoList> getAdminSalesValueItemReport(
 			@RequestParam("fromYear") int fromYear, @RequestParam("toYear") int toYear,
 			@RequestParam("subCatId") List<String> subCatId, @RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("billType") int billType, @RequestParam("dairyList") List<String> dairyList)
-			throws ParseException {
+			@RequestParam("billType") int billType, @RequestParam("dairyList") List<String> dairyList,
+			@RequestParam("configType") int configType) throws ParseException {
 
 		List<SalesReturnItemDaoList> repList = new ArrayList<>();
 		List<String> months = new ArrayList<String>();
@@ -2573,10 +2577,10 @@ public class SalesReportController {
 
 				if (dairy.contains(1) && dairy.contains(2)) {
 					salesReturnValueDao = salesReturnValueItemDaoRepo
-							.getAdminMonthWiseSalesReportCompDairyAndReg(months.get(i), subCat);
+							.getAdminMonthWiseSalesReportCompDairyAndReg(months.get(i), subCat,configType);
 				} else if (dairy.contains(1)) {
 					salesReturnValueDao = salesReturnValueItemDaoRepo.getAdminMonthWiseSalesReportComp(months.get(i),
-							subCat);
+							subCat,configType);
 				} else if (dairy.contains(2)) {
 					salesReturnValueDao = salesReturnValueItemDaoRepo
 							.getAdminMonthWiseSalesReportCompDairy(months.get(i), subCat);

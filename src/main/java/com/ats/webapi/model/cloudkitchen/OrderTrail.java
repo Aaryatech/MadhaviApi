@@ -46,6 +46,27 @@ public class OrderTrail {
 	@Column(name = "ex_var3")
 	private String exVar3;
 
+	public OrderTrail() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public OrderTrail(int trailId, int orderId, int actionByUserId, String actionDateTime, int status, int exInt1,
+			int exInt2, int exInt3, String exVar1, String exVar2, String exVar3) {
+		super();
+		this.trailId = trailId;
+		this.orderId = orderId;
+		this.actionByUserId = actionByUserId;
+		this.actionDateTime = actionDateTime;
+		this.status = status;
+		this.exInt1 = exInt1;
+		this.exInt2 = exInt2;
+		this.exInt3 = exInt3;
+		this.exVar1 = exVar1;
+		this.exVar2 = exVar2;
+		this.exVar3 = exVar3;
+	}
+
 	public int getTrailId() {
 		return trailId;
 	}

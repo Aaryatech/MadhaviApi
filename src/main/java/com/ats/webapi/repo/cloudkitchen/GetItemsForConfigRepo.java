@@ -57,7 +57,7 @@ public interface GetItemsForConfigRepo extends JpaRepository<GetItemsForConfig, 
 			"        tn_item_config_header ch,\r\n" + 
 			"        tn_item_config_detail cd\r\n" + 
 			"    WHERE\r\n" + 
-			"        ch.item_config_id = cd.item_config_id AND ch.del_status = 0 AND cd.del_status = 0 AND ch.fr_id = :frId AND ch.config_type = :configType\r\n" + 
+			"        ch.item_config_id = cd.item_config_id AND ch.del_status = 0 AND cd.del_status = 0 AND cd.is_active=0 AND ch.fr_id = :frId AND ch.config_type = :configType\r\n" + 
 			") t2\r\n" + 
 			"ON\r\n" + 
 			"    t1.item_id = t2.item_id",nativeQuery=true)

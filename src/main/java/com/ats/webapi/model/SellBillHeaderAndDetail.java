@@ -14,113 +14,116 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class SellBillHeaderAndDetail {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="sell_bill_no")
+	@Column(name = "sell_bill_no")
 	private int sellBillNo;
-	
-	@Column(name="invoice_no")
+
+	@Column(name = "invoice_no")
 	private String invoiceNo;
-	
-	@Column(name="bill_date")
+
+	@Column(name = "bill_date")
 	private Date billDate;
-	
-	@Column(name="bill_type")
+
+	@Column(name = "bill_type")
 	private char billType;
-	
-	@Column(name="timestamp")
+
+	@Column(name = "timestamp")
 	private Date timestamp;
-	
-	@Column(name="fr_id")
+
+	@Column(name = "fr_id")
 	private int frId;
-	
-	@Column(name="fr_code")
+
+	@Column(name = "fr_code")
 	private String frCode;
-	
-	@Column(name="taxable_amt")
+
+	@Column(name = "taxable_amt")
 	private float taxableAmt;
-	
-	@Column(name="total_tax")
+
+	@Column(name = "total_tax")
 	private float total_tax;
-	
-	@Column(name="grand_total")
+
+	@Column(name = "grand_total")
 	private float grandTotal;
-	
-	@Column(name="disc_type")
-	private int discType;   //new
-	
-	@Column(name="discount_per")
+
+	@Column(name = "disc_type")
+	private int discType; // new
+
+	@Column(name = "discount_per")
 	private float discountPer;
-		
-	@Column(name="discount_amt")
+
+	@Column(name = "discount_amt")
 	private float discountAmt;
-	
-	@Column(name="payable_amt")
+
+	@Column(name = "payable_amt")
 	private float payableAmt;
-	  
-	@Column(name="payment_mode")
+
+	@Column(name = "payment_mode")
 	private int paymentMode;
-	
-	@Column(name="paid_amt")
+
+	@Column(name = "paid_amt")
 	private float paidAmt;
-	
-	@Column(name="remaining_amt")
+
+	@Column(name = "remaining_amt")
 	private float remainingAmt;
-	
-	@Column(name="disc_amt_item")
-	private float discAmtItem; //new
-	
-	@Column(name="advance_amt")
-	private float advanceAmt;  //new     
-	 
-	@Column(name="cust_id")
+
+	@Column(name = "disc_amt_item")
+	private float discAmtItem; // new
+
+	@Column(name = "advance_amt")
+	private float advanceAmt; // new
+
+	@Column(name = "cust_id")
 	private int custId;
-	
-	@Column(name="user_name")
+
+	@Column(name = "user_name")
 	private String userName;
-	
-	@Column(name="user_gst_no")
+
+	@Column(name = "user_gst_no")
 	private String userGstNo;
-	
-	@Column(name="user_phone")
+
+	@Column(name = "user_phone")
 	private String userPhone;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private int status;
-	
-	@Column(name="is_dairy_mart_bill")
-	private int isDairyMartBill;//new
-	
-	@Column(name="coupon_no")
-	private String couponNo;//new
-	
-	@Column(name="cust_loyalty_pt_rate")
-	private float custLoyaltyPtRate;//new
-	
-	@Column(name="cust_loyalty_pt")
-	private float custLoyaltyPt;//new
-	
-	@Column(name="del_status")
+
+	@Column(name = "is_dairy_mart_bill")
+	private int isDairyMartBill;// new
+
+	@Column(name = "coupon_no")
+	private String couponNo;// new
+
+	@Column(name = "cust_loyalty_pt_rate")
+	private float custLoyaltyPtRate;// new
+
+	@Column(name = "cust_loyalty_pt")
+	private float custLoyaltyPt;// new
+
+	@Column(name = "del_status")
 	private int delStatus;
-	
-	@Column(name="cust_name")
-	private String custName; 
-	
-	@Column(name="gst_no")
-	private String gstNo; 
-	
+
+	@Column(name = "cust_name")
+	private String custName;
+
+	@Column(name = "gst_no")
+	private String gstNo;
+
 	private int extInt1;
-	
+	private int extInt2;
+
+	private String extVar2; // customer address
+
+	private float extFloat1;
+	private float extFloat2;
+
 	@Transient
 	private List<SellBillDetailForPos> list;
-	
+
 	@Transient
 	private List<TaxLabListForPos> taxlabList;
 
-	
-	
 	public int getExtInt1() {
 		return extInt1;
 	}
@@ -144,7 +147,8 @@ public class SellBillHeaderAndDetail {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy") 
+
+	@JsonFormat(locale = "hi", timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getBillDate() {
 		return billDate;
 	}
@@ -394,6 +398,38 @@ public class SellBillHeaderAndDetail {
 		this.taxlabList = taxlabList;
 	}
 
+	public String getExtVar2() {
+		return extVar2;
+	}
+
+	public void setExtVar2(String extVar2) {
+		this.extVar2 = extVar2;
+	}
+
+	public int getExtInt2() {
+		return extInt2;
+	}
+
+	public void setExtInt2(int extInt2) {
+		this.extInt2 = extInt2;
+	}
+
+	public float getExtFloat1() {
+		return extFloat1;
+	}
+
+	public void setExtFloat1(float extFloat1) {
+		this.extFloat1 = extFloat1;
+	}
+
+	public float getExtFloat2() {
+		return extFloat2;
+	}
+
+	public void setExtFloat2(float extFloat2) {
+		this.extFloat2 = extFloat2;
+	}
+
 	@Override
 	public String toString() {
 		return "SellBillHeaderAndDetail [sellBillNo=" + sellBillNo + ", invoiceNo=" + invoiceNo + ", billDate="
@@ -405,7 +441,8 @@ public class SellBillHeaderAndDetail {
 				+ ", custId=" + custId + ", userName=" + userName + ", userGstNo=" + userGstNo + ", userPhone="
 				+ userPhone + ", status=" + status + ", isDairyMartBill=" + isDairyMartBill + ", couponNo=" + couponNo
 				+ ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt=" + custLoyaltyPt + ", delStatus="
-				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", extInt1=" + extInt1 + ", list=" + list
-				+ ", taxlabList=" + taxlabList + "]";
+				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", extInt1=" + extInt1 + ", extInt2="
+				+ extInt2 + ", extVar2=" + extVar2 + ", extFloat1=" + extFloat1 + ", extFloat2=" + extFloat2 + ", list="
+				+ list + ", taxlabList=" + taxlabList + "]";
 	}
 }

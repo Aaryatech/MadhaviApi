@@ -1114,7 +1114,7 @@ public class FrStockApiController {
 	public @ResponseBody List<OpsFrItemStock> getOpsFrCurrentStock(@RequestParam("frId") int frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 			@RequestParam("month") int month, @RequestParam("year") int year,
-			@RequestParam("frStockType") int frStockType) {
+			@RequestParam("frStockType") int frStockType, @RequestParam("configType") int configType) {
 
 		List<OpsFrItemStock> res = new ArrayList<OpsFrItemStock>();
 
@@ -1125,7 +1125,7 @@ public class FrStockApiController {
 		System.out.println("inside rest getCurrentStock : I/p : currentMonth: " + month);
 		System.out.println("inside rest getCurrentStock : I/p : year: " + year);
 
-		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType);
+		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType,configType);
 
 		System.out.println("OPS FR STOCK Result:  " + res.toString());
 

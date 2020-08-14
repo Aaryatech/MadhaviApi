@@ -304,7 +304,7 @@ public interface SalesReturnQtyDaoRepository extends JpaRepository<SalesReturnQt
 			"        DATE_FORMAT(\n" + 
 			"            t_sell_bill_header.bill_date,\n" + 
 			"            '%Y-%m'\n" + 
-			"        ) = :month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND m_item.is_saleable = 1\n" + 
+			"        ) = :month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND m_item.is_saleable = 1 AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0)) \n" + 
 			"    GROUP BY\n" + 
 			"        m_item.item_grp2\n" + 
 			") t2\n" + 
@@ -327,7 +327,7 @@ public interface SalesReturnQtyDaoRepository extends JpaRepository<SalesReturnQt
 			") t3\n" + 
 			"ON\n" + 
 			"    t1.sub_cat_id = t3.id",nativeQuery=true)
-	List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutlet(@Param("month")String month);
+	List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutlet(@Param("month")String month, @Param("configType") int configType);
 	
 	//Anmol---10-04-2020--- COMP OUTLET DAIRY MART
 		@Query(value="SELECT\n" + 
@@ -517,7 +517,7 @@ public interface SalesReturnQtyDaoRepository extends JpaRepository<SalesReturnQt
 						"        DATE_FORMAT(\n" + 
 						"            t_sell_bill_header.bill_date,\n" + 
 						"            '%Y-%m'\n" + 
-						"        ) =:month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND m_item.is_saleable = 1\n" + 
+						"        ) =:month AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.sell_bill_no = t_sell_bill_detail.sell_bill_no AND m_item.id = t_sell_bill_detail.item_id AND m_item.is_saleable = 1 AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        m_item.item_grp2\n" + 
 						") t2\n" + 
@@ -543,7 +543,7 @@ public interface SalesReturnQtyDaoRepository extends JpaRepository<SalesReturnQt
 						"    )\n" + 
 						"    ) t1 GROUP BY sub_cat_id\n" + 
 						"    ",nativeQuery=true)
-				List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(@Param("month")String month);
+				List<SalesReturnQtyDao> getAdminSalesReturnQtyReportCompOutletDairymartAndRegular(@Param("month")String month, @Param("configType") int configType);
 
 	
 	@Query(value="SELECT\n" + 

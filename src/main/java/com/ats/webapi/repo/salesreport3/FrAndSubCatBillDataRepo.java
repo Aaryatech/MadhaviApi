@@ -77,4 +77,6 @@ public interface FrAndSubCatBillDataRepo extends JpaRepository<FrAndSubCatBillDa
 			"    sub_cat_id ", nativeQuery = true)
 	List<FrAndSubCatBillData> getBillData(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frIdList") List<Integer> frIds, @Param("subCatIdList") List<Integer> subCatIds);
 
+	
+
 }

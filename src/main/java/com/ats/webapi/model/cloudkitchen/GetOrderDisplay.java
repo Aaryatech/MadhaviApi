@@ -102,6 +102,13 @@ public class GetOrderDisplay {
 	private String areaName;
 	private String pincode;
 
+	private int catId;
+	private float deliveryCharges;
+	private int paymentSubMode;
+	private int isAgent;
+
+	private String orderDeliveredByName;
+
 	public String getId() {
 		return id;
 	}
@@ -830,6 +837,46 @@ public class GetOrderDisplay {
 		this.pincode = pincode;
 	}
 
+	public int getCatId() {
+		return catId;
+	}
+
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+
+	public float getDeliveryCharges() {
+		return deliveryCharges;
+	}
+
+	public void setDeliveryCharges(float deliveryCharges) {
+		this.deliveryCharges = deliveryCharges;
+	}
+
+	public int getPaymentSubMode() {
+		return paymentSubMode;
+	}
+
+	public void setPaymentSubMode(int paymentSubMode) {
+		this.paymentSubMode = paymentSubMode;
+	}
+
+	public int getIsAgent() {
+		return isAgent;
+	}
+
+	public void setIsAgent(int isAgent) {
+		this.isAgent = isAgent;
+	}
+
+	public String getOrderDeliveredByName() {
+		return orderDeliveredByName;
+	}
+
+	public void setOrderDeliveredByName(String orderDeliveredByName) {
+		this.orderDeliveredByName = orderDeliveredByName;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderDisplay [id=" + id + ", orderId=" + orderId + ", orderNo=" + orderNo + ", orderDate="
@@ -860,7 +907,8 @@ public class GetOrderDisplay {
 				+ ", detailExFloat2=" + detailExFloat2 + ", detailExFloat3=" + detailExFloat3 + ", detailExFloat4="
 				+ detailExFloat4 + ", custName=" + custName + ", itemName=" + itemName + ", itemUom=" + itemUom
 				+ ", uomId=" + uomId + ", cityName=" + cityName + ", areaName=" + areaName + ", pincode=" + pincode
-				+ "]";
+				+ ", catId=" + catId + ", deliveryCharges=" + deliveryCharges + ", paymentSubMode=" + paymentSubMode
+				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + "]";
 	}
 
 }

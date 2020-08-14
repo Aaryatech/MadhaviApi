@@ -24,5 +24,28 @@ public interface CategoryRepository extends JpaRepository<MCategory, Integer>{
 	
 	public List<MCategory> findByDelStatusAndIsSameDayInOrderBySeqNoAsc(int i, List<Integer> list);
 	
+	
+	@Query(value="SELECT  \n" + 
+			"			   c.*\n" + 
+			"			FROM  \n" + 
+			"			    m_category c  \n" + 
+			"			WHERE  \n" + 
+			"			    c.del_status = 0 AND c.cat_id IN(  \n" + 
+			"			    SELECT  \n" + 
+			"			        i.item_grp1  \n" + 
+			"			    FROM  \n" + 
+			"			        tn_item_config_header ch,  \n" + 
+			"			        tn_item_config_detail cd,  \n" + 
+			"			        m_item i  \n" + 
+			"			    WHERE  \n" + 
+			"			        ch.item_config_id = cd.item_config_id AND ch.del_status = 0 AND ch.is_active = 0 AND cd.is_active = 0 AND cd.del_status = 0 AND cd.item_id = i.id AND i.del_status = 0 AND ch.config_type=:configType AND ch.fr_id = :frId   \n" + 
+			"			    GROUP BY  \n" + 
+			"			        i.item_grp1  \n" + 
+			"			)  \n" + 
+			"			ORDER BY  \n" + 
+			"			    c.seq_no,  \n" + 
+			"			    c.cat_name",nativeQuery=true)
+	public  List<MCategory> getAllCatByFr(@Param("frId") int frId,@Param("configType") int configType);
+
 
 }

@@ -450,14 +450,14 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"    t_sell_bill_detail,\n" + 
 				"    m_customer\n" + 
 				"WHERE\n" + 
-				"    t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id\n" + 
+				"    t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0) ) \n" + 
 				"GROUP BY\n" + 
 				"    t_sell_bill_header.sell_bill_no\n" + 
 				"ORDER BY\n" + 
 				"    t_sell_bill_header.bill_date,\n" + 
 				"    t_sell_bill_header.invoice_no ",nativeQuery=true)
 			
-			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("configType") int configType);
 
 		
 		
@@ -527,7 +527,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"            t_sell_bill_detail,\n" + 
 				"            m_customer\n" + 
 				"        WHERE\n" + 
-				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id\n" + 
+				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0) )  \n" + 
 				"        GROUP BY\n" + 
 				"            t_sell_bill_header.sell_bill_no\n" + 
 				"        ORDER BY\n" + 
@@ -537,7 +537,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"        \n" + 
 				"       ORDER BY bill_date,invoice_no,fr_id ",nativeQuery=true)
 			
-			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3withDairymart(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("dairy") List<Integer> dairy);
+			List<SalesReportBillwise> getAdminSaleReportBillwiseAllFrOutletType3withDairymart(@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("dairy") List<Integer> dairy,@Param("configType") int configType);
 
 		
 		
@@ -785,12 +785,12 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"				        AND t_sell_bill_detail.sell_bill_no=t_sell_bill_header.sell_bill_no  \n" + 
 				"				           \n" + 
 				"				        AND t_sell_bill_header.del_status=0 AND t_sell_bill_detail.del_status=0 AND\n" + 
-				"                        t_sell_bill_header.cust_id=m_customer.cust_id\n" + 
+				"                        t_sell_bill_header.cust_id=m_customer.cust_id AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0) )  \n" + 
 				"				    GROUP BY  \n" + 
 				"				     t_sell_bill_header.sell_bill_no\n" + 
 				"                     ORDER BY t_sell_bill_header.bill_date, t_sell_bill_header.invoice_no ",nativeQuery=true)
 			
-			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("configType") int configType);
 
 		
 		//Anmol
@@ -858,7 +858,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"            t_sell_bill_detail,\n" + 
 				"            m_customer\n" + 
 				"        WHERE\n" + 
-				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id\n" + 
+				"            t_sell_bill_header.fr_id = m_franchisee.fr_id AND t_sell_bill_header.fr_id IN(:frIdList) AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND t_sell_bill_header.del_status = 0 AND t_sell_bill_detail.del_status = 0 AND t_sell_bill_header.cust_id = m_customer.cust_id AND IF(:configType=0 , t_sell_bill_header.ext_int2>=0, IF(:configType=1 , t_sell_bill_header.ext_int2=0, t_sell_bill_header.ext_int2>0) )  \n" + 
 				"        GROUP BY\n" + 
 				"            t_sell_bill_header.sell_bill_no\n" + 
 				"        ORDER BY\n" + 
@@ -869,7 +869,7 @@ SELECT MONTHNAME(t_bill_header.bill_date)as month, t_bill_header.bill_no,t_bill_
 				"\n" + 
 				"ORDER BY bill_date,invoice_no,fr_id ",nativeQuery=true)
 			
-			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3WithDairymart(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+			List<SalesReportBillwise> getAdminSaleReportBillwiseFrOutletType3WithDairymart(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("configType") int configType);
 
 		
 		

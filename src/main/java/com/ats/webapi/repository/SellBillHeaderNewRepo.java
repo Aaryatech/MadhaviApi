@@ -34,7 +34,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    t_transaction_detail.cash_amt as cash,\r\n" + 
 			"    t_transaction_detail.card_amt as card,\r\n" + 
 			"    t_transaction_detail.e_pay_amt as e_pay,\r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -71,7 +71,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    t_transaction_detail.cash_amt as cash,\r\n" + 
 			"    t_transaction_detail.card_amt as card,\r\n" + 
 			"    t_transaction_detail.e_pay_amt as e_pay,\r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -113,7 +113,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"        t_transaction_detail.cash_amt as cash,\r\n" + 
 			"        t_transaction_detail.card_amt as card,\r\n" + 
 			"        t_transaction_detail.e_pay_amt as e_pay,  \r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"    FROM\r\n" + 
 			"        t_sell_bill_header,\r\n" + 
 			"        t_transaction_detail,\r\n" + 
@@ -161,7 +161,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"        t_transaction_detail.cash_amt as cash,\r\n" + 
 			"        t_transaction_detail.card_amt as card,\r\n" + 
 			"        t_transaction_detail.e_pay_amt as e_pay,  \r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"    FROM\r\n" + 
 			"        t_sell_bill_header,\r\n" + 
 			"        t_transaction_detail,\r\n" + 
@@ -204,7 +204,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    t_transaction_detail.cash_amt AS cash,\r\n" + 
 			"    t_transaction_detail.card_amt AS card,\r\n" + 
 			"    t_transaction_detail.e_pay_amt AS e_pay, \r\n" +
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -252,7 +252,7 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
 			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -274,7 +274,61 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 	
 	List<SellBillHeaderNew> getCustSellReport(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
 			@Param("frId") List<String> frId,@Param("custId") List<String> custId);
-
+	
+	@Query(value =  "SELECT\r\n" + 
+			"    UUID() AS id, \r\n" + 
+			"    t_sell_bill_header.sell_bill_no, \r\n" + 
+			"    t_sell_bill_header.bill_type, \r\n" + 
+			"    SUM(t_sell_bill_header.discount_amt) AS discount_amt, \r\n" + 
+			"    t_sell_bill_header.invoice_no, \r\n" + 
+			"    t_sell_bill_header.bill_date, \r\n" + 
+			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt, \r\n" + 
+			"    SUM(t_sell_bill_header.total_tax) AS total_tax, \r\n" + 
+			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
+			"    ) AS paid_amt,\r\n" + 
+			"    SUM(t_sell_bill_header.remaining_amt) AS remaining_amt,\r\n" + 
+			"    CONCAT(\r\n" + 
+			"        SUM(t_transaction_detail.cash_amt),\r\n" + 
+			"        '-cash ,',\r\n" + 
+			"         SUM(t_transaction_detail.card_amt),\r\n" + 
+			"        '-card ,',\r\n" + 
+			"         SUM(t_transaction_detail.e_pay_amt),\r\n" + 
+			"        ' -E-pay'\r\n" + 
+			"    ) AS payment_mode,\r\n" + 
+			"    SUM(t_sell_bill_header.discount_per) as discount_per,\r\n" + 
+			"    SUM(t_sell_bill_header.payable_amt) AS payable_amt,\r\n" + 
+			"    m_franchisee.fr_name,\r\n" + 
+			"    m_customer.cust_id,\r\n" + 
+			"    m_customer.cust_name,\r\n" + 
+			"    m_customer.phone_number,\r\n" + 
+			"    m_customer.gst_no,\r\n" + 
+			"    m_customer.address,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
+			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
+			"FROM\r\n" + 
+			"    t_sell_bill_header,\r\n" + 
+			"    t_transaction_detail,\r\n" + 
+			"    m_franchisee,\r\n" + 
+			"    m_customer\r\n" + 
+			"WHERE\r\n" + 
+			"    m_franchisee.fr_id = t_sell_bill_header.fr_id AND\r\n" + 
+			"    t_sell_bill_header.del_status = 0 AND\r\n" + 
+			"    t_sell_bill_header.fr_id IN(:frId) AND \r\n" + 
+			"    t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND \r\n" + 
+			"    t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND \r\n" + 
+			"    m_customer.cust_id = t_sell_bill_header.cust_id AND \r\n" + 
+			"    t_sell_bill_header.cust_id IN(:custId) AND t_sell_bill_header.ext_int2>0 \r\n" + 
+			"GROUP BY \r\n" + 
+			"    	t_sell_bill_header.cust_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    t_sell_bill_header.sell_bill_no\r\n" + 
+			"DESC", nativeQuery = true)
+	
+	List<SellBillHeaderNew> getCustSellReportForOnline(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
+			@Param("frId") List<String> frId,@Param("custId") List<String> custId);
 
 	@Query(value =  "SELECT\r\n" + 
 			"    UUID() AS id, \r\n" + 
@@ -308,7 +362,63 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
 			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
 			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
-			"	t_sell_bill_header.ext_float1 as round_off " +
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
+			"FROM\r\n" + 
+			"    t_sell_bill_header,\r\n" + 
+			"    t_transaction_detail,\r\n" + 
+			"    m_franchisee,\r\n" + 
+			"    m_customer\r\n" + 
+			"WHERE\r\n" + 
+			"    m_franchisee.fr_id = t_sell_bill_header.fr_id AND\r\n" + 
+			"    t_sell_bill_header.del_status = 0 AND\r\n" + 
+			"    t_sell_bill_header.fr_id IN(:frId) AND \r\n" + 
+			"    t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND \r\n" + 
+			"    t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND \r\n" + 
+			"    m_customer.cust_id = t_sell_bill_header.cust_id AND \r\n" + 
+			"    t_sell_bill_header.cust_id IN(:custId) AND t_sell_bill_header.ext_int2=0 \r\n" + 
+			"GROUP BY \r\n" + 
+			"    	t_sell_bill_header.cust_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    t_sell_bill_header.sell_bill_no\r\n" + 
+			"DESC", nativeQuery = true)
+	
+	List<SellBillHeaderNew> getCustSellReportForPOS(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
+			@Param("frId") List<String> frId,@Param("custId") List<String> custId);
+	
+	
+	@Query(value =  "SELECT\r\n" + 
+			"    UUID() AS id, \r\n" + 
+			"    t_sell_bill_header.sell_bill_no, \r\n" + 
+			"    t_sell_bill_header.bill_type, \r\n" + 
+			"    SUM(t_sell_bill_header.discount_amt) AS discount_amt, \r\n" + 
+			"    t_sell_bill_header.invoice_no, \r\n" + 
+			"    t_sell_bill_header.bill_date, \r\n" + 
+			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt, \r\n" + 
+			"    SUM(t_sell_bill_header.total_tax) AS total_tax, \r\n" + 
+			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
+			"    ) AS paid_amt,\r\n" + 
+			"    SUM(t_sell_bill_header.remaining_amt) AS remaining_amt,\r\n" + 
+			"    CONCAT(\r\n" + 
+			"        SUM(t_transaction_detail.cash_amt),\r\n" + 
+			"        '-cash ,',\r\n" + 
+			"         SUM(t_transaction_detail.card_amt),\r\n" + 
+			"        '-card ,',\r\n" + 
+			"         SUM(t_transaction_detail.e_pay_amt),\r\n" + 
+			"        ' -E-pay'\r\n" + 
+			"    ) AS payment_mode,\r\n" + 
+			"    SUM(t_sell_bill_header.discount_per) as discount_per,\r\n" + 
+			"    SUM(t_sell_bill_header.payable_amt) AS payable_amt,\r\n" + 
+			"    m_franchisee.fr_name,\r\n" + 
+			"    m_customer.cust_id,\r\n" + 
+			"    m_customer.cust_name,\r\n" + 
+			"    m_customer.phone_number,\r\n" + 
+			"    m_customer.gst_no,\r\n" + 
+			"    m_customer.address,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
+			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
 			"FROM\r\n" + 
 			"    t_sell_bill_header,\r\n" + 
 			"    t_transaction_detail,\r\n" + 
@@ -329,6 +439,116 @@ public interface SellBillHeaderNewRepo extends JpaRepository<SellBillHeaderNew,I
 	
 	List<SellBillHeaderNew> getAllCustSellReport(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
 			@Param("frId") List<String> frId);
+	
+
+	@Query(value =  "SELECT\r\n" + 
+			"    UUID() AS id, \r\n" + 
+			"    t_sell_bill_header.sell_bill_no, \r\n" + 
+			"    t_sell_bill_header.bill_type, \r\n" + 
+			"    SUM(t_sell_bill_header.discount_amt) AS discount_amt, \r\n" + 
+			"    t_sell_bill_header.invoice_no, \r\n" + 
+			"    t_sell_bill_header.bill_date, \r\n" + 
+			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt, \r\n" + 
+			"    SUM(t_sell_bill_header.total_tax) AS total_tax, \r\n" + 
+			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
+			"    ) AS paid_amt,\r\n" + 
+			"    SUM(t_sell_bill_header.remaining_amt) AS remaining_amt,\r\n" + 
+			"    CONCAT(\r\n" + 
+			"        SUM(t_transaction_detail.cash_amt),\r\n" + 
+			"        '-cash ,',\r\n" + 
+			"         SUM(t_transaction_detail.card_amt),\r\n" + 
+			"        '-card ,',\r\n" + 
+			"         SUM(t_transaction_detail.e_pay_amt),\r\n" + 
+			"        ' -E-pay'\r\n" + 
+			"    ) AS payment_mode,\r\n" + 
+			"    SUM(t_sell_bill_header.discount_per) as discount_per,\r\n" + 
+			"    SUM(t_sell_bill_header.payable_amt) AS payable_amt,\r\n" + 
+			"    m_franchisee.fr_name,\r\n" + 
+			"    m_customer.cust_id,\r\n" + 
+			"    m_customer.cust_name,\r\n" + 
+			"    m_customer.phone_number,\r\n" + 
+			"    m_customer.gst_no,\r\n" + 
+			"    m_customer.address,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
+			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
+			"FROM\r\n" + 
+			"    t_sell_bill_header,\r\n" + 
+			"    t_transaction_detail,\r\n" + 
+			"    m_franchisee,\r\n" + 
+			"    m_customer\r\n" + 
+			"WHERE\r\n" + 
+			"    m_franchisee.fr_id = t_sell_bill_header.fr_id AND\r\n" + 
+			"    t_sell_bill_header.del_status = 0 AND\r\n" + 
+			"    t_sell_bill_header.fr_id IN(:frId) AND \r\n" + 
+			"    t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND \r\n" + 
+			"    t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND \r\n" + 
+			"    m_customer.cust_id = t_sell_bill_header.cust_id AND t_sell_bill_header.ext_int2>0 \r\n" + 
+			"GROUP BY \r\n" + 
+			"    	t_sell_bill_header.cust_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    t_sell_bill_header.sell_bill_no\r\n" + 
+			"DESC", nativeQuery = true)
+	
+	List<SellBillHeaderNew> getAllCustSellReportForOnline(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
+			@Param("frId") List<String> frId);
+	
+	@Query(value =  "SELECT\r\n" + 
+			"    UUID() AS id, \r\n" + 
+			"    t_sell_bill_header.sell_bill_no, \r\n" + 
+			"    t_sell_bill_header.bill_type, \r\n" + 
+			"    SUM(t_sell_bill_header.discount_amt) AS discount_amt, \r\n" + 
+			"    t_sell_bill_header.invoice_no, \r\n" + 
+			"    t_sell_bill_header.bill_date, \r\n" + 
+			"    SUM(t_sell_bill_header.taxable_amt) AS taxable_amt, \r\n" + 
+			"    SUM(t_sell_bill_header.total_tax) AS total_tax, \r\n" + 
+			"    SUM(t_sell_bill_header.grand_total) AS grand_total,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt + t_transaction_detail.card_amt + t_transaction_detail.e_pay_amt\r\n" + 
+			"    ) AS paid_amt,\r\n" + 
+			"    SUM(t_sell_bill_header.remaining_amt) AS remaining_amt,\r\n" + 
+			"    CONCAT(\r\n" + 
+			"        SUM(t_transaction_detail.cash_amt),\r\n" + 
+			"        '-cash ,',\r\n" + 
+			"         SUM(t_transaction_detail.card_amt),\r\n" + 
+			"        '-card ,',\r\n" + 
+			"         SUM(t_transaction_detail.e_pay_amt),\r\n" + 
+			"        ' -E-pay'\r\n" + 
+			"    ) AS payment_mode,\r\n" + 
+			"    SUM(t_sell_bill_header.discount_per) as discount_per,\r\n" + 
+			"    SUM(t_sell_bill_header.payable_amt) AS payable_amt,\r\n" + 
+			"    m_franchisee.fr_name,\r\n" + 
+			"    m_customer.cust_id,\r\n" + 
+			"    m_customer.cust_name,\r\n" + 
+			"    m_customer.phone_number,\r\n" + 
+			"    m_customer.gst_no,\r\n" + 
+			"    m_customer.address,\r\n" + 
+			"    SUM(t_transaction_detail.cash_amt) AS cash,\r\n" + 
+			"   	SUM(t_transaction_detail.card_amt) AS card,\r\n" + 
+			"    SUM(t_transaction_detail.e_pay_amt) AS e_pay, \r\n" + 
+			"	t_sell_bill_header.ext_float1 as round_off, t_sell_bill_header.ext_int2 as order_id  " +
+			"FROM\r\n" + 
+			"    t_sell_bill_header,\r\n" + 
+			"    t_transaction_detail,\r\n" + 
+			"    m_franchisee,\r\n" + 
+			"    m_customer\r\n" + 
+			"WHERE\r\n" + 
+			"    m_franchisee.fr_id = t_sell_bill_header.fr_id AND\r\n" + 
+			"    t_sell_bill_header.del_status = 0 AND\r\n" + 
+			"    t_sell_bill_header.fr_id IN(:frId) AND \r\n" + 
+			"    t_transaction_detail.sell_bill_no = t_sell_bill_header.sell_bill_no AND \r\n" + 
+			"    t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND \r\n" + 
+			"    m_customer.cust_id = t_sell_bill_header.cust_id AND t_sell_bill_header.ext_int2=0 \r\n" + 
+			"GROUP BY \r\n" + 
+			"    	t_sell_bill_header.cust_id\r\n" + 
+			"ORDER BY\r\n" + 
+			"    t_sell_bill_header.sell_bill_no\r\n" + 
+			"DESC", nativeQuery = true)
+	
+	List<SellBillHeaderNew> getAllCustSellReportForPOS(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,
+			@Param("frId") List<String> frId);
+	
 	
 	
 }

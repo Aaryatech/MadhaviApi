@@ -62,12 +62,13 @@ public interface SubCatBillRepRepo extends JpaRepository<SubCatBillRep, Integer>
 				"    m_cat_sub sc,\n" + 
 				"    m_item i\n" + 
 				"WHERE\n" + 
-				"    tb.del_status = 0 AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND i.is_saleable = 1\n" + 
+				"    tb.del_status = 0 AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND i.is_saleable = 1 AND IF(:configType=0 , tb.ext_int2>=0, IF(:configType=1 , tb.ext_int2=0, tb.ext_int2>0))\n" + 
+				"\n" + 
 				"GROUP BY\n" + 
 				"    i.item_grp2\n" + 
 				"ORDER BY\n" + 
 				"    i.item_grp1", nativeQuery = true)
-		List<SubCatBillRep> getAdminDataCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+		List<SubCatBillRep> getAdminDataCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("configType") int configType);
 		
 		
 		//Anmol--10-04-2020-------COMP OUTLET DAIRY AND REGULAR
@@ -109,7 +110,7 @@ public interface SubCatBillRepRepo extends JpaRepository<SubCatBillRep, Integer>
 						"            m_cat_sub sc,\n" + 
 						"            m_item i\n" + 
 						"        WHERE\n" + 
-						"            tb.del_status = 0 AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND i.is_saleable = 1\n" + 
+						"            tb.del_status = 0 AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND i.id = td.item_id AND i.item_grp2 = sc.sub_cat_id AND i.is_saleable = 1 AND IF(:configType=0 , tb.ext_int2>=0, IF(:configType=1 , tb.ext_int2=0, tb.ext_int2>0)) \n" + 
 						"        GROUP BY\n" + 
 						"            i.item_grp2\n" + 
 						"        ORDER BY\n" + 
@@ -118,7 +119,7 @@ public interface SubCatBillRepRepo extends JpaRepository<SubCatBillRep, Integer>
 						") t1\n" + 
 						"GROUP BY\n" + 
 						"    sub_cat_id", nativeQuery = true)
-				List<SubCatBillRep> getAdminDataCompOutletDairyAndReg(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+				List<SubCatBillRep> getAdminDataCompOutletDairyAndReg(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("configType") int configType);
 				
 				
 				//Anmol--10-04-2020-------COMP OUTLET DAIRY MART

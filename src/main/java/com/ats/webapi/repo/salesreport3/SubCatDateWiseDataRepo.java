@@ -40,6 +40,68 @@ public interface SubCatDateWiseDataRepo extends JpaRepository<SubCatDateWiseData
 			"    sc.sub_cat_id", nativeQuery = true)
 	List<SubCatDateWiseData> getSellBillData(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId, @Param("catIdList") List<Integer> catIdList);
 	
+	
+	@Query(value = "SELECT\r\n" + 
+			"    sd.sell_bill_detail_no,\r\n" + 
+			"    sc.sub_cat_id,\r\n" + 
+			"    sh.fr_id,\r\n" + 
+			"    ROUND(SUM(sd.ext_float1),\r\n" + 
+			"    2) AS sold_amt,\r\n" + 
+			"    ROUND(SUM(sd.disc_amt),\r\n" + 
+			"    2) AS disc_amt,\r\n" + 
+			"    SUM(sd.qty) AS sold_qty,\r\n" + 
+			"    sc.sub_cat_name,\r\n" + 
+			"    sd.cat_id,\r\n" + 
+			"    ROUND(SUM(sd.taxable_amt),\r\n" + 
+			"    2) AS taxable_amt,\r\n" + 
+			"    ROUND(SUM(sd.total_tax),\r\n" + 
+			"    2) AS total_tax\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_detail sd,\r\n" + 
+			"    m_cat_sub sc,\r\n" + 
+			"    t_sell_bill_header sh,\r\n" + 
+			"    m_item i\r\n" + 
+			"WHERE\r\n" + 
+			"    sh.sell_bill_no = sd.sell_bill_no AND sd.item_id = i.id AND i.item_grp2 = sc.sub_cat_id AND sh.del_status = 0 AND sd.del_status = 0 AND sd.cat_id IN(:catIdList) AND sh.fr_id = :frId AND sh.bill_date BETWEEN :fromDate AND :toDate AND sh.ext_int2>0\r\n" + 
+			"GROUP BY\r\n" + 
+			"    sh.fr_id,\r\n" + 
+			"    i.item_grp2\r\n" + 
+			"ORDER BY\r\n" + 
+			"    sd.cat_id,\r\n" + 
+			"    sc.sub_cat_id", nativeQuery = true)
+	List<SubCatDateWiseData> getSellBillDataForOnline(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId, @Param("catIdList") List<Integer> catIdList);
+	
+	@Query(value = "SELECT\r\n" + 
+			"    sd.sell_bill_detail_no,\r\n" + 
+			"    sc.sub_cat_id,\r\n" + 
+			"    sh.fr_id,\r\n" + 
+			"    ROUND(SUM(sd.ext_float1),\r\n" + 
+			"    2) AS sold_amt,\r\n" + 
+			"    ROUND(SUM(sd.disc_amt),\r\n" + 
+			"    2) AS disc_amt,\r\n" + 
+			"    SUM(sd.qty) AS sold_qty,\r\n" + 
+			"    sc.sub_cat_name,\r\n" + 
+			"    sd.cat_id,\r\n" + 
+			"    ROUND(SUM(sd.taxable_amt),\r\n" + 
+			"    2) AS taxable_amt,\r\n" + 
+			"    ROUND(SUM(sd.total_tax),\r\n" + 
+			"    2) AS total_tax\r\n" + 
+			"FROM\r\n" + 
+			"    t_sell_bill_detail sd,\r\n" + 
+			"    m_cat_sub sc,\r\n" + 
+			"    t_sell_bill_header sh,\r\n" + 
+			"    m_item i\r\n" + 
+			"WHERE\r\n" + 
+			"    sh.sell_bill_no = sd.sell_bill_no AND sd.item_id = i.id AND i.item_grp2 = sc.sub_cat_id AND sh.del_status = 0 AND sd.del_status = 0 AND sd.cat_id IN(:catIdList) AND sh.fr_id = :frId AND sh.bill_date BETWEEN :fromDate AND :toDate AND sh.ext_int2=0\r\n" + 
+			"GROUP BY\r\n" + 
+			"    sh.fr_id,\r\n" + 
+			"    i.item_grp2\r\n" + 
+			"ORDER BY\r\n" + 
+			"    sd.cat_id,\r\n" + 
+			"    sc.sub_cat_id", nativeQuery = true)
+	List<SubCatDateWiseData> getSellBillDataForPOS(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId, @Param("catIdList") List<Integer> catIdList);
+	
+	
 	@Query(value = "SELECT\r\n" + 
 			"        sd.sell_bill_detail_no,\r\n" + 
 			"        sc.sub_cat_id,\r\n" + 

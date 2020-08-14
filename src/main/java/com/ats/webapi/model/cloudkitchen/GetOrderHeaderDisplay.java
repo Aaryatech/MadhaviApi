@@ -63,6 +63,12 @@ public class GetOrderHeaderDisplay {
 	private String areaName;
 	private String pincode;
 
+	private float deliveryCharges;
+	private int paymentSubMode;
+	private int isAgent;
+
+	private String orderDeliveredByName;
+
 	List<GetOrderDetailDisplay> orderDetailList;
 
 	public GetOrderHeaderDisplay() {
@@ -79,8 +85,8 @@ public class GetOrderHeaderDisplay {
 			int exInt4, String exVar1, String exVar2, String exVar3, String exVar4, float exFloat1, float exFloat2,
 			float exFloat3, float exFloat4, String exDate1, String exDate2, String billingName, String billingAddress,
 			String customerGstnNo, int deliveryType, int deliveryInstId, String deliveryInstText, float deliveryKm,
-			String custName, String cityName, String areaName, String pincode,
-			List<GetOrderDetailDisplay> orderDetailList) {
+			String custName, String cityName, String areaName, String pincode, float deliveryCharges,
+			int paymentSubMode, int isAgent, String orderDeliveredByName, List<GetOrderDetailDisplay> orderDetailList) {
 		super();
 		this.orderId = orderId;
 		this.orderNo = orderNo;
@@ -140,7 +146,11 @@ public class GetOrderHeaderDisplay {
 		this.cityName = cityName;
 		this.areaName = areaName;
 		this.pincode = pincode;
+		this.deliveryCharges = deliveryCharges;
+		this.paymentSubMode = paymentSubMode;
+		this.isAgent = isAgent;
 		this.orderDetailList = orderDetailList;
+		this.orderDeliveredByName = orderDeliveredByName;
 	}
 
 	public int getOrderId() {
@@ -615,6 +625,38 @@ public class GetOrderHeaderDisplay {
 		this.pincode = pincode;
 	}
 
+	public float getDeliveryCharges() {
+		return deliveryCharges;
+	}
+
+	public void setDeliveryCharges(float deliveryCharges) {
+		this.deliveryCharges = deliveryCharges;
+	}
+
+	public int getPaymentSubMode() {
+		return paymentSubMode;
+	}
+
+	public void setPaymentSubMode(int paymentSubMode) {
+		this.paymentSubMode = paymentSubMode;
+	}
+
+	public int getIsAgent() {
+		return isAgent;
+	}
+
+	public void setIsAgent(int isAgent) {
+		this.isAgent = isAgent;
+	}
+
+	public String getOrderDeliveredByName() {
+		return orderDeliveredByName;
+	}
+
+	public void setOrderDeliveredByName(String orderDeliveredByName) {
+		this.orderDeliveredByName = orderDeliveredByName;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderHeaderDisplay [orderId=" + orderId + ", orderNo=" + orderNo + ", orderDate=" + orderDate
@@ -634,7 +676,9 @@ public class GetOrderHeaderDisplay {
 				+ billingAddress + ", customerGstnNo=" + customerGstnNo + ", deliveryType=" + deliveryType
 				+ ", deliveryInstId=" + deliveryInstId + ", deliveryInstText=" + deliveryInstText + ", deliveryKm="
 				+ deliveryKm + ", custName=" + custName + ", cityName=" + cityName + ", areaName=" + areaName
-				+ ", pincode=" + pincode + ", orderDetailList=" + orderDetailList + "]";
+				+ ", pincode=" + pincode + ", deliveryCharges=" + deliveryCharges + ", paymentSubMode=" + paymentSubMode
+				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + ", orderDetailList="
+				+ orderDetailList + "]";
 	}
 
 }

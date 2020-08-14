@@ -37,6 +37,7 @@ public class GetOrderDetailDisplay {
 	private String itemName;
 	private String itemUom;
 	private int uomId;
+	private int catId;
 
 	public GetOrderDetailDisplay() {
 		super();
@@ -47,8 +48,8 @@ public class GetOrderDetailDisplay {
 			float rate, float taxableAmt, float cgstPer, float sgstPer, float igstPer, float cgstAmt, float sgstAmt,
 			float igstAmt, float discAmt, float taxAmt, float totalAmt, int delStatus, String remark, int exInt1,
 			int exInt2, int exInt3, int exInt4, String exVar1, String exVar2, String exVar3, String exVar4,
-			float exFloat1, float exFloat2, float exFloat3, float exFloat4, String itemName, String itemUom,
-			int uomId) {
+			float exFloat1, float exFloat2, float exFloat3, float exFloat4, String itemName, String itemUom, int uomId,
+			int catId) {
 		super();
 		this.orderDetailId = orderDetailId;
 		this.orderId = orderId;
@@ -84,6 +85,7 @@ public class GetOrderDetailDisplay {
 		this.itemName = itemName;
 		this.itemUom = itemUom;
 		this.uomId = uomId;
+		this.catId = catId;
 	}
 
 	public int getOrderDetailId() {
@@ -358,6 +360,14 @@ public class GetOrderDetailDisplay {
 		this.uomId = uomId;
 	}
 
+	public int getCatId() {
+		return catId;
+	}
+
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderDetailDisplay [orderDetailId=" + orderDetailId + ", orderId=" + orderId + ", itemId=" + itemId
@@ -368,7 +378,7 @@ public class GetOrderDetailDisplay {
 				+ exInt1 + ", exInt2=" + exInt2 + ", exInt3=" + exInt3 + ", exInt4=" + exInt4 + ", exVar1=" + exVar1
 				+ ", exVar2=" + exVar2 + ", exVar3=" + exVar3 + ", exVar4=" + exVar4 + ", exFloat1=" + exFloat1
 				+ ", exFloat2=" + exFloat2 + ", exFloat3=" + exFloat3 + ", exFloat4=" + exFloat4 + ", itemName="
-				+ itemName + ", itemUom=" + itemUom + ", uomId=" + uomId + "]";
+				+ itemName + ", itemUom=" + itemUom + ", uomId=" + uomId + ", catId=" + catId + "]";
 	}
 
 }

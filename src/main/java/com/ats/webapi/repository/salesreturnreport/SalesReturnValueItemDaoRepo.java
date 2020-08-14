@@ -160,7 +160,7 @@ public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnVa
 				"        t_sell_bill_detail d,\n" + 
 				"        t_sell_bill_header h\n" + 
 				"    WHERE\n" + 
-				"        DATE_FORMAT(h.bill_date, '%Y-%m') =:month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no\n" + 
+				"        DATE_FORMAT(h.bill_date, '%Y-%m') =:month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 				"    GROUP BY\n" + 
 				"        d.item_id\n" + 
 				") t2\n" + 
@@ -180,7 +180,7 @@ public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnVa
 				"ON\n" + 
 				"    t1.item_id = t3.item_id ", nativeQuery = true)
 		List<SalesReturnValueItemDao> getAdminMonthWiseSalesReportComp(@Param("month") String month,
-				@Param("subCatId") List<Integer> subCatId);
+				@Param("subCatId") List<Integer> subCatId, @Param("configType") int configType);
 		
 		
 		//Anmol--------22-2-2020 COMP OUTLET WITH DAIRY
@@ -351,7 +351,7 @@ public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnVa
 						"        t_sell_bill_detail d,\n" + 
 						"        t_sell_bill_header h\n" + 
 						"    WHERE\n" + 
-						"        DATE_FORMAT(h.bill_date, '%Y-%m') = :month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no\n" + 
+						"        DATE_FORMAT(h.bill_date, '%Y-%m') = :month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        d.item_id\n" + 
 						") t2\n" + 
@@ -375,7 +375,7 @@ public interface SalesReturnValueItemDaoRepo extends JpaRepository<SalesReturnVa
 						"GROUP BY\n" + 
 						"    item_id ", nativeQuery = true)
 				List<SalesReturnValueItemDao> getAdminMonthWiseSalesReportCompDairyAndReg(@Param("month") String month,
-						@Param("subCatId") List<Integer> subCatId);
+						@Param("subCatId") List<Integer> subCatId, @Param("configType") int configType);
 				
 	
 	

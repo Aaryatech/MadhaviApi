@@ -434,7 +434,7 @@ public class ReportControllerV2 {
 	public @ResponseBody List<SalesReport> getAdminSalesReportV2(@RequestParam("frIdList") List<String> frIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 			@RequestParam("typeIdList") List<String> typeIdList, @RequestParam("billType") int billType,
-			@RequestParam("dairy") List<String> dairy) {
+			@RequestParam("dairy") List<String> dairy, @RequestParam("configType") int configType) {
 
 		List<SalesReport> saleList = new ArrayList<>();
 
@@ -484,10 +484,10 @@ public class ReportControllerV2 {
 		} else {
 			
 			if (dairy.contains("1") && dairy.contains("2")) {
-				saleList = getSalesReportRepo.getSalesReportFrCompOutletDairyAndReg(fromDate, toDate, frIdList);
+				saleList = getSalesReportRepo.getSalesReportFrCompOutletDairyAndReg(fromDate, toDate, frIdList, configType);
 				
 			} else if (dairy.contains("1")) {
-				saleList = getSalesReportRepo.getSalesReportFrCompOutlet(fromDate, toDate, frIdList);
+				saleList = getSalesReportRepo.getSalesReportFrCompOutlet(fromDate, toDate, frIdList, configType);
 				
 			} else if (dairy.contains("2")) {
 				saleList = getSalesReportRepo.getSalesReportFrCompOutletDairy(fromDate, toDate, frIdList);

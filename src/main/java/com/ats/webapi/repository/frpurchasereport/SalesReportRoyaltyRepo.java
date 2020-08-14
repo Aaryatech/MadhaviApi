@@ -3633,7 +3633,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"        t_sell_bill_header h,\n" + 
 				"        t_sell_bill_detail d\n" + 
 				"    WHERE\n" + 
-				"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+				"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 				"    GROUP BY\n" + 
 				"        d.item_id\n" + 
 				") t2\n" + 
@@ -3654,7 +3654,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"ON\n" + 
 				"    t1.id = t4.id",nativeQuery=true)	
 		List<SalesReportRoyalty> getAdminSaleReportCompOutlet(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-				@Param("toDate")String toDate);
+				@Param("toDate")String toDate, @Param("configType") int configType);
 		
 		
 		//Anmol -- 21-2-2020 ---- company outlet ---- SORT BY QTY
@@ -3698,7 +3698,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"        t_sell_bill_header h,\n" + 
 				"        t_sell_bill_detail d\n" + 
 				"    WHERE\n" + 
-				"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+				"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 				"    GROUP BY\n" + 
 				"        d.item_id\n" + 
 				") t2\n" + 
@@ -3719,7 +3719,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 				"ON\n" + 
 				"    t1.id = t4.id  ORDER BY t_bill_qty Desc",nativeQuery=true)	
 		List<SalesReportRoyalty> getAdminSaleReportCompOutletSortByQty(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-				@Param("toDate")String toDate);
+				@Param("toDate")String toDate, @Param("configType") int configType);
 		
 		
 		//Anmol -- 21-2-2020 ---- company outlet ---- SORT BY VALUE
@@ -3763,7 +3763,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"        t_sell_bill_header h,\n" + 
 						"        t_sell_bill_detail d\n" + 
 						"    WHERE\n" + 
-						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        d.item_id\n" + 
 						") t2\n" + 
@@ -3784,7 +3784,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"ON\n" + 
 						"    t1.id = t4.id  ORDER BY t_bill_taxable_amt Desc",nativeQuery=true)	
 				List<SalesReportRoyalty> getAdminSaleReportCompOutletSortByValue(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-						@Param("toDate")String toDate);
+						@Param("toDate")String toDate, @Param("configType") int configType);
 		
 				
 				
@@ -3933,7 +3933,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"        t_sell_bill_header h,\n" + 
 						"        t_sell_bill_detail d\n" + 
 						"    WHERE\n" + 
-						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        d.item_id\n" + 
 						") t2\n" + 
@@ -3961,7 +3961,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"    sub_cat_id,\n" + 
 						"    item_name",nativeQuery=true)	
 				List<SalesReportRoyalty> getAdminSaleReportCompOutletWithDairymart(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-						@Param("toDate")String toDate);
+						@Param("toDate")String toDate, @Param("configType") int configType);
 				
 				
 				//Anmol -- 8-4-2020 ---- company outlet with dairymart Sort by qty
@@ -4107,7 +4107,8 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"        t_sell_bill_header h,\n" + 
 						"        t_sell_bill_detail d\n" + 
 						"    WHERE\n" + 
-						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0))\n" + 
+						" \n" + 
 						"    GROUP BY\n" + 
 						"        d.item_id\n" + 
 						") t2\n" + 
@@ -4136,7 +4137,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"    sub_cat_id,\n" + 
 						"    item_name",nativeQuery=true)	
 				List<SalesReportRoyalty> getAdminSaleReportCompOutletWithDairymartSortQty(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-						@Param("toDate")String toDate);
+						@Param("toDate")String toDate, @Param("configType") int configType);
 				
 				
 				//Anmol -- 8-4-2020 ---- company outlet with dairymart Sort by amt
@@ -4282,7 +4283,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"        t_sell_bill_header h,\n" + 
 						"        t_sell_bill_detail d\n" + 
 						"    WHERE\n" + 
-						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList)\n" + 
+						"        h.sell_bill_no = d.sell_bill_no AND h.bill_date BETWEEN :fromDate AND :toDate AND h.del_status = 0 AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        d.item_id\n" + 
 						") t2\n" + 
@@ -4311,7 +4312,7 @@ public interface SalesReportRoyaltyRepo extends JpaRepository<SalesReportRoyalty
 						"    sub_cat_id,\n" + 
 						"    item_name",nativeQuery=true)	
 				List<SalesReportRoyalty> getAdminSaleReportCompOutletWithDairymartSortAmt(@Param("frIdList") List<String> frIdList,@Param("catIdList")List<String> catIdList,@Param("fromDate") String fromDate,
-						@Param("toDate")String toDate);
+						@Param("toDate")String toDate, @Param("configType") int configType);
 				
 				
 				

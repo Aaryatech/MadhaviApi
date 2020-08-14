@@ -48,7 +48,10 @@ import com.ats.webapi.repository.GetSellTAxRepSummaryRepo;
 import com.ats.webapi.repository.ItemReportDetailRepo;
 import com.ats.webapi.repository.ItemReportRepo;
 import com.ats.webapi.repository.PDispatchReportRepository;
+import com.ats.webapi.repository.RepFrDatewiseSellRepository;
 import com.ats.webapi.repository.RepFrItemwiseSellRepository;
+import com.ats.webapi.repository.RepFrMenuwiseSellRepository;
+import com.ats.webapi.repository.RepFrMonthwiseSellRepository;
 import com.ats.webapi.repository.SpKgSummaryRepository;
 import com.ats.webapi.service.RepFrSellServise;
 import com.ats.webapi.service.ReportsService;
@@ -264,16 +267,29 @@ public class ReportsController {
 	// -----------------------------------------------------------------------------------
 	// Sell Reports start
 
+	@Autowired
+	RepFrDatewiseSellRepository repFrDateSellRepository;
+
 	@RequestMapping(value = "/getRepDatewiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepFrDatewiseSellReport> getRepDatewiseSell(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("configType") int configType) {
 
 		List<GetRepFrDatewiseSellReport> tempList = new ArrayList<GetRepFrDatewiseSellReport>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
-		tempList = repFrSellServise.getDatewiseSellReport(fromDate, toDate, frId);
+		if (configType == 2) {
+			// ONLINE
+			tempList = repFrDateSellRepository.getDateWiseReportForOnline(fromDate, toDate, frId);
+		} else if (configType == 1) {
+			// POS
+			tempList = repFrDateSellRepository.getDateWiseReportForPOS(fromDate, toDate, frId);
+		} else if (configType == 0) {
+			// ALL
+			tempList = repFrDateSellRepository.getRepFrDatewiseSell(fromDate, toDate, frId);
+		}
 
 		/*
 		 * List<GetRepFrDatewiseSell> repFrDatewiseSellList =
@@ -390,9 +406,13 @@ public class ReportsController {
 	}
 
 	// ------------------------------------------------------------------------------------------------
+	@Autowired
+	RepFrMonthwiseSellRepository repFrMonthwiseSellRepository;
+
 	@RequestMapping(value = "/getRepMonthwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetMonthWiseReport> getRepMonthwiseSell(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("configType") int configType) {
 		List<GetMonthWiseReport> tempList = null;
 		System.out.println("from" + fromDate);
 		System.out.println("to" + toDate);
@@ -404,8 +424,17 @@ public class ReportsController {
 
 		System.out.println("to" + toDate);
 		System.out.println("from" + fromDate);
-		List<GetMonthWiseReport> GetRepMonthwiseSellList = repFrSellServise.getMonthwiseSellReport(fromDate, toDate,
-				frId);
+
+		List<GetMonthWiseReport> GetRepMonthwiseSellList = new ArrayList<>();
+
+		if (configType == 0) {
+			GetRepMonthwiseSellList = repFrMonthwiseSellRepository.getRepFrMonthwiseSell(fromDate, toDate, frId);
+		} else if (configType == 1) {
+			GetRepMonthwiseSellList = repFrMonthwiseSellRepository.getRepFrMonthwiseSellForPOS(fromDate, toDate, frId);
+		} else if (configType == 2) {
+			GetRepMonthwiseSellList = repFrMonthwiseSellRepository.getRepFrMonthwiseSellForOnline(fromDate, toDate,
+					frId);
+		}
 
 		LinkedHashMap<String, GetMonthWiseReport> hashList = new LinkedHashMap<String, GetMonthWiseReport>();
 
@@ -478,13 +507,19 @@ public class ReportsController {
 	@RequestMapping(value = "/getItemWiseSellRep", method = RequestMethod.POST)
 	public @ResponseBody List<CatWiseItemWiseSale> getItemWiseSellRep(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
-			@RequestParam("catId") List<String> catId) {
+			@RequestParam("catId") List<String> catId, @RequestParam("configType") int configType) {
 		List<CatWiseItemWiseSale> getItemSaleList = new ArrayList<>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
-		getItemSaleList = repo.getItemWiseSellReportDetails(fromDate, toDate, frId, catId);
+		if (configType == 0) {
+			getItemSaleList = repo.getItemWiseSellReportDetails(fromDate, toDate, frId, catId);
+		} else if (configType == 1) {
+			getItemSaleList = repo.getItemWiseSellReportDetailsForPOS(fromDate, toDate, frId, catId);
+		} else if (configType == 2) {
+			getItemSaleList = repo.getItemWiseSellReportDetailsForOnline(fromDate, toDate, frId, catId);
+		}
 
 		return getItemSaleList;
 
@@ -516,14 +551,28 @@ public class ReportsController {
 	 * 
 	 *                       }
 	 */
+
+	@Autowired
+	RepFrMenuwiseSellRepository repFrMenuwiseSellRepository;
+
 	@RequestMapping(value = "/getRepMenuwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepMenuwiseSell> getRepMenuwiseSell(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("configType") int configType) {
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		List<GetRepMenuwiseSell> getRepMenuwiseSellList = repFrSellServise.getMenuwiseSellReport(fromDate, toDate,
-				frId);
+
+		List<GetRepMenuwiseSell> getRepMenuwiseSellList = new ArrayList<>();
+
+		if (configType == 0) {
+			getRepMenuwiseSellList = repFrMenuwiseSellRepository.getRepFrMenuwiseSell(fromDate, toDate, frId);
+		} else if (configType == 1) {
+			getRepMenuwiseSellList = repFrMenuwiseSellRepository.getRepFrMenuwiseSellForPOS(fromDate, toDate, frId);
+		} else if (configType == 2) {
+			getRepMenuwiseSellList = repFrMenuwiseSellRepository.getRepFrMenuwiseSellForOnline(fromDate, toDate, frId);
+		}
+
 		return getRepMenuwiseSellList;
 
 	}
@@ -531,18 +580,47 @@ public class ReportsController {
 	@RequestMapping(value = "/getRepDateItemwiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepItemwiseSell> getRepDateItemwiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
-			@RequestParam("catId") List<String> catId) {
+			@RequestParam("catId") List<String> catId, @RequestParam("configType") int configType) {
 		List<GetRepItemwiseSell> getRepItemwiseSellList = new ArrayList<>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		if (catId.contains("-1")) {
-			getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCat(fromDate, toDate,
-					frId);
 
-		} else {
-			getRepItemwiseSellList = repFrSellServise.getDateItemwiseSellReport(fromDate, toDate, frId, catId);
+		if (configType == 0) {
+
+			if (catId.contains("-1")) {
+				getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCat(fromDate, toDate,
+						frId);
+
+			} else {
+				getRepItemwiseSellList = repFrItemwiseSellRepository.getRepFrDateItemwiseSell(fromDate, toDate, frId,
+						catId);
+			}
+
+		} else if (configType == 1) {
+
+			if (catId.contains("-1")) {
+				getRepItemwiseSellList = repFrItemwiseSellRepository.getDateItemwiseSellReportByAllCatForPOS(fromDate,
+						toDate, frId);
+
+			} else {
+				getRepItemwiseSellList = repFrItemwiseSellRepository.getRepFrDateItemwiseSellForPOS(fromDate, toDate,
+						frId, catId);
+			}
+
+		} else if (configType == 2) {
+
+			if (catId.contains("-1")) {
+				getRepItemwiseSellList = repFrItemwiseSellRepository
+						.getDateItemwiseSellReportByAllCatForOnline(fromDate, toDate, frId);
+
+			} else {
+				getRepItemwiseSellList = repFrItemwiseSellRepository.getRepFrDateItemwiseSellForOnline(fromDate, toDate,
+						frId, catId);
+			}
+
 		}
+
 		return getRepItemwiseSellList;
 
 	}

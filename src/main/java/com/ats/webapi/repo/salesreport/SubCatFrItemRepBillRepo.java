@@ -127,12 +127,12 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 			"			    m_cat_sub sc,  \n" + 
 			"			    m_item  \n" + 
 			"			WHERE  \n" + 
-			"			    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1 AND tb.del_status=0\n" + 
+			"			    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1 AND tb.del_status=0 AND IF(:configType=0 , tb.ext_int2>=0, IF(:configType=1 , tb.ext_int2=0, tb.ext_int2>0))\n" + 
 			"			GROUP BY  \n" + 
 			"			    tb.fr_id,  \n" + 
 			"			    m_item.id ", nativeQuery = true)
 	List<SubCatFrItemRepBill> getAdminDataCompOutlet(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
+			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList, @Param("configType") int configType);
 	
 	
 	//Anmol--10-04-2020-- COMP OUTLET DAIRY MART AND REGULAR
@@ -189,14 +189,14 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 				"    m_cat_sub sc,\n" + 
 				"    m_item\n" + 
 				"WHERE\n" + 
-				"    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1 AND tb.del_status = 0\n" + 
+				"    tb.del_status = 0 AND tb.fr_id IN(:frIdList) AND tb.sell_bill_no = td.sell_bill_no AND tb.bill_date BETWEEN :fromDate AND :toDate AND f.fr_id = tb.fr_id AND m_item.id = td.item_id AND m_item.item_grp2 = sc.sub_cat_id AND sc.sub_cat_id IN(:subCatIdList) AND m_item.is_saleable = 1 AND tb.del_status = 0 AND IF(:configType=0 , tb.ext_int2>=0, IF(:configType=1 , tb.ext_int2=0, tb.ext_int2>0)) \n" + 
 				"GROUP BY\n" + 
 				"    tb.fr_id,\n" + 
 				"    m_item.id\n" + 
 				"    )\n" + 
 				"    ) t1 GROUP BY fr_id,item_id ", nativeQuery = true)
 		List<SubCatFrItemRepBill> getAdminDataCompOutletDairyAndRegular(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-				@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
+				@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList, @Param("configType") int configType);
 
 		
 		//Anmol--10-04-2020-- COMP OUTLET  DAIRY MART

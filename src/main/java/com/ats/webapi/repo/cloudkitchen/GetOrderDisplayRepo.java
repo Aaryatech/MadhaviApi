@@ -10,11 +10,11 @@ import com.ats.webapi.model.cloudkitchen.GetOrderDisplay;
 
 public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Integer> {
 
-	@Query(value="SELECT\r\n" + 
+	@Query(value="select * from (SELECT\r\n" + 
 			"	uuid() as id,\r\n" + 
 			"    t1.*,\r\n" + 
 			"    COALESCE(t2.offer_name,'') AS offer_name,\r\n" + 
-			"    COALESCE(t2.offer_desc,'') AS offer_desc\r\n" + 
+			"    COALESCE(t2.offer_desc,'') AS offer_desc , COALESCE(t3.fr_emp_name, '') AS order_delivered_by_name \r\n" + 
 			"FROM\r\n" + 
 			"    (\r\n" + 
 			"    SELECT\r\n" + 
@@ -49,23 +49,22 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        d.ex_float2 AS detail_ex_float2,\r\n" + 
 			"        d.ex_float3 AS detail_ex_float3,\r\n" + 
 			"        d.ex_float4 AS detail_ex_float4,\r\n" + 
-			"        i.item_name,\r\n" + 
+			"        i.item_name,  i.item_grp1 AS cat_id, \r\n" + 
 			"        sup.item_uom,\r\n" + 
 			"        sup.uom_id,\r\n" + 
 			"        ct.city_name,\r\n" + 
-			"        a.area_name,  a.pincode\r\n" + 
+			"        '' as area_name,  '' as pincode\r\n" + 
 			"    FROM\r\n" + 
 			"        tn_order_header h,\r\n" + 
 			"        tn_order_detail d,\r\n" + 
-			"        mn_customer c,\r\n" + 
+			"        m_customer c,\r\n" + 
 			"        m_item i,\r\n" + 
 			"        m_item_sup sup,\r\n" + 
-			"        mn_city ct,\r\n" + 
-			"        mn_area a\r\n" + 
+			"        mn_city ct \r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND d.del_status = 0 AND c.del_status = 0 AND h.cust_id = c.cust_id AND d.item_id = i.id AND d.item_id = sup.item_id AND h.city_id = ct.city_id AND h.area_id = a.area_id AND h.fr_id = :frId AND h.delivery_date = :delDate AND h.order_status IN(:status) \r\n" + 
+			"        h.del_status = 0 AND d.del_status = 0 AND h.order_id=d.order_id AND c.del_status = 0 AND h.cust_id = c.cust_id AND d.item_id = i.id AND d.item_id = sup.item_id AND h.city_id = ct.city_id AND h.fr_id = :frId AND h.delivery_date = :delDate AND h.order_status IN(:status) \r\n" + 
 			"    ORDER BY\r\n" + 
-			"        h.status\r\n" + 
+			"        h.order_status\r\n" + 
 			") t1\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -76,14 +75,24 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        h.del_status = 0\r\n" + 
 			") t2\r\n" + 
 			"ON\r\n" + 
-			"    t1.offer_id = t2.offer_id",nativeQuery=true)
+			"    t1.offer_id = t2.offer_id "
+			+ " LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        *\r\n" + 
+			"    FROM\r\n" + 
+			"        m_fr_emp e\r\n" + 
+			"    WHERE\r\n" + 
+			"        e.del_status = 0\r\n" + 
+			") t3\r\n" + 
+			"ON\r\n" + 
+			"    t1.order_delivered_by = t3.fr_emp_id) tb order by tb.order_status",nativeQuery=true)
 	List<GetOrderDisplay> getAllOrdersByFrAndStatusAndDelDate(@Param("frId") int frId, @Param("delDate") String delDate, @Param("status") List<Integer> status);
 
 	@Query(value="SELECT\r\n" + 
 			"	uuid() as id,\r\n" + 
 			"    t1.*,\r\n" + 
 			"    COALESCE(t2.offer_name,'') AS offer_name,\r\n" + 
-			"    COALESCE(t2.offer_desc,'') AS offer_desc\r\n" + 
+			"    COALESCE(t2.offer_desc,'') AS offer_desc, COALESCE(t3.fr_emp_name, '') AS order_delivered_by_name \r\n" + 
 			"FROM\r\n" + 
 			"    (\r\n" + 
 			"    SELECT\r\n" + 
@@ -118,23 +127,22 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        d.ex_float2 AS detail_ex_float2,\r\n" + 
 			"        d.ex_float3 AS detail_ex_float3,\r\n" + 
 			"        d.ex_float4 AS detail_ex_float4,\r\n" + 
-			"        i.item_name,\r\n" + 
+			"        i.item_name,  i.item_grp1 AS cat_id, \r\n" + 
 			"        sup.item_uom,\r\n" + 
 			"        sup.uom_id,\r\n" + 
 			"        ct.city_name,\r\n" + 
-			"        a.area_name,  a.pincode\r\n" + 
+			"        '' as area_name,  '' as pincode\r\n" + 
 			"    FROM\r\n" + 
 			"        tn_order_header h,\r\n" + 
 			"        tn_order_detail d,\r\n" + 
-			"        mn_customer c,\r\n" + 
+			"        m_customer c,\r\n" + 
 			"        m_item i,\r\n" + 
 			"        m_item_sup sup,\r\n" + 
-			"        mn_city ct,\r\n" + 
-			"        mn_area a\r\n" + 
+			"        mn_city ct \r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND d.del_status = 0 AND c.del_status = 0 AND h.cust_id = c.cust_id AND d.item_id = i.id AND d.item_id = sup.item_id AND h.city_id = ct.city_id AND h.area_id = a.area_id AND h.fr_id = :frId AND h.order_status IN(:status) \r\n" + 
+			"        h.del_status = 0 AND d.del_status = 0 AND h.order_id=d.order_id AND c.del_status = 0 AND h.cust_id = c.cust_id AND d.item_id = i.id AND d.item_id = sup.item_id AND h.city_id = ct.city_id  AND h.fr_id = :frId AND h.order_status IN(:status) \r\n" + 
 			"    ORDER BY\r\n" + 
-			"        h.status\r\n" + 
+			"        h.order_status\r\n" + 
 			") t1\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
@@ -145,7 +153,17 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        h.del_status = 0\r\n" + 
 			") t2\r\n" + 
 			"ON\r\n" + 
-			"    t1.offer_id = t2.offer_id",nativeQuery=true)
+			"    t1.offer_id = t2.offer_id "
+			+ " LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        *\r\n" + 
+			"    FROM\r\n" + 
+			"        m_fr_emp e\r\n" + 
+			"    WHERE\r\n" + 
+			"        e.del_status = 0\r\n" + 
+			") t3\r\n" + 
+			"ON\r\n" + 
+			"    t1.order_delivered_by = t3.fr_emp_id",nativeQuery=true)
 	List<GetOrderDisplay> getAllOrdersByFrAndStatus(@Param("frId") int frId, @Param("status") List<Integer> status);
 
 

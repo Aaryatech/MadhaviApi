@@ -200,7 +200,7 @@ public interface SalesReturnValueDaoRepository extends JpaRepository<SalesReturn
 				"        t_sell_bill_detail d,\n" + 
 				"        m_item i\n" + 
 				"    WHERE\n" + 
-				"        DATE_FORMAT(h.bill_date, '%Y-%m') =:month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND i.id = d.item_id AND i.is_saleable = 1 AND i.del_status = 0\n" + 
+				"        DATE_FORMAT(h.bill_date, '%Y-%m') =:month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND i.id = d.item_id AND i.is_saleable = 1 AND i.del_status = 0 AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 				"    GROUP BY\n" + 
 				"        i.item_grp2\n" + 
 				") t2\n" + 
@@ -220,7 +220,7 @@ public interface SalesReturnValueDaoRepository extends JpaRepository<SalesReturn
 				") t3\n" + 
 				"ON\n" + 
 				"    t1.sub_cat_id = t3.item_grp2",nativeQuery=true)
-		List<SalesReturnValueDao> getAdminSalesReturnValueReportCompOutlet(@Param("month")String month);
+		List<SalesReturnValueDao> getAdminSalesReturnValueReportCompOutlet(@Param("month")String month, @Param("configType") int configType);
 		
 		
 		//Anmol--10-04-2020---  COMP OUTLET DAIRY MART
@@ -396,7 +396,7 @@ public interface SalesReturnValueDaoRepository extends JpaRepository<SalesReturn
 						"        t_sell_bill_detail d,\n" + 
 						"        m_item i\n" + 
 						"    WHERE\n" + 
-						"        DATE_FORMAT(h.bill_date, '%Y-%m') = :month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND i.id = d.item_id AND i.is_saleable = 1 AND i.del_status = 0\n" + 
+						"        DATE_FORMAT(h.bill_date, '%Y-%m') = :month AND h.del_status = 0 AND h.sell_bill_no = d.sell_bill_no AND i.id = d.item_id AND i.is_saleable = 1 AND i.del_status = 0 AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \n" + 
 						"    GROUP BY\n" + 
 						"        i.item_grp2\n" + 
 						") t2\n" + 
@@ -419,7 +419,7 @@ public interface SalesReturnValueDaoRepository extends JpaRepository<SalesReturn
 						"    )\n" + 
 						"    ) t1 GROUP BY sub_cat_id\n" + 
 						"    ",nativeQuery=true)
-				List<SalesReturnValueDao> getAdminSalesReturnValueReportCompOutletDairyAndReg(@Param("month")String month);
+				List<SalesReturnValueDao> getAdminSalesReturnValueReportCompOutletDairyAndReg(@Param("month")String month, @Param("configType") int configType);
 				
 				
 	

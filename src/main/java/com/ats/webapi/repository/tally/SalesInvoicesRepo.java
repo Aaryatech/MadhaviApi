@@ -204,7 +204,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    m_item_sup sup,\r\n" + 
 			"    m_franchisee f\r\n" + 
 			"WHERE\r\n" + 
-			"    h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND d.item_id = i.id AND i.id = sup.item_id AND c.comp_id = 1 AND h.tally_sync = 0 AND h.fr_id = f.fr_id AND h.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+			"    h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND d.item_id = i.id AND i.id = sup.item_id AND c.comp_id = 1 AND h.tally_sync = 0 AND h.fr_id = f.fr_id AND h.bill_date BETWEEN :fromDate AND :toDate AND h.ex_varchar2!=1 \r\n" + 
 			"ORDER BY\r\n" + 
 			"    h.bill_no\r\n" + 
 			") a\r\n" + 
@@ -235,7 +235,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_bill_detail d,\r\n" + 
 			"        t_bill_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate\r\n" + 
+			"        h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.ex_varchar2!=1 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.bill_no\r\n" + 
 			") b\r\n" + 

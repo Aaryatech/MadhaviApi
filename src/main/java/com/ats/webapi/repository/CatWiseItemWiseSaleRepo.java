@@ -45,6 +45,75 @@ public interface CatWiseItemWiseSaleRepo extends JpaRepository<CatWiseItemWiseSa
 			"        h.fr_id ORDER BY d.cat_id", nativeQuery=true)
 	List<CatWiseItemWiseSale> getItemWiseSellReportDetails(@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
+	
+	
+	@Query(value="select\n" + 
+			"        d.sell_bill_detail_no,\n" + 
+			"        d.item_id,\n" + 
+			"        h.fr_id,\n" + 
+			"        f.fr_name,\n" + 
+			"        t.item_name,\n" + 
+			"        c.cat_name,\n" + 
+			"        d.cat_id,\n" + 
+			"        h.bill_date,\n" + 
+			"        d.mrp_base_rate as rate,\n" + 
+			"        d.mrp as mrp,\n" + 
+			"        sum(d.qty) as qty,\n" + 
+			"        sum(d.mrp*d.qty) as amount, sum(d.disc_amt) as disc_amt, sum(d.grand_total) as payable_amt \n" + 
+			"    from\n" + 
+			"        t_sell_bill_detail d,\n" + 
+			"        t_sell_bill_header h,\n" + 
+			"        m_category c,\n" + 
+			"        m_item t,\n" + 
+			"        m_franchisee f \n" + 
+			"    WHERE\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate\n" + 
+			"        AND d.cat_id IN(:catId ) \n" + 
+			"        AND c.cat_id=d.cat_id \n" + 
+			"        AND d.item_id=t.id \n" + 
+			"        AND h.sell_bill_no=d.sell_bill_no \n" + 
+			"        and h.del_status=0 \n" + 
+			"        AND h.fr_id IN(:frId) \n" + 
+			"        AND h.fr_id=f.fr_id AND h.ext_int2>0 \n" + 
+			"    GROUP BY\n" + 
+			"        d.item_id,\n" + 
+			"        h.fr_id ORDER BY d.cat_id", nativeQuery=true)
+	List<CatWiseItemWiseSale> getItemWiseSellReportDetailsForOnline(@Param("fromDate") String fromDate,
+			@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
+	
+	@Query(value="select\n" + 
+			"        d.sell_bill_detail_no,\n" + 
+			"        d.item_id,\n" + 
+			"        h.fr_id,\n" + 
+			"        f.fr_name,\n" + 
+			"        t.item_name,\n" + 
+			"        c.cat_name,\n" + 
+			"        d.cat_id,\n" + 
+			"        h.bill_date,\n" + 
+			"        d.mrp_base_rate as rate,\n" + 
+			"        d.mrp as mrp,\n" + 
+			"        sum(d.qty) as qty,\n" + 
+			"        sum(d.mrp*d.qty) as amount, sum(d.disc_amt) as disc_amt, sum(d.grand_total) as payable_amt \n" + 
+			"    from\n" + 
+			"        t_sell_bill_detail d,\n" + 
+			"        t_sell_bill_header h,\n" + 
+			"        m_category c,\n" + 
+			"        m_item t,\n" + 
+			"        m_franchisee f \n" + 
+			"    WHERE\n" + 
+			"        h.bill_date BETWEEN :fromDate AND :toDate\n" + 
+			"        AND d.cat_id IN(:catId ) \n" + 
+			"        AND c.cat_id=d.cat_id \n" + 
+			"        AND d.item_id=t.id \n" + 
+			"        AND h.sell_bill_no=d.sell_bill_no \n" + 
+			"        and h.del_status=0 \n" + 
+			"        AND h.fr_id IN(:frId) \n" + 
+			"        AND h.fr_id=f.fr_id AND h.ext_int2=0 \n" + 
+			"    GROUP BY\n" + 
+			"        d.item_id,\n" + 
+			"        h.fr_id ORDER BY d.cat_id", nativeQuery=true)
+	List<CatWiseItemWiseSale> getItemWiseSellReportDetailsForPOS(@Param("fromDate") String fromDate,
+			@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
 
 	@Query(value = "select\r\n" + 
 			"        d.sell_bill_detail_no,\r\n" + 

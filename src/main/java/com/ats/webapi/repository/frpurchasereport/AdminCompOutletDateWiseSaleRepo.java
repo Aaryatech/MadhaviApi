@@ -44,7 +44,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"        t_sell_bill_header h,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList) \r\n" + 
+			"        h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList)  AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0) ) \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.bill_date,\r\n" + 
 			"        h.fr_id\r\n" + 
@@ -61,7 +61,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"        t_transaction_detail d,\r\n" + 
 			"        t_sell_bill_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0\r\n" + 
+			"        d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0  AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0) )  \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.transaction_date,\r\n" + 
 			"        h.fr_id\r\n" + 
@@ -135,7 +135,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"    bill_date,\r\n" + 
 			"    fr_name",nativeQuery=true)
 		
-		List<AdminCompOutletDateWiseSale> getAdminDateWiseCompOutletSale(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+		List<AdminCompOutletDateWiseSale> getAdminDateWiseCompOutletSale(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("configType") int configType);
 
 	
 	
@@ -177,7 +177,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"        t_sell_bill_header h,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList)\r\n" + 
+			"        h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        YEAR(h.bill_date),MONTH(h.bill_date),\r\n" + 
 			"        h.fr_id\r\n" + 
@@ -196,7 +196,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"        t_transaction_detail d,\r\n" + 
 			"        t_sell_bill_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0\r\n" + 
+			"        d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0 AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        YEAR(d.transaction_date),MONTH(d.transaction_date),\r\n" + 
 			"        h.fr_id\r\n" + 
@@ -278,7 +278,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 			"    date_str,\r\n" + 
 			"    fr_name",nativeQuery=true)
 		
-		List<AdminCompOutletDateWiseSale> getAdminMonthWiseCompOutletSale(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+		List<AdminCompOutletDateWiseSale> getAdminMonthWiseCompOutletSale(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("configType") int configType);
 
 	
 	
@@ -392,7 +392,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"                t_sell_bill_header h,\r\n" + 
 				"                m_franchisee f\r\n" + 
 				"            WHERE\r\n" + 
-				"                h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList)\r\n" + 
+				"                h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0) )  \r\n" + 
 				"            GROUP BY\r\n" + 
 				"                h.bill_date,\r\n" + 
 				"                h.fr_id\r\n" + 
@@ -409,7 +409,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"            t_transaction_detail d,\r\n" + 
 				"            t_sell_bill_header h\r\n" + 
 				"        WHERE\r\n" + 
-				"            d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0\r\n" + 
+				"            d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0  AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0) ) \r\n" + 
 				"        GROUP BY\r\n" + 
 				"            d.transaction_date,\r\n" + 
 				"            h.fr_id\r\n" + 
@@ -490,7 +490,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"    bill_date,\r\n" + 
 				"    fr_name",nativeQuery=true)
 			
-			List<AdminCompOutletDateWiseSale> getAdminDateWiseCompOutletSaleDairymartAndReg(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+			List<AdminCompOutletDateWiseSale> getAdminDateWiseCompOutletSaleDairymartAndReg(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate,@Param("configType") int configType);
 
 		
 		
@@ -579,7 +579,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"                t_sell_bill_header h,\r\n" + 
 				"                m_franchisee f\r\n" + 
 				"            WHERE\r\n" + 
-				"                h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList)\r\n" + 
+				"                h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND h.fr_id IN(:frIdList) AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0))  \r\n" + 
 				"            GROUP BY\r\n" + 
 				"                YEAR(h.bill_date),\r\n" + 
 				"                MONTH(h.bill_date),\r\n" + 
@@ -599,7 +599,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"            t_transaction_detail d,\r\n" + 
 				"            t_sell_bill_header h\r\n" + 
 				"        WHERE\r\n" + 
-				"            d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0\r\n" + 
+				"            d.transaction_date BETWEEN :fromDate AND :toDate AND d.sell_bill_no = h.sell_bill_no AND h.fr_id IN(:frIdList) AND h.del_status = 0 AND IF(:configType=0 , h.ext_int2>=0, IF(:configType=1 , h.ext_int2=0, h.ext_int2>0)) \r\n" + 
 				"        GROUP BY\r\n" + 
 				"            YEAR(d.transaction_date),\r\n" + 
 				"            MONTH(d.transaction_date),\r\n" + 
@@ -691,7 +691,7 @@ public interface AdminCompOutletDateWiseSaleRepo extends JpaRepository<AdminComp
 				"ORDER BY\r\n" + 
 				"    date_str",nativeQuery=true)
 			
-			List<AdminCompOutletDateWiseSale> getAdminMonthWiseCompOutletSaleDairyAndRegular(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
+			List<AdminCompOutletDateWiseSale> getAdminMonthWiseCompOutletSaleDairyAndRegular(@Param("frIdList") List<String> frIdList,@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("configType") int configType );
 
 		
 		// MONTHLY REPORT COMPOUTLET WITH DAIRY
