@@ -14,11 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.CreditNotePos;
 import com.ats.webapi.model.CreditNotePosHeaderDisp;
+import com.ats.webapi.model.Franchisee;
+import com.ats.webapi.model.SellBillHeader;
 import com.ats.webapi.model.Setting;
 import com.ats.webapi.model.advorder.GetAdvanceOrderList;
+import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.repo.CreditNotePosRepo;
 import com.ats.webapi.repository.CreditNotePosHeaderDispRepo;
+import com.ats.webapi.repository.FranchiseeRepository;
+import com.ats.webapi.repository.SellBillHeaderRepository;
 import com.ats.webapi.repository.SettingRepository;
+import com.ats.webapi.repository.frsetting.FrSettingRepo;
 
 @RestController
 public class CreditNotePosController {
@@ -31,6 +37,13 @@ public class CreditNotePosController {
 
 	@Autowired
 	CreditNotePosHeaderDispRepo creditNotePosHeaderDispRepo;
+	
+	@Autowired FranchiseeRepository franchiseeRepository;
+	
+	@Autowired FrSettingRepo frSettingRepo;
+	
+	@Autowired
+	SellBillHeaderRepository sellBillHeaderRepository;
 
 	@RequestMapping(value = { "/savePosCreditNote" }, method = RequestMethod.POST)
 	public @ResponseBody CreditNotePos savePosCreditNote(@RequestBody CreditNotePos creditNotePos) {
@@ -86,18 +99,16 @@ public class CreditNotePosController {
 
 	@RequestMapping(value = { "/getPosCreditNoteHeaderDisp" }, method = RequestMethod.POST)
 	public @ResponseBody List<CreditNotePosHeaderDisp> getPosCreditNoteHeaderDisp(@RequestParam String fromDate,
-			@RequestParam String toDate, @RequestParam int custId,@RequestParam int frId) {
+			@RequestParam String toDate, @RequestParam int custId, @RequestParam int frId) {
 		List<CreditNotePosHeaderDisp> advList = new ArrayList<CreditNotePosHeaderDisp>();
 
 		try {
-			
-			if(custId==0) {
-				advList = creditNotePosHeaderDispRepo.getCrnPosHeaderAllCust(fromDate, toDate,frId);				
-			}else {
-				advList = creditNotePosHeaderDispRepo.getCrnPosHeader(fromDate, toDate, custId,frId);
-			}
-			
 
+			if (custId == 0) {
+				advList = creditNotePosHeaderDispRepo.getCrnPosHeaderAllCust(fromDate, toDate, frId);
+			} else {
+				advList = creditNotePosHeaderDispRepo.getCrnPosHeader(fromDate, toDate, custId, frId);
+			}
 
 		} catch (Exception e) {
 			System.out.println("Exce in getPosCreditNoteHeaderDisp  " + e.getMessage());
@@ -130,6 +141,60 @@ public class CreditNotePosController {
 		try {
 
 			res = creditNotePosRepo.save(creditNotePos);
+
+		} catch (Exception e) {
+			res = new ArrayList<>();
+		}
+		return res;
+
+	}
+
+	// FOR CLOUD KITCHEN WALLET---------------
+	@RequestMapping(value = { "/saveNewPosCreditNoteListForWallet" }, method = RequestMethod.POST)
+	public @ResponseBody List<CreditNotePos> savePosCreditNoteForWallet(
+			@RequestBody List<CreditNotePos> creditNotePos) {
+
+		List<CreditNotePos> res = null;
+
+		try {
+
+			int billId = creditNotePos.get(0).getStatus();
+			int frId=creditNotePos.get(0).getExInt1();
+
+			Setting settingsValue = settingRepository.findBySettingId(58);
+			int crnNo = settingsValue.getSettingValue();
+			
+			Franchisee franchisee = franchiseeRepository.findOne(frId);
+			
+			FrSetting frSetting = frSettingRepo.findByFrId(frId);
+			
+			String crnInvoiceNo = "" + franchisee.getFrCode() + "_" + frSetting.getSpNo();
+			
+			SellBillHeader billHeader = sellBillHeaderRepository.getBillHeaderById(billId);
+			
+			
+
+			for (int i = 0; i < creditNotePos.size(); i++) {
+				creditNotePos.get(i).setCrnNo(crnNo);
+				creditNotePos.get(i).setStatus(0);
+				creditNotePos.get(i).setCrnInvoiceNo(crnInvoiceNo);
+				creditNotePos.get(i).setBillInvoice(billHeader.getInvoiceNo());
+				creditNotePos.get(i).setUserId(billHeader.getExtInt1());
+				
+			}
+			
+
+			res = creditNotePosRepo.save(creditNotePos);
+
+			if (res != null) {
+				Setting setting = settingRepository.findBySettingId(58);
+				int val = setting.getSettingValue() + 1;
+
+				int value = settingRepository.udatekeyvalueForId(58, val);
+				
+				int updateRes = frSettingRepo.updateFrSettingSpNo( frId);
+
+			}
 
 		} catch (Exception e) {
 			res = new ArrayList<>();

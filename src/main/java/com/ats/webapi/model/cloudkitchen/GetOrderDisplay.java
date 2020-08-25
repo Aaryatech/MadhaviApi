@@ -63,6 +63,7 @@ public class GetOrderDisplay {
 	private int deliveryInstId;
 	private String deliveryInstText;
 	private float deliveryKm;
+	private String uuidNo;
 
 	private int orderDetailId;
 	private int itemId;
@@ -106,6 +107,9 @@ public class GetOrderDisplay {
 	private float deliveryCharges;
 	private int paymentSubMode;
 	private int isAgent;
+
+	private String custPhone;
+	private String custWhatsApp;
 
 	private String orderDeliveredByName;
 
@@ -877,6 +881,30 @@ public class GetOrderDisplay {
 		this.orderDeliveredByName = orderDeliveredByName;
 	}
 
+	public String getUuidNo() {
+		return uuidNo;
+	}
+
+	public void setUuidNo(String uuidNo) {
+		this.uuidNo = uuidNo;
+	}
+
+	public String getCustPhone() {
+		return custPhone;
+	}
+
+	public void setCustPhone(String custPhone) {
+		this.custPhone = custPhone;
+	}
+
+	public String getCustWhatsApp() {
+		return custWhatsApp;
+	}
+
+	public void setCustWhatsApp(String custWhatsApp) {
+		this.custWhatsApp = custWhatsApp;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderDisplay [id=" + id + ", orderId=" + orderId + ", orderNo=" + orderNo + ", orderDate="
@@ -895,20 +923,21 @@ public class GetOrderDisplay {
 				+ exFloat4 + ", exDate1=" + exDate1 + ", exDate2=" + exDate2 + ", billingName=" + billingName
 				+ ", billingAddress=" + billingAddress + ", customerGstnNo=" + customerGstnNo + ", deliveryType="
 				+ deliveryType + ", deliveryInstId=" + deliveryInstId + ", deliveryInstText=" + deliveryInstText
-				+ ", deliveryKm=" + deliveryKm + ", orderDetailId=" + orderDetailId + ", itemId=" + itemId
-				+ ", hsnCode=" + hsnCode + ", qty=" + qty + ", mrp=" + mrp + ", rate=" + rate + ", detailTaxableAmt="
-				+ detailTaxableAmt + ", cgstPer=" + cgstPer + ", sgstPer=" + sgstPer + ", igstPer=" + igstPer
-				+ ", detailCgstAmt=" + detailCgstAmt + ", detailSgstAmt=" + detailSgstAmt + ", detailIgstAmt="
-				+ detailIgstAmt + ", detailDiscAmt=" + detailDiscAmt + ", detailTaxAmt=" + detailTaxAmt
-				+ ", detailTotalAmt=" + detailTotalAmt + ", detailRemark=" + detailRemark + ", detailExInt1="
-				+ detailExInt1 + ", detailExInt2=" + detailExInt2 + ", detailExInt3=" + detailExInt3 + ", detailExInt4="
-				+ detailExInt4 + ", detailExVar1=" + detailExVar1 + ", detailExVar2=" + detailExVar2 + ", detailExVar3="
-				+ detailExVar3 + ", detailExVar4=" + detailExVar4 + ", detailExFloat1=" + detailExFloat1
-				+ ", detailExFloat2=" + detailExFloat2 + ", detailExFloat3=" + detailExFloat3 + ", detailExFloat4="
-				+ detailExFloat4 + ", custName=" + custName + ", itemName=" + itemName + ", itemUom=" + itemUom
-				+ ", uomId=" + uomId + ", cityName=" + cityName + ", areaName=" + areaName + ", pincode=" + pincode
-				+ ", catId=" + catId + ", deliveryCharges=" + deliveryCharges + ", paymentSubMode=" + paymentSubMode
-				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + "]";
+				+ ", deliveryKm=" + deliveryKm + ", uuidNo=" + uuidNo + ", orderDetailId=" + orderDetailId + ", itemId="
+				+ itemId + ", hsnCode=" + hsnCode + ", qty=" + qty + ", mrp=" + mrp + ", rate=" + rate
+				+ ", detailTaxableAmt=" + detailTaxableAmt + ", cgstPer=" + cgstPer + ", sgstPer=" + sgstPer
+				+ ", igstPer=" + igstPer + ", detailCgstAmt=" + detailCgstAmt + ", detailSgstAmt=" + detailSgstAmt
+				+ ", detailIgstAmt=" + detailIgstAmt + ", detailDiscAmt=" + detailDiscAmt + ", detailTaxAmt="
+				+ detailTaxAmt + ", detailTotalAmt=" + detailTotalAmt + ", detailRemark=" + detailRemark
+				+ ", detailExInt1=" + detailExInt1 + ", detailExInt2=" + detailExInt2 + ", detailExInt3=" + detailExInt3
+				+ ", detailExInt4=" + detailExInt4 + ", detailExVar1=" + detailExVar1 + ", detailExVar2=" + detailExVar2
+				+ ", detailExVar3=" + detailExVar3 + ", detailExVar4=" + detailExVar4 + ", detailExFloat1="
+				+ detailExFloat1 + ", detailExFloat2=" + detailExFloat2 + ", detailExFloat3=" + detailExFloat3
+				+ ", detailExFloat4=" + detailExFloat4 + ", custName=" + custName + ", itemName=" + itemName
+				+ ", itemUom=" + itemUom + ", uomId=" + uomId + ", cityName=" + cityName + ", areaName=" + areaName
+				+ ", pincode=" + pincode + ", catId=" + catId + ", deliveryCharges=" + deliveryCharges
+				+ ", paymentSubMode=" + paymentSubMode + ", isAgent=" + isAgent + ", custPhone=" + custPhone
+				+ ", custWhatsApp=" + custWhatsApp + ", orderDeliveredByName=" + orderDeliveredByName + "]";
 	}
 
 }

@@ -31,7 +31,7 @@ public interface GetOrdersRepo extends JpaRepository<GetOrders, Integer> {
 			"    h.del_status = 0 AND c.del_status = 0 AND h.cust_id = c.cust_id AND h.fr_id=:frId AND h.delivery_date=:delDate \r\n" + 
 			"ORDER BY\r\n" + 
 			"    h.status",nativeQuery=true)
-	List<GetOrders> getAllOrdersByFr(@Param("frId") int frId, @Param("delDate") String delDate);
+	List<GetOrders> getAllOrdersByFr1(@Param("frId") int frId, @Param("delDate") String delDate);
 
 	
 }

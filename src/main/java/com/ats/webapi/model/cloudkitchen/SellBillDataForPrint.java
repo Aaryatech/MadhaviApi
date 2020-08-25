@@ -3,7 +3,6 @@ package com.ats.webapi.model.cloudkitchen;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -52,11 +51,14 @@ public class SellBillDataForPrint {
 	private String extVar2; // customer address
 	private float extFloat1;
 	private float extFloat2;
+	private float extFloat3;
+	
 
 	private String delBoyName;
 	private String delBoyMobile;
 	private int isAgent;
 	private String empName;
+	private String custAddress;
 
 	@Transient
 	private List<SellBillDetailForPos> list;
@@ -401,6 +403,26 @@ public class SellBillDataForPrint {
 	public void setEmpName(String empName) {
 		this.empName = empName;
 	}
+	
+	
+
+	public float getExtFloat3() {
+		return extFloat3;
+	}
+
+	public void setExtFloat3(float extFloat3) {
+		this.extFloat3 = extFloat3;
+	}
+
+	public String getCustAddress() {
+		return custAddress;
+	}
+
+	public void setCustAddress(String custAddress) {
+		this.custAddress = custAddress;
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -415,8 +437,9 @@ public class SellBillDataForPrint {
 				+ ", custLoyaltyPtRate=" + custLoyaltyPtRate + ", custLoyaltyPt=" + custLoyaltyPt + ", delStatus="
 				+ delStatus + ", custName=" + custName + ", gstNo=" + gstNo + ", extInt1=" + extInt1 + ", extInt2="
 				+ extInt2 + ", extVar2=" + extVar2 + ", extFloat1=" + extFloat1 + ", extFloat2=" + extFloat2
-				+ ", delBoyName=" + delBoyName + ", delBoyMobile=" + delBoyMobile + ", isAgent=" + isAgent
-				+ ", empName=" + empName + ", list=" + list + ", taxlabList=" + taxlabList + "]";
+				+ ", extFloat3=" + extFloat3 + ", delBoyName=" + delBoyName + ", delBoyMobile=" + delBoyMobile
+				+ ", isAgent=" + isAgent + ", empName=" + empName + ", custAddress=" + custAddress + ", list=" + list
+				+ ", taxlabList=" + taxlabList + "]";
 	}
 
 }

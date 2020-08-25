@@ -1,10 +1,7 @@
 package com.ats.webapi.controller.cloudkitchen;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,22 +13,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ats.webapi.model.Info;
 import com.ats.webapi.model.cloudkitchen.GetDeliveryBoyOrAgentData;
 import com.ats.webapi.model.cloudkitchen.GetItemsForConfig;
 import com.ats.webapi.model.cloudkitchen.GetOrderDetail;
 import com.ats.webapi.model.cloudkitchen.GetOrderDetailDisplay;
 import com.ats.webapi.model.cloudkitchen.GetOrderDisplay;
 import com.ats.webapi.model.cloudkitchen.GetOrderHeaderDisplay;
-import com.ats.webapi.model.cloudkitchen.GetOrders;
-import com.ats.webapi.model.cloudkitchen.OrderTrail;
 import com.ats.webapi.repo.cloudkitchen.GetDeliveryBoyOrAgentDataRepo;
 import com.ats.webapi.repo.cloudkitchen.GetItemsForConfigRepo;
 import com.ats.webapi.repo.cloudkitchen.GetOrderDetailRepo;
 import com.ats.webapi.repo.cloudkitchen.GetOrderDisplayRepo;
 import com.ats.webapi.repo.cloudkitchen.GetOrdersRepo;
-import com.ats.webapi.repo.cloudkitchen.OrderHeaderRepo;
-import com.ats.webapi.repo.cloudkitchen.OrderTrailRepo;
 
 @RestController
 public class OrderController {
@@ -47,12 +39,6 @@ public class OrderController {
 
 	@Autowired
 	GetOrderDisplayRepo getOrderDisplayRepo;
-
-	@Autowired
-	OrderHeaderRepo orderHeaderRepo;
-
-	@Autowired
-	OrderTrailRepo orderTrailRepo;
 
 	@Autowired
 	GetDeliveryBoyOrAgentDataRepo getDeliveryBoyOrAgentDataRepo;
@@ -73,23 +59,6 @@ public class OrderController {
 		return itemList;
 	}
 
-//	@RequestMapping(value = { "/getOrdersByFrAndDeliveryDate" }, method = RequestMethod.POST)
-//	public @ResponseBody List<GetOrders> getOrdersByFrAndDeliveryDate(@RequestParam("frId") int frId,
-//			@RequestParam("delDate") String delDate) {
-//
-//		List<GetOrders> orderList = null;
-//		try {
-//			System.err.println("FR ID = " + frId + "      DEL DATE = " + delDate);
-//			orderList = getOrdersRepo.getAllOrdersByFr(frId, delDate);
-//			if (orderList == null) {
-//				new ArrayList<GetOrders>();
-//			}
-//			System.err.println("ORDERS = " + orderList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return orderList;
-//	}
 
 	@RequestMapping(value = { "/getOrdersByFrAndDeliveryDate" }, method = RequestMethod.POST)
 	public @ResponseBody List<GetOrderHeaderDisplay> getOrdersByFrAndDeliveryDate(@RequestParam("frId") int frId,
@@ -141,7 +110,7 @@ public class OrderController {
 										order.getDeliveryInstText(), order.getDeliveryKm(), order.getCustName(),
 										order.getCityName(), order.getAreaName(), order.getPincode(),
 										order.getDeliveryCharges(), order.getPaymentSubMode(), order.getIsAgent(),
-										order.getOrderDeliveredByName(), detailList);
+										order.getOrderDeliveredByName(),order.getUuidNo(),order.getCustPhone(),order.getCustWhatsApp(), detailList);
 
 								orderList.add(header);
 
@@ -246,7 +215,7 @@ public class OrderController {
 										order.getDeliveryInstText(), order.getDeliveryKm(), order.getCustName(),
 										order.getCityName(), order.getAreaName(), order.getPincode(),
 										order.getDeliveryCharges(), order.getPaymentSubMode(), order.getIsAgent(),
-										order.getOrderDeliveredByName(), detailList);
+										order.getOrderDeliveredByName(),order.getUuidNo(),order.getCustPhone(),order.getCustWhatsApp(), detailList);
 
 								orderList.add(header);
 
@@ -313,117 +282,6 @@ public class OrderController {
 		return orderList;
 	}
 
-	// -----------UPDATE STATUS----------------
-	@RequestMapping(value = { "/updateOrderHeaderStatus" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateOrderStatus(@RequestParam("orderId") int orderId,
-			@RequestParam("status") int status, @RequestParam("userId") int userId,
-			@RequestParam("remark") String remark, @RequestParam("type") int type) {
-
-		Info info = new Info();
-
-		try {
-			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date dt = new Date();
-
-			System.err.println("Status = " + status + " ORder id = " + orderId);
-			int update = orderHeaderRepo.updateStatus(orderId, status);
-			System.err.println("update res = " + update);
-			if (update > 0) {
-
-				OrderTrail orderTrail = new OrderTrail();
-				orderTrail.setOrderId(orderId);
-				orderTrail.setActionByUserId(userId);
-				orderTrail.setActionDateTime(sf.format(dt));
-				orderTrail.setStatus(status);
-				orderTrail.setExVar1(remark);
-				orderTrail.setExInt1(type);
-				OrderTrail orderRes = orderTrailRepo.save(orderTrail);
-
-				info.setError(false);
-				info.setMessage("updated");
-			} else {
-				info.setError(true);
-			}
-
-		} catch (Exception e) {
-			info.setError(true);
-			e.printStackTrace();
-		}
-		return info;
-	}
-
-	// ACCEPT AND PROCESS ORDER-------------------
-	@RequestMapping(value = { "/acceptAndProcessOrderOPS" }, method = RequestMethod.POST)
-	public @ResponseBody Info acceptAndProcessOrderOPS(@RequestParam("orderId") int orderId,
-			@RequestParam("status") int status, @RequestParam("userId") int userId,
-			@RequestParam("remark") String remark, @RequestParam("type") int type) {
-
-		Info info = new Info();
-
-		try {
-			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date dt = new Date();
-
-			System.err.println("Status = " + status + " ORder id = " + orderId);
-			int update = orderHeaderRepo.updateStatus(orderId, status);
-			System.err.println("update res = " + update);
-			if (update > 0) {
-
-				OrderTrail orderTrail1 = new OrderTrail();
-				orderTrail1.setOrderId(orderId);
-				orderTrail1.setActionByUserId(userId);
-				orderTrail1.setActionDateTime(sf.format(dt));
-				orderTrail1.setStatus(2);
-				orderTrail1.setExVar1(remark);
-				orderTrail1.setExInt1(type);
-				OrderTrail orderRes1 = orderTrailRepo.save(orderTrail1);
-
-				OrderTrail orderTrail2 = new OrderTrail();
-				orderTrail2.setOrderId(orderId);
-				orderTrail2.setActionByUserId(userId);
-				orderTrail2.setActionDateTime(sf.format(dt));
-				orderTrail2.setStatus(status);
-				orderTrail2.setExVar1(remark);
-				orderTrail2.setExInt1(type);
-				OrderTrail orderRes2 = orderTrailRepo.save(orderTrail2);
-
-				info.setError(false);
-				info.setMessage("updated");
-			} else {
-				info.setError(true);
-			}
-
-		} catch (Exception e) {
-			info.setError(true);
-			e.printStackTrace();
-		}
-		return info;
-	}
-
-	// -----------UPDATE DELIVERY BOY----------------
-	@RequestMapping(value = { "/updateDeliveryBoy" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateDeliveryBoy(@RequestParam("orderId") int orderId,
-			@RequestParam("delBoyId") int delBoyId) {
-
-		Info info = new Info();
-		try {
-
-			int res = orderHeaderRepo.updateDeliveryBoy(orderId, delBoyId);
-			if (res > 0) {
-				info.setError(false);
-				info.setMessage("Success");
-			} else {
-				info.setError(true);
-				info.setMessage("Failed");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			info.setError(true);
-			info.setMessage("Failed");
-		}
-		return info;
-	}
 
 	public class OrderSorter implements Comparator<GetOrderHeaderDisplay> {
 		@Override

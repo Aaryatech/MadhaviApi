@@ -69,6 +69,11 @@ public class GetOrderHeaderDisplay {
 
 	private String orderDeliveredByName;
 
+	private String uuidNo;
+
+	private String custPhone;
+	private String custWhatsApp;
+
 	List<GetOrderDetailDisplay> orderDetailList;
 
 	public GetOrderHeaderDisplay() {
@@ -86,7 +91,8 @@ public class GetOrderHeaderDisplay {
 			float exFloat3, float exFloat4, String exDate1, String exDate2, String billingName, String billingAddress,
 			String customerGstnNo, int deliveryType, int deliveryInstId, String deliveryInstText, float deliveryKm,
 			String custName, String cityName, String areaName, String pincode, float deliveryCharges,
-			int paymentSubMode, int isAgent, String orderDeliveredByName, List<GetOrderDetailDisplay> orderDetailList) {
+			int paymentSubMode, int isAgent, String orderDeliveredByName, String uuidNo, String custPhone,
+			String custWhatsApp, List<GetOrderDetailDisplay> orderDetailList) {
 		super();
 		this.orderId = orderId;
 		this.orderNo = orderNo;
@@ -151,6 +157,9 @@ public class GetOrderHeaderDisplay {
 		this.isAgent = isAgent;
 		this.orderDetailList = orderDetailList;
 		this.orderDeliveredByName = orderDeliveredByName;
+		this.uuidNo = uuidNo;
+		this.custPhone = custPhone;
+		this.custWhatsApp = custWhatsApp;
 	}
 
 	public int getOrderId() {
@@ -657,6 +666,30 @@ public class GetOrderHeaderDisplay {
 		this.orderDeliveredByName = orderDeliveredByName;
 	}
 
+	public String getUuidNo() {
+		return uuidNo;
+	}
+
+	public void setUuidNo(String uuidNo) {
+		this.uuidNo = uuidNo;
+	}
+
+	public String getCustPhone() {
+		return custPhone;
+	}
+
+	public void setCustPhone(String custPhone) {
+		this.custPhone = custPhone;
+	}
+
+	public String getCustWhatsApp() {
+		return custWhatsApp;
+	}
+
+	public void setCustWhatsApp(String custWhatsApp) {
+		this.custWhatsApp = custWhatsApp;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderHeaderDisplay [orderId=" + orderId + ", orderNo=" + orderNo + ", orderDate=" + orderDate
@@ -677,8 +710,9 @@ public class GetOrderHeaderDisplay {
 				+ ", deliveryInstId=" + deliveryInstId + ", deliveryInstText=" + deliveryInstText + ", deliveryKm="
 				+ deliveryKm + ", custName=" + custName + ", cityName=" + cityName + ", areaName=" + areaName
 				+ ", pincode=" + pincode + ", deliveryCharges=" + deliveryCharges + ", paymentSubMode=" + paymentSubMode
-				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + ", orderDetailList="
-				+ orderDetailList + "]";
+				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + ", uuidNo=" + uuidNo
+				+ ", custPhone=" + custPhone + ", custWhatsApp=" + custWhatsApp + ", orderDetailList=" + orderDetailList
+				+ "]";
 	}
 
 }

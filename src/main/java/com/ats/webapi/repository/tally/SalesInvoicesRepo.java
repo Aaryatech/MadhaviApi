@@ -962,4 +962,148 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"",nativeQuery=true)
 	List<SalesInvoices> getTallySyncDataByDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
+	
+	
+	@Query(value="SELECT\r\n" + 
+			"    UUID() AS id, a.fr_id, a.bill_no, DATE_FORMAT(a.date, '%d-%m-%Y') AS DATE,\r\n" + 
+			"    a.e_way_bill_no,\r\n" + 
+			"    DATE_FORMAT(a.e_way_bill_date, '%d-%m-%Y') AS e_way_bill_date,\r\n" + 
+			"    COALESCE(a.customer_name, '') AS customer_name,\r\n" + 
+			"    COALESCE(a.gst_no, '') AS gst_no,\r\n" + 
+			"    COALESCE(a.address, '') AS address,\r\n" + 
+			"    a.state,\r\n" + 
+			"    a.state_code,\r\n" + 
+			"    COALESCE(a.ship_to_customer_name, '') AS ship_to_customer_name,\r\n" + 
+			"    COALESCE(a.ship_to_gst_no, '') AS ship_to_gst_no,\r\n" + 
+			"    COALESCE(a.ship_to_address, '') AS ship_to_address,\r\n" + 
+			"    a.ship_to_state,\r\n" + 
+			"    a.ship_to_state_code,\r\n" + 
+			"    a.product_name,\r\n" + 
+			"    a.part_no,\r\n" + 
+			"    ROUND(a.qty, 3) AS qty,\r\n" + 
+			"    a.unit,\r\n" + 
+			"    a.hsn,\r\n" + 
+			"    a.gst_per,\r\n" + 
+			"    ROUND(a.rate, 2) AS rate,\r\n" + 
+			"    a.discount,\r\n" + 
+			"    ROUND(b.amount, 2) AS amount,\r\n" + 
+			"    a.item_level_disc_amt,\r\n" + 
+			"    ROUND(\r\n" + 
+			"        (\r\n" + 
+			"            ROUND(a.rate, 2) * ROUND(a.qty, 3) - a.item_level_disc_amt\r\n" + 
+			"        ),\r\n" + 
+			"        2\r\n" + 
+			"    ) AS item_level_taxable_amt,\r\n" + 
+			"    COALESCE(ROUND(b.cgst, 2),\r\n" + 
+			"    0) AS cgst,\r\n" + 
+			"    COALESCE(ROUND(b.sgst, 2),\r\n" + 
+			"    0) AS sgst,\r\n" + 
+			"    COALESCE(ROUND(b.igst, 2),\r\n" + 
+			"    0) AS igst,\r\n" + 
+			"    a.other_ledger,\r\n" + 
+			"    COALESCE(b.tot, 0) AS rate_total,\r\n" + 
+			"    0 AS round_off,\r\n" + 
+			"    ROUND(\r\n" + 
+			"        COALESCE(b.tot, 0) + COALESCE(ROUND(b.cgst, 2),\r\n" + 
+			"        0) + COALESCE(ROUND(b.sgst, 2),\r\n" + 
+			"        0) - COALESCE(ROUND(b.amount, 2),\r\n" + 
+			"        0)\r\n" + 
+			"    ) AS total_amount,\r\n" + 
+			"    a.account_type\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_no AS bill_id,\r\n" + 
+			"        h.invoice_no AS bill_no,\r\n" + 
+			"        h.bill_date AS DATE,\r\n" + 
+			"        h.is_tally_sync AS e_way_bill_no,\r\n" + 
+			"        h.bill_date AS e_way_bill_date,\r\n" + 
+			"        h.party_name AS ship_to_customer_name,\r\n" + 
+			"        h.party_gstin AS ship_to_gst_no,\r\n" + 
+			"        h.party_address AS ship_to_address,\r\n" + 
+			"        c.state,\r\n" + 
+			"        c.state_code,\r\n" + 
+			"        CASE WHEN h.is_dairy_mart != 2 THEN CONCAT(h.ex_varchar3, ' - ', f.fr_code) ELSE h.ex_varchar3\r\n" + 
+			"END AS customer_name,\r\n" + 
+			"h.ex_varchar4 AS gst_no,\r\n" + 
+			"h.ex_varchar5 AS address,\r\n" + 
+			"c.state AS ship_to_state,\r\n" + 
+			"c.state_code AS ship_to_state_code,\r\n" + 
+			"i.item_name AS product_name,\r\n" + 
+			"0 AS part_no,\r\n" + 
+			"d.bill_qty AS qty,\r\n" + 
+			"sup.item_uom AS unit,\r\n" + 
+			"d.hsn_code AS hsn,\r\n" + 
+			"d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
+			"d.base_rate AS rate,\r\n" + 
+			"d.disc_per AS discount,\r\n" + 
+			"d.remark AS amount,\r\n" + 
+			"d.cgst_rs AS cgst,\r\n" + 
+			"d.sgst_rs AS sgst,\r\n" + 
+			"d.igst_rs AS igst,\r\n" + 
+			"0 AS other_ledger,\r\n" + 
+			"CASE WHEN h.is_dairy_mart = 2 THEN 'Dairy Mart' ELSE CASE WHEN h.ex_varchar2 = 1 THEN 'Delivery Challan' ELSE 'Franchise Bill'\r\n" + 
+			"    END\r\n" + 
+			"END AS account_type,\r\n" + 
+			"ROUND(\r\n" + 
+			"    ROUND(\r\n" + 
+			"        ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
+			"        2\r\n" + 
+			"    ) *(d.disc_per / 100),\r\n" + 
+			"    2\r\n" + 
+			") AS item_level_disc_amt\r\n" + 
+			"FROM\r\n" + 
+			"    t_bill_header h,\r\n" + 
+			"    t_bill_detail d,\r\n" + 
+			"    m_company c,\r\n" + 
+			"    m_item i,\r\n" + 
+			"    m_item_sup sup,\r\n" + 
+			"    m_franchisee f\r\n" + 
+			"WHERE\r\n" + 
+			"    h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND d.item_id = i.id AND i.id = sup.item_id AND c.comp_id = 1 AND h.tally_sync = 0 AND h.fr_id = f.fr_id AND h.bill_date BETWEEN :fromDate AND :toDate AND h.ex_varchar2=1 AND h.is_dairy_mart=2\r\n" + 
+			"ORDER BY\r\n" + 
+			"    h.bill_no\r\n" + 
+			") a\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        d.bill_no,\r\n" + 
+			"        h.invoice_no,\r\n" + 
+			"        SUM(d.grand_total) AS grand_total,\r\n" + 
+			"        SUM(d.cgst_rs) AS cgst,\r\n" + 
+			"        SUM(d.sgst_rs) AS sgst,\r\n" + 
+			"        SUM(d.igst_rs) AS igst,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS tot,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                ROUND(\r\n" + 
+			"                    ROUND(d.bill_qty, 3) * ROUND(d.base_rate, 2),\r\n" + 
+			"                    2\r\n" + 
+			"                ) *(d.disc_per / 100),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS amount\r\n" + 
+			"    FROM\r\n" + 
+			"        t_bill_detail d,\r\n" + 
+			"        t_bill_header h\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.ex_varchar2=1 AND h.is_dairy_mart=2\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        d.bill_no\r\n" + 
+			") b\r\n" + 
+			"ON\r\n" + 
+			"    a.bill_id = b.bill_no\r\n" + 
+			"ORDER BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_no,\r\n" + 
+			"    DATE\r\n" + 
+			"DESC",nativeQuery=true)
+	List<SalesInvoices> getTallySyncDataByDateForOwnFrAndDairyMart(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+
+	
 }

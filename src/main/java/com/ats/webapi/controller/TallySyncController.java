@@ -803,5 +803,70 @@ public class TallySyncController {
 
 		return res;
 	}
+	
+	
+	
+	
+	// TALLY SYNC GROUP BY BILLS - OWN FRANCHISE AND DAIRY MART
+		@RequestMapping(value = { "/getBillsForTallySyncGroupByOwnFrAndDairyMart" }, method = RequestMethod.GET)
+		public @ResponseBody TallySalesInvoiceListGroupByBills getBillsForTallySyncGroupByOwnFrAndDairyMart(
+				@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+			TallySalesInvoiceListGroupByBills res = new TallySalesInvoiceListGroupByBills();
+
+			List<SalesInvoices> tallyList = new ArrayList<>();
+			tallyList = salesInvoiceRepo.getTallySyncDataByDateForOwnFrAndDairyMart(fromDate, toDate);
+
+			List<com.ats.webapi.model.SalesInvoices> salesList = new ArrayList<>();
+
+			if (tallyList != null) {
+
+				Set<String> invoiceSet = new HashSet<String>();
+				for (SalesInvoices bills : tallyList) {
+					invoiceSet.add(bills.getBillNo());
+				}
+
+				List<String> invList = new ArrayList<>();
+				invList.addAll(invoiceSet);
+
+				Collections.sort(invList);
+
+				for (String invoice : invList) {
+
+					com.ats.webapi.model.SalesInvoices salesModel = new com.ats.webapi.model.SalesInvoices();
+					salesModel.setBillNo(invoice);
+
+					List<BillInfo> billList = new ArrayList<>();
+
+					for (SalesInvoices bills : tallyList) {
+						if (invoice.equalsIgnoreCase(bills.getBillNo())) {
+
+//							if(invoice.equalsIgnoreCase("-c") || invoice.equalsIgnoreCase("-E") || invoice.equalsIgnoreCase("-P")) {
+//								
+//							}
+
+							BillInfo bill = new BillInfo(bills.getBillNo(), bills.getDate(), bills.geteWayBillNo(),
+									bills.geteWayBillDate(), bills.getCustomerName(), bills.getGstNo(), bills.getAddress(),
+									bills.getState(), bills.getStateCode(), bills.getShipToCustomerName(),
+									bills.getShipToGstNo(), bills.getShipToAddress(), bills.getShipToState(),
+									bills.getShipToStateCode(), bills.getProductName(), bills.getPartNo(), bills.getQty(),
+									bills.getUnit(), bills.getHsn(), bills.getGstPer(), bills.getRate(),
+									bills.getDiscount(), bills.getAmount(),bills.getItemLevelDiscAmt(),bills.getItemLevelTaxableAmt(), bills.getCgst(), bills.getSgst(),
+									bills.getIgst(), bills.getOtherLedger(), bills.getRateTotal(), bills.getRoundOff(),
+									bills.getTotalAmount(), bills.getAccountType());
+							billList.add(bill);
+
+						}
+					}
+					salesModel.setBillInfo(billList);
+					salesList.add(salesModel);
+				}
+
+				res.setSalesInvoices(salesList);
+
+			}
+
+			return res;
+		}
 
 }

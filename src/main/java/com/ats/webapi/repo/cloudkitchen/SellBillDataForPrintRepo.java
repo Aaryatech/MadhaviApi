@@ -43,7 +43,7 @@ public interface SellBillDataForPrintRepo extends JpaRepository<SellBillDataForP
 			"        e.fr_emp_id = oh.order_delivered_by\r\n" + 
 			")\r\n" + 
 			"END AS del_boy_mobile, c.cust_name,\r\n" + 
-			"c.gst_no, e.fr_emp_name AS emp_name \r\n" + 
+			"c.gst_no, e.fr_emp_name AS emp_name, oh.address as cust_address  \r\n" + 
 			"FROM\r\n" + 
 			"    t_sell_bill_header bh,\r\n" + 
 			"    tn_order_header oh,  m_customer c,  m_fr_emp e \r\n" + 

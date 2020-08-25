@@ -53,7 +53,7 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        sup.item_uom,\r\n" + 
 			"        sup.uom_id,\r\n" + 
 			"        ct.city_name,\r\n" + 
-			"        '' as area_name,  '' as pincode\r\n" + 
+			"        '' as area_name,  '' as pincode, c.phone_number as cust_phone,c.whatsapp_no as cust_whats_app \r\n" + 
 			"    FROM\r\n" + 
 			"        tn_order_header h,\r\n" + 
 			"        tn_order_detail d,\r\n" + 
@@ -131,7 +131,7 @@ public interface GetOrderDisplayRepo extends JpaRepository<GetOrderDisplay, Inte
 			"        sup.item_uom,\r\n" + 
 			"        sup.uom_id,\r\n" + 
 			"        ct.city_name,\r\n" + 
-			"        '' as area_name,  '' as pincode\r\n" + 
+			"        '' as area_name,  '' as pincode, c.phone_number as cust_phone,c.whatsapp_no as cust_whats_app \r\n" + 
 			"    FROM\r\n" + 
 			"        tn_order_header h,\r\n" + 
 			"        tn_order_detail d,\r\n" + 

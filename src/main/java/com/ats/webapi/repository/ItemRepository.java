@@ -603,7 +603,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        m_item i,\n" + 
 			"        m_item_sup s\n" + 
 			"    WHERE\n" + 
-			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.id = s.item_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
 			"    t1.item_id = t2.id\n" + 
@@ -708,7 +708,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        m_item i,\n" + 
 			"        m_item_sup s\n" + 
 			"    WHERE\n" + 
-			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.id = s.item_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
 			"    t1.item_id = t2.id\n" + 
@@ -814,7 +814,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        m_item i,\n" + 
 			"        m_item_sup s\n" + 
 			"    WHERE\n" + 
-			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.id = s.item_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
 			"    t1.item_id = t2.id\n" + 
@@ -922,7 +922,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"        m_item i,\n" + 
 			"        m_item_sup s\n" + 
 			"    WHERE\n" + 
-			"        i.del_status = 0 AND s.del_status = 0 AND i.item_id = s.item_id\n" + 
+			"        i.del_status = 0 AND s.del_status = 0 AND i.id = s.item_id\n" + 
 			") t2\n" + 
 			"ON\n" + 
 			"    t1.item_id = t2.id\n" + 
