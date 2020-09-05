@@ -33,5 +33,14 @@ public interface GetBillsForFrRepository extends JpaRepository<GetBillsForFr, In
 			"",nativeQuery=true)
 	
 	List<GetBillsForFr> getAllBillForManGrn(@Param("frId") int frId);
+	
+	
+	//New - from - to date
+	@Query(value=" SELECT t_bill_header.bill_no ,t_bill_header.invoice_no, t_bill_header.bill_date "
+			+ "FROM t_bill_header WHERE t_bill_header.fr_id =:frId AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate "
+			+ " AND t_bill_header.del_status=0 AND t_bill_header.status=2 ORDER BY  t_bill_header.bill_no DESC" + 
+			"",nativeQuery=true)
+	
+	List<GetBillsForFr> getBillForSelectedFrBetDate(@Param("frId") int frId, @Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
 }

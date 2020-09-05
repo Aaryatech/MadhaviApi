@@ -69,6 +69,7 @@ import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GenerateBillRepository;
 import com.ats.webapi.repository.GetBillDetailsRepository;
 import com.ats.webapi.repository.GetBillHeaderRepository;
+import com.ats.webapi.repository.GetBillsForFrRepository;
 import com.ats.webapi.repository.GetGrnItemConfigRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
 import com.ats.webapi.repository.GetReorderByStockTypeRepository;
@@ -450,6 +451,9 @@ public class RestApiController {
 
 	@Autowired
 	PostBillHeaderRepository postBillHeaderRepository;
+	
+	@Autowired
+	GetBillsForFrRepository getBillsForFrRepository;
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
 	public @ResponseBody Info changeAdminUserPass(@RequestBody User user) {
@@ -837,6 +841,19 @@ public class RestApiController {
 		GetBillsForFrList billsForFrLisr = getBillsForFrService.getBillForFrByDate(frId, bilDate);
 
 		System.out.println("GEt BillS for Fr by Bill Date " + billsForFrLisr.toString());
+
+		return billsForFrLisr;
+
+	}
+	
+	@RequestMapping(value = "/getBillsForFrByFromAndToDate", method = RequestMethod.POST)
+	public @ResponseBody GetBillsForFrList getBillsForFrByFromAndToDate(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+		GetBillsForFrList billsForFrLisr = new GetBillsForFrList();
+		
+		List<GetBillsForFr> data=getBillsForFrRepository.getBillForSelectedFrBetDate(frId,fromDate,toDate);
+		billsForFrLisr.setGetBillsForFr(data);
 
 		return billsForFrLisr;
 
@@ -1632,7 +1649,8 @@ public class RestApiController {
 
 	@RequestMapping(value = "/getBillHeaderForAllFr", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeaderForAllFr(@RequestParam("typeIdList") List<String> typeIdList,
-			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate, @RequestParam("configType") int configType) {
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("configType") int configType) {
 
 		GetBillHeaderList billHeaderList = null;
 		try {
@@ -1651,17 +1669,17 @@ public class RestApiController {
 				itmList = new ArrayList<Integer>();
 				itmList.add(0);
 				itmList.add(1);
-				//billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate, itmList);
-				
-				
+				// billHeaderList = getBillHeaderService.getBillHeaderForAllFr(fromDate, toDate,
+				// itmList);
+
 				GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFrAllNew(fromDate, toDate,itmList,configType);
+				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFrAllNew(fromDate, toDate,
+						itmList, configType);
 				if (billHeaders != null) {
 					getBillHeaderList.setGetBillHeaders(billHeaders);
 				}
-				
-				billHeaderList=getBillHeaderList;
-				
+
+				billHeaderList = getBillHeaderList;
 
 			} else if (typeIdList.contains("1") && typeIdList.contains("2") && listSize == 2) {
 
@@ -1700,16 +1718,17 @@ public class RestApiController {
 			} else {
 				System.err.println(" 3");
 
-				//billHeaderList = getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
-				
+				// billHeaderList =
+				// getBillHeaderService.getSaleReportBillwiseFrOutletType3(fromDate, toDate);
+
 				GetBillHeaderList getBillHeaderList = new GetBillHeaderList();
-				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr3New(fromDate, toDate,configType);
+				List<GetBillHeader> billHeaders = getBillHeaderRepository.getBillHeaderForAllFr3New(fromDate, toDate,
+						configType);
 				if (billHeaders != null) {
 					getBillHeaderList.setGetBillHeaders(billHeaders);
 				}
-				
-				billHeaderList=getBillHeaderList;
-				
+
+				billHeaderList = getBillHeaderList;
 
 			}
 		} catch (Exception e) {
@@ -5563,6 +5582,30 @@ public class RestApiController {
 
 	}
 
+	@RequestMapping(value = "/getSellBillHeaderNewPOS", method = RequestMethod.POST)
+	public @ResponseBody List<SellBillHeaderNew> getSellBillHeaderNewPOS(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId,
+			@RequestParam("configType") int configType) {
+
+		fromDate = Common.convertToYMD(fromDate);
+		toDate = Common.convertToYMD(toDate);
+
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<>();
+
+		if (configType == 0) {
+			getSellBillHeaderList = sellBillHeaderNewRepo.getPosViewSellBillAll(fromDate, toDate, frId);
+		} else if (configType == 1) {
+			getSellBillHeaderList = sellBillHeaderNewRepo.getPosViewSellBillPOS(fromDate, toDate, frId);
+		} else if (configType == 2) {
+			getSellBillHeaderList = sellBillHeaderNewRepo.getPosViewSellBillOnline(fromDate, toDate, frId);
+		}
+
+		// System.out.println("List Sell Bill Header**** // 28-10-2017 ganesh " +
+		// getSellBillHeaderList.toString());
+		return getSellBillHeaderList;
+
+	}
+
 	@Autowired
 	SellBillHeaderNewRepo sellBillHeaderNewRepo;
 
@@ -6187,7 +6230,7 @@ public class RestApiController {
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
 
-		List<SellBillHeaderNew> getSellBillHeaderList =new ArrayList<>();
+		List<SellBillHeaderNew> getSellBillHeaderList = new ArrayList<>();
 		System.err.println("CUST -----------" + custId);
 
 		if (configType == 0) {
@@ -6211,7 +6254,8 @@ public class RestApiController {
 			if (custId.contains("0")) {
 				getSellBillHeaderList = sellBillHeaderNewRepo.getAllCustSellReportForOnline(fromDate, toDate, frId);
 			} else {
-				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReportForOnline(fromDate, toDate, frId, custId);
+				getSellBillHeaderList = sellBillHeaderNewRepo.getCustSellReportForOnline(fromDate, toDate, frId,
+						custId);
 			}
 		}
 

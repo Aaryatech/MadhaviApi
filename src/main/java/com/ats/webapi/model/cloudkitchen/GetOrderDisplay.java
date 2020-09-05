@@ -112,6 +112,10 @@ public class GetOrderDisplay {
 	private String custWhatsApp;
 
 	private String orderDeliveredByName;
+	
+	private String deliveryDateDisplay;
+	private String deliveryTimeDisplay;
+	private String trailRemark;
 
 	public String getId() {
 		return id;
@@ -904,6 +908,34 @@ public class GetOrderDisplay {
 	public void setCustWhatsApp(String custWhatsApp) {
 		this.custWhatsApp = custWhatsApp;
 	}
+	
+	
+
+	public String getDeliveryDateDisplay() {
+		return deliveryDateDisplay;
+	}
+
+	public void setDeliveryDateDisplay(String deliveryDateDisplay) {
+		this.deliveryDateDisplay = deliveryDateDisplay;
+	}
+
+	public String getDeliveryTimeDisplay() {
+		return deliveryTimeDisplay;
+	}
+
+	public void setDeliveryTimeDisplay(String deliveryTimeDisplay) {
+		this.deliveryTimeDisplay = deliveryTimeDisplay;
+	}
+
+	public String getTrailRemark() {
+		return trailRemark;
+	}
+
+	public void setTrailRemark(String trailRemark) {
+		this.trailRemark = trailRemark;
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -937,7 +969,9 @@ public class GetOrderDisplay {
 				+ ", itemUom=" + itemUom + ", uomId=" + uomId + ", cityName=" + cityName + ", areaName=" + areaName
 				+ ", pincode=" + pincode + ", catId=" + catId + ", deliveryCharges=" + deliveryCharges
 				+ ", paymentSubMode=" + paymentSubMode + ", isAgent=" + isAgent + ", custPhone=" + custPhone
-				+ ", custWhatsApp=" + custWhatsApp + ", orderDeliveredByName=" + orderDeliveredByName + "]";
+				+ ", custWhatsApp=" + custWhatsApp + ", orderDeliveredByName=" + orderDeliveredByName
+				+ ", deliveryDateDisplay=" + deliveryDateDisplay + ", deliveryTimeDisplay=" + deliveryTimeDisplay
+				+ ", trailRemark=" + trailRemark + "]";
 	}
 
 }

@@ -561,9 +561,9 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            d.hsncd\n" + 
 			"        FROM\n" + 
 			"            tn_item_config_header h,\n" + 
-			"            tn_item_config_detail d\n" + 
+			"            tn_item_config_detail d, m_item i \n" + 
 			"        WHERE\n" + 
-			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType AND d.item_id=i.id AND i.del_status=0 AND i.item_is_used=1 \n" + 
 			"    ) t1\n" + 
 			"LEFT JOIN(\n" + 
 			"    SELECT\n" + 
@@ -668,7 +668,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            tn_item_config_detail d,\n" + 
 			"            m_item i\n" + 
 			"        WHERE\n" + 
-			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp1 = :catId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp1 = :catId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType AND i.item_is_used=1 \n" + 
 			"    ) t1\n" + 
 			"LEFT JOIN(\n" + 
 			"    SELECT\n" + 
@@ -774,7 +774,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            tn_item_config_detail d,\n" + 
 			"            m_item i\n" + 
 			"        WHERE\n" + 
-			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp2 = :subCatId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType \n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND i.item_grp2 = :subCatId AND h.fr_id = :frId AND d.status = 0 AND h.config_type = :configType AND i.item_is_used=1 \n" + 
 			"    ) t1\n" + 
 			"LEFT JOIN(\n" + 
 			"    SELECT\n" + 
@@ -882,7 +882,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 			"            tn_item_config_detail d,\n" + 
 			"            m_item i\n" + 
 			"        WHERE\n" + 
-			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND h.fr_id =:frId AND d.status = 0 AND h.config_type = :configType AND d.item_id IN(:itemList) \n" + 
+			"            h.item_config_id = d.item_config_id AND h.del_status = 0 AND d.is_active = 0 AND d.del_status = 0 AND i.id = d.item_id AND i.del_status = 0 AND h.fr_id =:frId AND d.status = 0 AND h.config_type = :configType AND d.item_id IN(:itemList) AND i.item_is_used=1 \n" + 
 			"    ) t1\n" + 
 			"LEFT JOIN(\n" + 
 			"    SELECT\n" + 

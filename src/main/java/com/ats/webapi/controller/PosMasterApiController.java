@@ -41,7 +41,7 @@ public class PosMasterApiController {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Exce in saving saveCustomer " + e.getMessage());
+			//System.err.println("Exce in saving saveCustomer " + e.getMessage());
 			e.printStackTrace();
 
 		}
@@ -54,7 +54,7 @@ public class PosMasterApiController {
 		try {
 			servicsList = customerRepo.findByDelStatusOrderByCustIdDesc(0);
 		} catch (Exception e) {
-			System.err.println("Exce in getAllServices " + e.getMessage());
+			//System.err.println("Exce in getAllServices " + e.getMessage());
 		}
 		return servicsList;
 	}
@@ -65,7 +65,7 @@ public class PosMasterApiController {
 		try {
 			servc = customerRepo.findByCustIdAndDelStatus(custId, 0);
 		} catch (Exception e) {
-			System.err.println("Exce in getServiceById" + e.getMessage());
+			//System.err.println("Exce in getServiceById" + e.getMessage());
 		}
 		return servc;
 	}
@@ -76,7 +76,7 @@ public class PosMasterApiController {
 		try {
 			servicsList = customerRepo.findByFrIdAndDelStatus(frId, 0);
 		} catch (Exception e) {
-			System.err.println("Exce in getServiceById" + e.getMessage());
+			//System.err.println("Exce in getServiceById" + e.getMessage());
 		}
 		return servicsList;
 	}
@@ -97,7 +97,7 @@ public class PosMasterApiController {
 			}
 		} catch (Exception e) {
 
-			System.err.println("Exce in deleteService  " + e.getMessage());
+			//System.err.println("Exce in deleteService  " + e.getMessage());
 			e.printStackTrace();
 			info.setError(true);
 		}
@@ -123,7 +123,7 @@ public class PosMasterApiController {
 			}
 		} catch (Exception e) {
 
-			System.err.println("Exce in updateCustAddressAndKm  " + e.getMessage());
+			//System.err.println("Exce in updateCustAddressAndKm  " + e.getMessage());
 			e.printStackTrace();
 			info.setError(true);
 		}
@@ -148,13 +148,24 @@ public class PosMasterApiController {
 			}
 		} catch (Exception e) {
 
-			System.err.println("Exce in updateAddressAndKmAndPincode  " + e.getMessage());
+			//System.err.println("Exce in updateAddressAndKmAndPincode  " + e.getMessage());
 			e.printStackTrace();
 			info.setError(true);
 		}
 
 		return info;
 
+	}
+	
+	@RequestMapping(value = { "/getCustomerByFrBill" }, method = RequestMethod.POST)
+	public @ResponseBody List<Customer> getCustomerByFrBill(@RequestParam int frId) {
+		List<Customer> servicsList = new ArrayList<Customer>();
+		try {
+			servicsList = customerRepo.getCustByFr(frId);
+		} catch (Exception e) {
+			//System.err.println("Exce in getServiceById" + e.getMessage());
+		}
+		return servicsList;
 	}
 	
 

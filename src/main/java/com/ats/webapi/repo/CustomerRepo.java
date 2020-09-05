@@ -25,6 +25,7 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 	int deleteCustomer(@Param("custId") int custId);
 
 	List<Customer> findByFrIdAndDelStatus(int frId, int i);
+	
 	@Query(value="select * from m_customer where phone_number=:phoneNo  and del_status=:i",nativeQuery=true)
 	List<Customer> findByPhoneNumberAndDelStatus(@Param("phoneNo")String phoneNo,@Param("i") int i);
 	
@@ -38,4 +39,11 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 	@Modifying
 	@Query(value="UPDATE m_customer SET address=:address, ex_var1=:km, ex_var2=:pincode  WHERE cust_id=:custId",nativeQuery=true)
 	int updateAddressAndKmAndPincode(@Param("address") String address,@Param("km") String km,@Param("pincode") String pincode,@Param("custId") int custId);
+
+	@Query(value="SELECT c.* FROM m_customer c WHERE c.del_status=0 AND c.cust_id IN(SELECT h.cust_id FROM t_sell_bill_header h WHERE h.fr_id=:frId)",nativeQuery=true)
+	List<Customer> getCustByFr(@Param("frId") int frId);
+	
+
+	
+
 }

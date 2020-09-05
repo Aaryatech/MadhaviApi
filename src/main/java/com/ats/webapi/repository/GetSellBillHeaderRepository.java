@@ -37,4 +37,7 @@ public interface GetSellBillHeaderRepository extends JpaRepository<GetSellBillHe
 	
 	List<GetSellBillHeader> getFrSellBillHeader(@Param("fromDate") String fromDate ,@Param("toDate") String toDate ,@Param("frId") List<String> frId);
 	
+	
+	
+	
 }

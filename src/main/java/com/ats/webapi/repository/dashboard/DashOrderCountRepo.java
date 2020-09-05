@@ -90,7 +90,7 @@ public interface DashOrderCountRepo extends JpaRepository<DashOrderCount, Intege
 			"    FROM\r\n" + 
 			"        tn_order_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND h.order_date BETWEEN :fromDate AND :toDate AND h.order_status = 6 AND h.fr_id = :frId\r\n" + 
+			"        h.del_status = 0 AND h.delivery_date BETWEEN :fromDate AND :toDate AND h.order_status = 6 AND h.fr_id = :frId\r\n" + 
 			") t7\r\n" + 
 			"ON\r\n" + 
 			"    t1.id = t7.id\r\n" + 
@@ -135,4 +135,37 @@ public interface DashOrderCountRepo extends JpaRepository<DashOrderCount, Intege
 			"    t1.id = t10.id",nativeQuery=true)
 	DashOrderCount getOrderDashCount(@Param("fromDate")String fromDate,@Param("toDate")String toDate,@Param("frId")int frId);
 
+	
+	@Query(value="SELECT\r\n" + 
+			"    t1.id,\r\n" + 
+			"    t2.pending,\r\n" + 
+			"    0 as accepted,\r\n" + 
+			"    0 as process,\r\n" + 
+			"    0 as delivery_pending,\r\n" + 
+			"    0 as delivered,\r\n" + 
+			"    0 as rejected,\r\n" + 
+			"    0 as returned,\r\n" + 
+			"    0 as cancelled,\r\n" + 
+			"    0 as cash_amt,\r\n" + 
+			"    0 as card_amt,\r\n" + 
+			"    0 as e_pay_amt\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"SELECT\r\n" + 
+			"    1 AS id\r\n" + 
+			") t1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        1 AS id,\r\n" + 
+			"        COUNT(*) AS pending\r\n" + 
+			"    FROM\r\n" + 
+			"        tn_order_header h\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.del_status = 0 AND h.order_status = 1 AND h.fr_id = :frId\r\n" + 
+			") t2\r\n" + 
+			"ON\r\n" + 
+			"    t1.id = t2.id ",nativeQuery=true)
+	DashOrderCount getOnlyPendingCountByFr(@Param("frId")int frId);
+
+	
 }

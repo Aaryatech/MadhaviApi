@@ -74,6 +74,10 @@ public class GetOrderHeaderDisplay {
 	private String custPhone;
 	private String custWhatsApp;
 
+	private String deliveryDateDisplay;
+	private String deliveryTimeDisplay;
+	private String trailRemark;
+
 	List<GetOrderDetailDisplay> orderDetailList;
 
 	public GetOrderHeaderDisplay() {
@@ -92,7 +96,8 @@ public class GetOrderHeaderDisplay {
 			String customerGstnNo, int deliveryType, int deliveryInstId, String deliveryInstText, float deliveryKm,
 			String custName, String cityName, String areaName, String pincode, float deliveryCharges,
 			int paymentSubMode, int isAgent, String orderDeliveredByName, String uuidNo, String custPhone,
-			String custWhatsApp, List<GetOrderDetailDisplay> orderDetailList) {
+			String custWhatsApp, String deliveryDateDisplay, String deliveryTimeDisplay, String trailRemark,
+			List<GetOrderDetailDisplay> orderDetailList) {
 		super();
 		this.orderId = orderId;
 		this.orderNo = orderNo;
@@ -160,6 +165,9 @@ public class GetOrderHeaderDisplay {
 		this.uuidNo = uuidNo;
 		this.custPhone = custPhone;
 		this.custWhatsApp = custWhatsApp;
+		this.deliveryDateDisplay = deliveryDateDisplay;
+		this.deliveryTimeDisplay = deliveryTimeDisplay;
+		this.trailRemark = trailRemark;
 	}
 
 	public int getOrderId() {
@@ -690,6 +698,30 @@ public class GetOrderHeaderDisplay {
 		this.custWhatsApp = custWhatsApp;
 	}
 
+	public String getDeliveryDateDisplay() {
+		return deliveryDateDisplay;
+	}
+
+	public void setDeliveryDateDisplay(String deliveryDateDisplay) {
+		this.deliveryDateDisplay = deliveryDateDisplay;
+	}
+
+	public String getDeliveryTimeDisplay() {
+		return deliveryTimeDisplay;
+	}
+
+	public void setDeliveryTimeDisplay(String deliveryTimeDisplay) {
+		this.deliveryTimeDisplay = deliveryTimeDisplay;
+	}
+
+	public String getTrailRemark() {
+		return trailRemark;
+	}
+
+	public void setTrailRemark(String trailRemark) {
+		this.trailRemark = trailRemark;
+	}
+
 	@Override
 	public String toString() {
 		return "GetOrderHeaderDisplay [orderId=" + orderId + ", orderNo=" + orderNo + ", orderDate=" + orderDate
@@ -711,8 +743,9 @@ public class GetOrderHeaderDisplay {
 				+ deliveryKm + ", custName=" + custName + ", cityName=" + cityName + ", areaName=" + areaName
 				+ ", pincode=" + pincode + ", deliveryCharges=" + deliveryCharges + ", paymentSubMode=" + paymentSubMode
 				+ ", isAgent=" + isAgent + ", orderDeliveredByName=" + orderDeliveredByName + ", uuidNo=" + uuidNo
-				+ ", custPhone=" + custPhone + ", custWhatsApp=" + custWhatsApp + ", orderDetailList=" + orderDetailList
-				+ "]";
+				+ ", custPhone=" + custPhone + ", custWhatsApp=" + custWhatsApp + ", deliveryDateDisplay="
+				+ deliveryDateDisplay + ", deliveryTimeDisplay=" + deliveryTimeDisplay + ", trailRemark=" + trailRemark
+				+ ", orderDetailList=" + orderDetailList + "]";
 	}
 
 }

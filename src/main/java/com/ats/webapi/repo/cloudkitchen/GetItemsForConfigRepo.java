@@ -47,7 +47,7 @@ public interface GetItemsForConfigRepo extends JpaRepository<GetItemsForConfig, 
 			"        m_item i,\r\n" + 
 			"        m_item_sup sup\r\n" + 
 			"    WHERE\r\n" + 
-			"        i.del_status = 0 AND sup.del_status = 0 AND i.id = sup.item_id AND d.item_id = i.id AND d.del_status = 0 AND d.is_used = 0\r\n" + 
+			"        i.del_status = 0 AND sup.del_status = 0 AND i.id = sup.item_id AND d.item_id = i.id AND d.del_status = 0 AND d.is_used = 0 AND i.item_is_used=1 \r\n" + 
 			") t1\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 

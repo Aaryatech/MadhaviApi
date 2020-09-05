@@ -203,6 +203,20 @@ public class NewOpsController {
 		}
 		return count;
 	}
+	
+	@RequestMapping(value = { "/getOnlyPendingOrderCountByFr" }, method = RequestMethod.POST)
+	public @ResponseBody DashOrderCount getOnlyPendingOrderCountByFr(@RequestParam int frId) {
+
+		DashOrderCount count = new DashOrderCount();
+
+		try {
+			count = dashOrderCountRepo.getOnlyPendingCountByFr(frId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 
 	// ------UPDATE FR EMPLOYEE TOKEN------------------
 	@RequestMapping(value = { "/updateFrEmpToken" }, method = RequestMethod.POST)

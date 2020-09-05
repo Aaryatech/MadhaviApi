@@ -83,7 +83,7 @@ public class PettyCashApiController {
 		try {
 			petty = pettyRepo.findByFrIdAndStatusLimit1(frId, 0);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return petty;
@@ -95,7 +95,7 @@ public class PettyCashApiController {
 		try {
 			pettyList = pettyRepo.findByFrIdAndStatus(frId, 0);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashList : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashList : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return pettyList;
@@ -113,9 +113,9 @@ public class PettyCashApiController {
 			pettyDao.setSellBillAdv(sellBillAdv);
 			pettyDao.setOtherBillAdv(otherBill);
 
-			System.out.println("Date----------------" + pettyDao.toString());
+		//	System.out.println("Date----------------" + pettyDao.toString());
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return pettyDao;
@@ -140,10 +140,10 @@ public class PettyCashApiController {
 				String fromDate =  sf.format(date);
 				String toDate =  sf.format(date);
 				
-				System.out.println("Cashhhhhhhhhhhhhh--------------"+cash);
+			//	System.out.println("Cashhhhhhhhhhhhhh--------------"+cash);
 				
 				PosDashCounts posDetails = getPosDashData(fromDate, toDate, frDetails.getFrId(), frDetails.getFrRateCat());
-				System.out.println("posDetails----------"+posDetails);
+				//System.out.println("posDetails----------"+posDetails);
 				
 				String msg = "Total summary for ("+frDetails.getFrCode()+") at ("+sf.format(date)+")\n" + 
 						"E-Pay - ("+posDetails.getEpayAmt()+")\n" + 
@@ -166,7 +166,7 @@ public class PettyCashApiController {
 				 }
 			}
 		} catch (Exception e) {
-			System.err.println("Exception in addPettyCash : " + e.getMessage());
+			//System.err.println("Exception in addPettyCash : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return cash;
@@ -178,7 +178,7 @@ public class PettyCashApiController {
 		try {
 			petty = pettyRepo.findByPettycashId(id);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return petty;
@@ -198,7 +198,7 @@ public class PettyCashApiController {
 				info.setMessage("fail");
 			}
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return info;
@@ -211,7 +211,7 @@ public class PettyCashApiController {
 		try {
 			pettyList = pettyRepo.findByFrIdAndStatusDateWise(frId, 0, fromDate, toDate);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashListDateWise : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashListDateWise : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return pettyList;
@@ -239,7 +239,7 @@ public class PettyCashApiController {
 		try {
 			empList = expressBillRepository.getPettyCashSellingAmt(fromTime, toTime, frId);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashSellAmt : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashSellAmt : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return empList;
@@ -255,7 +255,7 @@ public class PettyCashApiController {
 		try {
 			data = pettyCashHandRepo.getLastRecordFrmPettyCashHndOvr(frId, lastdate);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashHandOvrLastRecrd : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashHandOvrLastRecrd : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return data;
@@ -267,7 +267,7 @@ public class PettyCashApiController {
 		try {
 			cash = pettyCashHandRepo.save(cashHndOvr);
 		} catch (Exception e) {
-			System.err.println("Exception in savePettyCashHandOver : " + e.getMessage());
+			//System.err.println("Exception in savePettyCashHandOver : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return cash;
@@ -279,7 +279,7 @@ public class PettyCashApiController {
 		try {
 			list = pettyCashHandRepo.findByFrIdAndDelStatus(frId, 0);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashHandByFrid : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashHandByFrid : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
@@ -291,9 +291,9 @@ public class PettyCashApiController {
 		List<PettyCashHandover> list = new ArrayList<PettyCashHandover>();
 		try {
 			list = pettyCashHandRepo.findByFrIdAndDelStatusAndClosingDateBetween(frId, 0, fromDate, toDate);
-			System.err.println("List-----------" + list);
+			//System.err.println("List-----------" + list);
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashHandByFrid : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashHandByFrid : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
@@ -313,9 +313,9 @@ public class PettyCashApiController {
 		try {
 			list = frEmpRepo.findByFrIdAndDelStatus(frId, 0);
 			
-			System.err.println("List-----------" + list);
+			//System.err.println("List-----------" + list);
 		} catch (Exception e) {
-			System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());
+			//System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
@@ -328,9 +328,9 @@ public class PettyCashApiController {
 		try {
 			
 			list = frEmpRepo.findByFrId(frId);
-			System.err.println("List-----------" + list);
+		//	System.err.println("List-----------" + list);
 		} catch (Exception e) {
-			System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());
+		//	System.err.println("Exception in getAllFrEmpByFrid : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
@@ -343,9 +343,9 @@ public class PettyCashApiController {
 		try {
 			
 			list = frEmpRepo.findByFrIdAndDesignationAndDelStatus(frId, desig, 0);
-			System.err.println("List-----------" + list);
+		//	System.err.println("List-----------" + list);
 		} catch (Exception e) {
-			System.err.println("Exception in getAllFrEmpsByDesination : " + e.getMessage());
+		//	System.err.println("Exception in getAllFrEmpsByDesination : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return list;
@@ -359,7 +359,7 @@ public class PettyCashApiController {
 		try {
 			emp = frEmpRepo.findByFrEmpId(empId);
 		} catch (Exception e) {
-			System.err.println("Exception in getFrEmpByEmpId : " + e.getMessage());
+		//	System.err.println("Exception in getFrEmpByEmpId : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return emp;
@@ -384,7 +384,7 @@ public class PettyCashApiController {
 			}
 
 		} catch (Exception e) {
-			System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
+			//System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return frEmp;
@@ -403,7 +403,7 @@ public class PettyCashApiController {
 				info.setMessage("Fail");
 			}
 		} catch (Exception e) {
-			System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
+			//System.err.println("Exception in saveFrEmpDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return info;
@@ -414,19 +414,20 @@ public class PettyCashApiController {
 		Info info = new Info();
 		try {
 			FrEmpMaster emp = new FrEmpMaster();
+			//emp = frEmpRepo.findByFrIdAndFrEmpContactAndDelStatus(frId, mobNo, 0);
 			emp = frEmpRepo.findByFrIdAndFrEmpContactAndDelStatus(frId, mobNo, 0);
-			System.out.println("Emp-------" + emp);
+			//System.out.println("Emp-------" + emp);
 			if (emp != null) {
-				System.out.println("Contact No. Found");
+				//System.out.println("Contact No. Found");
 				info.setError(false);
 				info.setMessage("" + emp.getFrEmpId());
 			} else {
-				System.out.println("Contact No. Not Found");
+			//	System.out.println("Contact No. Not Found");
 				info.setError(true);
 				info.setMessage("0");
 			}
 		} catch (Exception e) {
-			System.err.println("Exception in checkUniqueContactNo : " + e.getMessage());
+		//	System.err.println("Exception in checkUniqueContactNo : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return info;
@@ -435,13 +436,13 @@ public class PettyCashApiController {
 	@RequestMapping(value = { "/getTrCashAmtAndAdvAmtAndExpAmt" }, method = RequestMethod.POST)
 	public GetCashAdvAndExpAmt getTrCashAmtAndAdvAmtAndExpAmt(int frId, String date) {
 		GetCashAdvAndExpAmt data = new GetCashAdvAndExpAmt();
-		System.err.println("PARAM------DATE---- " + date);
-		System.err.println("PARAM---------- " + frId + "---------------------------- " + date);
+		//System.err.println("PARAM------DATE---- " + date);
+	//	System.err.println("PARAM---------- " + frId + "---------------------------- " + date);
 		try {
 			data = getCashAdvAndExpAmtRepo.getAmt(frId, date);
-			System.err.println("AMT--------------" + data);
+			//System.err.println("AMT--------------" + data);
 		} catch (Exception e) {
-			System.err.println("Exception in getTrCashAmtAndAdvAmtAndExpAmt : " + e.getMessage());
+			//System.err.println("Exception in getTrCashAmtAndAdvAmtAndExpAmt : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return data;
@@ -454,7 +455,7 @@ public class PettyCashApiController {
 		try {
 			data = pettyCashHandRepo.getLastRecord(frId, lastdate);
 		} catch (Exception e) {
-			System.err.println("Exception in getLastCashHandover : " + e.getMessage());
+			//System.err.println("Exception in getLastCashHandover : " + e.getMessage());
 			e.printStackTrace();
 		}
 		return data;
@@ -492,7 +493,7 @@ public class PettyCashApiController {
 			pettyDao.setSellBillAdv(sellBillAdv);
 			pettyDao.setOtherBillAdv(otherBill);
 
-			System.out.println("Date----------------" + pettyDao.toString());
+			//System.out.println("Date----------------" + pettyDao.toString());
 
 			List<Float> spList = new ArrayList<>();
 
@@ -510,29 +511,29 @@ public class PettyCashApiController {
 				}
 			}
 
-			System.out.println("List1-------------" + spList);
+			//System.out.println("List1-------------" + spList);
 
 			float lastAdv = spList.get(1);
-			System.out.println("LastAdv-------------" + lastAdv);
+			//System.out.println("LastAdv-------------" + lastAdv);
 
 			float mrp = spList.get(2);
-			System.out.println("MRP-------------" + mrp);
+			//System.out.println("MRP-------------" + mrp);
 
 			float currentAdv = spList.get(3);
-			System.out.println("Today-------------" + currentAdv);
+			//System.out.println("Today-------------" + currentAdv);
 
 			float calAdv = mrp - currentAdv;
 			float amt = calAdv + lastAdv;
-			System.out.println("Total Adv-------------" + amt);
+			//System.out.println("Total Adv-------------" + amt);
 
 			float sellBillAdv1 = pettyDao.getSellBillAdv().getSellQtyMrp();
-			System.out.println("SellBillDetailAdv------------" + sellBillAdv1);
+			//System.out.println("SellBillDetailAdv------------" + sellBillAdv1);
 
 			float othrBilAdv = pettyDao.getOtherBillAdv().getBillDetailItemMrp();
-			System.out.println("OtherBillDetailAdv-----------" + othrBilAdv);
+			//System.out.println("OtherBillDetailAdv-----------" + othrBilAdv);
 
 			float cashAmt = amt + sellBillAdv1 + othrBilAdv;
-			System.out.println("Cash Amt-------------" + cashAmt);
+			//System.out.println("Cash Amt-------------" + cashAmt);
 
 			GetCashAdvAndExpAmt data = new GetCashAdvAndExpAmt();
 			data = getCashAdvAndExpAmtRepo.getAmt(frId, date);
@@ -542,7 +543,7 @@ public class PettyCashApiController {
 			
 
 		} catch (Exception e) {
-			System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
+			//System.err.println("Exception in getPettyCashDetails : " + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -559,7 +560,7 @@ public class PettyCashApiController {
 		try {
 			amt = getTotalAmtRepo.getTotalPOSCreditNoteAmt(frId, date);
 		} catch (Exception e) {
-			System.out.println("Exc in getTotalPOSCreditNoteAmt" + e.getMessage());
+			//System.out.println("Exc in getTotalPOSCreditNoteAmt" + e.getMessage());
 			e.printStackTrace();
 		}
 		return amt;
@@ -623,9 +624,9 @@ public class PettyCashApiController {
 		List<DashAdvanceOrderCounts> dailyList = new ArrayList<DashAdvanceOrderCounts>();
 		List<DashAdvanceOrderCounts> advOrderList = new ArrayList<DashAdvanceOrderCounts>();
 
-		System.err.println("PARAM ------ " + fromDate + "       " + toDate + "         " + frId);
+		//System.err.println("PARAM ------ " + fromDate + "       " + toDate + "         " + frId);
 
-		System.err.println("DashBoardReporApi data is " + fromDate + toDate + frId);
+		//System.err.println("DashBoardReporApi data is " + fromDate + toDate + frId);
 		try {
 			
 			try {
@@ -670,11 +671,11 @@ public class PettyCashApiController {
 				e.getMessage();
 			}
 			
-			System.err.println("DashBoardReporApi ***" + daseqe.toString());
+			//System.err.println("DashBoardReporApi ***" + daseqe.toString());
 			crnReport.setDailyMartList(dailyList);
 			crnReport.setAdvOrderList(advOrderList);
 
-			System.err.println("PURCHASE ====================== " + billCountpur);
+			//System.err.println("PURCHASE ====================== " + billCountpur);
 
 			GetTotalAmt getAdvAmt = getTotalAmtRepo.getTotalAmount(frId, fromDate, toDate);
 			float advAmt = 0;
@@ -748,11 +749,11 @@ public class PettyCashApiController {
 				crnReport.setExpenseAmt(Float.parseFloat(billCountch.getChAmt()));
 			}
 
-			System.err.println("DashBoardReporApi /getCredNoteReport" + crnReport.toString());
+			//System.err.println("DashBoardReporApi /getCredNoteReport" + crnReport.toString());
 
 		} catch (Exception e) {
 
-			System.err.println("Exception in DashBoardReporApi /getCredNoteReport" + e.getMessage());
+			//System.err.println("Exception in DashBoardReporApi /getCredNoteReport" + e.getMessage());
 
 			e.printStackTrace();
 		}
