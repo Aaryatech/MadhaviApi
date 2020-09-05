@@ -45,7 +45,7 @@ public interface RepFrItemwiseSellRepository extends JpaRepository<GetRepItemwis
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate AND d.cat_id IN(:catId)"
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 	List<GetRepItemwiseSell> getRepFrDateItemwiseSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
 
 	
@@ -53,14 +53,14 @@ public interface RepFrItemwiseSellRepository extends JpaRepository<GetRepItemwis
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate AND d.cat_id IN(:catId)"
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id AND h.ext_int2>0 GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id AND h.ext_int2>0 GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 	List<GetRepItemwiseSell> getRepFrDateItemwiseSellForOnline(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
 
 	@Query(value="select d.sell_bill_detail_no, d.item_id, h.fr_id, f.fr_name, t.item_name, c.cat_name, d.cat_id, h.bill_date, sum(d.qty) as qty, sum(d.disc_amt) as disc_amt, sum(d.disc_amt+d.ext_float1) as payable_amt,"
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate AND d.cat_id IN(:catId)"
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id AND h.ext_int2=0 GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id AND h.ext_int2=0 GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 	List<GetRepItemwiseSell> getRepFrDateItemwiseSellForPOS(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId, @Param("catId") List<String> catId);
 
 	  
@@ -98,7 +98,7 @@ public interface RepFrItemwiseSellRepository extends JpaRepository<GetRepItemwis
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate "
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 
 	List<GetRepItemwiseSell> getDateItemwiseSellReportByAllCat(@Param("fromDate")String fromDate,@Param("toDate") String toDate,@Param("frId") List<String> frId);
 
@@ -106,7 +106,7 @@ public interface RepFrItemwiseSellRepository extends JpaRepository<GetRepItemwis
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate "
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id AND h.ext_int2>0 GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id AND h.ext_int2>0 GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 
 	List<GetRepItemwiseSell> getDateItemwiseSellReportByAllCatForOnline(@Param("fromDate")String fromDate,@Param("toDate") String toDate,@Param("frId") List<String> frId);
 
@@ -114,7 +114,7 @@ public interface RepFrItemwiseSellRepository extends JpaRepository<GetRepItemwis
 			+" sum(d.mrp*d.qty) as amount from t_sell_bill_detail d, t_sell_bill_header h, m_category c,"
 			+" m_item t, m_franchisee f WHERE h.bill_date BETWEEN :fromDate AND :toDate "
 			+" AND c.cat_id=d.cat_id AND d.item_id=t.id AND h.sell_bill_no=d.sell_bill_no and h.del_status=0 AND h.fr_id IN(:frId) AND"
-			+" h.fr_id=f.fr_id AND h.ext_int2=0 GROUP BY h.bill_date, d.item_id, h.fr_id order by bill_date,t.item_name",nativeQuery=true)
+			+" h.fr_id=f.fr_id AND h.ext_int2=0 GROUP BY h.bill_date, d.item_id, h.fr_id order by t.item_name, h.bill_date desc",nativeQuery=true)
 
 	List<GetRepItemwiseSell> getDateItemwiseSellReportByAllCatForPOS(@Param("fromDate")String fromDate,@Param("toDate") String toDate,@Param("frId") List<String> frId);
 
