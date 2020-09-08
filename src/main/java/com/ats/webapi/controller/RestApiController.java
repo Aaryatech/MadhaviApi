@@ -62,6 +62,7 @@ import com.ats.webapi.repository.BillReceiptHeaderRepo;
 import com.ats.webapi.repository.BookedOrderMailedRepo;
 import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ConfigureFrListRepository;
+import com.ats.webapi.repository.CustListBtwnDateRepo;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FranchiseForDispatchRepository;
 import com.ats.webapi.repository.FranchiseSupRepository;
@@ -6408,6 +6409,18 @@ public class RestApiController {
 			errorMessage = new ErrorMessage();
 		}
 		return errorMessage;
+	}
+	
+@Autowired CustListBtwnDateRepo listRepo;
+	
+	@RequestMapping(value = "/getCustListBtwnDate", method = RequestMethod.POST)
+	public @ResponseBody List<CustListBtwenDate> getCustListBtwnDate(@RequestParam("fromDate") String fromDate, 
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
+		
+		List<CustListBtwenDate> list = listRepo.getCustomersBtenDates(fromDate, toDate, frId);
+		
+		return list;
+		
 	}
 
 }
