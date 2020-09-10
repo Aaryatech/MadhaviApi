@@ -22,6 +22,9 @@ public class SubCategoryRes {
     	@Column(name="del_status")
 	    private int delStatus;
     	
+    	@Column(name="prefix")
+	    private String prefix;
+    	
 		public int getSubCatId() {
 			return subCatId;
 		}
@@ -45,6 +48,17 @@ public class SubCategoryRes {
 		}
 		public void setDelStatus(int delStatus) {
 			this.delStatus = delStatus;
+		}
+		public String getPrefix() {
+			return prefix;
+		}
+		public void setPrefix(String prefix) {
+			this.prefix = prefix;
+		}
+		@Override
+		public String toString() {
+			return "SubCategoryRes [subCatId=" + subCatId + ", subCatName=" + subCatName + ", catId=" + catId
+					+ ", delStatus=" + delStatus + ", prefix=" + prefix + "]";
 		}
 	    
 	    

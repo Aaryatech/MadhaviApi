@@ -19,4 +19,8 @@ public interface SubCategoryResRepository extends JpaRepository<SubCategoryRes, 
 
 	SubCategoryRes findBySubCatId(int subCatId);
 
+	SubCategoryRes findByPrefixIgnoreCase(String prefix);
+	
+	SubCategoryRes findByPrefixIgnoreCaseAndSubCatIdNot(String prefix, int subCatId);
+	
 }

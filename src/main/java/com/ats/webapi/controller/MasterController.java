@@ -422,6 +422,34 @@ public class MasterController {
 		return getSubCategoryRes;
 
 	}
+	
+	
+	
+	@RequestMapping(value = { "/getSubCatByPrefix" }, method = RequestMethod.POST)
+	public @ResponseBody ErrorMessage getSubCatByPrefix(@RequestParam("prefix") String prefix, @RequestParam("subCatId") int subCatId) {
+
+		ErrorMessage res = new ErrorMessage();
+		try {
+			SubCategoryRes value = new SubCategoryRes();
+			if(subCatId==0) {
+			  value = subCategoryResRepository.findByPrefixIgnoreCase(prefix);
+			}else {
+				value = subCategoryResRepository.findByPrefixIgnoreCaseAndSubCatIdNot(prefix, subCatId);
+			}
+			if(value!=null) {
+				res.setError(false);
+				res.setMessage("Prefix Found");
+			}else {
+				res.setError(true);
+				res.setMessage("Prefix Not  Found");
+			}
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		return res;
+
+	}
 
 	// ----------------------------SAVE SpCake Sup---------------------------
 	@RequestMapping(value = { "/saveSpCakeSup" }, method = RequestMethod.POST)
