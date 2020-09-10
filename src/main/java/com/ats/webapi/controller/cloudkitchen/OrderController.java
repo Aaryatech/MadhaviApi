@@ -452,7 +452,7 @@ public class OrderController {
 			List<GetOrderDisplay> res = getOrderDisplayRepo.getAllOrdersByDeliveryBoyAndStatusAndDate(fromDate,toDate,empId, status);
 
 			if (res != null) {
-
+					
 				Set<Integer> setOrderIds = new HashSet<Integer>();
 				for (GetOrderDisplay order : res) {
 					setOrderIds.add(order.getOrderId());

@@ -176,7 +176,7 @@ public class NewOpsController {
 				System.err.println("ID ============================== " + id);
 				if (id == 0) {
 
-					// SMSUtility.sendAddCustomerSMS("91"+service.getPhoneNumber());
+					SMSUtility.sendAddCustomerSMS("91"+service.getPhoneNumber());
 
 				}
 			}
