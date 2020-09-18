@@ -43,7 +43,9 @@ public interface CustomerRepo extends JpaRepository<Customer,Integer> {
 	@Query(value="SELECT c.* FROM m_customer c WHERE c.del_status=0 AND c.cust_id IN(SELECT h.cust_id FROM t_sell_bill_header h WHERE h.fr_id=:frId)",nativeQuery=true)
 	List<Customer> getCustByFr(@Param("frId") int frId);
 	
-
+	@Query(value="select * from m_customer where del_status=0 AND added_from_type IN(:type) ORDER BY cust_name",nativeQuery=true)
+	List<Customer> getCustByAddedType(@Param("type") List<Integer> type);
+	
 	
 
 }

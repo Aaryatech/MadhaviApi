@@ -35,7 +35,7 @@ public interface DashOrderCountRepo extends JpaRepository<DashOrderCount, Intege
 			"    FROM\r\n" + 
 			"        tn_order_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.del_status = 0 AND h.order_status = 1 AND h.fr_id = :frId\r\n" + 
+			"        h.del_status = 0 AND h.order_status=1 AND h.fr_id = :frId\r\n" + 
 			") t2\r\n" + 
 			"ON\r\n" + 
 			"    t1.id = t2.id\r\n" + 

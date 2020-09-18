@@ -29,6 +29,7 @@ import com.ats.webapi.commons.Firebase;
 import com.ats.webapi.model.AllMenus;
 import com.ats.webapi.model.CategoryList;
 import com.ats.webapi.model.ConfigureFranchisee;
+import com.ats.webapi.model.Customer;
 import com.ats.webapi.model.ErrorMessage;
 import com.ats.webapi.model.Flavour;
 import com.ats.webapi.model.FlavourConf;
@@ -66,6 +67,7 @@ import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tray.TrayType;
+import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.ItemDepartmentRepo;
 import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repository.ConfigureFrRepository;
@@ -201,9 +203,12 @@ public class MasterController {
 
 	@Autowired
 	ItemDepartmentRepo itemDepartmentRepo;
-	
+
 	@Autowired
 	PettyCashManagmtRepo pettyCashManagmtRepo;
+
+	@Autowired
+	CustomerRepo customerRepo;
 
 	@RequestMapping(value = "/getOtherItemsByCatIdAndFrId", method = RequestMethod.POST)
 	public @ResponseBody List<Item> getOtherItemsByCatIdAndFrId(@RequestParam int frId) {
@@ -213,7 +218,7 @@ public class MasterController {
 		return items;
 
 	}
-	
+
 	@RequestMapping(value = "/getOtherItemsByCatId", method = RequestMethod.GET)
 	public @ResponseBody List<Item> getOtherItemsByCatId() {
 
@@ -422,29 +427,28 @@ public class MasterController {
 		return getSubCategoryRes;
 
 	}
-	
-	
-	
+
 	@RequestMapping(value = { "/getSubCatByPrefix" }, method = RequestMethod.POST)
-	public @ResponseBody ErrorMessage getSubCatByPrefix(@RequestParam("prefix") String prefix, @RequestParam("subCatId") int subCatId) {
+	public @ResponseBody ErrorMessage getSubCatByPrefix(@RequestParam("prefix") String prefix,
+			@RequestParam("subCatId") int subCatId) {
 
 		ErrorMessage res = new ErrorMessage();
 		try {
 			SubCategoryRes value = new SubCategoryRes();
-			if(subCatId==0) {
-			  value = subCategoryResRepository.findByPrefixIgnoreCase(prefix);
-			}else {
+			if (subCatId == 0) {
+				value = subCategoryResRepository.findByPrefixIgnoreCase(prefix);
+			} else {
 				value = subCategoryResRepository.findByPrefixIgnoreCaseAndSubCatIdNot(prefix, subCatId);
 			}
-			if(value!=null) {
+			if (value != null) {
 				res.setError(false);
 				res.setMessage("Prefix Found");
-			}else {
+			} else {
 				res.setError(true);
 				res.setMessage("Prefix Not  Found");
 			}
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 		return res;
@@ -1632,7 +1636,7 @@ public class MasterController {
 		return res;
 
 	}
-	
+
 	@RequestMapping(value = { "/getFrById" }, method = RequestMethod.POST)
 	public @ResponseBody Franchisee getFrById(@RequestParam("frId") int frId) {
 
@@ -1640,13 +1644,26 @@ public class MasterController {
 
 		return fr;
 	}
-	
+
 	@RequestMapping(value = { "/deletePettyCashData" }, method = RequestMethod.POST)
 	public @ResponseBody int deletePettyCashData(@RequestParam("id") int id) {
 
 		int res = pettyCashManagmtRepo.deletePettyCashDataById(id);
 
 		return res;
+	}
+
+	// --Customer--
+	@RequestMapping(value = "/getCustListByAddedType", method = RequestMethod.POST)
+	public @ResponseBody List<Customer> getCustListByAddedType(@RequestParam List<Integer> type) {
+
+		List<Customer> list = customerRepo.getCustByAddedType(type);
+		if (list == null) {
+			list = new ArrayList<>();
+		}
+
+		return list;
+
 	}
 
 }
