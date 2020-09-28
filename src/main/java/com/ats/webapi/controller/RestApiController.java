@@ -1470,7 +1470,15 @@ public class RestApiController {
 	public @ResponseBody SellBillHeader sellBillData(@RequestBody SellBillHeader sellBillHeader)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
 
+		/*
+		 * String rOff=sellBillHeader.getExtVar2(); float roundOff=0; if(rOff!=null) {
+		 * try { roundOff=Float.parseFloat(rOff); }catch(Exception e) {} }
+		 * sellBillHeader.setExtFloat1(roundOff);
+		 */
+		
 		System.out.println("Data for insert  " + sellBillHeader.toString());
+		
+		System.out.println("Data for insert  ROUND OFF-----------------> " + sellBillHeader.getExtFloat1());
 
 		SellBillHeader jsonSellBillHeader;
 		// List<SellBillDetail> jsonBillDetail;

@@ -110,13 +110,13 @@ public class SellBillHeader implements Serializable {
 	private int extInt2;
 
 	@Column(name = "ext_float1")
-	private int extFloat1;
+	private float extFloat1;
 
 	@Column(name = "ext_float2")
-	private int extFloat2;
+	private float extFloat2;
 
 	@Column(name = "ext_float3")
-	private int extFloat3;
+	private float extFloat3;
 
 	@Column(name = "ext_var1")
 	private String extVar1;
@@ -132,11 +132,11 @@ public class SellBillHeader implements Serializable {
 		this.extVar1 = extVar1;
 	}
 
-	public int getExtFloat1() {
+	public float getExtFloat1() {
 		return extFloat1;
 	}
 
-	public void setExtFloat1(int extFloat1) {
+	public void setExtFloat1(float extFloat1) {
 		this.extFloat1 = extFloat1;
 	}
 
@@ -402,7 +402,7 @@ public class SellBillHeader implements Serializable {
 		this.extVar2 = extVar2;
 	}
 
-	public int getExtFloat2() {
+	public float getExtFloat2() {
 		return extFloat2;
 	}
 
@@ -410,7 +410,7 @@ public class SellBillHeader implements Serializable {
 		this.extFloat2 = extFloat2;
 	}
 
-	public int getExtFloat3() {
+	public float getExtFloat3() {
 		return extFloat3;
 	}
 

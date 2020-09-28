@@ -30,6 +30,7 @@ import com.ats.webapi.model.AllMenus;
 import com.ats.webapi.model.CategoryList;
 import com.ats.webapi.model.ConfigureFranchisee;
 import com.ats.webapi.model.Customer;
+import com.ats.webapi.model.CustomerSaleReport;
 import com.ats.webapi.model.ErrorMessage;
 import com.ats.webapi.model.Flavour;
 import com.ats.webapi.model.FlavourConf;
@@ -68,6 +69,7 @@ import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tray.TrayType;
 import com.ats.webapi.repo.CustomerRepo;
+import com.ats.webapi.repo.CustomerSaleReportRepo;
 import com.ats.webapi.repo.ItemDepartmentRepo;
 import com.ats.webapi.repo.PettyCashManagmtRepo;
 import com.ats.webapi.repository.ConfigureFrRepository;
@@ -1658,6 +1660,22 @@ public class MasterController {
 	public @ResponseBody List<Customer> getCustListByAddedType(@RequestParam List<Integer> type) {
 
 		List<Customer> list = customerRepo.getCustByAddedType(type);
+		if (list == null) {
+			list = new ArrayList<>();
+		}
+
+		return list;
+
+	}
+
+	@Autowired
+	CustomerSaleReportRepo customerSaleReportRepo;
+
+	@RequestMapping(value = "/getCustListByAddedTypeForSale", method = RequestMethod.POST)
+	public @ResponseBody List<CustomerSaleReport> getCustListByAddedTypeForSale(@RequestParam List<Integer> type,
+			@RequestParam List<Integer> frId, @RequestParam String fromDate, @RequestParam String toDate) {
+
+		List<CustomerSaleReport> list = customerSaleReportRepo.getCustByAddedTypeAndFr(type, frId, fromDate, toDate);
 		if (list == null) {
 			list = new ArrayList<>();
 		}

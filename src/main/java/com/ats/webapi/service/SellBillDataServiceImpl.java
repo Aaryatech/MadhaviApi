@@ -28,7 +28,9 @@ public class SellBillDataServiceImpl implements SellBillDataService {
 
 			sellBillHeaderRes = sellBillHeaderRepository.save(sellBillHeader);
 			if (sellBillHeaderRes != null) {
-				int res = sellBillHeaderRepository.updateRoundOff(sellBillHeaderRes.getSellBillNo());
+				if (sellBillHeaderRes.getExtInt2() == 0) {
+					int res = sellBillHeaderRepository.updateRoundOff(sellBillHeaderRes.getSellBillNo());
+				}
 			}
 
 			int sellBillNo = sellBillHeaderRes.getSellBillNo();
