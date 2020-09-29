@@ -21,7 +21,9 @@ import com.ats.webapi.model.Item;
 import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.MCategory;
 import com.ats.webapi.model.SubCategory;
+import com.ats.webapi.model.cust.AddCustemerResponse;
 import com.ats.webapi.model.dashboard.DashOrderCount;
+import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.posdashboard.BillTransactionDetailDashCount;
 import com.ats.webapi.repo.CustomerRepo;
 import com.ats.webapi.repo.FrEmpMasterRepo;
@@ -29,6 +31,7 @@ import com.ats.webapi.repo.cloudkitchen.FrConfigRepo;
 import com.ats.webapi.repo.posdashboard.BillTransactionDetailDashCountRepo;
 import com.ats.webapi.repository.CategoryRepository;
 import com.ats.webapi.repository.ItemRepository;
+import com.ats.webapi.repository.NewSettingRepository;
 import com.ats.webapi.repository.SubCategoryRepository;
 import com.ats.webapi.repository.dashboard.DashOrderCountRepo;
 
@@ -55,6 +58,12 @@ public class NewOpsController {
 
 	@Autowired
 	FrEmpMasterRepo frEmpMasterRepo;
+
+	@Autowired
+	NewSettingRepository newSettingRepository;
+
+	@Autowired
+	CustomerRepo cust;
 
 	@RequestMapping(value = { "/findAllOnlyCategoryPOS" }, method = RequestMethod.POST)
 	public @ResponseBody CategoryList findAllOnlyCategoryPOS(@RequestParam int frId, @RequestParam int configType) {
@@ -170,13 +179,38 @@ public class NewOpsController {
 
 		int id = service.getCustId();
 
+		if (id == 0) {
+			int cityId = 0, langId = 0;
+			try {
+				FrConfig config = frConfigRepo.findBydelStatusAndFrId(0, service.getFrId());
+				if (config != null) {
+					String[] cityStr = config.getCityIds().split(",");
+					cityId = Integer.parseInt(cityStr[0]);
+				}
+			} catch (Exception e) {
+			}
+
+			serv.setCityId(cityId);
+
+			try {
+
+				NewSetting newSetting = newSettingRepository.findBySettingKeyAndDelStatus("POS_default_lang_id", 0);
+				if (newSetting != null) {
+					langId = Integer.parseInt(newSetting.getSettingValue1());
+				}
+			} catch (Exception e) {
+			}
+
+			serv.setLangId(langId);
+		}
+
 		try {
 			serv = customerRepo.saveAndFlush(service);
 			if (serv != null) {
 				System.err.println("ID ============================== " + id);
 				if (id == 0) {
 
-					SMSUtility.sendAddCustomerSMS("91"+service.getPhoneNumber());
+					SMSUtility.sendAddCustomerSMS("91" + service.getPhoneNumber());
 
 				}
 			}
@@ -187,6 +221,82 @@ public class NewOpsController {
 
 		}
 		return serv;
+	}
+
+	@RequestMapping(value = { "/saveCustomerPOSNew" }, method = RequestMethod.POST)
+	public @ResponseBody AddCustemerResponse saveCustomerPOSNew(@RequestBody Customer service) {
+
+		AddCustemerResponse info = new AddCustemerResponse();
+
+		List<Customer> emp = new ArrayList<Customer>();
+		emp = cust.findByPhoneNumberAndDelStatus(service.getPhoneNumber(), 0);
+		if (emp != null) {
+			if (emp.size() == 0) {
+
+				Customer serv = new Customer();
+				int id = service.getCustId();
+
+				if (id == 0) {
+					int cityId = 0, langId = 0;
+					try {
+						FrConfig config = frConfigRepo.findBydelStatusAndFrId(0, service.getFrId());
+						if (config != null) {
+							String[] cityStr = config.getCityIds().split(",");
+							cityId = Integer.parseInt(cityStr[0]);
+						}
+					} catch (Exception e) {
+					}
+
+					serv.setCityId(cityId);
+
+					try {
+
+						NewSetting newSetting = newSettingRepository.findBySettingKeyAndDelStatus("POS_default_lang_id",
+								0);
+						if (newSetting != null) {
+							langId = Integer.parseInt(newSetting.getSettingValue1());
+						}
+					} catch (Exception e) {
+					}
+
+					serv.setLangId(langId);
+				}
+
+				try {
+					serv = customerRepo.saveAndFlush(service);
+					if (serv != null) {
+						// System.err.println("ID ============================== " + id);
+						if (id == 0) {
+							SMSUtility.sendAddCustomerSMS("91" + service.getPhoneNumber());
+						}
+					}
+
+				} catch (Exception e) {
+					// System.err.println("Exce in saving saveCustomer " + e.getMessage());
+					e.printStackTrace();
+				}
+
+				info.setError(false);
+				info.setAddCustomerId(serv.getCustId());
+				info.setMsg("Customer Added Successfully");
+
+			} else {
+				info.setError(true);
+				info.setAddCustomerId(0);
+				info.setMsg("Mobile Number Already Exists!");
+
+			}
+		} else {
+			info.setError(true);
+			info.setAddCustomerId(0);
+			info.setMsg("Unable to save!");
+		}
+
+		List<Customer> custList = new ArrayList<Customer>();
+		custList = customerRepo.findByDelStatusOrderByCustIdDesc(0);
+		info.setCustomerList(custList);
+
+		return info;
 	}
 
 	@RequestMapping(value = { "/getDashOrderCount" }, method = RequestMethod.POST)
@@ -203,7 +313,7 @@ public class NewOpsController {
 		}
 		return count;
 	}
-	
+
 	@RequestMapping(value = { "/getOnlyPendingOrderCountByFr" }, method = RequestMethod.POST)
 	public @ResponseBody DashOrderCount getOnlyPendingOrderCountByFr(@RequestParam int frId) {
 
