@@ -179,46 +179,18 @@ public class NewOpsController {
 
 		int id = service.getCustId();
 
-		if (id == 0) {
-			int cityId = 0, langId = 0;
-			try {
-				FrConfig config = frConfigRepo.findBydelStatusAndFrId(0, service.getFrId());
-				if (config != null) {
-					String[] cityStr = config.getCityIds().split(",");
-					cityId = Integer.parseInt(cityStr[0]);
-				}
-			} catch (Exception e) {
-			}
-
-			serv.setCityId(cityId);
-
-			try {
-
-				NewSetting newSetting = newSettingRepository.findBySettingKeyAndDelStatus("POS_default_lang_id", 0);
-				if (newSetting != null) {
-					langId = Integer.parseInt(newSetting.getSettingValue1());
-				}
-			} catch (Exception e) {
-			}
-
-			serv.setLangId(langId);
-		}
-
 		try {
 			serv = customerRepo.saveAndFlush(service);
 			if (serv != null) {
 				System.err.println("ID ============================== " + id);
 				if (id == 0) {
-
 					SMSUtility.sendAddCustomerSMS("91" + service.getPhoneNumber());
-
 				}
 			}
 
 		} catch (Exception e) {
 			System.err.println("Exce in saving saveCustomer " + e.getMessage());
 			e.printStackTrace();
-
 		}
 		return serv;
 	}
@@ -227,58 +199,44 @@ public class NewOpsController {
 	public @ResponseBody AddCustemerResponse saveCustomerPOSNew(@RequestBody Customer service) {
 
 		AddCustemerResponse info = new AddCustemerResponse();
+		
+		System.err.println("IN saveCustomerPOSNew");
 
 		List<Customer> emp = new ArrayList<Customer>();
 		emp = cust.findByPhoneNumberAndDelStatus(service.getPhoneNumber(), 0);
+		System.err.println("CHECKED MOBILE NO ---------");
+
+		
 		if (emp != null) {
 			if (emp.size() == 0) {
 
 				Customer serv = new Customer();
 				int id = service.getCustId();
 
-				if (id == 0) {
-					int cityId = 0, langId = 0;
-					try {
-						FrConfig config = frConfigRepo.findBydelStatusAndFrId(0, service.getFrId());
-						if (config != null) {
-							String[] cityStr = config.getCityIds().split(",");
-							cityId = Integer.parseInt(cityStr[0]);
-						}
-					} catch (Exception e) {
-					}
-
-					serv.setCityId(cityId);
-
-					try {
-
-						NewSetting newSetting = newSettingRepository.findBySettingKeyAndDelStatus("POS_default_lang_id",
-								0);
-						if (newSetting != null) {
-							langId = Integer.parseInt(newSetting.getSettingValue1());
-						}
-					} catch (Exception e) {
-					}
-
-					serv.setLangId(langId);
-				}
-
 				try {
 					serv = customerRepo.saveAndFlush(service);
-					if (serv != null) {
-						// System.err.println("ID ============================== " + id);
-						if (id == 0) {
-							SMSUtility.sendAddCustomerSMS("91" + service.getPhoneNumber());
-						}
-					}
+					System.err.println("CUST SAVED ----------");
+
+//					if (serv != null) {
+//						if (id == 0) {
+//							SMSUtility.sendAddCustomerSMS("91" + service.getPhoneNumber());
+//							System.err.println("SMS API ------------");
+//
+//						}
+//					}
 
 				} catch (Exception e) {
-					// System.err.println("Exce in saving saveCustomer " + e.getMessage());
 					e.printStackTrace();
 				}
 
 				info.setError(false);
 				info.setAddCustomerId(serv.getCustId());
+				info.setCust(serv);
 				info.setMsg("Customer Added Successfully");
+				
+				//info.setCustomerList(customerRepo.findByDelStatusOrderByCustIdDesc(0));
+				System.err.println("CUST LIST -----------");
+
 
 			} else {
 				info.setError(true);
@@ -291,10 +249,6 @@ public class NewOpsController {
 			info.setAddCustomerId(0);
 			info.setMsg("Unable to save!");
 		}
-
-		List<Customer> custList = new ArrayList<Customer>();
-		custList = customerRepo.findByDelStatusOrderByCustIdDesc(0);
-		info.setCustomerList(custList);
 
 		return info;
 	}

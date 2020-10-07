@@ -126,6 +126,10 @@ public class PosApiController {
 			res = sellBillDataForPrintRepo.getBillHeaderByOrderId(orderId);
 			if (res == null) {
 				res = new SellBillDataForPrint();
+			}else {
+				
+				String delInstTxt=sellBillDataForPrintRepo.getDeliveryInstByOrder(orderId);
+				res.setExtVar2(delInstTxt);
 			}
 
 			List<SellBillDetailForPos> list = sellBillDetailForPosRepository

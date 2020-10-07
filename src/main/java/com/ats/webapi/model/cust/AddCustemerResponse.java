@@ -7,6 +7,7 @@ import com.ats.webapi.model.Customer;
 public class AddCustemerResponse {
 
 	private int addCustomerId;
+	private Customer cust;
 	private List<Customer> customerList;
 	private boolean error;
 	private String msg;
@@ -43,10 +44,18 @@ public class AddCustemerResponse {
 		this.msg = msg;
 	}
 
+	public Customer getCust() {
+		return cust;
+	}
+
+	public void setCust(Customer cust) {
+		this.cust = cust;
+	}
+
 	@Override
 	public String toString() {
-		return "AddCustemerResponse [addCustomerId=" + addCustomerId + ", customerList=" + customerList + ", error="
-				+ error + "]";
+		return "AddCustemerResponse [addCustomerId=" + addCustomerId + ", cust=" + cust + ", customerList="
+				+ customerList + ", error=" + error + ", msg=" + msg + "]";
 	}
 
 }

@@ -51,4 +51,8 @@ public interface SellBillDataForPrintRepo extends JpaRepository<SellBillDataForP
 			"    bh.ext_int2 = :orderId AND bh.ext_int2 = oh.order_id AND bh.cust_id=c.cust_id AND oh.cust_id=c.cust_id AND bh.ext_int1=e.fr_emp_id ",nativeQuery=true)
 	SellBillDataForPrint getBillHeaderByOrderId(@Param("orderId") int orderId);
 	
+	
+	@Query(value="SELECT COALESCE(delivery_inst_text,'') FROM tn_order_header WHERE order_id=:orderId ",nativeQuery=true)
+	String getDeliveryInstByOrder(@Param("orderId") int orderId);
+	
 }
