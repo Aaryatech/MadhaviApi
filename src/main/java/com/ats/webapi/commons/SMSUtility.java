@@ -22,7 +22,7 @@ public class SMSUtility {
 
 			map.add("APIKEY", "pJMAaVPuGbh");
 			map.add("MobileNo", phoneNo);
-			map.add("SenderID", "MADHVI");
+			map.add("SenderID", "MDVDRY");//MADHVI
 			map.add("Message", msg);
 			map.add("ServiceName", "TEMPLATE_BASED");
 			String sms = restTemplate.postForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx", map,
