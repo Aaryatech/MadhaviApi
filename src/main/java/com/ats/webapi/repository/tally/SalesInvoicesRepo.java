@@ -1187,8 +1187,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"d.sgst_rs AS sgst,\r\n" + 
 			"d.igst_rs AS igst,\r\n" + 
 			"0 AS other_ledger,\r\n" + 
-			"CASE WHEN h.is_dairy_mart = 2 THEN 'Dairy Mart' ELSE CASE WHEN h.ex_varchar2 = 1 THEN 'Delivery Challan' ELSE 'Franchise Bill'\r\n" + 
-			"    END\r\n" + 
+			"CASE WHEN h.is_dairy_mart = 2 THEN 'Dairy Mart' ELSE 'Purchase Bill'\r\n" + 
 			"END AS account_type,\r\n" + 
 			"ROUND(\r\n" + 
 			"    ROUND(\r\n" + 
@@ -1205,7 +1204,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    m_item_sup sup,\r\n" + 
 			"    m_franchisee f\r\n" + 
 			"WHERE\r\n" + 
-			"    h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND d.item_id = i.id AND i.id = sup.item_id AND c.comp_id = 1 AND h.tally_sync = 0 AND h.fr_id = f.fr_id AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = :frId\r\n" + 
+			"    h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND d.item_id = i.id AND i.id = sup.item_id AND c.comp_id = 1 AND h.tally_sync = 0 AND h.fr_id = f.fr_id AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = :frId AND h.is_dairy_mart != 2\r\n" + 
 			"ORDER BY\r\n" + 
 			"    h.bill_no\r\n" + 
 			") a\r\n" + 
@@ -1236,7 +1235,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_bill_detail d,\r\n" + 
 			"        t_bill_header h\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = :frId\r\n" + 
+			"        h.bill_no = d.bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = :frId AND h.is_dairy_mart != 2\r\n" + 
 			"    GROUP BY\r\n" + 
 			"        d.bill_no\r\n" + 
 			") b\r\n" + 
@@ -1328,7 +1327,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                f.fr_code AS account_type\r\n" + 
+			"                'Sale Bill' AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
@@ -1585,7 +1584,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                f.fr_code AS account_type\r\n" + 
+			"                'Sale Bill' AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
@@ -1842,7 +1841,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                f.fr_code AS account_type\r\n" + 
+			"                'Sale Bill' AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
