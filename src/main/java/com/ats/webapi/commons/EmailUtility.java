@@ -230,8 +230,19 @@ public class EmailUtility {
 			String message = msg;
 			String mob = phoneNo.trim();
 		
-			String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
+			//String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
 		
+			
+			map.add("APIKEY", "pJMAaVPuGbh");
+			map.add("MobileNo", phoneNo);
+			map.add("SenderID", "MDVDRY");//MADHVI
+			map.add("Message", msg);
+			map.add("ServiceName", "TEMPLATE_BASED");
+			
+			String sms = restTemplate.postForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx", map,
+					String.class);
+			
+			
 			info.setError(false);
 			info.setMessage(sms);
 		  
@@ -259,7 +270,17 @@ public class EmailUtility {
 			String message = msg;
 			String mob = phoneNo.trim();
 		
-			String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
+			
+			map.add("APIKEY", "pJMAaVPuGbh");
+			map.add("MobileNo", phoneNo);
+			map.add("SenderID", "MDVDRY");//MADHVI
+			map.add("Message", msg);
+			map.add("ServiceName", "TEMPLATE_BASED");
+			
+			String sms = restTemplate.postForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx", map,
+					String.class);
+			
+			//String sms = restTemplate.getForObject("https://smsapi.24x7sms.com/api_2.0/SendSMS.aspx?APIKEY=pJMAaVPuGbh&MobileNo="+mob+"&SenderID=MADHVI&Message="+message+"&ServiceName=TEMPLATE_BASED", String.class);
 		
 			info.setError(false);
 			info.setMessage(sms);
@@ -387,7 +408,7 @@ public class EmailUtility {
 		
 	}
 
-	public static Info send(String frMob, Formatter f) {
+	public static Info send11(String frMob, Formatter f) {
 		
 		Info info=new Info();
 		
