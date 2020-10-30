@@ -21,10 +21,74 @@ public interface StockCalculationRepository extends JpaRepository<RegularSpecial
 	
 	
 
-	@Query(value = "SELECT COALESCE(SUM(CASE WHEN bill_stock_type = 1 THEN qty ELSE 0 END),0) as reg , COALESCE(SUM(CASE WHEN bill_stock_type = 2 THEN qty ELSE 0 END),0) as sp FROM t_sell_bill_detail WHERE t_sell_bill_detail.item_id =:itemId AND "
-			+ "t_sell_bill_detail.sell_bill_no IN (SELECT t_sell_bill_header.sell_bill_no FROM t_sell_bill_header WHERE t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate)", nativeQuery = true)
+//	@Query(value = "SELECT COALESCE(SUM(CASE WHEN bill_stock_type = 1 THEN qty ELSE 0 END),0) as reg , COALESCE(SUM(CASE WHEN bill_stock_type = 2 THEN qty ELSE 0 END),0) as sp FROM t_sell_bill_detail WHERE t_sell_bill_detail.item_id =:itemId AND "
+//			+ "t_sell_bill_detail.sell_bill_no IN (SELECT t_sell_bill_header.sell_bill_no FROM t_sell_bill_header WHERE t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate)", nativeQuery = true)
+//	RegularSpecialStockCal getRegTotalSell(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
+//			@Param("itemId") int itemId);
+	
+	
+	@Query(value = "SELECT\n" + 
+			"    ROUND(\n" + 
+			"        (\n" + 
+			"            COALESCE(\n" + 
+			"                SUM(\n" + 
+			"                    (b.sell_qty * a.rm_qty) / a.no_pieces_per_item\n" + 
+			"                ),\n" + 
+			"                0\n" + 
+			"            )\n" + 
+			"        ),\n" + 
+			"        2\n" + 
+			"    ) AS reg,\n" + 
+			"    0 AS sp\n" + 
+			"FROM\n" + 
+			"    (\n" + 
+			"    SELECT\n" + 
+			"        item_id,\n" + 
+			"        rm_id,\n" + 
+			"        rm_qty,\n" + 
+			"        no_pieces_per_item\n" + 
+			"    FROM\n" + 
+			"        m_item_detail\n" + 
+			"    WHERE\n" + 
+			"        rm_id = :itemId AND del_status = 0\n" + 
+			") a\n" + 
+			"LEFT JOIN(\n" + 
+			"    SELECT\n" + 
+			"        t_sell_bill_detail.item_id,\n" + 
+			"        COALESCE(\n" + 
+			"            SUM(\n" + 
+			"                CASE WHEN bill_stock_type = 1 THEN qty ELSE 0\n" + 
+			"            END\n" + 
+			"        ),\n" + 
+			"        0\n" + 
+			") AS sell_qty\n" + 
+			"FROM\n" + 
+			"    t_sell_bill_detail\n" + 
+			"WHERE\n" + 
+			"    t_sell_bill_detail.item_id IN(\n" + 
+			"    SELECT\n" + 
+			"        item_id\n" + 
+			"    FROM\n" + 
+			"        m_item_detail\n" + 
+			"    WHERE\n" + 
+			"        rm_id = :itemId AND del_status = 0\n" + 
+			") AND t_sell_bill_detail.sell_bill_no IN(\n" + 
+			"    SELECT\n" + 
+			"        t_sell_bill_header.sell_bill_no\n" + 
+			"    FROM\n" + 
+			"        t_sell_bill_header\n" + 
+			"    WHERE\n" + 
+			"        t_sell_bill_header.fr_id = :frId AND t_sell_bill_header.del_status = 0 AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate\n" + 
+			")\n" + 
+			"GROUP BY\n" + 
+			"    t_sell_bill_detail.item_id\n" + 
+			") b\n" + 
+			"ON\n" + 
+			"    a.item_id = b.item_id", nativeQuery = true)
 	RegularSpecialStockCal getRegTotalSell(@Param("frId") int frId, @Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("itemId") int itemId);
+	
+	
 		
 	// grn/gvn
 		@Query(value = "SELECT COALESCE(SUM(t_grn_gvn.grn_gvn_qty),0) FROM t_grn_gvn WHERE t_grn_gvn.fr_id=:frId AND t_grn_gvn.item_id=:itemId AND"

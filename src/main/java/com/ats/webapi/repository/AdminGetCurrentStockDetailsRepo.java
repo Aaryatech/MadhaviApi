@@ -89,7 +89,7 @@ public interface AdminGetCurrentStockDetailsRepo  extends JpaRepository<AdminGet
 			"    a.fr_id = t3.fr_id AND a.id = t3.item_id\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
-			"        a.item_id,\r\n" + 
+			"        a.item_id,a.rm_id,\r\n" + 
 			"        b.fr_id,\r\n" + 
 			"        ROUND(\r\n" + 
 			"            (\r\n" + 
@@ -150,10 +150,10 @@ public interface AdminGetCurrentStockDetailsRepo  extends JpaRepository<AdminGet
 			"    a.item_id = b.item_id AND a.fr_id = b.fr_id\r\n" + 
 			"GROUP BY\r\n" + 
 			"    b.fr_id,\r\n" + 
-			"    a.item_id\r\n" + 
+			"    a.rm_id\r\n" + 
 			"    ) t4\r\n" + 
 			"ON\r\n" + 
-			"    a.fr_id = t4.fr_id AND a.id = t4.item_id\r\n" + 
+			"    a.fr_id = t4.fr_id AND a.id = t4.rm_id\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 
 			"        p.ex_int1 AS fr_id,\r\n" + 

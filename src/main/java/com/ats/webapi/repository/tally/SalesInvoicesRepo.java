@@ -2015,6 +2015,838 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            DATE,\r\n" + 
 			"            fr_id\r\n" + 
 			"    )",nativeQuery=true)
+	List<SalesInvoices> getTallySyncDataByDateAndFr_Sales_old(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId);
+
+	
+	
+	@Query(value="(\r\n" + 
+			"SELECT\r\n" + 
+			"    *\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
+			"        UUID() AS id, t1.fr_id, t5.invoice AS bill_no, DATE_FORMAT(t1.date, '%d-%m-%Y') AS DATE,\r\n" + 
+			"        '' AS e_way_bill_no,\r\n" + 
+			"        '' AS e_way_bill_date,\r\n" + 
+			"        'Cash' AS ship_to_customer_name,\r\n" + 
+			"        '' AS ship_to_gst_no,\r\n" + 
+			"        '' AS ship_to_address,\r\n" + 
+			"        t3.state,\r\n" + 
+			"        t3.state_code,\r\n" + 
+			"        'Cash' AS customer_name,\r\n" + 
+			"        '' AS gst_no,\r\n" + 
+			"        '' AS address,\r\n" + 
+			"        t3.state AS ship_to_state,\r\n" + 
+			"        t3.state_code AS ship_to_state_code,\r\n" + 
+			"        t2.item_name AS product_name,\r\n" + 
+			"        0 AS part_no,\r\n" + 
+			"        COALESCE(ROUND(t1.qty, 3),\r\n" + 
+			"        0) AS qty,\r\n" + 
+			"        t4.item_uom AS unit,\r\n" + 
+			"        t1.hsn,\r\n" + 
+			"        COALESCE(t1.gst_per, 0) AS gst_per,\r\n" + 
+			"        COALESCE(ROUND(t1.rate, 2),\r\n" + 
+			"        0) AS rate,\r\n" + 
+			"        COALESCE(t1.discount, 0) AS discount,\r\n" + 
+			"        COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"        0) AS amount,\r\n" + 
+			"        COALESCE(ROUND(t1.amount, 2),\r\n" + 
+			"        0) AS item_level_disc_amt,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            (\r\n" + 
+			"                ROUND(t1.qty, 3) * ROUND(t1.rate, 2) - ROUND(t1.amount, 2)\r\n" + 
+			"            ),\r\n" + 
+			"            2\r\n" + 
+			"        ) AS item_level_taxable_amt,\r\n" + 
+			"        COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"        0) AS cgst,\r\n" + 
+			"        COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"        0) AS sgst,\r\n" + 
+			"        0 AS igst,\r\n" + 
+			"        0 AS other_ledger,\r\n" + 
+			"        COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
+			"        0 AS round_off,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"            0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"            0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"            0)\r\n" + 
+			"        ) AS total_amount,\r\n" + 
+			"        t1.account_type\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.sell_bill_no AS bill_id,\r\n" + 
+			"            h.invoice_no AS bill_no,\r\n" + 
+			"            h.bill_date AS DATE,\r\n" + 
+			"            '' AS e_way_bill_no,\r\n" + 
+			"            '' AS e_way_bill_date,\r\n" + 
+			"            '' AS ship_to_customer_name,\r\n" + 
+			"            '' AS ship_to_gst_no,\r\n" + 
+			"            '' AS ship_to_address,\r\n" + 
+			"            '' AS customer_name,\r\n" + 
+			"            '' AS gst_no,\r\n" + 
+			"            '' AS address,\r\n" + 
+			"            0 AS part_no,\r\n" + 
+			"            SUM(d.qty) AS qty,\r\n" + 
+			"            d.ext_var1 AS hsn,\r\n" + 
+			"            d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
+			"            SUM(d.mrp_base_rate) / COUNT(d.item_id) AS rate1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS rate,\r\n" + 
+			"            0 AS discount,\r\n" + 
+			"            SUM(d.disc_amt) AS amount,\r\n" + 
+			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
+			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
+			"            SUM(d.igst_rs) AS igst,\r\n" + 
+			"            0 AS other_ledger,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            1 AS temp,\r\n" + 
+			"            'Sale Bill' AS account_type\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id\r\n" + 
+			"        ORDER BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        id,\r\n" + 
+			"        item_name\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item\r\n" + 
+			") t2\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t2.id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        comp_id,\r\n" + 
+			"        state,\r\n" + 
+			"        state_code\r\n" + 
+			"    FROM\r\n" + 
+			"        m_company\r\n" + 
+			"    WHERE\r\n" + 
+			"        comp_id = 1\r\n" + 
+			") t3\r\n" + 
+			"ON\r\n" + 
+			"    t1.temp = 1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        s.item_id,\r\n" + 
+			"        s.item_uom\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item_sup s\r\n" + 
+			") t4\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t4.item_id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.*,\r\n" + 
+			"        CONCAT(\r\n" + 
+			"            MIN(h.invoice_no),\r\n" + 
+			"            '-',\r\n" + 
+			"            MAX(h.invoice_no),\r\n" + 
+			"            '-C'\r\n" + 
+			"        ) AS invoice\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t5\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        t.item_name,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(cgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS cgst,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(sgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS sgst\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            i.id,\r\n" + 
+			"            i.item_name,\r\n" + 
+			"            CAST(\r\n" + 
+			"                (\r\n" + 
+			"                    SUM(d.mrp_base_rate) / COUNT(d.item_id)\r\n" + 
+			"                ) AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"            CAST(\r\n" + 
+			"                SUM(d.disc_amt) AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS disc,\r\n" + 
+			"            d.cgst_per,\r\n" + 
+			"            d.sgst_per\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_item i,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t6\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            CAST(\r\n" + 
+			"                (\r\n" + 
+			"                    SUM(d.mrp_base_rate) / COUNT(d.item_id)\r\n" + 
+			"                ) AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t7\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date,\r\n" + 
+			"        SUM(d.disc_amt) amount\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date) t\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        DATE,\r\n" + 
+			"        fr_id\r\n" + 
+			")\r\n" + 
+			"UNION ALL\r\n" + 
+			"(\r\n" + 
+			"    SELECT\r\n" + 
+			"    *\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
+			"        UUID() AS id, t1.fr_id, t5.invoice AS bill_no, DATE_FORMAT(t1.date, '%d-%m-%Y') AS DATE,\r\n" + 
+			"        '' AS e_way_bill_no,\r\n" + 
+			"        '' AS e_way_bill_date,\r\n" + 
+			"        'E-pay' AS ship_to_customer_name,\r\n" + 
+			"        '' AS ship_to_gst_no,\r\n" + 
+			"        '' AS ship_to_address,\r\n" + 
+			"        t3.state,\r\n" + 
+			"        t3.state_code,\r\n" + 
+			"        'E-pay' AS customer_name,\r\n" + 
+			"        '' AS gst_no,\r\n" + 
+			"        '' AS address,\r\n" + 
+			"        t3.state AS ship_to_state,\r\n" + 
+			"        t3.state_code AS ship_to_state_code,\r\n" + 
+			"        t2.item_name AS product_name,\r\n" + 
+			"        0 AS part_no,\r\n" + 
+			"        COALESCE(ROUND(t1.qty, 3),\r\n" + 
+			"        0) AS qty,\r\n" + 
+			"        t4.item_uom AS unit,\r\n" + 
+			"        t1.hsn,\r\n" + 
+			"        COALESCE(t1.gst_per, 0) AS gst_per,\r\n" + 
+			"        COALESCE(ROUND(t1.rate, 2),\r\n" + 
+			"        0) AS rate,\r\n" + 
+			"        COALESCE(t1.discount, 0) AS discount,\r\n" + 
+			"        COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"        0) AS amount,\r\n" + 
+			"        COALESCE(ROUND(t1.amount, 2),\r\n" + 
+			"        0) AS item_level_disc_amt,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            (\r\n" + 
+			"                ROUND(t1.qty, 3) * ROUND(t1.rate, 2) - ROUND(t1.amount, 2)\r\n" + 
+			"            ),\r\n" + 
+			"            2\r\n" + 
+			"        ) AS item_level_taxable_amt,\r\n" + 
+			"        COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"        0) AS cgst,\r\n" + 
+			"        COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"        0) AS sgst,\r\n" + 
+			"        0 AS igst,\r\n" + 
+			"        0 AS other_ledger,\r\n" + 
+			"        COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
+			"        0 AS round_off,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"            0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"            0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"            0)\r\n" + 
+			"        ) AS total_amount,\r\n" + 
+			"        t1.account_type\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.sell_bill_no AS bill_id,\r\n" + 
+			"            h.invoice_no AS bill_no,\r\n" + 
+			"            h.bill_date AS DATE,\r\n" + 
+			"            '' AS e_way_bill_no,\r\n" + 
+			"            '' AS e_way_bill_date,\r\n" + 
+			"            '' AS ship_to_customer_name,\r\n" + 
+			"            '' AS ship_to_gst_no,\r\n" + 
+			"            '' AS ship_to_address,\r\n" + 
+			"            '' AS customer_name,\r\n" + 
+			"            '' AS gst_no,\r\n" + 
+			"            '' AS address,\r\n" + 
+			"            0 AS part_no,\r\n" + 
+			"            SUM(d.qty) AS qty,\r\n" + 
+			"            d.ext_var1 AS hsn,\r\n" + 
+			"            d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
+			"            ROUND(d.mrp_base_rate, 2) AS rate1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS rate,\r\n" + 
+			"            0 AS discount,\r\n" + 
+			"            SUM(d.disc_amt) AS amount,\r\n" + 
+			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
+			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
+			"            SUM(d.igst_rs) AS igst,\r\n" + 
+			"            0 AS other_ledger,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            1 AS temp,\r\n" + 
+			"            'Sale Bill' AS account_type\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id\r\n" + 
+			"        ORDER BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        id,\r\n" + 
+			"        item_name\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item\r\n" + 
+			") t2\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t2.id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        comp_id,\r\n" + 
+			"        state,\r\n" + 
+			"        state_code\r\n" + 
+			"    FROM\r\n" + 
+			"        m_company\r\n" + 
+			"    WHERE\r\n" + 
+			"        comp_id = 1\r\n" + 
+			") t3\r\n" + 
+			"ON\r\n" + 
+			"    t1.temp = 1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        s.item_id,\r\n" + 
+			"        s.item_uom\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item_sup s\r\n" + 
+			") t4\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t4.item_id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.*,\r\n" + 
+			"        CONCAT(\r\n" + 
+			"            MIN(h.invoice_no),\r\n" + 
+			"            '-',\r\n" + 
+			"            MAX(h.invoice_no),\r\n" + 
+			"            '-E'\r\n" + 
+			"        ) AS invoice\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t5\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        t.item_name,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(cgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS cgst,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(sgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS sgst\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            i.id,\r\n" + 
+			"            i.item_name,\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"            CAST(\r\n" + 
+			"                SUM(d.disc_amt) AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS disc,\r\n" + 
+			"            d.cgst_per,\r\n" + 
+			"            d.sgst_per\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_item i,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t6\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t7\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date,\r\n" + 
+			"        SUM(d.disc_amt) amount\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date) t\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        DATE,\r\n" + 
+			"        fr_id\r\n" + 
+			")\r\n" + 
+			"UNION ALL\r\n" + 
+			"(\r\n" + 
+			"    SELECT\r\n" + 
+			"    *\r\n" + 
+			"FROM\r\n" + 
+			"    (\r\n" + 
+			"    SELECT\r\n" + 
+			"        UUID() AS id, t1.fr_id, t5.invoice AS bill_no, DATE_FORMAT(t1.date, '%d-%m-%Y') AS DATE,\r\n" + 
+			"        '' AS e_way_bill_no,\r\n" + 
+			"        '' AS e_way_bill_date,\r\n" + 
+			"        'Pending' AS ship_to_customer_name,\r\n" + 
+			"        '' AS ship_to_gst_no,\r\n" + 
+			"        '' AS ship_to_address,\r\n" + 
+			"        t3.state,\r\n" + 
+			"        t3.state_code,\r\n" + 
+			"        'Pending' AS customer_name,\r\n" + 
+			"        '' AS gst_no,\r\n" + 
+			"        '' AS address,\r\n" + 
+			"        t3.state AS ship_to_state,\r\n" + 
+			"        t3.state_code AS ship_to_state_code,\r\n" + 
+			"        t2.item_name AS product_name,\r\n" + 
+			"        0 AS part_no,\r\n" + 
+			"        COALESCE(ROUND(t1.qty, 3),\r\n" + 
+			"        0) AS qty,\r\n" + 
+			"        t4.item_uom AS unit,\r\n" + 
+			"        t1.hsn,\r\n" + 
+			"        COALESCE(t1.gst_per, 0) AS gst_per,\r\n" + 
+			"        COALESCE(ROUND(t1.rate, 2),\r\n" + 
+			"        0) AS rate,\r\n" + 
+			"        COALESCE(t1.discount, 0) AS discount,\r\n" + 
+			"        COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"        0) AS amount,\r\n" + 
+			"        COALESCE(ROUND(t1.amount, 2),\r\n" + 
+			"        0) AS item_level_disc_amt,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            (\r\n" + 
+			"                ROUND(t1.qty, 3) * ROUND(t1.rate, 2) - ROUND(t1.amount, 2)\r\n" + 
+			"            ),\r\n" + 
+			"            2\r\n" + 
+			"        ) AS item_level_taxable_amt,\r\n" + 
+			"        COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"        0) AS cgst,\r\n" + 
+			"        COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"        0) AS sgst,\r\n" + 
+			"        0 AS igst,\r\n" + 
+			"        0 AS other_ledger,\r\n" + 
+			"        COALESCE(t7.tot, 0) AS rate_total,\r\n" + 
+			"        0 AS round_off,\r\n" + 
+			"        ROUND(\r\n" + 
+			"            COALESCE(t7.tot, 0) + COALESCE(ROUND(t6.cgst, 2),\r\n" + 
+			"            0) + COALESCE(ROUND(t6.sgst, 2),\r\n" + 
+			"            0) - COALESCE(ROUND(t8.amount, 2),\r\n" + 
+			"            0)\r\n" + 
+			"        ) AS total_amount,\r\n" + 
+			"        t1.account_type\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.sell_bill_no AS bill_id,\r\n" + 
+			"            h.invoice_no AS bill_no,\r\n" + 
+			"            h.bill_date AS DATE,\r\n" + 
+			"            '' AS e_way_bill_no,\r\n" + 
+			"            '' AS e_way_bill_date,\r\n" + 
+			"            '' AS ship_to_customer_name,\r\n" + 
+			"            '' AS ship_to_gst_no,\r\n" + 
+			"            '' AS ship_to_address,\r\n" + 
+			"            '' AS customer_name,\r\n" + 
+			"            '' AS gst_no,\r\n" + 
+			"            '' AS address,\r\n" + 
+			"            0 AS part_no,\r\n" + 
+			"            SUM(d.qty) AS qty,\r\n" + 
+			"            d.ext_var1 AS hsn,\r\n" + 
+			"            d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
+			"            ROUND(d.mrp_base_rate, 2) AS rate1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS rate,\r\n" + 
+			"            0 AS discount,\r\n" + 
+			"            SUM(d.disc_amt) AS amount,\r\n" + 
+			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
+			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
+			"            SUM(d.igst_rs) AS igst,\r\n" + 
+			"            0 AS other_ledger,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            1 AS temp,\r\n" + 
+			"            'Sale Bill' AS account_type\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id\r\n" + 
+			"        ORDER BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        id,\r\n" + 
+			"        item_name\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item\r\n" + 
+			") t2\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t2.id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        comp_id,\r\n" + 
+			"        state,\r\n" + 
+			"        state_code\r\n" + 
+			"    FROM\r\n" + 
+			"        m_company\r\n" + 
+			"    WHERE\r\n" + 
+			"        comp_id = 1\r\n" + 
+			") t3\r\n" + 
+			"ON\r\n" + 
+			"    t1.temp = 1\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        s.item_id,\r\n" + 
+			"        s.item_uom\r\n" + 
+			"    FROM\r\n" + 
+			"        m_item_sup s\r\n" + 
+			") t4\r\n" + 
+			"ON\r\n" + 
+			"    t1.item_id = t4.item_id\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.*,\r\n" + 
+			"        CONCAT(\r\n" + 
+			"            MIN(h.invoice_no),\r\n" + 
+			"            '-',\r\n" + 
+			"            MAX(h.invoice_no),\r\n" + 
+			"            '-P'\r\n" + 
+			"        ) AS invoice\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t5\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t5.fr_id AND t1.date = t5.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        t.item_name,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(cgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS cgst,\r\n" + 
+			"        SUM(\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (ROUND(r * q, 2) - disc) *(sgst_per / 100)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            )\r\n" + 
+			"        ) AS sgst\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            i.id,\r\n" + 
+			"            i.item_name,\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
+			"            CAST(\r\n" + 
+			"                SUM(d.disc_amt) AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS disc,\r\n" + 
+			"            d.cgst_per,\r\n" + 
+			"            d.sgst_per\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d,\r\n" + 
+			"            m_item i,\r\n" + 
+			"            m_franchisee f\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND d.item_id = i.id AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t6\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t6.fr_id AND t1.date = t6.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        t.fr_id,\r\n" + 
+			"        t.bill_date,\r\n" + 
+			"        SUM(ROUND(r * q, 2)) AS tot\r\n" + 
+			"    FROM\r\n" + 
+			"        (\r\n" + 
+			"        SELECT\r\n" + 
+			"            h.fr_id,\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            CAST(\r\n" + 
+			"                d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
+			"            ) AS r1,\r\n" + 
+			"            ROUND(\r\n" + 
+			"                (\r\n" + 
+			"                    (d.mrp * 100) /(100 + d.cgst_per + d.sgst_per)\r\n" + 
+			"                ),\r\n" + 
+			"                2\r\n" + 
+			"            ) AS r,\r\n" + 
+			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q\r\n" + 
+			"        FROM\r\n" + 
+			"            t_sell_bill_header h,\r\n" + 
+			"            t_sell_bill_detail d\r\n" + 
+			"        WHERE\r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.status = 3 AND h.fr_id = :frId\r\n" + 
+			"        GROUP BY\r\n" + 
+			"            h.bill_date,\r\n" + 
+			"            d.item_id,\r\n" + 
+			"            h.fr_id\r\n" + 
+			"    ) t\r\n" + 
+			"GROUP BY\r\n" + 
+			"    fr_id,\r\n" + 
+			"    bill_date\r\n" + 
+			") t7\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t7.fr_id AND t1.date = t7.bill_date\r\n" + 
+			"LEFT JOIN(\r\n" + 
+			"    SELECT\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date,\r\n" + 
+			"        SUM(d.disc_amt) amount\r\n" + 
+			"    FROM\r\n" + 
+			"        t_sell_bill_header h,\r\n" + 
+			"        t_sell_bill_detail d,\r\n" + 
+			"        m_franchisee f\r\n" + 
+			"    WHERE\r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.status = 3 AND h.fr_id = :frId\r\n" + 
+			"    GROUP BY\r\n" + 
+			"        h.fr_id,\r\n" + 
+			"        h.bill_date\r\n" + 
+			") t8\r\n" + 
+			"ON\r\n" + 
+			"    t1.fr_id = t8.fr_id AND t1.date = t8.bill_date) t\r\n" + 
+			"    ORDER BY\r\n" + 
+			"        DATE,\r\n" + 
+			"        fr_id\r\n" + 
+			")",nativeQuery=true)
 	List<SalesInvoices> getTallySyncDataByDateAndFr_Sales(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("frId") int frId);
 
 	
