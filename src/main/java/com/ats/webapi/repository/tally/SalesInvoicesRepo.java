@@ -1168,8 +1168,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        h.party_address AS ship_to_address,\r\n" + 
 			"        c.state,\r\n" + 
 			"        c.state_code,\r\n" + 
-			"        CASE WHEN h.is_dairy_mart != 2 THEN CONCAT(h.ex_varchar3, ' - ', f.fr_code) ELSE h.ex_varchar3\r\n" + 
-			"END AS customer_name,\r\n" + 
+			"        'Madhvi Dairy Private Limited' AS customer_name,\r\n" + 
 			"h.ex_varchar4 AS gst_no,\r\n" + 
 			"h.ex_varchar5 AS address,\r\n" + 
 			"c.state AS ship_to_state,\r\n" + 
@@ -1187,7 +1186,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"d.sgst_rs AS sgst,\r\n" + 
 			"d.igst_rs AS igst,\r\n" + 
 			"0 AS other_ledger,\r\n" + 
-			"CASE WHEN h.is_dairy_mart = 2 THEN 'Dairy Mart' ELSE 'Purchase Bill'\r\n" + 
+			"CASE WHEN h.is_dairy_mart = 2 THEN 'Dairy Mart' ELSE CONCAT('Purchase Bill - ', f.fr_code)\r\n" + 
 			"END AS account_type,\r\n" + 
 			"ROUND(\r\n" + 
 			"    ROUND(\r\n" + 
@@ -1327,7 +1326,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                'Sale Bill' AS account_type\r\n" + 
+			"                CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
@@ -1584,7 +1583,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                'Sale Bill' AS account_type\r\n" + 
+			"                CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
@@ -1841,7 +1840,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                0 AS other_ledger,\r\n" + 
 			"                d.item_id,\r\n" + 
 			"                1 AS temp,\r\n" + 
-			"                'Sale Bill' AS account_type\r\n" + 
+			"                CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"            FROM\r\n" + 
 			"                t_sell_bill_header h,\r\n" + 
 			"                t_sell_bill_detail d,\r\n" + 
@@ -2107,7 +2106,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            0 AS other_ledger,\r\n" + 
 			"            d.item_id,\r\n" + 
 			"            1 AS temp,\r\n" + 
-			"            'Sale Bill' AS account_type\r\n" + 
+			"            CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d,\r\n" + 
@@ -2386,7 +2385,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            0 AS other_ledger,\r\n" + 
 			"            d.item_id,\r\n" + 
 			"            1 AS temp,\r\n" + 
-			"            'Sale Bill' AS account_type\r\n" + 
+			"            CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d,\r\n" + 
@@ -2661,7 +2660,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            0 AS other_ledger,\r\n" + 
 			"            d.item_id,\r\n" + 
 			"            1 AS temp,\r\n" + 
-			"            'Sale Bill' AS account_type\r\n" + 
+			"            CONCAT('Sale Bill - ',f.fr_code) AS account_type\r\n" + 
 			"        FROM\r\n" + 
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d,\r\n" + 
