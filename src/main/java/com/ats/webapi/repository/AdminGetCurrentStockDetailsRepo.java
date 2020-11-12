@@ -116,8 +116,7 @@ public interface AdminGetCurrentStockDetailsRepo  extends JpaRepository<AdminGet
 			"        WHERE\r\n" + 
 			"            rm_id IN(:itemIds) AND m_item_detail.del_status = 0 AND m_franchisee.fr_id IN(:frIds)\r\n" + 
 			"        GROUP BY\r\n" + 
-			"            m_item_detail.item_id,\r\n" + 
-			"            m_franchisee.fr_id\r\n" + 
+			"            m_franchisee.fr_id, m_item_detail.item_id, m_item_detail.rm_id \r\n" + 
 			"    ) a\r\n" + 
 			"LEFT JOIN(\r\n" + 
 			"    SELECT\r\n" + 

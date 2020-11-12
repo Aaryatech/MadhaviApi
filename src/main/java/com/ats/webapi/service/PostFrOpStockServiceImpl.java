@@ -136,12 +136,23 @@ public class PostFrOpStockServiceImpl implements PostFrOpStockService {
 	}
 
 	@Override
+	public PostFrItemStockHeader getRunningMonthWithCat(int frId,int catId) {
+
+		PostFrItemStockHeader frItemStockHeader = postFrOpStockHeaderRepository.getRunningMonthByCat(frId,catId);
+
+		return frItemStockHeader;
+	}
+	
+	
+	//NEW
+	@Override
 	public PostFrItemStockHeader getRunningMonth(int frId) {
 
 		PostFrItemStockHeader frItemStockHeader = postFrOpStockHeaderRepository.getRunningMonth(frId);
 
 		return frItemStockHeader;
 	}
+	
 
 	@Override
 	public List<GetCurrentStockDetails> getStockBetweenMonth(int frId, int fromMonth, int toMonth,

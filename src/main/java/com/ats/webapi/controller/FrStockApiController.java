@@ -917,6 +917,14 @@ public class FrStockApiController {
 		return frItemStockHeader;
 
 	}
+	
+	@RequestMapping(value = "/getRunningMonthWithCat", method = RequestMethod.POST)
+	public @ResponseBody PostFrItemStockHeader getRunningMonthWithCat(@RequestParam("frId") int frId,@RequestParam("catId") int catId) {
+
+		PostFrItemStockHeader frItemStockHeader = postFrOpStockService.getRunningMonthWithCat(frId,catId);
+		return frItemStockHeader;
+
+	}
 
 	@RequestMapping(value = { "/postFrOpStock" }, method = RequestMethod.POST)
 	public @ResponseBody Info postFrOpStock(@RequestBody PostFrItemStockHeader postFrItemStockHeader)
