@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.GrandTotalBillWise;
 import com.ats.webapi.model.GrandTotalCreditnoteWise;
+import com.ats.webapi.model.report.B2BSalesReport;
 import com.ats.webapi.model.reportv2.AdminCrNoteRegItem;
 import com.ats.webapi.model.reportv2.AdminCrNoteRegisterList;
 import com.ats.webapi.model.reportv2.CrNoteRegItem;
@@ -26,6 +27,7 @@ import com.ats.webapi.model.reportv2.HSNWiseReport;
 import com.ats.webapi.model.reportv2.SalesReport;
 import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
 import com.ats.webapi.repository.reportv2.AdminCrNoteRegItemRepo;
+import com.ats.webapi.repository.reportv2.B2BSalesReportRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
@@ -55,6 +57,9 @@ public class ReportControllerV2 {
 
 	@Autowired
 	GrandTotalCreditnoteWiseRepository grandTotalCreditnoteWiseRepository;
+	
+	@Autowired
+	B2BSalesReportRepo b2bSalesRepo;
 
 	@RequestMapping(value = { "/getHsnBillReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnBillReport(@RequestParam("fromDate") String fromDate,
@@ -776,5 +781,20 @@ public class ReportControllerV2 {
 		System.err.println("size Sp  crNoteList " + crNoteList.getCrNoteRegSpList());
 
 		return crNoteList;
+	}
+	
+	
+	
+	@RequestMapping(value = { "/getB2BSalesReportBetDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<B2BSalesReport> getCB2BSalesReportFrId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+		List<B2BSalesReport> rep = new ArrayList<B2BSalesReport>();
+		try {
+		rep = b2bSalesRepo.getB2BSalesReport(fromDate, toDate, frId);	
+		}catch (Exception e) {
+			System.err.println("Excep in /getCB2BSalesReportFrId" + e.getMessage());
+		}
+
+		return rep;
 	}
 }
