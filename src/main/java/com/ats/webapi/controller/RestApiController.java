@@ -1466,6 +1466,8 @@ public class RestApiController {
 		return info;
 	}
 
+	
+	
 	@RequestMapping(value = { "/insertSellBillData" }, method = RequestMethod.POST)
 	public @ResponseBody SellBillHeader sellBillData(@RequestBody SellBillHeader sellBillHeader)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
@@ -1480,10 +1482,19 @@ public class RestApiController {
 		
 		System.out.println("Data for insert  ROUND OFF-----------------> " + sellBillHeader.getExtFloat1());
 
-		SellBillHeader jsonSellBillHeader;
+		SellBillHeader jsonSellBillHeader=null;
 		// List<SellBillDetail> jsonBillDetail;
-
-		jsonSellBillHeader = sellBillDataService.saveSellBillHeader(sellBillHeader);
+				
+		
+		int id=sellBillHeader.getSellBillNo();
+		if(id>0) {
+			jsonSellBillHeader = sellBillDataService.saveSellBillHeader(sellBillHeader);
+		}else {
+			int invoiceCount=sellBillHeaderRepository.getInvoiceCount(sellBillHeader.getInvoiceNo());
+			if(invoiceCount==0  ) {
+				jsonSellBillHeader = sellBillDataService.saveSellBillHeader(sellBillHeader);
+			}
+		}
 
 		System.out.println("SellBillHeader data: " + sellBillHeader.toString());
 

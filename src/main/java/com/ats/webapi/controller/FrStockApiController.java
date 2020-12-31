@@ -32,6 +32,7 @@ import com.ats.webapi.model.ErrorMessage;
 import com.ats.webapi.model.Franchisee;
 import com.ats.webapi.model.FranchiseeList;
 import com.ats.webapi.model.GetCurrentStockDetails;
+import com.ats.webapi.model.GetFranchiseStock;
 import com.ats.webapi.model.Info;
 import com.ats.webapi.model.Item;
 import com.ats.webapi.model.OpsFrItemStock;
@@ -54,6 +55,7 @@ import com.ats.webapi.service.FrItemStockConfigurePostService;
 import com.ats.webapi.service.FranchiseeService;
 import com.ats.webapi.service.GetItemStockService;
 import com.ats.webapi.service.ItemService;
+import com.ats.webapi.service.OpsFrItemStockService;
 import com.ats.webapi.service.PostFrOpStockService;
 import com.ats.webapi.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -917,11 +919,12 @@ public class FrStockApiController {
 		return frItemStockHeader;
 
 	}
-	
-	@RequestMapping(value = "/getRunningMonthWithCat", method = RequestMethod.POST)
-	public @ResponseBody PostFrItemStockHeader getRunningMonthWithCat(@RequestParam("frId") int frId,@RequestParam("catId") int catId) {
 
-		PostFrItemStockHeader frItemStockHeader = postFrOpStockService.getRunningMonthWithCat(frId,catId);
+	@RequestMapping(value = "/getRunningMonthWithCat", method = RequestMethod.POST)
+	public @ResponseBody PostFrItemStockHeader getRunningMonthWithCat(@RequestParam("frId") int frId,
+			@RequestParam("catId") int catId) {
+
+		PostFrItemStockHeader frItemStockHeader = postFrOpStockService.getRunningMonthWithCat(frId, catId);
 		return frItemStockHeader;
 
 	}
@@ -1133,9 +1136,44 @@ public class FrStockApiController {
 		System.out.println("inside rest getCurrentStock : I/p : currentMonth: " + month);
 		System.out.println("inside rest getCurrentStock : I/p : year: " + year);
 
-		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType,configType);
+		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType, configType);
 
 		System.out.println("OPS FR STOCK Result:  " + res.toString());
+
+		return res;
+
+	}
+
+	@Autowired
+	OpsFrItemStockService stockService;
+
+	@RequestMapping(value = "/getFranchiseCurrentStock", method = RequestMethod.POST)
+	public @ResponseBody GetFranchiseStock getFranchiseCurrentStock(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("month") int month, @RequestParam("year") int year) {
+
+		GetFranchiseStock res = new GetFranchiseStock();
+
+		Info info = new Info();
+
+		try {
+
+			List<OpsFrItemStock> stock = stockService.getFranchiseStock(frId, fromDate, toDate, month, year);
+			res.setStockList(stock);
+			if (stock != null) {
+				info.setError(false);
+				info.setMessage("Success");
+			} else {
+				info.setError(true);
+				info.setMessage("Stock Not Found!");
+			}
+
+		} catch (Exception e) {
+			info.setError(true);
+			info.setMessage(e.getMessage());
+		}
+
+		res.setInfo(info);
 
 		return res;
 

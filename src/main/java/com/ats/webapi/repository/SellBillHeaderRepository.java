@@ -40,9 +40,9 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	
 	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.fr_id=:frId AND t_sell_bill_header.status=3 AND   t_sell_bill_header.remaining_amt>1 and t_sell_bill_header.bill_date=:todaysDate AND del_status=0 ORDER BY  t_sell_bill_header.invoice_no ASC",nativeQuery=true)
 	List<SellBillHeader> getCustBillsTodaysPending(@Param("todaysDate") String todaysDate,@Param("frId") int frId);
-
-
 	
+	
+		
 	@Transactional
 	@Modifying
 	@Query(" UPDATE SellBillHeader SET remaining_amt=:pendingAmt,paid_amt=:paidAmt,status=:flag  WHERE sell_bill_no =:sellBillNo")
@@ -86,6 +86,9 @@ public interface SellBillHeaderRepository extends JpaRepository<SellBillHeader, 
 	
 	@Query(value="select * from t_sell_bill_header where  t_sell_bill_header.ext_int2=:orderId",nativeQuery=true)
 	SellBillHeader getBillHeaderByOrderId(@Param("orderId") int orderId);
+	
+	@Query(value="SELECT COALESCE(COUNT(*),0) FROM t_sell_bill_header WHERE invoice_no LIKE :invoice",nativeQuery=true)
+	int getInvoiceCount(@Param("invoice") String invoice);
 	
 
 	

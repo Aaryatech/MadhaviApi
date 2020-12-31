@@ -346,6 +346,7 @@ public interface OpsFrItemStockRepo extends JpaRepository<OpsFrItemStock ,Intege
 		 		"ON\r\n" + 
 		 		"    t1.id = t5.item_id\r\n" + 
 		 		"LEFT JOIN(\r\n" + 
+		 		" SELECT SUM(tbl.reg) reg,tbl.sp,tbl.item_id,tbl.rm_id FROM( " +
 		 		"    SELECT ROUND(\r\n" + 
 		 		"            (\r\n" + 
 		 		"                COALESCE(\r\n" + 
@@ -358,7 +359,7 @@ public interface OpsFrItemStockRepo extends JpaRepository<OpsFrItemStock ,Intege
 		 		"            2\r\n" + 
 		 		"        ) AS reg,\r\n" + 
 		 		"        0 AS sp,\r\n" + 
-		 		"        a.item_id\r\n" + 
+		 		"        a.item_id, a.rm_id \r\n" + 
 		 		"    FROM\r\n" + 
 		 		"        (\r\n" + 
 		 		"        SELECT\r\n" + 
@@ -376,7 +377,7 @@ public interface OpsFrItemStockRepo extends JpaRepository<OpsFrItemStock ,Intege
 		 		"                m_item i\r\n" + 
 		 		"            WHERE\r\n" + 
 		 		"                i.del_status = 0 AND is_stockable=1\r\n" + 
-		 		"        ) AND del_status = 0\r\n" + 
+		 		"        ) AND del_status = 0 GROUP BY m_item_detail.item_id,m_item_detail.rm_id \r\n" + 
 		 		"    ) a\r\n" + 
 		 		"LEFT JOIN(\r\n" + 
 		 		"    SELECT t_sell_bill_detail.item_id,\r\n" + 
@@ -418,7 +419,7 @@ public interface OpsFrItemStockRepo extends JpaRepository<OpsFrItemStock ,Intege
 		 		"ON\r\n" + 
 		 		"    a.item_id = b.item_id\r\n" + 
 		 		"GROUP BY\r\n" + 
-		 		"    a.item_id\r\n" + 
+		 		"    a.rm_id  ) tbl GROUP BY rm_id \r\n" + 
 		 		") t6\r\n" + 
 		 		"ON\r\n" + 
 		 		"    t1.id = t6.item_id\r\n" + 
