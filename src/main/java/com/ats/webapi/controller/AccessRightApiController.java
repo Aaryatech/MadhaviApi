@@ -1,5 +1,9 @@
 package com.ats.webapi.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,19 @@ public class AccessRightApiController {
 	@Autowired
 	AssignRoleDetailListRepository assignRoleDetailListRepository;
 	
+	@RequestMapping(value = { "/checkDate" }, method = RequestMethod.POST)
+	public @ResponseBody String checkDate() {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		Date curDate=new Date();
+		System.err.println("" +sdf1.format(curDate));
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		String x= dateFormat.format(cal.getTime());
+		
+		return ""+sdf1.format(curDate) + "time " +x;
+		
+	}
 	@RequestMapping(value = { "/deleteRole" }, method = RequestMethod.POST)
 	public @ResponseBody Info deleteRole(@RequestParam int roleId) {
 
