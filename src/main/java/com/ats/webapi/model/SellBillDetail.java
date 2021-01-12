@@ -12,85 +12,83 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name ="t_sell_bill_detail")
-public class SellBillDetail implements Serializable{
-
+@Table(name = "t_sell_bill_detail")
+public class SellBillDetail implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="sell_bill_detail_no")
+	@Column(name = "sell_bill_detail_no")
 	private int sellBillDetailNo;
-		
-	@Column(name="sell_bill_no")
+
+	@Column(name = "sell_bill_no")
 	private int sellBillNo;
-	
-	@Column(name="cat_id")
+
+	@Column(name = "cat_id")
 	private int catId;
-	
-	@Column(name="item_id")
+
+	@Column(name = "item_id")
 	private int itemId;
 
-	@Column(name="mrp")
+	@Column(name = "mrp")
 	private float mrp;
-	
-	@Column(name="qty")
+
+	@Column(name = "qty")
 	private float qty;
-	
-	@Column(name="mrp_base_rate")
+
+	@Column(name = "mrp_base_rate")
 	private float mrpBaseRate;
-	
-	@Column(name="taxable_amt")
+
+	@Column(name = "taxable_amt")
 	private float taxableAmt;
-	
-	@Column(name="sgst_per")
+
+	@Column(name = "sgst_per")
 	private float sgstPer;
-	
-	@Column(name="sgst_rs")
+
+	@Column(name = "sgst_rs")
 	private float sgstRs;
-	
-	@Column(name="cgst_per")
+
+	@Column(name = "cgst_per")
 	private float cgstPer;
-	
-	@Column(name="cgst_rs")
+
+	@Column(name = "cgst_rs")
 	private float cgstRs;
-	
-	@Column(name="igst_per")
+
+	@Column(name = "igst_per")
 	private float igstPer;
-	
-	@Column(name="igst_rs")
+
+	@Column(name = "igst_rs")
 	private float igstRs;
-	
-	@Column(name="disc_per")
-	private float discPer;//new
-	
-	@Column(name="disc_amt")
-	private float discAmt;//new
-	
-	@Column(name="total_tax")
+
+	@Column(name = "disc_per")
+	private float discPer;// new
+
+	@Column(name = "disc_amt")
+	private float discAmt;// new
+
+	@Column(name = "total_tax")
 	private float totalTax;
-	
-	@Column(name="grand_total")
+
+	@Column(name = "grand_total")
 	private float grandTotal;
-	
-	@Column(name="remark")
+
+	@Column(name = "remark")
 	private String remark;
-	
-	@Column(name="del_status")
+
+	@Column(name = "del_status")
 	private int delStatus;
 
-	@Column(name="bill_stock_type")
+	@Column(name = "bill_stock_type")
 	private int billStockType;
-	
-	
-	@Column(name="ext_float1")
+
+	@Column(name = "ext_float1")
 	private float extFloat1;
-	
-	@Column(name="ext_var1")
+
+	@Column(name = "ext_float2")
+	private float extFloat2;
+
+	@Column(name = "ext_var1")
 	private String extVar1;
-	
-	
-	
-	
+
 	public String getExtVar1() {
 		return extVar1;
 	}
@@ -122,8 +120,7 @@ public class SellBillDetail implements Serializable{
 	public void setSellBillDetailNo(int sellBillDetailNo) {
 		this.sellBillDetailNo = sellBillDetailNo;
 	}
-    
-	
+
 	public int getBillStockType() {
 		return billStockType;
 	}
@@ -275,8 +272,14 @@ public class SellBillDetail implements Serializable{
 	public void setExtFloat1(float extFloat1) {
 		this.extFloat1 = extFloat1;
 	}
-	
-	
+
+	public float getExtFloat2() {
+		return extFloat2;
+	}
+
+	public void setExtFloat2(float extFloat2) {
+		this.extFloat2 = extFloat2;
+	}
 
 	@Override
 	public String toString() {
@@ -286,11 +289,7 @@ public class SellBillDetail implements Serializable{
 				+ ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", discPer=" + discPer
 				+ ", discAmt=" + discAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + ", remark="
 				+ remark + ", delStatus=" + delStatus + ", billStockType=" + billStockType + ", extFloat1=" + extFloat1
-				+ ", extVar1=" + extVar1 + "]";
+				+ ", extFloat2=" + extFloat2 + ", extVar1=" + extVar1 + "]";
 	}
-	
-	
 
-	
-	
 }
