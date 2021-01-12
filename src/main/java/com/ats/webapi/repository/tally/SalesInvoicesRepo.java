@@ -2112,7 +2112,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_detail d,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
@@ -2165,7 +2165,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
@@ -2225,7 +2225,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            m_item i,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(1) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2263,7 +2263,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2285,7 +2285,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(1) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
@@ -2391,7 +2391,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_detail d,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
@@ -2444,7 +2444,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
@@ -2502,7 +2502,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            m_item i,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.payment_mode IN(2, 3) AND h.status != 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2538,7 +2538,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2560,7 +2560,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.payment_mode IN(2, 3) AND h.status != 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
@@ -2666,7 +2666,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_detail d,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.fr_id,\r\n" + 
 			"            h.bill_date,\r\n" + 
@@ -2719,7 +2719,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
@@ -2777,7 +2777,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            m_item i,\r\n" + 
 			"            m_franchisee f\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.status = 3 AND d.item_id = i.id AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2813,7 +2813,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            t_sell_bill_header h,\r\n" + 
 			"            t_sell_bill_detail d\r\n" + 
 			"        WHERE\r\n" + 
-			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"            h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND d.del_status = 0 AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"        GROUP BY\r\n" + 
 			"            h.bill_date,\r\n" + 
 			"            d.item_id,\r\n" + 
@@ -2835,7 +2835,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"        t_sell_bill_detail d,\r\n" + 
 			"        m_franchisee f\r\n" + 
 			"    WHERE\r\n" + 
-			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=15 \r\n" + 
+			"        h.sell_bill_no = d.sell_bill_no AND h.del_status = 0 AND d.del_status = 0 AND h.bill_date BETWEEN :fromDate AND :toDate AND h.fr_id = f.fr_id AND f.del_status = 0 AND h.status = 3 AND h.fr_id = :frId AND LENGTH(h.user_gst_no)=0 \r\n" + 
 			"    GROUP BY\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date\r\n" + 
