@@ -312,7 +312,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
 			"                ROUND(d.mrp_base_rate, 2) AS rate,\r\n" + 
 			"                0 AS discount,\r\n" + 
-			"                SUM(d.ext_float2) AS amount,\r\n" + 
+			"                SUM(d.ext_float3) AS amount,\r\n" + 
 			"                SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"                SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"                SUM(d.igst_rs) AS igst,\r\n" + 
@@ -408,7 +408,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
 			"        ) AS r,\r\n" + 
 			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
-			"        CAST(SUM(d.ext_float2) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        CAST(SUM(d.ext_float3) AS DECIMAL(10, 2)) AS disc,\r\n" + 
 			"        d.cgst_per,\r\n" + 
 			"        d.sgst_per\r\n" + 
 			"        \r\n" + 
@@ -461,7 +461,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"   SELECT\r\n" + 
 			"    h.fr_id,\r\n" + 
 			"    h.bill_date,\r\n" + 
-			"    SUM(d.ext_float2) amount\r\n" + 
+			"    SUM(d.ext_float3) amount\r\n" + 
 			"FROM\r\n" + 
 			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
@@ -551,7 +551,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
 			"                ROUND(d.mrp_base_rate, 2) AS rate,\r\n" + 
 			"                0 AS discount,\r\n" + 
-			"                SUM(d.ext_float2) AS amount,\r\n" + 
+			"                SUM(d.ext_float3) AS amount,\r\n" + 
 			"                SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"                SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"                SUM(d.igst_rs) AS igst,\r\n" + 
@@ -645,7 +645,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
 			"        ) AS r,\r\n" + 
 			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
-			"        CAST(SUM(d.ext_float2) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        CAST(SUM(d.ext_float3) AS DECIMAL(10, 2)) AS disc,\r\n" + 
 			"        d.cgst_per,\r\n" + 
 			"        d.sgst_per\r\n" + 
 			"        \r\n" + 
@@ -698,7 +698,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"   SELECT\r\n" + 
 			"    h.fr_id,\r\n" + 
 			"    h.bill_date,\r\n" + 
-			"    SUM(d.ext_float2) amount\r\n" + 
+			"    SUM(d.ext_float3) amount\r\n" + 
 			"FROM\r\n" + 
 			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
@@ -788,7 +788,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                d.cgst_per + d.sgst_per AS gst_per,\r\n" + 
 			"                ROUND(d.mrp_base_rate, 2) AS rate,\r\n" + 
 			"                0 AS discount,\r\n" + 
-			"                SUM(d.ext_float2) AS amount,\r\n" + 
+			"                SUM(d.ext_float3) AS amount,\r\n" + 
 			"                SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"                SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"                SUM(d.igst_rs) AS igst,\r\n" + 
@@ -882,7 +882,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            d.mrp_base_rate AS DECIMAL(10, 2)\r\n" + 
 			"        ) AS r,\r\n" + 
 			"        CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
-			"        CAST(SUM(d.ext_float2) AS DECIMAL(10, 2)) AS disc,\r\n" + 
+			"        CAST(SUM(d.ext_float3) AS DECIMAL(10, 2)) AS disc,\r\n" + 
 			"        d.cgst_per,\r\n" + 
 			"        d.sgst_per\r\n" + 
 			"        \r\n" + 
@@ -935,7 +935,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"   SELECT\r\n" + 
 			"    h.fr_id,\r\n" + 
 			"    h.bill_date,\r\n" + 
-			"    SUM(d.ext_float2) amount\r\n" + 
+			"    SUM(d.ext_float3) amount\r\n" + 
 			"FROM\r\n" + 
 			"    t_sell_bill_header h,\r\n" + 
 			"    t_sell_bill_detail d,\r\n" + 
@@ -2099,7 +2099,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                2\r\n" + 
 			"            ) AS rate,\r\n" + 
 			"            0 AS discount,\r\n" + 
-			"            SUM(d.ext_float2) AS amount,\r\n" + 
+			"            SUM(d.ext_float3) AS amount,\r\n" + 
 			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"            SUM(d.igst_rs) AS igst,\r\n" + 
@@ -2215,7 +2215,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            ) AS r,\r\n" + 
 			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
 			"            CAST(\r\n" + 
-			"                SUM(d.ext_float2) AS DECIMAL(10, 2)\r\n" + 
+			"                SUM(d.ext_float3) AS DECIMAL(10, 2)\r\n" + 
 			"            ) AS disc,\r\n" + 
 			"            d.cgst_per,\r\n" + 
 			"            d.sgst_per\r\n" + 
@@ -2279,7 +2279,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(d.ext_float2) amount\r\n" + 
+			"        SUM(d.ext_float3) amount\r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
 			"        t_sell_bill_detail d,\r\n" + 
@@ -2378,7 +2378,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                2\r\n" + 
 			"            ) AS rate,\r\n" + 
 			"            0 AS discount,\r\n" + 
-			"            SUM(d.ext_float2) AS amount,\r\n" + 
+			"            SUM(d.ext_float3) AS amount,\r\n" + 
 			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"            SUM(d.igst_rs) AS igst,\r\n" + 
@@ -2492,7 +2492,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            ) AS r,\r\n" + 
 			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
 			"            CAST(\r\n" + 
-			"                SUM(d.ext_float2) AS DECIMAL(10, 2)\r\n" + 
+			"                SUM(d.ext_float3) AS DECIMAL(10, 2)\r\n" + 
 			"            ) AS disc,\r\n" + 
 			"            d.cgst_per,\r\n" + 
 			"            d.sgst_per\r\n" + 
@@ -2554,7 +2554,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(d.ext_float2) amount\r\n" + 
+			"        SUM(d.ext_float3) amount\r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
 			"        t_sell_bill_detail d,\r\n" + 
@@ -2653,7 +2653,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"                2\r\n" + 
 			"            ) AS rate,\r\n" + 
 			"            0 AS discount,\r\n" + 
-			"            SUM(d.ext_float2) AS amount,\r\n" + 
+			"            SUM(d.ext_float3) AS amount,\r\n" + 
 			"            SUM(d.cgst_rs) AS cgst,\r\n" + 
 			"            SUM(d.sgst_rs) AS sgst,\r\n" + 
 			"            SUM(d.igst_rs) AS igst,\r\n" + 
@@ -2767,7 +2767,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"            ) AS r,\r\n" + 
 			"            CAST(SUM(qty) AS DECIMAL(10, 3)) AS q,\r\n" + 
 			"            CAST(\r\n" + 
-			"                SUM(d.ext_float2) AS DECIMAL(10, 2)\r\n" + 
+			"                SUM(d.ext_float3) AS DECIMAL(10, 2)\r\n" + 
 			"            ) AS disc,\r\n" + 
 			"            d.cgst_per,\r\n" + 
 			"            d.sgst_per\r\n" + 
@@ -2829,7 +2829,7 @@ public interface SalesInvoicesRepo extends JpaRepository<SalesInvoices, Long>{
 			"    SELECT\r\n" + 
 			"        h.fr_id,\r\n" + 
 			"        h.bill_date,\r\n" + 
-			"        SUM(d.ext_float2) amount\r\n" + 
+			"        SUM(d.ext_float3) amount\r\n" + 
 			"    FROM\r\n" + 
 			"        t_sell_bill_header h,\r\n" + 
 			"        t_sell_bill_detail d,\r\n" + 
