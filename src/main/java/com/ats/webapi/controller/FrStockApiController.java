@@ -45,6 +45,7 @@ import com.ats.webapi.model.StockRegSpSell;
 import com.ats.webapi.model.ViewFrStockBackEnd;
 import com.ats.webapi.repository.AdminGetCurrentStockDetailsRepo;
 import com.ats.webapi.repository.GetFrItemStockConfigurationRepository;
+import com.ats.webapi.repository.ItemRepository;
 import com.ats.webapi.repository.OpsFrItemStockRepo;
 import com.ats.webapi.repository.PostFrOpStockDetailRepository;
 import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
@@ -102,6 +103,9 @@ public class FrStockApiController {
 
 	@Autowired
 	OpsFrItemStockRepo opsFrItemStockRepo;
+	
+	@Autowired
+	ItemRepository itemRepository;
 
 	/*
 	 * @RequestMapping(value = "/getCurrentOpStock", method = RequestMethod.POST)
@@ -1136,7 +1140,19 @@ public class FrStockApiController {
 		System.out.println("inside rest getCurrentStock : I/p : currentMonth: " + month);
 		System.out.println("inside rest getCurrentStock : I/p : year: " + year);
 
-		res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType, configType);
+		//res = opsFrItemStockRepo.getOpsFrCurrStock(frId, fromDate, toDate, month, year, frStockType, configType);
+		
+		List<Integer> itemIdsList=new ArrayList<>();
+		List<Item> allItemList=itemRepository.findByDelStatusOrderByItemGrp2(0);
+		if(allItemList!=null) {
+			for(int i=0;i<allItemList.size();i++) {
+				itemIdsList.add(allItemList.get(i).getId());
+			}
+		}
+		
+		res = opsFrItemStockRepo.getOpsFrCurrStockNew(frId, fromDate, toDate, month, year, frStockType, itemIdsList);
+		
+		
 
 		System.out.println("OPS FR STOCK Result:  " + res.toString());
 
