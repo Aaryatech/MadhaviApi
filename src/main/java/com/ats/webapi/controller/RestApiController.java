@@ -1321,6 +1321,8 @@ public class RestApiController {
 		List<PostBillHeader> jsonBillHeader = null;
 
 		Info info = new Info();
+		
+		System.err.println("Save Mnual Bills");
 		try {
 			jsonBillHeader = postBillDataService.saveBillHeader(postBillDataCommon.getPostBillHeadersList());
 
@@ -2304,6 +2306,12 @@ public class RestApiController {
 
 			Info info = EmailUtility.sendOrderEmail(senderEmail, senderPassword, frEmail, mailsubject, text);
 			System.err.println("Mail Resp : " + info);
+			
+			String msg = "Hi Dear Customer,\nWe have received your Madhvi DairyMart order of RS. (" + header.getTotal() + ") "
+					+ ". Please collect your order from (" + frDetails.getFrAddress() + ") Mo. (" + frDetails.getFrMob() + ") on (" + header.getDeliveryDate() + ") . "
+					+ "For More Info Call 8260060049 - DairyMart Support";			
+			
+			Info smsInfo = EmailUtility.send(frDetails.getFrMob(), msg);
 		}
 
 		return billList;
